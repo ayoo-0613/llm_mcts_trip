@@ -13,8 +13,14 @@ DEFAULT_REWARD_CFG = {
     "missing_flight_penalty": -10.0,
     "missing_return_penalty": -10.0,
     "missing_stay_penalty": -8.0,
+    "missing_city_penalty": -8.0,
+    "missing_segment_penalty": -6.0,
+    "missing_must_city_penalty": -6.0,
     "meal_missing_penalty": -4.0,
     "attraction_missing_penalty": -4.0,
+    "duplicate_meal_penalty": -3.0,
+    "duplicate_restaurant_across_days_penalty": -2.0,
+    "duplicate_attraction_penalty": -3.0,
     "preference_bonus": 1.5,
     "poi_bonus": 1.0,
     "finish_success_bonus": 6.0,
@@ -22,16 +28,19 @@ DEFAULT_REWARD_CFG = {
 }
 
 MEAL_SLOTS = ["breakfast", "lunch", "dinner"]
-ATTRACTION_SLOTS = ["morning", "afternoon", "evening", "night"]
+ATTRACTION_SLOTS = ["spot"]  # single attraction slot per day
 
 
 @dataclass
 class TravelState:
     outbound_flight: Optional[Dict] = None
     return_flight: Optional[Dict] = None
-    accommodation: Optional[Dict] = None
+    accommodation: Optional[Dict] = None  # legacy single-city stay
+    city_stays: Dict[str, Optional[Dict]] = field(default_factory=dict)  # city -> accommodation
     meals: Dict[int, Dict[str, Optional[Dict]]] = field(default_factory=dict)  # day -> slot -> restaurant
     attractions: Dict[int, Dict[str, Optional[Dict]]] = field(default_factory=dict)  # day -> slot -> attraction
+    city_sequence: List[str] = field(default_factory=list)
+    segment_modes: Dict[int, Dict] = field(default_factory=dict)  # segment idx -> {"mode": str, "detail": Dict}
     cost: float = 0.0
     preference_matches: int = 0
     violations: List[str] = field(default_factory=list)
@@ -42,8 +51,11 @@ class TravelState:
             outbound_flight=copy.deepcopy(self.outbound_flight),
             return_flight=copy.deepcopy(self.return_flight),
             accommodation=copy.deepcopy(self.accommodation),
+            city_stays=copy.deepcopy(self.city_stays),
             meals=copy.deepcopy(self.meals),
             attractions=copy.deepcopy(self.attractions),
+            city_sequence=list(self.city_sequence),
+            segment_modes=copy.deepcopy(self.segment_modes),
             cost=self.cost,
             preference_matches=self.preference_matches,
             violations=list(self.violations),
@@ -71,19 +83,36 @@ class TravelEnv:
         self.steps = 0
         self.action_payloads: Dict[str, Tuple] = {}
         self.last_info: Dict = {}
+        self._ensure_destination_required()
 
     def _empty_state(self) -> TravelState:
         meals = {day: {slot: None for slot in self.meal_slots} for day in range(1, self.total_days + 1)}
         attractions = {day: {slot: None for slot in self.attraction_slots} for day in range(1, self.total_days + 1)}
         return TravelState(meals=meals, attractions=attractions)
 
+    def _ensure_destination_required(self) -> None:
+        dest = self.goal.destination
+        if not dest:
+            return
+        dest_norm = self.kb._normalize_city(dest)
+        must_norms = {self.kb._normalize_city(c) for c in self.goal.must_visit_cities}
+        if dest_norm not in must_norms and not self.goal.fixed_city_order:
+            self.goal.must_visit_cities.append(dest)
+        if dest not in self.goal.candidate_cities:
+            self.goal.candidate_cities.append(dest)
+
     def reset(self, goal: Optional[TripGoal] = None) -> Tuple[str, List[str]]:
         if goal is not None:
             self.goal = goal
             self.total_days = goal.duration_days or 3
             self.base_state = self._empty_state()
+            if self.goal.fixed_city_order:
+                self.base_state.city_sequence = list(self.goal.fixed_city_order)
             self.base_history = []
+            self._ensure_destination_required()
         self.state = self.base_state.clone()
+        if not self.state.city_sequence and self.goal.fixed_city_order:
+            self.state.city_sequence = list(self.goal.fixed_city_order)
         self.state.cost = self._estimate_cost(self.state)
         self.history = list(self.base_history)
         self.steps = 0
@@ -107,6 +136,16 @@ class TravelEnv:
             cost += state.return_flight["price"]
         if state.accommodation is not None:
             cost += state.accommodation["price"]
+        for stay in state.city_stays.values():
+            if stay is not None:
+                cost += stay["price"]
+        for mode in state.segment_modes.values():
+            detail = mode.get("detail", {}) if isinstance(mode, dict) else {}
+            if isinstance(detail, dict):
+                if "price" in detail:
+                    cost += float(detail["price"])
+                elif "cost" in detail:
+                    cost += float(detail["cost"])
         for day in state.meals.values():
             for meal in day.values():
                 if meal is not None:
@@ -126,23 +165,70 @@ class TravelEnv:
     def _count_attractions_day(self, state: TravelState, day: int) -> int:
         return sum(1 for a in state.attractions.get(day, {}).values() if a is not None)
 
+    def _restaurant_ids_day(self, state: TravelState, day: int) -> set:
+        return {m["id"] for m in state.meals.get(day, {}).values() if m}
+
+    def _restaurant_ids_all(self, state: TravelState) -> set:
+        ids = set()
+        for day_map in state.meals.values():
+            for m in day_map.values():
+                if m:
+                    ids.add(m["id"])
+        return ids
+
+    def _attraction_ids_all(self, state: TravelState) -> set:
+        ids = set()
+        for day_map in state.attractions.values():
+            for a in day_map.values():
+                if a:
+                    ids.add(a["id"])
+        return ids
+
+    def _city_for_day(self, state: TravelState, day: int) -> Optional[str]:
+        seq = state.city_sequence or self.goal.fixed_city_order or self.goal.must_visit_cities
+        if not seq:
+            return self.goal.destination
+        idx = min(len(seq) - 1, int((day - 1) * len(seq) / max(1, self.total_days)))
+        return seq[idx]
+
+    def _segments(self, state: TravelState) -> List[Tuple[int, str, str]]:
+        seq = state.city_sequence
+        segments: List[Tuple[int, str, str]] = []
+        if seq:
+            segments.append((0, self.goal.origin, seq[0]))
+            for i in range(1, len(seq)):
+                segments.append((i, seq[i - 1], seq[i]))
+            if self.goal.return_required:
+                segments.append((len(seq), seq[-1], self.goal.origin))
+        elif self.goal.destination:
+            # fallback single-destination routing
+            segments.append((0, self.goal.origin, self.goal.destination))
+            if self.goal.return_required:
+                segments.append((1, self.goal.destination, self.goal.origin))
+        return segments
+
+    def _allowed_transport_modes(self) -> List[str]:
+        allowed = self.goal.transport_allowed_modes or ["flight", "taxi", "self-driving"]
+        forbidden = set(m.lower() for m in (self.goal.transport_forbidden_modes or []))
+        return [m for m in allowed if m not in forbidden]
+
     def _observation(self, state: TravelState) -> str:
         parts = [self.goal.as_text()]
-        if state.outbound_flight:
-            f = state.outbound_flight
-            parts.append(
-                f"Outbound: {f['id']} {f['origin']}->{f['destination']} {f['depart']}-{f['arrive']} ${f['price']:.0f}"
-            )
-        if state.return_flight:
-            f = state.return_flight
-            parts.append(
-                f"Return: {f['id']} {f['origin']}->{f['destination']} {f['depart']}-{f['arrive']} ${f['price']:.0f}"
-            )
-        if state.accommodation:
-            s = state.accommodation
-            parts.append(
-                f"Stay: {s['name']} in {s['city']} ({s['room_type']}) ${s['price']:.0f}"
-            )
+        if state.city_sequence:
+            parts.append(f"Cities selected: {' -> '.join(state.city_sequence)}")
+        if state.segment_modes:
+            seg_txt = []
+            for idx, seg in state.segment_modes.items():
+                detail = seg.get("detail", {})
+                mode = seg.get("mode")
+                if isinstance(detail, dict) and "origin" in detail and "destination" in detail:
+                    seg_txt.append(f"seg{idx}:{detail['origin']}->{detail['destination']} via {mode}")
+                else:
+                    seg_txt.append(f"seg{idx}:{mode}")
+            parts.append("Transport: " + "; ".join(seg_txt))
+        for city, stay in state.city_stays.items():
+            if stay:
+                parts.append(f"Stay {city}: {stay['name']} {stay['room_type']} ${stay['price']:.0f}")
 
         for day in range(1, self.total_days + 1):
             day_meals = state.meals[day]
@@ -155,12 +241,16 @@ class TravelEnv:
                 parts.append(f"Day {day} attractions: {att_txt}")
 
         pending = []
-        if self.goal.require_flight and state.outbound_flight is None:
-            pending.append("outbound flight")
-        if self.goal.require_flight and self.goal.return_required and state.return_flight is None:
-            pending.append("return flight")
-        if self.goal.require_accommodation and state.accommodation is None:
-            pending.append("accommodation")
+        city_target = self.goal.visiting_city_number or 1
+        if len(state.city_sequence) < city_target:
+            pending.append(f"cities missing {city_target - len(state.city_sequence)}")
+        segments = self._segments(state)
+        for idx, src, dst in segments:
+            if idx not in state.segment_modes:
+                pending.append(f"segment {idx} {src}->{dst} mode")
+        for city in state.city_sequence:
+            if state.city_stays.get(city) is None and self.goal.require_accommodation:
+                pending.append(f"stay in {city}")
 
         for day in range(1, self.total_days + 1):
             meals_missing = [slot for slot, meal in state.meals[day].items() if meal is None]
@@ -175,74 +265,117 @@ class TravelEnv:
         if self.goal.budget is not None:
             budget_left = self.goal.budget - self._estimate_cost(state)
             parts.append(f"Budget left estimate: {budget_left:.0f}")
-        dist = self.kb.distance_between(self.goal.origin, self.goal.destination)
-        if dist:
-            parts.append(f"Ground distance {dist}")
+        parts.append(f"Allowed transport: {', '.join(self._allowed_transport_modes())}")
         return " | ".join(parts)
 
     def _build_valid_actions(self, state: TravelState) -> List[str]:
         actions: List[str] = []
         self.action_payloads = {}
 
-        if self.goal.require_flight and state.outbound_flight is None:
-            flights = self.kb.get_flights(
-                self.goal.origin, self.goal.destination,
-                top_k=self.top_k,
-                max_price=self.goal.budget,
+        city_target = self.goal.visiting_city_number or 1
+        cities_locked = bool(self.goal.fixed_city_order) or (len(state.city_sequence) >= city_target)
+        if not cities_locked:
+            candidates = self.goal.candidate_cities or self.kb.get_candidate_cities(
+                destination_hint=self.goal.destination,
+                must_visit=self.goal.must_visit_cities,
+                priority=self.goal.priority_cities,
+                top_k=max(self.top_k * 2, city_target),
             )
-            for f in flights:
-                action = f"flight_out:{f['id']} {f['origin']}->{f['destination']} ${f['price']:.0f} {f['depart']}-{f['arrive']}"
-                self.action_payloads[action] = ("outbound", f)
-                actions.append(action)
+            for must in self.goal.must_visit_cities:
+                if must not in candidates:
+                    candidates.insert(0, must)
+            for pri in self.goal.priority_cities:
+                if pri not in candidates:
+                    candidates.append(pri)
+            for city in candidates:
+                if city not in state.city_sequence:
+                    action = f"choose_city:{city}"
+                    self.action_payloads[action] = ("choose_city", city)
+                    actions.append(action)
+            if self._can_finish(state):
+                actions.append("finish")
+            if not actions:
+                actions.append("finish")
+            return actions
 
-        if self.goal.require_flight and self.goal.return_required and state.return_flight is None:
-            flights = self.kb.get_flights(
-                self.goal.destination, self.goal.origin,
-                top_k=self.top_k,
-                max_price=self.goal.budget,
-            )
-            for f in flights:
-                action = f"flight_back:{f['id']} {f['origin']}->{f['destination']} ${f['price']:.0f} {f['depart']}-{f['arrive']}"
-                self.action_payloads[action] = ("return", f)
-                actions.append(action)
+        allowed_modes = self._allowed_transport_modes()
+        segments = self._segments(state)
+        for idx, src, dst in segments:
+            if idx in state.segment_modes:
+                continue
+            for mode in allowed_modes:
+                if mode == "flight":
+                    flights = self.kb.get_flights(
+                        src, dst, top_k=self.top_k, max_price=self.goal.budget
+                    )
+                    for f in flights:
+                        action = (
+                            f"move:seg{idx}:flight:{f['id']} {src}->{dst} "
+                            f"${f['price']:.0f} {f['depart']}-{f['arrive']}"
+                        )
+                        self.action_payloads[action] = ("segment_mode", idx, "flight", f)
+                        actions.append(action)
+                else:
+                    dist_km = self.kb.distance_km(src, dst)
+                    if dist_km is None:
+                        continue
+                    cost = dist_km
+                    action = f"move:seg{idx}:{mode}:{src}->{dst} {dist_km:.0f}km cost {cost:.0f}"
+                    payload_detail = {"origin": src, "destination": dst, "distance": dist_km, "cost": cost}
+                    self.action_payloads[action] = ("segment_mode", idx, mode, payload_detail)
+                    actions.append(action)
 
-        if self.goal.require_accommodation and state.accommodation is None:
-            stays = self.kb.get_accommodations(
-                self.goal.destination,
-                top_k=self.top_k,
-                max_price=self.goal.budget,
-            )
-            for s in stays:
-                action = f"stay:{s['id']} {s['name']} {s['room_type']} ${s['price']:.0f}"
-                self.action_payloads[action] = ("accommodation", s)
-                actions.append(action)
+        for city in state.city_sequence:
+            if self.goal.require_accommodation and state.city_stays.get(city) is None:
+                stays = self.kb.get_accommodations(
+                    city,
+                    top_k=self.top_k,
+                    max_price=self.goal.budget,
+                )
+                for s in stays:
+                    action = f"stay:{city}:{s['id']} {s['name']} {s['room_type']} ${s['price']:.0f}"
+                    self.action_payloads[action] = ("stay_city", city, s)
+                    actions.append(action)
 
-        restaurants = self.kb.get_restaurants(
-            self.goal.destination,
-            preferences=self.goal.preferences,
-            top_k=self.top_k,
-        )
         for day in range(1, self.total_days + 1):
+            city = self._city_for_day(state, day)
+            restaurants = self.kb.get_restaurants(
+                city,
+                preferences=self.goal.preferences,
+                top_k=self.top_k,
+            )
+            used_ids = self._restaurant_ids_day(state, day)
+            used_global = self._restaurant_ids_all(state)
             for slot in self.meal_slots:
                 if state.meals[day][slot] is None:
                     for r in restaurants:
+                        # discourage same restaurant within a day and across days
+                        if r["id"] in used_ids or r["id"] in used_global:
+                            continue
                         action = f"eat:d{day}:{slot}:{r['id']} {r['name']} {r['cuisines']} ${r['cost']:.0f} rating {r['rating']}"
                         self.action_payloads[action] = ("meal", day, slot, r)
                         actions.append(action)
 
-        attractions = self.kb.get_attractions(self.goal.destination, top_k=self.top_k)
         for day in range(1, self.total_days + 1):
+            city = self._city_for_day(state, day)
             current_att = self._count_attractions_day(state, day)
             if current_att >= self.goal.attractions_per_day_max:
                 continue
+            attractions = self.kb.get_attractions(city, top_k=self.top_k)
+            used_att = self._attraction_ids_all(state)
             for slot in self.attraction_slots:
                 if state.attractions[day][slot] is None:
                     for a in attractions:
+                        if a["id"] in used_att:
+                            continue
                         action = f"visit:d{day}:{slot}:{a['id']} {a['name']} @ {a['city']}"
                         self.action_payloads[action] = ("attraction", day, slot, a)
                         actions.append(action)
 
-        actions.append("finish")
+        if self._can_finish(state):
+            actions.append("finish")
+        if not actions:
+            actions.append("finish")
         return actions
 
     def get_goal(self) -> str:
@@ -250,12 +383,35 @@ class TravelEnv:
 
     def is_success(self, state: Optional[TravelState] = None) -> bool:
         state = state or self.state
-        if self.goal.require_flight and state.outbound_flight is None:
+        city_target = self.goal.visiting_city_number or 1
+        if len(state.city_sequence) < city_target:
             return False
-        if self.goal.require_flight and self.goal.return_required and state.return_flight is None:
-            return False
-        if self.goal.require_accommodation and state.accommodation is None:
-            return False
+        must_norm = {self.kb._normalize_city(c) for c in self.goal.must_visit_cities}
+        if must_norm:
+            seq_norm = {self.kb._normalize_city(c) for c in state.city_sequence}
+            if not must_norm.issubset(seq_norm):
+                return False
+
+        segments = self._segments(state)
+        for idx, _, _ in segments:
+            if idx not in state.segment_modes:
+                return False
+
+        if self.goal.require_flight:
+            if segments:
+                first_seg = state.segment_modes.get(0)
+                if not first_seg or first_seg.get("mode") != "flight":
+                    return False
+                if self.goal.return_required:
+                    last_idx = segments[-1][0]
+                    last_seg = state.segment_modes.get(last_idx)
+                    if not last_seg or last_seg.get("mode") != "flight":
+                        return False
+
+        if self.goal.require_accommodation:
+            for city in state.city_sequence:
+                if state.city_stays.get(city) is None:
+                    return False
         for day in range(1, self.total_days + 1):
             if any(meal is None for meal in state.meals[day].values()):
                 return False
@@ -264,6 +420,32 @@ class TravelEnv:
                 return False
         if self.goal.budget is not None and state.cost > self.goal.budget:
             return False
+        return True
+
+    def _can_finish(self, state: Optional[TravelState] = None) -> bool:
+        state = state or self.state
+        city_target = self.goal.visiting_city_number or 1
+        if len(state.city_sequence) < city_target:
+            return False
+        must_norm = {self.kb._normalize_city(c) for c in self.goal.must_visit_cities}
+        if must_norm:
+            seq_norm = {self.kb._normalize_city(c) for c in state.city_sequence}
+            if not must_norm.issubset(seq_norm):
+                return False
+        segments = self._segments(state)
+        for idx, _, _ in segments:
+            if idx not in state.segment_modes:
+                return False
+        if self.goal.require_accommodation:
+            for city in state.city_sequence:
+                if state.city_stays.get(city) is None:
+                    return False
+        for day in range(1, self.total_days + 1):
+            if any(meal is None for meal in state.meals[day].values()):
+                return False
+            att_count = self._count_attractions_day(state, day)
+            if att_count < self.goal.attractions_per_day_min:
+                return False
         return True
 
     def step(self, action: str):
@@ -277,6 +459,8 @@ class TravelEnv:
             obs = self._observation(self.state)
             self.last_info = {"violations": list(self.state.violations), "cost": self.state.cost}
             return obs, reward, True, self.history, []
+        if action == "finish" and not self._can_finish(self.state):
+            reward = -1.0
 
         payload = self.action_payloads.get(action)
         if payload is None:
@@ -288,26 +472,48 @@ class TravelEnv:
             return obs, reward, done, self.history, valid_actions
 
         kind = payload[0]
-        if kind == "outbound" and self.state.outbound_flight is None:
-            _, flight = payload
-            self.state.outbound_flight = flight
-        elif kind == "return" and self.state.return_flight is None:
-            _, flight = payload
-            self.state.return_flight = flight
-        elif kind == "accommodation" and self.state.accommodation is None:
-            _, stay = payload
-            self.state.accommodation = stay
+        if kind == "choose_city":
+            _, city = payload
+            if city not in self.state.city_sequence:
+                self.state.city_sequence.append(city)
+                # refresh transport decisions when the route changes
+                self.state.segment_modes = {}
+                self.state.outbound_flight = None
+                self.state.return_flight = None
+        elif kind == "segment_mode":
+            _, seg_idx, mode, detail = payload
+            self.state.segment_modes[seg_idx] = {"mode": mode, "detail": detail}
+            segments = self._segments(self.state)
+            last_idx = segments[-1][0] if segments else None
+            if mode == "flight":
+                if seg_idx == 0:
+                    self.state.outbound_flight = detail
+                if self.goal.return_required and last_idx is not None and seg_idx == last_idx:
+                    self.state.return_flight = detail
+        elif kind == "stay_city":
+            _, city, stay = payload
+            if self.state.city_stays.get(city) is None:
+                self.state.city_stays[city] = stay
         elif kind == "meal":
             _, day, slot, rest = payload
             if self.state.meals[day][slot] is None:
-                self.state.meals[day][slot] = rest
-                if self._matches_preference(rest):
-                    self.state.preference_matches += 1
-                    reward += self.reward_cfg.get("preference_bonus", 0.0)
+                # discourage same restaurant multiple times per day
+                day_ids = self._restaurant_ids_day(self.state, day)
+                if rest["id"] in day_ids:
+                    reward += self.reward_cfg.get("duplicate_meal_penalty", 0.0)
+                elif rest["id"] in self._restaurant_ids_all(self.state):
+                    reward += self.reward_cfg.get("duplicate_restaurant_across_days_penalty", 0.0)
+                else:
+                    self.state.meals[day][slot] = rest
+                    if self._matches_preference(rest):
+                        self.state.preference_matches += 1
+                        reward += self.reward_cfg.get("preference_bonus", 0.0)
         elif kind == "attraction":
             _, day, slot, attr = payload
             if self.state.attractions[day][slot] is None:
-                if self._count_attractions_day(self.state, day) < self.goal.attractions_per_day_max:
+                if attr["id"] in self._attraction_ids_all(self.state):
+                    reward += self.reward_cfg.get("duplicate_attraction_penalty", 0.0)
+                elif self._count_attractions_day(self.state, day) < self.goal.attractions_per_day_max:
                     self.state.attractions[day][slot] = attr
                     reward += self.reward_cfg.get("poi_bonus", 0.0)
 
@@ -332,15 +538,43 @@ class TravelEnv:
         state.cost = self._estimate_cost(state)
         reward = 0.0
 
-        if self.goal.require_flight and state.outbound_flight is None:
-            self._ensure_violation(state, "outbound")
-            reward += self.reward_cfg.get("missing_flight_penalty", 0.0)
-        if self.goal.require_flight and self.goal.return_required and state.return_flight is None:
-            self._ensure_violation(state, "return")
-            reward += self.reward_cfg.get("missing_return_penalty", 0.0)
-        if self.goal.require_accommodation and state.accommodation is None:
-            self._ensure_violation(state, "accommodation")
-            reward += self.reward_cfg.get("missing_stay_penalty", 0.0)
+        city_target = self.goal.visiting_city_number or 1
+        if len(state.city_sequence) < city_target:
+            self._ensure_violation(state, "city_count")
+            reward += (city_target - len(state.city_sequence)) * self.reward_cfg.get("missing_city_penalty", 0.0)
+
+        must_norm = {self.kb._normalize_city(c) for c in self.goal.must_visit_cities}
+        if must_norm:
+            seq_norm = {self.kb._normalize_city(c) for c in state.city_sequence}
+            missing_must = [c for c in must_norm if c not in seq_norm]
+            if missing_must:
+                self._ensure_violation(state, "must_city")
+                reward += len(missing_must) * self.reward_cfg.get("missing_must_city_penalty", 0.0)
+
+        segments = self._segments(state)
+        for idx, src, dst in segments:
+            if idx not in state.segment_modes:
+                self._ensure_violation(state, f"segment{idx}")
+                reward += self.reward_cfg.get("missing_segment_penalty", 0.0)
+
+        if self.goal.require_flight:
+            if segments:
+                first_seg = state.segment_modes.get(0)
+                if not first_seg or first_seg.get("mode") != "flight":
+                    self._ensure_violation(state, "outbound")
+                    reward += self.reward_cfg.get("missing_flight_penalty", 0.0)
+                if self.goal.return_required:
+                    last_idx = segments[-1][0]
+                    last_seg = state.segment_modes.get(last_idx)
+                    if not last_seg or last_seg.get("mode") != "flight":
+                        self._ensure_violation(state, "return")
+                        reward += self.reward_cfg.get("missing_return_penalty", 0.0)
+
+        if self.goal.require_accommodation:
+            for city in state.city_sequence:
+                if state.city_stays.get(city) is None:
+                    self._ensure_violation(state, f"stay_{city}")
+                    reward += self.reward_cfg.get("missing_stay_penalty", 0.0)
 
         for day in range(1, self.total_days + 1):
             missing_meals = sum(1 for meal in state.meals[day].values() if meal is None)
@@ -352,6 +586,24 @@ class TravelEnv:
                 missing_att = self.goal.attractions_per_day_min - att_count
                 self._ensure_violation(state, f"day{day}_attractions")
                 reward += missing_att * self.reward_cfg.get("attraction_missing_penalty", 0.0)
+            # duplicate penalties
+            day_ids = self._restaurant_ids_day(state, day)
+            if len(day_ids) < len([m for m in state.meals[day].values() if m]):
+                self._ensure_violation(state, f"day{day}_duplicate_meals")
+                reward += self.reward_cfg.get("duplicate_meal_penalty", 0.0)
+        # cross-day duplicate restaurants
+        all_rest = self._restaurant_ids_all(state)
+        total_meals = sum(1 for day_map in state.meals.values() for v in day_map.values() if v)
+        if len(all_rest) < total_meals:
+            self._ensure_violation(state, "duplicate_restaurants")
+            reward += self.reward_cfg.get("duplicate_restaurant_across_days_penalty", 0.0)
+
+        # global duplicate attraction penalty
+        att_all = self._attraction_ids_all(state)
+        total_atts = sum(1 for day_map in state.attractions.values() for v in day_map.values() if v)
+        if len(att_all) < total_atts:
+            self._ensure_violation(state, "duplicate_attractions")
+            reward += self.reward_cfg.get("duplicate_attraction_penalty", 0.0)
 
         if self.goal.budget is not None and state.cost > self.goal.budget:
             self._ensure_violation(state, "budget")

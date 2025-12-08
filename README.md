@@ -91,6 +91,54 @@ python mcts/virtualhome/mcts_agent.py \
     --seen_comp
 ```
 
+## Travel planning (tabular dataset + MCTS + local LLM)
+
+This repo also includes a lightweight travel planner that treats the tabular dataset under `./database` (flights, accommodations, restaurants, attractions) as the environment and searches with MCTS. Key pieces:
+
+- `mcts/travel/knowledge_base.py`: loads/normalizes the CSVs.
+- `mcts/travel/travel_env.py`: defines a multi-day state (outbound/return flights, accommodation, per-day meal slots, per-day attraction slots), constraints (budget, daily meals, daily attractions), rewards/penalties, and terminal checks.
+- `mcts/travel/llm_policy.py`: optional action prior scorer; can use a local LLM or SentenceTransformer embeddings; if unavailable, falls back to uniform priors (torch/transformers are optional).
+- `mcts/mcts/mcts.py`: generic MCTS that consumes env observations/valid actions; uses the policy prior in PUCT.
+- `scripts/run_travel_mcts.py`: entry point; supports direct CLI args or a natural language query parsed by a local LLM (Ollama-style `/api/generate`).
+
+### State and action space
+- State tracks: outbound flight, return flight, one accommodation, meals per day (breakfast/lunch/dinner), attractions per day (slots morning/afternoon/evening/night), total cost, preference hits, violations.
+- Actions: `flight_out:*`, `flight_back:*`, `stay:*`, `eat:d{day}:{slot}:*`, `visit:d{day}:{slot}:*`, `finish`.
+- Constraints: require outbound/return flights, accommodation, 3 meals per day, at least 2 (up to 3) attractions per day, stay within budget. Rewards penalize violations and reward preference matches/POIs; success only if all hard constraints met.
+
+### Natural language parsing
+If `--nl-query` is provided, the script calls a local LLM (default `deepseek-r1:14b` at `LOCAL_LLM_BASE`/`--local-base`) with a simple JSON-extraction prompt to fill origin/destination/start_date/duration/budget/preferences and attraction bounds. Missing fields can be supplied via CLI flags.
+
+### Running the planner
+Base example with explicit args:
+```
+python scripts/run_travel_mcts.py \
+  --origin "St. Petersburg" --destination Rockford \
+  --start-date 2022-03-16 --days 3 --budget 1700 \
+  --local-model deepseek-r1:14b --local-base http://localhost:11434 \
+  --device cpu --top-k 3 --debug
+```
+
+NL parsing example (origin/destination extracted from query):
+```
+python scripts/run_travel_mcts.py \
+  --nl-query 'Please help me plan a trip from St. Petersburg to Rockford spanning 3 days from March 16th to March 18th, 2022. The travel should be planned for a single person with a budget of $1,700.' \
+  --local-model deepseek-r1:14b --local-base http://localhost:11434 \
+  --device cpu --top-k 3 --debug
+```
+
+Flags of note:
+- `--local-model`: local LLM for action priors (optional; if missing, priors are uniform); also used by default for NL parsing.
+- `--device`: cpu/mps/cuda:0 etc. (torch is optional; if absent, the planner still runs with uniform priors).
+- `--nl-query`: free-form request; `--parser-model/--local-base/--parser-timeout` control the parser call.
+- `--top-k`: limit candidates per category to shrink branching factor.
+- `--debug`: print root node stats (Q/N) and per-step cost/violations.
+
+### What MCTS does here
+- Outer loop: from empty itinerary, repeatedly call `MCTSAgent.search` to pick the next action, apply it to the travel env, and continue until success or max steps.
+- Inner loop: standard PUCT—uses env observation/valid actions, policy priors from `TravelLLMPolicy` (or uniform), expands/rolls out to estimate Q, and selects the highest-scoring action.
+- Termination: only succeeds when outbound+return flights, accommodation, all meal slots, and minimum attractions per day are satisfied within budget; otherwise finish incurs penalties.
+
 ## Travel dataset + local LLM
 
 The repository now includes a lightweight environment that consumes the tabular travel dataset under `./database` (flights, accommodations, restaurants, attractions) and runs MCTS with a local scoring model. Example:
