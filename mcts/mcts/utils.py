@@ -66,11 +66,17 @@ def find_near_actions(act_vec, acts, embedding, threshold=0.7):
 
 
 def softmax(a, T=1):
-    a = np.array(a) / T
+    a = np.array(a, dtype=float)
+    if a.size == 0:
+        return np.array([])
+    a = a / T
+    # numerical stability: subtract max to avoid overflow
+    a = a - np.max(a)
     exp_a = np.exp(a)
     sum_exp_a = np.sum(exp_a)
-    y = exp_a / sum_exp_a
-    return y
+    if sum_exp_a <= 0 or not np.isfinite(sum_exp_a):
+        return np.zeros_like(exp_a)
+    return exp_a / sum_exp_a
 
 
 def padding(l, maxlen):

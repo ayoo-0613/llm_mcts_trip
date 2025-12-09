@@ -68,6 +68,7 @@ def _parse_nl_query(nl_query: str, base_url: str, model: str, timeout: float = 6
         "JSON: {\"origin\": \"Houston\", \"destination\": \"Utah\", \"start_date\": \"2022-03-23\", \"duration_days\": 3, \"budget\": null, \"visiting_city_number\": 2, \"must_visit_cities\": [\"Salt Lake City\",\"Moab\"], \"priority_cities\": [], \"fixed_city_order\": [\"Salt Lake City\",\"Moab\"], \"transport_allow\": null, \"transport_forbid\": [\"flight\"], \"preferences\": [\"sushi\"], \"people_number\": 2}\n\n"
         f"Query: {nl_query}"
     )
+
     raw = _call_local_llm(base_url, model, prompt, timeout=timeout)
     if not raw:
         return {}
@@ -167,12 +168,13 @@ def _parse_date_safe(date_str: str) -> Optional[datetime]:
 def _structured_plan(env: TravelEnv) -> Dict[str, List[str]]:
     state = env.state
     goal = env.goal
-    cities = list(state.city_sequence or goal.fixed_city_order or ([goal.destination] if goal.destination else []))
+    cities = list(getattr(state, "city_seq", []) or goal.fixed_city_order or ([goal.destination] if goal.destination else []))
 
     segments = env._segments(state)
     transport_methods: List[str] = []
     for idx, src, dst in segments:
-        seg = state.segment_modes.get(idx)
+        tm_list = getattr(state, "transport_modes", [])
+        seg = tm_list[idx] if idx < len(tm_list) else None
         if seg:
             detail = seg.get("detail", {})
             mode = seg.get("mode")
@@ -201,23 +203,21 @@ def _structured_plan(env: TravelEnv) -> Dict[str, List[str]]:
 
     restaurants_set = []
     seen_rest = set()
-    for day in range(1, env.total_days + 1):
-        for slot, meal in state.meals.get(day, {}).items():
-            if meal and meal["id"] not in seen_rest:
-                restaurants_set.append(f"{meal['name']}, {meal.get('city', goal.destination)}")
-                seen_rest.add(meal["id"])
+    for (day, slot), meal in getattr(state, "restaurants", {}).items():
+        if meal and meal.get("id") not in seen_rest:
+            restaurants_set.append(f"{meal['name']}, {meal.get('city', goal.destination)}")
+            seen_rest.add(meal["id"])
 
     attractions_set = []
     seen_att = set()
-    for day_map in state.attractions.values():
-        for att in day_map.values():
-            if att and att["id"] not in seen_att:
-                attractions_set.append(f"{att['name']}, {att.get('city')}")
-                seen_att.add(att["id"])
+    for day, att in getattr(state, "attractions", {}).items():
+        if att and att.get("id") not in seen_att:
+            attractions_set.append(f"{att['name']}, {att.get('city')}")
+            seen_att.add(att["id"])
 
     accommodations_list = []
     for city in cities:
-        stay = state.city_stays.get(city)
+        stay = getattr(state, "hotel_index", {}).get(city)
         if stay:
             accommodations_list.append(f"{stay['name']}, {city}")
         else:
@@ -253,7 +253,11 @@ def _load_queries(args) -> List[str]:
 
 
 def _build_goal(parsed: Dict[str, Any], args) -> TripGoal:
-    visit_num = parsed.get("visiting_city_number") or args.visiting_city_number or 1
+    visit_num = parsed.get("visiting_city_number") or parsed.get("visitingcitynumber") or args.visiting_city_number or 1
+    origin_parsed = parsed.get("origin") or parsed.get("org")
+    destination_parsed = parsed.get("destination") or parsed.get("dest")
+    start_date_parsed = parsed.get("start_date") or (parsed.get("date")[0] if parsed.get("date") else None)
+    duration_parsed = parsed.get("duration_days") or parsed.get("days")
     must_cities = parsed.get("must_visit_cities") or args.must_city or []
     priority_cities = parsed.get("priority_cities") or args.priority_city or []
     fixed_city_order = parsed.get("fixed_city_order") or args.fixed_city_order or []
@@ -261,8 +265,31 @@ def _build_goal(parsed: Dict[str, Any], args) -> TripGoal:
     if not (parsed.get("visiting_city_number") or args.visiting_city_number) and fixed_city_order:
         visit_num = len(fixed_city_order)
 
+    local_constraint = parsed.get("local_constraint") or {}
+    local_transport = None
+    local_room_type = None
+    local_house_rule = None
+    local_cuisine = []
+    if isinstance(local_constraint, dict):
+        local_transport = local_constraint.get("transportation")
+        local_room_type = local_constraint.get("room type")
+        local_house_rule = local_constraint.get("house rule")
+        local_cuisine = local_constraint.get("cuisine") or []
+
     allow_modes = parsed.get("transport_allow") or args.allow_transport or []
     forbid_modes = parsed.get("transport_forbid") or parsed.get("transport_forbidden") or args.forbid_transport or []
+    if local_transport:
+        if isinstance(local_transport, str):
+            if "no flight" in local_transport:
+                forbid_modes.append("flight")
+            if "no self-driving" in local_transport or "no driving" in local_transport:
+                forbid_modes.append("self-driving")
+        if isinstance(local_transport, list):
+            for t in local_transport:
+                if isinstance(t, str) and "no flight" in t:
+                    forbid_modes.append("flight")
+                if isinstance(t, str) and ("no self-driving" in t or "no driving" in t):
+                    forbid_modes.append("self-driving")
 
     def _norm_modes(modes):
         if modes is None:
@@ -276,16 +303,17 @@ def _build_goal(parsed: Dict[str, Any], args) -> TripGoal:
     require_flight = ("flight" not in forbid_modes)
 
     return TripGoal(
-        origin=parsed.get("origin"),
-        destination=parsed.get("destination"),
-        start_date=parsed.get("start_date") or args.start_date,
-        duration_days=parsed.get("duration_days") or args.days,
+        origin=origin_parsed or args.origin,
+        destination=destination_parsed or args.destination,
+        start_date=start_date_parsed or args.start_date,
+        duration_days=duration_parsed or args.days,
         budget=parsed.get("budget") or args.budget,
         require_flight=require_flight,
         require_accommodation=True,
         num_restaurants=parsed.get("restaurants") or args.restaurants,
         num_attractions=args.attractions,
-        preferences=parsed.get("preferences") or args.preferences,
+        preferences=parsed.get("preferences") or local_cuisine or args.preferences,
+        people_number=parsed.get("people_number") or parsed.get("people") or parsed.get("num_people") or 1,
         visiting_city_number=visit_num,
         must_visit_cities=must_cities,
         priority_cities=priority_cities,
@@ -293,6 +321,9 @@ def _build_goal(parsed: Dict[str, Any], args) -> TripGoal:
         fixed_city_order=fixed_city_order,
         transport_allowed_modes=allow_modes,
         transport_forbidden_modes=forbid_modes,
+        room_type=local_room_type,
+        house_rule=local_house_rule,
+        required_cuisines=local_cuisine if isinstance(local_cuisine, list) else [],
         return_required=True,
         meals_per_day=3,
         attractions_per_day_min=parsed.get("attractions_min") or 1,
@@ -314,6 +345,7 @@ def _run_single(goal: TripGoal, kb: TravelKnowledgeBase, policy: TravelLLMPolicy
         seed=args.seed,
         model=args.local_model,
         debug=args.debug,
+        plan_llm_lambda=args.plan_llm_lambda,
     )
     agent = MCTSAgent(mcts_args, env, policy=policy, uct_type=args.uct_type, use_llm=True)
 
@@ -325,13 +357,14 @@ def _run_single(goal: TripGoal, kb: TravelKnowledgeBase, policy: TravelLLMPolicy
         action = agent.search(obs, history, step, valid_actions, done)
         obs, reward, done, history, valid_actions = env.apply_action(action)
         plan_actions.append(action)
+        print(f"[step {step}] action: {action}")
         if done:
             break
     success = env.is_success(env.state)
     return {
         "success": success,
         "actions": plan_actions,
-        "cost": env.state.cost,
+        "cost": getattr(env.state, "total_cost", 0.0),
         "violations": env.state.violations,
         "state": env.state,
         "goal": goal,
@@ -378,13 +411,15 @@ def parse_args():
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--debug", action="store_true")
     # LLM params
-    parser.add_argument("--local-model", default=None, help="Local LLM for action priors and NL parsing.")
+    parser.add_argument("--local-model", default="deepseek-r1:14b", help="Local LLM for action priors and NL parsing.")
     parser.add_argument("--local-base", default=os.getenv("LOCAL_LLM_BASE", "http://localhost:11434"))
-    parser.add_argument("--device", default="cpu", help="cpu/mps/cuda:0 etc.")
+    parser.add_argument("--device", default="mps", help="cpu/mps/cuda:0 etc.")
     parser.add_argument("--parser-model", default=None, help="Parser model (defaults to --local-model).")
     parser.add_argument("--parser-timeout", type=float, default=180.0)
     parser.add_argument("--database-root", default="database")
     parser.add_argument("--save-dir", default="plans_out", help="Directory to save generated plans as JSON.")
+    parser.add_argument("--plan-llm-lambda", type=float, default=0.0,
+                        help="Weight for plan-level LLM scoring at terminal rollout (0 disables).")
     return parser.parse_args()
 
 
@@ -398,7 +433,8 @@ def main():
     parser_model = args.parser_model or args.local_model or "deepseek-r1:14b"
     kb = TravelKnowledgeBase(args.database_root)
     policy = TravelLLMPolicy(device=args.device, model_path=args.local_model, embedding_model="all-MiniLM-L6-v2")
-    os.makedirs(args.save_dir, exist_ok=True)
+    save_root = os.path.join(args.save_dir, args.set_type)
+    os.makedirs(save_root, exist_ok=True)
 
     for idx, q in enumerate(subset, start=args.start_index + 1):
         parsed = _parse_nl_query(q, args.local_base, parser_model, timeout=args.parser_timeout)
@@ -413,7 +449,7 @@ def main():
         structured = _structured_plan(result["env"])
         filename = f"{idx:03d}_{goal.origin}_to_{goal.destination}_{goal.start_date or 'na'}_{goal.duration_days or 'days'}d.json"
         safe_name = filename.replace(" ", "_").replace("/", "-")
-        out_path = os.path.join(args.save_dir, safe_name)
+        out_path = os.path.join(save_root, safe_name)
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(
                 {

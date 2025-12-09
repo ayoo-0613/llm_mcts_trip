@@ -81,6 +81,7 @@ class MCTSAgent:
         self.simulation_num = getattr(args, 'simulation_num', 1)
         self.use_llm = use_llm
         self.llm_policy = policy
+        self.plan_llm_lambda = getattr(args, "plan_llm_lambda", 0.0)
         if use_llm and self.llm_policy is None:
             try:
                 from mcts.virtualhome.llm_policy import LLMPolicy  # lazy import for backward compatibility
@@ -271,6 +272,8 @@ class MCTSAgent:
         return np.random.choice(state_node.children, p=count_based_probs)
 
     def greedy_action_node(self, state_node, exploration_constant, bonus_constant, if_print=False):
+        if not state_node.children:
+            return 0
         best_value = -np.inf
         best_children = []
         best_children_prob = []
@@ -330,13 +333,23 @@ class MCTSAgent:
             for c in state_node.children:
                 if c.N > 0:
                     print(c.action, c.Q, c.N)
+        if len(best_children_prob) == 0:
+            return 0
         best_children_prob = np.array(best_children_prob) / np.sum(best_children_prob)
         output_action_index = np.argmax(best_children_prob)
         return best_children[output_action_index]
 
     def rollout(self, state_node, depth):
         if state_node.done or depth == self.max_depth:
-            return 0
+            # delegate to env leaf evaluator if available
+            if hasattr(self.env, "evaluate_leaf"):
+                return self.env.evaluate_leaf()
+            llm_bonus = 0.0
+            if self.use_llm and self.plan_llm_lambda > 0 and self.llm_policy is not None:
+                goal_text = self.env.get_goal() if hasattr(self.env, "get_goal") else ""
+                obs_text = state_node.ob or state_node.state
+                llm_bonus = self.plan_llm_lambda * self.llm_policy.score_plan(goal_text, state_node.history, obs_text)
+            return llm_bonus
         action_node = np.random.choice(state_node.children, 1)[0]
         action = action_node.action
 

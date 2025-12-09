@@ -21,12 +21,16 @@ class TripGoal:
     attractions_per_day_min: int = 2
     attractions_per_day_max: int = 3
     preferences: List[str] = field(default_factory=list)
+    people_number: int = 1
     must_visit_cities: List[str] = field(default_factory=list)
     priority_cities: List[str] = field(default_factory=list)
     candidate_cities: List[str] = field(default_factory=list)
     fixed_city_order: List[str] = field(default_factory=list)
     transport_allowed_modes: Optional[List[str]] = None
     transport_forbidden_modes: List[str] = field(default_factory=list)
+    room_type: Optional[str] = None
+    house_rule: Optional[str] = None
+    required_cuisines: List[str] = field(default_factory=list)
     notes: Optional[str] = None
 
     def as_text(self) -> str:
@@ -94,13 +98,15 @@ class TravelKnowledgeBase:
             self.distances["destination_norm"] = self.distances["destination"].apply(self._normalize_city)
 
     def get_flights(self, origin: str, destination: str, top_k: int = 5,
-                    max_price: Optional[float] = None) -> List[Dict]:
+                    max_price: Optional[float] = None, date_str: Optional[str] = None) -> List[Dict]:
         orig = self._normalize_city(origin)
         dest = self._normalize_city(destination)
         df = self.flights[
             (self.flights["OriginCityName_norm"] == orig) &
             (self.flights["DestCityName_norm"] == dest)
         ]
+        if date_str is not None and "FlightDate" in df:
+            df = df[df["FlightDate"] == date_str]
         if max_price is not None:
             df = df[df["Price"] <= max_price]
         df = df.sort_values(by=["Price", "ActualElapsedTime"], ascending=[True, True]).head(top_k)
@@ -120,11 +126,27 @@ class TravelKnowledgeBase:
         ]
 
     def get_accommodations(self, city: str, top_k: int = 5,
-                           max_price: Optional[float] = None) -> List[Dict]:
+                           max_price: Optional[float] = None,
+                           room_type: Optional[str] = None,
+                           house_rule: Optional[str] = None,
+                           min_nights: Optional[int] = None) -> List[Dict]:
         city_norm = self._normalize_city(city)
         df = self.accommodations[self.accommodations["city_norm"] == city_norm]
         if max_price is not None:
             df = df[df["price"] <= max_price]
+        if room_type:
+            target = room_type.lower()
+            df = df[df["room type"].str.lower() == target]
+        if house_rule:
+            hr_lower = house_rule.lower()
+            if "pets" in hr_lower:
+                df = df[~df.get("house_rules", "").str.contains("No pets", case=False, na=False)]
+            if "parties" in hr_lower:
+                df = df[~df.get("house_rules", "").str.contains("No parties", case=False, na=False)]
+            if "smoking" in hr_lower:
+                df = df[~df.get("house_rules", "").str.contains("No smoking", case=False, na=False)]
+        if min_nights is not None and "minimum nights" in df.columns:
+            df = df[df["minimum nights"] <= min_nights]
         df = df.sort_values(by=["price", "review rate number"], ascending=[True, False]).head(top_k)
         return [
             {
@@ -136,6 +158,7 @@ class TravelKnowledgeBase:
                 "occupancy": row.get("maximum occupancy"),
                 "city": row["city"],
                 "house_rules": row.get("house_rules"),
+                "min_nights": row.get("minimum nights"),
             }
             for idx, row in df.iterrows()
         ]

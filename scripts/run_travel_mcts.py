@@ -183,22 +183,13 @@ def _structured_plan(env: TravelEnv) -> Dict[str, List[str]]:
 
 def _parse_nl_query(nl_query: str, base_url: str, model: str, timeout: float = 60.0) -> Dict[str, Any]:
     prompt = (
-        "Extract a JSON with fields: origin, destination, start_date, duration_days (int), budget (number), "
-        "visiting_city_number (int), must_visit_cities (array of strings), priority_cities (array of strings), "
-        "fixed_city_order (array of strings or null), transport_allow (array of strings or null), "
-        "transport_forbid (array of strings or null), preferences (array of strings), people_number (int or null). "
-        "Allowed transport values: \"flight\", \"taxi\", \"self-driving\". "
-        "Do NOT invent a city order; only set fixed_city_order when the user explicitly specifies an order like "
-        "\"first A then B\". Otherwise leave fixed_city_order as null. "
-        "If the user forbids flights or self-driving, add them to transport_forbid. "
-        "If the user explicitly restricts to some modes, put them in transport_allow; otherwise use null. "
-        "Use null for any missing scalar. Output ONLY JSON.\n\n"
-        "Example 1:\n"
-        "Query: We will fly from Indianapolis to Colorado for about a week, want to visit three cities there, bring our dog, try Mexican food, no self-driving. Budget 15000, around March 11 2022.\n"
-        "JSON: {\"origin\": \"Indianapolis\", \"destination\": \"Colorado\", \"start_date\": \"2022-03-11\", \"duration_days\": 7, \"budget\": 15000, \"visiting_city_number\": 3, \"must_visit_cities\": [], \"priority_cities\": [], \"fixed_city_order\": null, \"transport_allow\": null, \"transport_forbid\": [\"self-driving\"], \"preferences\": [\"Mexican\"], \"people_number\": null}\n\n"
-        "Example 2:\n"
-        "Query: First go to Salt Lake City then Moab from Houston for 3 days on March 23 2022, no flights, two people, like sushi.\n"
-        "JSON: {\"origin\": \"Houston\", \"destination\": \"Utah\", \"start_date\": \"2022-03-23\", \"duration_days\": 3, \"budget\": null, \"visiting_city_number\": 2, \"must_visit_cities\": [\"Salt Lake City\",\"Moab\"], \"priority_cities\": [], \"fixed_city_order\": [\"Salt Lake City\",\"Moab\"], \"transport_allow\": null, \"transport_forbid\": [\"flight\"], \"preferences\": [\"sushi\"], \"people_number\": 2}\n\n"
+        "Extract ONLY a JSON with fields: org, dest, days (int), visiting_city_number (int), "
+        "date (array of ISO dates, length=days), people_number (int), "
+        "local_constraint (object with keys: \"house rule\", \"cuisine\" (array or null), \"room type\", \"transportation\"), "
+        "budget (number). Use null for missing scalars/arrays. Do not add extra fields.\n\n"
+        "Example:\n"
+        "Query: Could you arrange a 3-day solo trip for me starting from Ontario and heading to Honolulu spanning from March 4th to March 6th, 2022, with a total budget of $3,200?\n"
+        "JSON: {\"org\": \"Ontario\", \"dest\": \"Honolulu\", \"days\": 3, \"visiting_city_number\": 1, \"date\": [\"2022-03-04\",\"2022-03-05\",\"2022-03-06\"], \"people_number\": 1, \"local_constraint\": {\"house rule\": null, \"cuisine\": null, \"room type\": null, \"transportation\": null}, \"budget\": 3200}\n\n"
         f"Query: {nl_query}"
     )
     raw = _call_local_llm(base_url, model, prompt, timeout=timeout)
@@ -257,12 +248,13 @@ def parse_args():
     parser.add_argument("--debug", action="store_true", help="Print debug info for root stats and rewards.")
 
     # LLM params
-    parser.add_argument("--local-model", default=None, help="Path/name of a local transformers model for scoring actions.")
+    parser.add_argument("--local-model", default="deepseek-r1:14b", help="Path/name of a local transformers model for scoring actions.")
     parser.add_argument("--embedding-model", default="all-MiniLM-L6-v2",
                         help="SentenceTransformer model name for similarity scoring.")
-    parser.add_argument("--device", default="cpu", help="Device string for LLM/embeddings, e.g. cuda:0, mps, or cpu.")
+    parser.add_argument("--device", default="mps", help="Device string for LLM/embeddings, e.g. cuda:0, mps, or cpu.")
     parser.add_argument("--parser-model", default=None, help="Model name/path for NL parsing (defaults to --local-model).")
     parser.add_argument("--parser-timeout", type=float, default=60.0, help="Timeout (s) for NL parser call.")
+    parser.add_argument("--plan-llm-lambda", type=float, default=0.0, help="Weight for plan-level LLM rollout scoring (terminal).")
     return parser.parse_args()
 
 
@@ -273,15 +265,46 @@ def main():
         parser_model = args.parser_model or args.local_model or "deepseek-r1:14b"
         parsed = _parse_nl_query(args.nl_query, args.local_base, parser_model, timeout=args.parser_timeout)
 
-    visit_num = parsed.get("visiting_city_number") or args.visiting_city_number or 1
+    visit_num = parsed.get("visiting_city_number") or parsed.get("visiting_city_number".replace("_", "")) or args.visiting_city_number or 1
+    origin_parsed = parsed.get("origin") or parsed.get("org")
+    destination_parsed = parsed.get("destination") or parsed.get("dest")
+    start_date_parsed = parsed.get("start_date") or (parsed.get("date")[0] if parsed.get("date") else None)
+    duration_parsed = parsed.get("duration_days") or parsed.get("days")
     must_cities = parsed.get("must_visit_cities") or args.must_city or []
     priority_cities = parsed.get("priority_cities") or args.priority_city or []
     fixed_city_order = parsed.get("fixed_city_order") or args.fixed_city_order or []
     candidate_cities = parsed.get("candidate_cities") or args.candidate_city or []
     if not (parsed.get("visiting_city_number") or args.visiting_city_number) and fixed_city_order:
         visit_num = len(fixed_city_order)
+    local_transport = None
+    local_constraint = parsed.get("local_constraint") or {}
+    if isinstance(local_constraint, dict):
+        local_transport = local_constraint.get("transportation")
+        local_room_type = local_constraint.get("room type")
+        local_house_rule = local_constraint.get("house rule")
+        local_cuisine = local_constraint.get("cuisine") or []
+    else:
+        local_transport = None
+        local_room_type = None
+        local_house_rule = None
+        local_cuisine = []
+
     allow_modes = parsed.get("transport_allow") or args.allow_transport or []
     forbid_modes = parsed.get("transport_forbid") or parsed.get("transport_forbidden") or args.forbid_transport or []
+    if local_transport:
+        if isinstance(local_transport, str):
+            if "no flight" in local_transport:
+                forbid_modes = forbid_modes or []
+                forbid_modes.append("flight")
+            if "no self-driving" in local_transport or "no driving" in local_transport:
+                forbid_modes = forbid_modes or []
+                forbid_modes.append("self-driving")
+        if isinstance(local_transport, list):
+            for t in local_transport:
+                if isinstance(t, str) and "no flight" in t:
+                    forbid_modes.append("flight")
+                if isinstance(t, str) and ("no self-driving" in t or "no driving" in t):
+                    forbid_modes.append("self-driving")
     def _norm_modes(modes):
         if modes is None:
             return []
@@ -293,23 +316,27 @@ def main():
     require_flight = (not args.no_flight) and ("flight" not in forbid_modes)
 
     goal = TripGoal(
-        origin=parsed.get("origin") or args.origin,
-        destination=parsed.get("destination") or args.destination,
-        start_date=parsed.get("start_date") or args.start_date,
-        duration_days=parsed.get("duration_days") or args.days,
+        origin=origin_parsed or args.origin,
+        destination=destination_parsed or args.destination,
+        start_date=start_date_parsed or args.start_date,
+        duration_days=duration_parsed or args.days,
         budget=parsed.get("budget") or args.budget,
         require_flight=require_flight,
         require_accommodation=not args.no_stay,
         visiting_city_number=visit_num,
         num_restaurants=args.restaurants,
         num_attractions=args.attractions,
-        preferences=parsed.get("preferences") or args.preferences,
+        preferences=parsed.get("preferences") or local_cuisine or args.preferences,
+        people_number=parsed.get("people_number") or parsed.get("people") or parsed.get("num_people") or 1,
         must_visit_cities=must_cities,
         priority_cities=priority_cities,
         candidate_cities=candidate_cities,
         fixed_city_order=fixed_city_order,
         transport_allowed_modes=allow_modes,
         transport_forbidden_modes=forbid_modes,
+        room_type=local_room_type,
+        house_rule=local_house_rule,
+        required_cuisines=local_cuisine if isinstance(local_cuisine, list) else [],
         notes=args.notes,
         return_required=True,
         meals_per_day=3,
@@ -335,6 +362,7 @@ def main():
         seed=args.seed,
         model=args.local_model,
         debug=args.debug,
+        plan_llm_lambda=args.plan_llm_lambda,
     )
     agent = MCTSAgent(mcts_args, env, policy=policy, uct_type=args.uct_type, use_llm=True)
 
