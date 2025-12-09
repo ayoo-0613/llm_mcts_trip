@@ -28,15 +28,27 @@ class TravelLLMPolicy:
         # Normalize device strings so "gpu" maps to the first CUDA device if available.
         if device.lower() == "gpu":
             device = "cuda:0"
+        elif device.lower().startswith("mps"):
+            device = "mps"
+        elif device.lower().startswith("cpu"):
+            device = "cpu"
         self.device = device
         self.generator = None
         if model_path and pipeline is not None:
             try:
-                self.generator = pipeline(
-                    "text-generation",
-                    model=model_path,
-                    device_map="auto" if device and "cuda" in device else None,
-                )
+                # Prefer explicit device on mac (mps) or cpu; otherwise fall back to auto for CUDA.
+                if device and device.startswith("cuda"):
+                    self.generator = pipeline(
+                        "text-generation",
+                        model=model_path,
+                        device_map="auto",
+                    )
+                else:
+                    self.generator = pipeline(
+                        "text-generation",
+                        model=model_path,
+                        device=self.device,
+                    )
             except Exception:
                 self.generator = None
 
@@ -138,3 +150,48 @@ class TravelLLMPolicy:
         scores = scores - np.max(scores)
         exp = np.exp(scores)
         return exp / np.sum(exp)
+
+    # -------- Plan-level scoring for terminal rollouts --------
+    def score_plan(self, goal: str, history: List[str], observation: str) -> float:
+        """Score a complete plan (terminal rollout) using the generator if available."""
+        if self.generator is None:
+            return 0.0
+        plan_text = "; ".join(history) if history else "None"
+        prompt = (
+            "You are evaluating a travel itinerary. Give a single score between 0 and 1 "
+            "for how reasonable and complete the plan is.\n"
+            f"Goal: {goal}\n"
+            f"Observation: {observation}\n"
+            f"Actions: {plan_text}\n"
+            "Score:"
+        )
+        try:
+            outputs = self.generator(
+                prompt,
+                max_new_tokens=8,
+                num_return_sequences=1,
+                do_sample=False,
+                temperature=0.0,
+                return_full_text=False,
+            )
+            text = outputs[0]["generated_text"]
+        except TypeError:
+            outputs = self.generator(
+                prompt,
+                max_new_tokens=8,
+                num_return_sequences=1,
+                do_sample=False,
+                temperature=0.0,
+            )
+            text = outputs[0]["generated_text"]
+        except Exception:
+            return 0.0
+
+        m = re.search(r"([01](?:\\.\\d+)?)", text)
+        if not m:
+            return 0.0
+        try:
+            return float(m.group(1))
+        except Exception:
+            return 0.0
+
