@@ -1,55 +1,72 @@
+from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import List, Optional, Dict, Any
 import os
 import pandas as pd
 
 
 @dataclass
 class TripGoal:
-    origin: str
-    destination: str
-    start_date: Optional[str] = None
-    duration_days: Optional[int] = None
+    # === 核心来自 JSON ===
+    origin: str                    # JSON: org
+    destination: str               # JSON: dest
+    start_date: Optional[str]      # JSON: date[0]（如果有）
+    duration_days: int             # JSON: days
+    visiting_city_number: int      # JSON: visiting_city_number
+    budget: Optional[float]        # JSON: budget
+    people_number: int = 1         # JSON: people_number（可选）
+
+    # local_constraint 拆成更结构化的字段（或直接保留原 dict 也可以）
+    house_rule: Optional[List[str]] = None      # local_constraint["house rule"]
+    cuisine: Optional[List[str]] = None         # local_constraint["cuisine"]
+    room_type: Optional[List[str]] = None       # local_constraint["room type"]
+    transportation: Optional[List[str]] = None  # local_constraint["transportation"]
+
+    # === 内部规划用的默认约束（不是 JSON 里有，而是你系统需要）===
     return_required: bool = True
-    budget: Optional[float] = None
     require_flight: bool = True
     require_accommodation: bool = True
-    visiting_city_number: int = 1
-    num_restaurants: int = 1
-    num_attractions: int = 1
+
     meals_per_day: int = 3
     attractions_per_day_min: int = 2
     attractions_per_day_max: int = 3
+
+    # 偏好（可从 cuisine / NL 里抽取）
     preferences: List[str] = field(default_factory=list)
-    must_visit_cities: List[str] = field(default_factory=list)
-    priority_cities: List[str] = field(default_factory=list)
-    candidate_cities: List[str] = field(default_factory=list)
-    fixed_city_order: List[str] = field(default_factory=list)
-    transport_allowed_modes: Optional[List[str]] = None
-    transport_forbidden_modes: List[str] = field(default_factory=list)
-    notes: Optional[str] = None
 
     def as_text(self) -> str:
         prefs = ", ".join(self.preferences) if self.preferences else "None"
         budget_text = f"${self.budget:.0f}" if self.budget is not None else "unspecified"
-        days_text = f"{self.duration_days} day(s)" if self.duration_days else "unspecified duration"
-        cities_txt = (
-            " | ".join(self.fixed_city_order)
-            if self.fixed_city_order
-            else (" | ".join(self.must_visit_cities) if self.must_visit_cities else "flexible")
-        )
+        days_text = f"{self.duration_days} day(s)"
         parts = [
             f"Trip from {self.origin} to {self.destination}",
             f"start date: {self.start_date or 'unspecified'}",
             f"duration: {days_text}",
             f"budget: {budget_text}",
-            f"preferences: {prefs}",
+            f"people: {self.people_number}",
             f"city count target: {self.visiting_city_number}",
-            f"city order: {cities_txt}",
+            f"preferences: {prefs}",
         ]
-        if self.notes:
-            parts.append(f"notes: {self.notes}")
         return "; ".join(parts)
+
+
+    def trip_goal_from_json(data: Dict[str, Any]) -> TripGoal:
+        """把 NL 抽取出来的 JSON 转成 TripGoal 对象。"""
+        lc = data.get("local_constraint") or {}
+        dates = data.get("date") or []
+        return TripGoal(
+            origin=data["org"],
+            destination=data["dest"],
+            start_date=dates[0] if dates else None,
+            duration_days=data["days"],
+            visiting_city_number=data.get("visiting_city_number", 1),
+            budget=data.get("budget"),
+            people_number=data.get("people_number", 1),
+            house_rule=lc.get("house rule"),
+            cuisine=lc.get("cuisine"),
+            room_type=lc.get("room type"),
+            transportation=lc.get("transportation"),
+        )
 
 
 class TravelKnowledgeBase:
@@ -60,6 +77,7 @@ class TravelKnowledgeBase:
         self.restaurants = self._load_csv("restaurants/clean_restaurant_2022.csv")
         self.attractions = self._load_csv("attractions/attractions.csv")
         self.distances = self._load_csv("googleDistanceMatrix/distance.csv")
+        self.states, self.cities, self.city_to_state, self.state_to_cities = self._load_background()
 
         self._normalize()
 
@@ -68,6 +86,42 @@ class TravelKnowledgeBase:
         if not os.path.exists(path):
             raise FileNotFoundError(f"Expected dataset at {path}")
         return pd.read_csv(path)
+
+    def _load_background(self):
+        """Load supporting background data: states, cities, and city-state pairs."""
+        bg_root = os.path.join(self.root, "background")
+        states = self._load_txt_lines(os.path.join(bg_root, "stateSet.txt"))
+        cities = self._load_txt_lines(os.path.join(bg_root, "citySet.txt"))
+        city_to_state = self._load_city_state_map(os.path.join(bg_root, "citySet_with_states.txt"))
+
+        state_to_cities: Dict[str, List[str]] = defaultdict(list)
+        for city, state in city_to_state.items():
+            if state:
+                state_to_cities[state].append(city)
+
+        return states, cities, city_to_state, dict(state_to_cities)
+
+    @staticmethod
+    def _load_txt_lines(path: str) -> List[str]:
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"Expected dataset at {path}")
+        with open(path, "r", encoding="utf-8") as f:
+            return [line.strip() for line in f if line.strip()]
+
+    @staticmethod
+    def _load_city_state_map(path: str) -> Dict[str, str]:
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"Expected dataset at {path}")
+        mapping: Dict[str, str] = {}
+        with open(path, "r", encoding="utf-8") as f:
+            for raw in f:
+                parts = raw.strip().split("\t")
+                if len(parts) < 2:
+                    continue
+                city, state = parts[0].strip(), parts[1].strip()
+                if city:
+                    mapping[city] = state
+        return mapping
 
     @staticmethod
     def _normalize_city(name: str) -> str:
@@ -92,6 +146,20 @@ class TravelKnowledgeBase:
         if "origin" in self.distances:
             self.distances["origin_norm"] = self.distances["origin"].apply(self._normalize_city)
             self.distances["destination_norm"] = self.distances["destination"].apply(self._normalize_city)
+
+        # Background normalization for quick lookups.
+        self.state_norm_map = {
+            self._normalize_city(state): state for state in self.states if state
+        }
+        self.city_to_state_norm = {
+            self._normalize_city(city): state for city, state in self.city_to_state.items() if city
+        }
+        self.state_to_cities_norm = {
+            self._normalize_city(state): list(cities) for state, cities in self.state_to_cities.items()
+        }
+        self.city_set_norm = {
+            self._normalize_city(city): city for city in self.cities if city
+        }
 
     def get_flights(self, origin: str, destination: str, top_k: int = 5,
                     max_price: Optional[float] = None) -> List[Dict]:
@@ -178,6 +246,18 @@ class TravelKnowledgeBase:
             for idx, row in df.iterrows()
         ]
 
+    def get_state_for_city(self, city: str) -> Optional[str]:
+        """Return the state a city belongs to, if known."""
+        return self.city_to_state_norm.get(self._normalize_city(city))
+
+    def get_cities_for_state(self, state: str) -> List[str]:
+        """Return all cities recorded for a given state."""
+        norm = self._normalize_city(state)
+        canonical = self.state_norm_map.get(norm)
+        if not canonical:
+            return []
+        return list(self.state_to_cities.get(canonical, []))
+
     def get_candidate_cities(self, destination_hint: Optional[str] = None,
                              must_visit: Optional[List[str]] = None,
                              priority: Optional[List[str]] = None,
@@ -185,6 +265,10 @@ class TravelKnowledgeBase:
         must_visit = must_visit or []
         priority = priority or []
         dest_norm = self._normalize_city(destination_hint) if destination_hint else None
+        state_hint = None
+        if destination_hint:
+            # If the hint is a state or maps to one through the background sets, remember it.
+            state_hint = self.state_norm_map.get(dest_norm) or self.city_to_state_norm.get(dest_norm)
 
         def _add_unique(src: List[str], acc: List[str], seen: set) -> None:
             for city in src:
@@ -200,6 +284,9 @@ class TravelKnowledgeBase:
         if destination_hint:
             _add_unique([destination_hint], candidates, seen)
 
+        if state_hint:
+            _add_unique(self.get_cities_for_state(state_hint), candidates, seen)
+
         if destination_hint:
             accom_matches = self.accommodations[
                 self.accommodations["city"].str.contains(destination_hint, case=False, na=False)
@@ -210,6 +297,9 @@ class TravelKnowledgeBase:
             ]["DestCityName"].unique().tolist()
             _add_unique(accom_matches, candidates, seen)
             _add_unique(flight_matches, candidates, seen)
+
+        if len(candidates) < top_k and self.cities:
+            _add_unique(self.cities, candidates, seen)
 
         # Fallback to most frequent accommodation cities to fill up to top_k
         if len(candidates) < top_k:

@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import sys
 from datetime import datetime, timedelta
@@ -181,6 +182,32 @@ def _structured_plan(env: TravelEnv) -> Dict[str, List[str]]:
     }
 
 
+def _extract_query_text(entry: Dict[str, Any]) -> str:
+    for key in ("query", "instruction", "prompt", "input", "user_query", "text", "nl_query"):
+        if key in entry and entry[key]:
+            return str(entry[key])
+    return ""
+
+
+def _load_goal_json(path: str) -> Dict[str, Any]:
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    # If the file contains a list, take the first element for single-run use.
+    if isinstance(data, list):
+        data = data[0] if data else {}
+    # Prefer already parsed goal fields if present.
+    if isinstance(data, dict):
+        if isinstance(data.get("parsed"), dict):
+            parsed = data["parsed"]
+        elif isinstance(data.get("goal"), dict):
+            parsed = data["goal"]
+        else:
+            parsed = data
+        parsed["__query_text"] = _extract_query_text(data)
+        return parsed
+    return {}
+
+
 def _parse_nl_query(nl_query: str, base_url: str, model: str, timeout: float = 60.0) -> Dict[str, Any]:
     prompt = (
         "Extract a JSON with fields: origin, destination, start_date, duration_days (int), budget (number), "
@@ -209,6 +236,85 @@ def _parse_nl_query(nl_query: str, base_url: str, model: str, timeout: float = 6
         return json.loads(raw)
     except Exception:
         return {}
+
+
+def _build_goal(parsed: Dict[str, Any], args) -> TripGoal:
+    visit_num = parsed.get("visiting_city_number") or args.visiting_city_number or 1
+    must_cities = parsed.get("must_visit_cities") or args.must_city or []
+    priority_cities = parsed.get("priority_cities") or args.priority_city or []
+    fixed_city_order = parsed.get("fixed_city_order") or args.fixed_city_order or []
+    candidate_cities = parsed.get("candidate_cities") or args.candidate_city or []
+    if not (parsed.get("visiting_city_number") or args.visiting_city_number) and fixed_city_order:
+        visit_num = len(fixed_city_order)
+
+    allow_modes = parsed.get("transport_allow") or args.allow_transport or []
+    forbid_modes = parsed.get("transport_forbid") or parsed.get("transport_forbidden") or args.forbid_transport or []
+
+    def _norm_modes(modes):
+        if modes is None:
+            return []
+        if isinstance(modes, str):
+            return [modes]
+        return list(modes)
+
+    allow_modes = [m.lower() for m in _norm_modes(allow_modes)] or None
+    forbid_modes = [m.lower() for m in _norm_modes(forbid_modes)]
+    require_flight = (not args.no_flight) and ("flight" not in forbid_modes)
+
+    return TripGoal(
+        origin=parsed.get("origin") or args.origin,
+        destination=parsed.get("destination") or args.destination,
+        start_date=parsed.get("start_date") or args.start_date,
+        duration_days=parsed.get("duration_days") or args.days,
+        budget=parsed.get("budget") or args.budget,
+        require_flight=require_flight,
+        require_accommodation=not args.no_stay,
+        visiting_city_number=visit_num,
+        num_restaurants=parsed.get("restaurants") or args.restaurants,
+        num_attractions=args.attractions,
+        preferences=parsed.get("preferences") or args.preferences,
+        must_visit_cities=must_cities,
+        priority_cities=priority_cities,
+        candidate_cities=candidate_cities,
+        fixed_city_order=fixed_city_order,
+        transport_allowed_modes=allow_modes,
+        transport_forbidden_modes=forbid_modes,
+        notes=args.notes or parsed.get("notes"),
+        return_required=True,
+        meals_per_day=3,
+        attractions_per_day_min=parsed.get("attractions_min") or 1,
+        attractions_per_day_max=parsed.get("attractions_max") or 1,
+    )
+
+
+def _default_output_path(goal: TripGoal, args) -> str:
+    """Consistent filename under plans_out/<split>/<idx>_origin_to_dest_date_daysd.json."""
+    directory = os.path.join("plans_out", args.set_type)
+    name = f"{args.query_index:03d}_{goal.origin}_to_{goal.destination}_{goal.start_date or 'na'}_{goal.duration_days or 'days'}d.json"
+    safe_name = name.replace(" ", "_").replace("/", "-")
+    return os.path.join(directory, safe_name)
+
+
+def _save_plan(output_path: str, query_text: Optional[str], parsed: Dict[str, Any],
+               goal: TripGoal, actions: List[str], success: bool, env: TravelEnv) -> None:
+    os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
+    structured = _structured_plan(env)
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(
+            {
+                "query": query_text,
+                "parsed": {k: v for k, v in parsed.items() if k != "__query_text"},
+                "goal": goal.as_text(),
+                "actions": actions,
+                "success": success,
+                "cost": env.state.cost,
+                "violations": env.state.violations,
+                "structured_plan": structured,
+            },
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
 
 
 def parse_args():
@@ -242,7 +348,13 @@ def parse_args():
     parser.add_argument("--local-base", default=os.getenv("LOCAL_LLM_BASE", "http://localhost:11434"),
                         help="Local LLM base URL for NL parsing (Ollama style).")
     parser.add_argument("--database-root", default="database", help="Path to the tabular dataset.")
-    parser.add_argument("--top-k", type=int, default=5, help="Limit of candidates per category.")
+    parser.add_argument("--top-k", type=int, default=30, help="Limit of candidates per category.")
+    parser.add_argument("--goal-json", default=None, help="Path to JSON file with parsed trip fields.")
+    parser.add_argument("--output-path", default=None, help="Path to save the generated plan JSON.")
+    parser.add_argument("--set-type", default="train", choices=["train", "validation", "test"],
+                        help="Output split folder (train/validation/test).")
+    parser.add_argument("--query-index", type=int, default=0,
+                        help="Index number used in the default output filename.")
 
     # MCTS params
     parser.add_argument("--exploration-constant", type=float, default=8.0)
@@ -250,7 +362,7 @@ def parse_args():
     parser.add_argument("--max-depth", type=int, default=12)
     parser.add_argument("--max-episode-len", type=int, default=30)
     parser.add_argument("--simulation-per-act", type=int, default=1)
-    parser.add_argument("--simulation-num", type=int, default=50)
+    parser.add_argument("--simulation-num", type=int, default=30)
     parser.add_argument("--discount-factor", type=float, default=0.95)
     parser.add_argument("--uct-type", default="PUCT")
     parser.add_argument("--seed", type=int, default=0)
@@ -260,7 +372,7 @@ def parse_args():
     parser.add_argument("--local-model", default=None, help="Path/name of a local transformers model for scoring actions.")
     parser.add_argument("--embedding-model", default="all-MiniLM-L6-v2",
                         help="SentenceTransformer model name for similarity scoring.")
-    parser.add_argument("--device", default="cpu", help="Device string for LLM/embeddings, e.g. cuda:0, mps, or cpu.")
+    parser.add_argument("--device", default="mps", help="Device string for LLM/embeddings, e.g. cuda:0, mps, or cpu.")
     parser.add_argument("--parser-model", default=None, help="Model name/path for NL parsing (defaults to --local-model).")
     parser.add_argument("--parser-timeout", type=float, default=60.0, help="Timeout (s) for NL parser call.")
     return parser.parse_args()
@@ -268,56 +380,18 @@ def parse_args():
 
 def main():
     args = parse_args()
-    parsed = {}
-    if args.nl_query:
+    parsed: Dict[str, Any] = {}
+    query_text: Optional[str] = None
+    if args.goal_json:
+        parsed = _load_goal_json(args.goal_json)
+        query_text = parsed.pop("__query_text", None)
+    elif args.nl_query:
         parser_model = args.parser_model or args.local_model or "deepseek-r1:14b"
         parsed = _parse_nl_query(args.nl_query, args.local_base, parser_model, timeout=args.parser_timeout)
 
-    visit_num = parsed.get("visiting_city_number") or args.visiting_city_number or 1
-    must_cities = parsed.get("must_visit_cities") or args.must_city or []
-    priority_cities = parsed.get("priority_cities") or args.priority_city or []
-    fixed_city_order = parsed.get("fixed_city_order") or args.fixed_city_order or []
-    candidate_cities = parsed.get("candidate_cities") or args.candidate_city or []
-    if not (parsed.get("visiting_city_number") or args.visiting_city_number) and fixed_city_order:
-        visit_num = len(fixed_city_order)
-    allow_modes = parsed.get("transport_allow") or args.allow_transport or []
-    forbid_modes = parsed.get("transport_forbid") or parsed.get("transport_forbidden") or args.forbid_transport or []
-    def _norm_modes(modes):
-        if modes is None:
-            return []
-        if isinstance(modes, str):
-            return [modes]
-        return list(modes)
-    allow_modes = [m.lower() for m in _norm_modes(allow_modes)] or None
-    forbid_modes = [m.lower() for m in _norm_modes(forbid_modes)]
-    require_flight = (not args.no_flight) and ("flight" not in forbid_modes)
-
-    goal = TripGoal(
-        origin=parsed.get("origin") or args.origin,
-        destination=parsed.get("destination") or args.destination,
-        start_date=parsed.get("start_date") or args.start_date,
-        duration_days=parsed.get("duration_days") or args.days,
-        budget=parsed.get("budget") or args.budget,
-        require_flight=require_flight,
-        require_accommodation=not args.no_stay,
-        visiting_city_number=visit_num,
-        num_restaurants=args.restaurants,
-        num_attractions=args.attractions,
-        preferences=parsed.get("preferences") or args.preferences,
-        must_visit_cities=must_cities,
-        priority_cities=priority_cities,
-        candidate_cities=candidate_cities,
-        fixed_city_order=fixed_city_order,
-        transport_allowed_modes=allow_modes,
-        transport_forbidden_modes=forbid_modes,
-        notes=args.notes,
-        return_required=True,
-        meals_per_day=3,
-        attractions_per_day_min=parsed.get("attractions_min") or 1,
-        attractions_per_day_max=parsed.get("attractions_max") or 1,
-    )
+    goal = _build_goal(parsed, args)
     if not goal.origin or not goal.destination:
-        raise ValueError("Origin and destination must be provided via arguments or NL query.")
+        raise ValueError("Origin and destination must be provided via JSON, arguments, or NL query.")
 
     kb = TravelKnowledgeBase(args.database_root)
     env = TravelEnv(kb, goal, max_steps=args.max_episode_len, top_k=args.top_k)
@@ -364,6 +438,13 @@ def main():
     success = env.is_success(env.state)
     print("\nFinal plan:")
     _print_plan(env, success, plan_actions)
+
+    output_path = args.output_path
+    if not output_path:
+        output_path = _default_output_path(goal, args)
+    if output_path:
+        _save_plan(output_path, query_text, parsed, goal, plan_actions, success, env)
+        print(f"\nSaved plan JSON to: {output_path}")
 
 
 if __name__ == "__main__":
