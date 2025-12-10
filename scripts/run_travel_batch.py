@@ -55,6 +55,7 @@ def _parse_nl_query(nl_query: str, base_url: str, model: str, timeout: float = 6
         "fixed_city_order (array of strings or null), transport_allow (array of strings or null), "
         "transport_forbid (array of strings or null), preferences (array of strings), people_number (int or null). "
         "Allowed transport values: \"flight\", \"taxi\", \"self-driving\". "
+        "Destination can be a state/region rather than a single city; keep the stated destination verbatim. "
         "Do NOT invent a city order; only set fixed_city_order when the user explicitly specifies an order like "
         "\"first A then B\". Otherwise leave fixed_city_order as null. "
         "If the user forbids flights or self-driving, add them to transport_forbid. "
@@ -233,6 +234,31 @@ def _structured_plan(env: TravelEnv) -> Dict[str, List[str]]:
     }
 
 
+def _state_hint(kb: TravelKnowledgeBase, name: Optional[str]) -> Optional[str]:
+    if not name:
+        return None
+    norm = kb._normalize_city(name)
+    return kb.state_norm_map.get(norm) or kb.city_to_state_norm.get(norm)
+
+
+def _goal_diagnostics(kb: TravelKnowledgeBase, goal: TripGoal) -> Dict[str, Any]:
+    dest_state = _state_hint(kb, goal.destination)
+    origin_state = _state_hint(kb, goal.origin)
+    state_city_pool = kb.get_cities_for_state(dest_state) if dest_state else []
+    must_states = {c: kb.get_state_for_city(c) or _state_hint(kb, c) for c in goal.must_visit_cities}
+    pri_states = {c: kb.get_state_for_city(c) or _state_hint(kb, c) for c in goal.priority_cities}
+    candidate_states = {c: kb.get_state_for_city(c) or _state_hint(kb, c) for c in goal.candidate_cities}
+    return {
+        "destination_state": dest_state,
+        "origin_state": origin_state,
+        "state_city_pool": state_city_pool,
+        "candidate_cities": goal.candidate_cities,
+        "must_city_states": must_states,
+        "priority_city_states": pri_states,
+        "candidate_city_states": candidate_states,
+    }
+
+
 def _extract_query_text(entry: Dict[str, Any]) -> str:
     for key in ("query", "instruction", "prompt", "input", "user_query", "text"):
         if key in entry and entry[key]:
@@ -252,7 +278,7 @@ def _load_queries(args) -> List[str]:
     return [_extract_query_text(x) for x in ds]
 
 
-def _build_goal(parsed: Dict[str, Any], args) -> TripGoal:
+def _build_goal(parsed: Dict[str, Any], args, kb: TravelKnowledgeBase) -> TripGoal:
     visit_num = parsed.get("visiting_city_number") or args.visiting_city_number or 1
     must_cities = parsed.get("must_visit_cities") or args.must_city or []
     priority_cities = parsed.get("priority_cities") or args.priority_city or []
@@ -273,16 +299,25 @@ def _build_goal(parsed: Dict[str, Any], args) -> TripGoal:
 
     allow_modes = [m.lower() for m in _norm_modes(allow_modes)] or None
     forbid_modes = [m.lower() for m in _norm_modes(forbid_modes)]
-    require_flight = ("flight" not in forbid_modes)
+    require_flight = (not args.no_flight) and ("flight" not in forbid_modes)
+
+    if kb and not candidate_cities and (parsed.get("destination") or args.destination):
+        dest_hint = parsed.get("destination") or args.destination
+        candidate_cities = kb.get_candidate_cities(
+            destination_hint=dest_hint,
+            must_visit=must_cities,
+            priority=priority_cities,
+            top_k=max(args.top_k * 2, visit_num),
+        )
 
     return TripGoal(
-        origin=parsed.get("origin"),
-        destination=parsed.get("destination"),
+        origin=parsed.get("origin") or args.origin,
+        destination=parsed.get("destination") or args.destination,
         start_date=parsed.get("start_date") or args.start_date,
         duration_days=parsed.get("duration_days") or args.days,
         budget=parsed.get("budget") or args.budget,
         require_flight=require_flight,
-        require_accommodation=True,
+        require_accommodation=not args.no_stay,
         num_restaurants=parsed.get("restaurants") or args.restaurants,
         num_attractions=args.attractions,
         preferences=parsed.get("preferences") or args.preferences,
@@ -297,6 +332,7 @@ def _build_goal(parsed: Dict[str, Any], args) -> TripGoal:
         meals_per_day=3,
         attractions_per_day_min=parsed.get("attractions_min") or 1,
         attractions_per_day_max=parsed.get("attractions_max") or 1,
+        notes=args.notes or parsed.get("notes"),
     )
 
 
@@ -344,6 +380,8 @@ def parse_args():
     parser.add_argument("--set-type", default="train", choices=["train", "validation", "test"],
                         help="HF dataset split to load.")
     parser.add_argument("--dataset-id", default="osunlp/TravelPlanner", help="HF dataset id to load queries from.")
+    parser.add_argument("--origin", default=None, help="Override origin city for all queries.")
+    parser.add_argument("--destination", default=None, help="Override destination city/state for all queries.")
     parser.add_argument("--start-date", default=None)
     parser.add_argument("--days", type=int, default=3)
     parser.add_argument("--visiting-city-number", type=int, default=None, help="Target number of cities to visit.")
@@ -351,6 +389,8 @@ def parse_args():
     parser.add_argument("--restaurants", type=int, default=3)
     parser.add_argument("--attractions", type=int, default=2)
     parser.add_argument("--preference", action="append", dest="preferences", default=[])
+    parser.add_argument("--no-flight", action="store_true", help="Do not require a flight.")
+    parser.add_argument("--no-stay", action="store_true", help="Do not require accommodation.")
     parser.add_argument("--must-city", action="append", dest="must_city", default=[],
                         help="City that must appear in the plan (can be repeated).")
     parser.add_argument("--priority-city", action="append", dest="priority_city", default=[],
@@ -385,6 +425,7 @@ def parse_args():
     parser.add_argument("--parser-timeout", type=float, default=180.0)
     parser.add_argument("--database-root", default="database")
     parser.add_argument("--save-dir", default="plans_out", help="Directory to save generated plans as JSON.")
+    parser.add_argument("--notes", default=None, help="Optional notes saved with each plan.")
     return parser.parse_args()
 
 
@@ -408,9 +449,10 @@ def main():
         if not parsed.get("origin") or not parsed.get("destination"):
             print(f"[{idx}] skip (parse failed): {q}")
             continue
-        goal = _build_goal(parsed, args)
+        goal = _build_goal(parsed, args, kb)
         result = _run_single(goal, kb, policy, args)
         structured = _structured_plan(result["env"])
+        diagnostics = _goal_diagnostics(kb, goal)
         filename = f"{idx:03d}_{goal.origin}_to_{goal.destination}_{goal.start_date or 'na'}_{goal.duration_days or 'days'}d.json"
         safe_name = filename.replace(" ", "_").replace("/", "-")
         out_path = os.path.join(args.save_dir, safe_name)
@@ -425,6 +467,7 @@ def main():
                     "cost": result["cost"],
                     "violations": result["violations"],
                     "structured_plan": structured,
+                    "diagnostics": diagnostics,
                 },
                 f,
                 ensure_ascii=False,
@@ -435,6 +478,7 @@ def main():
         print(f"Parsed goal: {goal.as_text()}")
         print(f"Success: {result['success']} | Cost: {result['cost']:.2f} | Violations: {result['violations']}")
         print(f"Actions: {result['actions']}")
+        print(f"Dest state hint: {diagnostics['destination_state']} | Candidate cities seeded: {diagnostics['candidate_cities']}")
         print(f"Saved to: {out_path}")
 
 

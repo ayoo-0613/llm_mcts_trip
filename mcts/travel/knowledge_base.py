@@ -33,6 +33,16 @@ class TripGoal:
 
     # 偏好（可从 cuisine / NL 里抽取）
     preferences: List[str] = field(default_factory=list)
+    # 规划扩展
+    must_visit_cities: List[str] = field(default_factory=list)
+    priority_cities: List[str] = field(default_factory=list)
+    candidate_cities: List[str] = field(default_factory=list)
+    fixed_city_order: List[str] = field(default_factory=list)
+    transport_allowed_modes: Optional[List[str]] = None
+    transport_forbidden_modes: List[str] = field(default_factory=list)
+    num_restaurants: int = 1
+    num_attractions: int = 1
+    notes: Optional[str] = None
 
     def as_text(self) -> str:
         prefs = ", ".join(self.preferences) if self.preferences else "None"
@@ -46,11 +56,14 @@ class TripGoal:
             f"people: {self.people_number}",
             f"city count target: {self.visiting_city_number}",
             f"preferences: {prefs}",
+            f"must cities: {', '.join(self.must_visit_cities) or 'None'}",
+            f"priority cities: {', '.join(self.priority_cities) or 'None'}",
         ]
         return "; ".join(parts)
 
 
-    def trip_goal_from_json(data: Dict[str, Any]) -> TripGoal:
+    @staticmethod
+    def trip_goal_from_json(data: Dict[str, Any]) -> "TripGoal":
         """把 NL 抽取出来的 JSON 转成 TripGoal 对象。"""
         lc = data.get("local_constraint") or {}
         dates = data.get("date") or []
@@ -66,6 +79,15 @@ class TripGoal:
             cuisine=lc.get("cuisine"),
             room_type=lc.get("room type"),
             transportation=lc.get("transportation"),
+            must_visit_cities=data.get("must_visit_cities", []),
+            priority_cities=data.get("priority_cities", []),
+            candidate_cities=data.get("candidate_cities", []),
+            fixed_city_order=data.get("fixed_city_order") or [],
+            transport_allowed_modes=data.get("transport_allow") or data.get("transport_allowed_modes"),
+            transport_forbidden_modes=data.get("transport_forbid") or data.get("transport_forbidden_modes", []),
+            num_restaurants=data.get("restaurants", 1),
+            num_attractions=data.get("attractions", 1),
+            notes=data.get("notes"),
         )
 
 
@@ -328,9 +350,13 @@ class TravelKnowledgeBase:
             return None
         try:
             import re
-            match = re.search(r"([0-9]+(?:\\.[0-9]+)?)", str(raw))
+            # 1) 先把千位分隔符去掉
+            s = str(raw).replace(",", "")
+            # 2) 再从中提取第一个数字（可带小数）
+            match = re.search(r"([0-9]+(?:\.[0-9]+)?)", s)
             if not match:
                 return None
             return float(match.group(1))
         except Exception:
             return None
+
