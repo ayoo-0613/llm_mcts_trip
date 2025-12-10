@@ -88,6 +88,7 @@ class MCTSAgent:
                 self.llm_policy = LLMPolicy(device="cuda:0", model=getattr(args, 'model', None))
             except Exception:
                 self.llm_policy = None
+        self._warned_no_llm = False
         self.q_network = None
         # self.valid_action_dict = env.action_dict
         # self.valid_action_dict = {} if valid_action_dict is None else valid_action_dict
@@ -167,6 +168,10 @@ class MCTSAgent:
             if hasattr(self.llm_policy, "score_actions"):
                 return self.llm_policy.score_actions(
                     history, ob, valid_actions, goal_text, self.round, self.discount_factor)
+        elif self.use_llm and not self._warned_no_llm and self.debug:
+            # Warn once so users know LLM prior is disabled.
+            print("[MCTS] use_llm=True but llm_policy is None; falling back to uniform.")
+            self._warned_no_llm = True
         # fallback to uniform
         uniform = np.ones((len(valid_actions),)) / len(valid_actions)
         return uniform, 0

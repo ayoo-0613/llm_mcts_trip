@@ -2,6 +2,7 @@ import re
 from typing import List, Sequence, Tuple
 
 import numpy as np
+import requests
 
 try:
     import torch  # optional; only needed for embeddings / MPS/CUDA
@@ -21,10 +22,11 @@ except ImportError:  # transformers is optional
 
 
 class TravelLLMPolicy:
-    """Lightweight policy scorer that can run on local LLMs or embeddings."""
+    """Lightweight policy scorer that can run on local LLMs (pipeline/HTTP) or embeddings."""
 
-    def __init__(self, device: str = "cpu", model_path: str = None,
-                 embedding_model: str = "all-MiniLM-L6-v2"):
+    def __init__(self, device: str = "mps", model_path: str = None,
+                 embedding_model: str = "all-MiniLM-L6-v2",
+                 llm_base: str = None, llm_timeout: float = 30.0, debug: bool = False):
         # Normalize device strings so "gpu" maps to the first CUDA device if available.
         if device.lower() == "gpu":
             device = "cuda:0"
@@ -33,6 +35,10 @@ class TravelLLMPolicy:
         elif device.lower().startswith("cpu"):
             device = "cpu"
         self.device = device
+        self.llm_base = llm_base
+        self.llm_timeout = llm_timeout
+        self.model_name = model_path
+        self.debug = debug
         self.generator = None
         if model_path and pipeline is not None:
             try:
@@ -69,11 +75,20 @@ class TravelLLMPolicy:
 
         if self.generator is not None:
             scores = self._score_with_generator(history, observation, valid_actions, goal)
+            if self.debug:
+                print("[LLMPolicy] scored with local pipeline" if scores is not None else "[LLMPolicy] pipeline scoring failed")
         else:
             scores = None
 
+        if (scores is None or len(scores) != len(valid_actions)) and self.llm_base:
+            scores = self._score_with_remote(history, observation, valid_actions, goal)
+            if self.debug:
+                print("[LLMPolicy] scored with remote LLM" if scores is not None else "[LLMPolicy] remote scoring failed")
+
         if scores is None or len(scores) != len(valid_actions):
             scores = self._score_with_embeddings(history, observation, valid_actions, goal)
+            if self.debug:
+                print("[LLMPolicy] scored with embeddings" if scores is not None else "[LLMPolicy] embedding scoring failed; returning zeros")
 
         if scores is None or len(scores) != len(valid_actions):
             scores = np.zeros(len(valid_actions))
@@ -128,6 +143,18 @@ class TravelLLMPolicy:
             return None
         return np.array(scores)
 
+    def _score_with_remote(self, history: List[str], observation: str,
+                           valid_actions: Sequence[str], goal: str) -> np.ndarray:
+        prompt = self._build_prompt(history, observation, valid_actions, goal)
+        text = self._call_local_llm(prompt)
+        if not text:
+            return None
+        numbers = re.findall(r"[01](?:\\.\\d+)?", text)
+        scores = [float(n) for n in numbers[:len(valid_actions)]]
+        if len(scores) != len(valid_actions):
+            return None
+        return np.array(scores)
+
     @staticmethod
     def _build_prompt(history: List[str], observation: str,
                       valid_actions: Sequence[str], goal: str) -> str:
@@ -153,8 +180,8 @@ class TravelLLMPolicy:
 
     # -------- Plan-level scoring for terminal rollouts --------
     def score_plan(self, goal: str, history: List[str], observation: str) -> float:
-        """Score a complete plan (terminal rollout) using the generator if available."""
-        if self.generator is None:
+        """Score a complete plan (terminal rollout) using the generator or remote LLM if available."""
+        if self.generator is None and not self.llm_base:
             return 0.0
         plan_text = "; ".join(history) if history else "None"
         prompt = (
@@ -165,27 +192,35 @@ class TravelLLMPolicy:
             f"Actions: {plan_text}\n"
             "Score:"
         )
-        try:
-            outputs = self.generator(
-                prompt,
-                max_new_tokens=8,
-                num_return_sequences=1,
-                do_sample=False,
-                temperature=0.0,
-                return_full_text=False,
-            )
-            text = outputs[0]["generated_text"]
-        except TypeError:
-            outputs = self.generator(
-                prompt,
-                max_new_tokens=8,
-                num_return_sequences=1,
-                do_sample=False,
-                temperature=0.0,
-            )
-            text = outputs[0]["generated_text"]
-        except Exception:
-            return 0.0
+        text = None
+        if self.generator is not None:
+            try:
+                outputs = self.generator(
+                    prompt,
+                    max_new_tokens=8,
+                    num_return_sequences=1,
+                    do_sample=False,
+                    temperature=0.0,
+                    return_full_text=False,
+                )
+                text = outputs[0]["generated_text"]
+            except TypeError:
+                outputs = self.generator(
+                    prompt,
+                    max_new_tokens=8,
+                    num_return_sequences=1,
+                    do_sample=False,
+                    temperature=0.0,
+                )
+                text = outputs[0]["generated_text"]
+            except Exception:
+                text = None
+        if text is None:
+            text = self._call_local_llm(prompt)
+            if text is None:
+                return 0.0
+            if self.debug:
+                print("[LLMPolicy] plan scored via remote LLM")
 
         m = re.search(r"([01](?:\\.\\d+)?)", text)
         if not m:
@@ -194,3 +229,28 @@ class TravelLLMPolicy:
             return float(m.group(1))
         except Exception:
             return 0.0
+
+    def _call_local_llm(self, prompt: str) -> str:
+        """Call a local LLM server (e.g., Ollama) for scoring."""
+        if not self.llm_base or not self.model_name:
+            return None
+        endpoint = f"{self.llm_base.rstrip('/')}/api/generate"
+        payload = {
+            "model": self.model_name,
+            "prompt": prompt,
+            "temperature": 0.0,
+            "stream": False,
+        }
+        try:
+            resp = requests.post(endpoint, json=payload, timeout=self.llm_timeout)
+            if resp.status_code >= 400:
+                return None
+            data = resp.json()
+        except Exception:
+            return None
+        if self.debug:
+            print(f"[LLMPolicy] POST {endpoint} -> {resp.status_code}")
+        for key in ("response", "text", "output", "content"):
+            if key in data and isinstance(data[key], str):
+                return data[key]
+        return None

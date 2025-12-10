@@ -85,7 +85,7 @@ class Action:
 
 class TravelEnv:
     def __init__(self, knowledge_base: TravelKnowledgeBase, goal: TripGoal,
-                 max_steps: int = 40, top_k: int = 5,
+                 max_steps: int = 40, top_k: int =30,
                  reward_cfg: Optional[Dict] = None):
         self.kb = knowledge_base
         self.goal = goal
@@ -553,12 +553,19 @@ class TravelEnv:
                 if pri not in candidates:
                     candidates.append(pri)
             for city in candidates:
-                if self.kb._normalize_city(city) == origin_norm:
+                # Allow choosing the origin if origin == destination; otherwise skip adding the origin city again.
+                if self.kb._normalize_city(city) == origin_norm and self.goal.origin != self.goal.destination:
                     continue
                 if city not in state.city_seq:
                     action = f"choose_city:{city}"
                     self.action_payloads[action] = ("choose_city", city)
                     actions.append(action)
+            # Fallback: if no candidates, still allow selecting the destination once to avoid immediate finish.
+            if not actions and self.goal.destination and self.goal.destination not in state.city_seq:
+                city = self.goal.destination
+                action = f"choose_city:{city}"
+                self.action_payloads[action] = ("choose_city", city)
+                actions.append(action)
             if not actions:
                 actions.append("finish")
             return actions

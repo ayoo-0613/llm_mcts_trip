@@ -125,7 +125,7 @@ class TravelKnowledgeBase:
             for _, row in df.iterrows()
         ]
 
-    def get_accommodations(self, city: str, top_k: int = 5,
+    def get_accommodations(self, city: str, top_k: int = 20,
                            max_price: Optional[float] = None,
                            room_type: Optional[str] = None,
                            house_rule: Optional[str] = None,
@@ -164,7 +164,7 @@ class TravelKnowledgeBase:
         ]
 
     def get_restaurants(self, city: str, preferences: Optional[List[str]] = None,
-                        top_k: int = 5) -> List[Dict]:
+                        top_k: int = 50) -> List[Dict]:
         city_norm = self._normalize_city(city)
         df = self.restaurants[self.restaurants["City_norm"] == city_norm]
         prefs = [self._normalize_city(p) for p in preferences] if preferences else []
@@ -185,7 +185,7 @@ class TravelKnowledgeBase:
             for idx, row in df.iterrows()
         ]
 
-    def get_attractions(self, city: str, top_k: int = 5) -> List[Dict]:
+    def get_attractions(self, city: str, top_k: int = 20) -> List[Dict]:
         city_norm = self._normalize_city(city)
         df = self.attractions[self.attractions["City_norm"] == city_norm]
         df = df.head(top_k)
@@ -204,7 +204,7 @@ class TravelKnowledgeBase:
     def get_candidate_cities(self, destination_hint: Optional[str] = None,
                              must_visit: Optional[List[str]] = None,
                              priority: Optional[List[str]] = None,
-                             top_k: int = 10) -> List[str]:
+                             top_k: int = 3) -> List[str]:
         must_visit = must_visit or []
         priority = priority or []
         dest_norm = self._normalize_city(destination_hint) if destination_hint else None

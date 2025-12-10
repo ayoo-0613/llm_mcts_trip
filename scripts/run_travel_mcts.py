@@ -254,6 +254,9 @@ def parse_args():
     parser.add_argument("--device", default="mps", help="Device string for LLM/embeddings, e.g. cuda:0, mps, or cpu.")
     parser.add_argument("--parser-model", default=None, help="Model name/path for NL parsing (defaults to --local-model).")
     parser.add_argument("--parser-timeout", type=float, default=60.0, help="Timeout (s) for NL parser call.")
+    parser.add_argument("--policy-base", default=None, help="Local LLM base URL for action scoring (defaults to --local-base).")
+    parser.add_argument("--policy-timeout", type=float, default=20.0, help="Timeout (s) for each policy LLM call.")
+    parser.add_argument("--policy-debug", action="store_true", help="Print LLM policy scoring path (pipeline/remote/embed).")
     parser.add_argument("--plan-llm-lambda", type=float, default=0.0, help="Weight for plan-level LLM rollout scoring (terminal).")
     return parser.parse_args()
 
@@ -348,7 +351,15 @@ def main():
 
     kb = TravelKnowledgeBase(args.database_root)
     env = TravelEnv(kb, goal, max_steps=args.max_episode_len, top_k=args.top_k)
-    policy = TravelLLMPolicy(device=args.device, model_path=args.local_model, embedding_model=args.embedding_model)
+    policy_base = args.policy_base or args.local_base
+    policy = TravelLLMPolicy(
+        device=args.device,
+        model_path=args.local_model,
+        embedding_model=args.embedding_model,
+        llm_base=policy_base,
+        llm_timeout=args.policy_timeout,
+        debug=args.policy_debug,
+    )
 
     mcts_args = SimpleNamespace(
         exploration_constant=args.exploration_constant,

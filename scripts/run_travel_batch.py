@@ -24,7 +24,7 @@ from mcts.travel.llm_policy import TravelLLMPolicy  # noqa: E402
 from mcts.travel.travel_env import TravelEnv  # noqa: E402
 
 
-def _call_local_llm(base_url: str, model: str, prompt: str, timeout: float = 60.0) -> Optional[str]:
+def _call_local_llm(base_url: str, model: str, prompt: str, timeout: float = 160.0) -> Optional[str]:
     endpoint = f"{base_url.rstrip('/')}/api/generate"
     payload = {
         "model": model,
@@ -396,7 +396,7 @@ def parse_args():
                         help="Allow only these transport modes (flight, taxi, self-driving).")
     parser.add_argument("--forbid-transport", action="append", dest="forbid_transport", default=[],
                         help="Ban these transport modes (flight, taxi, self-driving).")
-    parser.add_argument("--top-k", type=int, default=5)
+    parser.add_argument("--top-k", type=int, default=50)
     parser.add_argument("--limit", type=int, default=5, help="Max number of queries to process.")
     parser.add_argument("--start-index", type=int, default=0, help="Start index into query list (0-based).")
     # MCTS params
@@ -420,6 +420,9 @@ def parse_args():
     parser.add_argument("--save-dir", default="plans_out", help="Directory to save generated plans as JSON.")
     parser.add_argument("--plan-llm-lambda", type=float, default=0.0,
                         help="Weight for plan-level LLM scoring at terminal rollout (0 disables).")
+    parser.add_argument("--policy-base", default=None, help="Local LLM base URL for action scoring (defaults to --local-base).")
+    parser.add_argument("--policy-timeout", type=float, default=20.0, help="Timeout (s) for each policy LLM call.")
+    parser.add_argument("--policy-debug", action="store_true", help="Print LLM policy scoring path (pipeline/remote/embed).")
     return parser.parse_args()
 
 
@@ -432,7 +435,15 @@ def main():
 
     parser_model = args.parser_model or args.local_model or "deepseek-r1:14b"
     kb = TravelKnowledgeBase(args.database_root)
-    policy = TravelLLMPolicy(device=args.device, model_path=args.local_model, embedding_model="all-MiniLM-L6-v2")
+    policy_base = args.policy_base or args.local_base
+    policy = TravelLLMPolicy(
+        device=args.device,
+        model_path=args.local_model,
+        embedding_model="all-MiniLM-L6-v2",
+        llm_base=policy_base,
+        llm_timeout=args.policy_timeout,
+        debug=args.policy_debug,
+    )
     save_root = os.path.join(args.save_dir, args.set_type)
     os.makedirs(save_root, exist_ok=True)
 
