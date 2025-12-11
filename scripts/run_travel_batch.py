@@ -4,7 +4,6 @@ import os
 import re
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
-
 import requests
 
 try:
@@ -168,10 +167,20 @@ def _parse_date_safe(date_str: str) -> Optional[datetime]:
 def _structured_plan(env: TravelEnv) -> Dict[str, List[str]]:
     state = env.state
     goal = env.goal
-    cities = list(state.city_sequence or goal.fixed_city_order or ([goal.destination] if goal.destination else []))
 
-    segments = env._segments(state)
+    # 目的地城市列表：优先使用已选城市序列，其次 fixed_city_order，最后 fallback 到 destination
+    cities = list(
+        state.city_sequence
+        or goal.fixed_city_order
+        or ([goal.destination] if goal.destination else [])
+    )
+
+    # ----------------------------
+    # 1. 交通方式（先根据状态中已经选好的 segment_modes）
+    # ----------------------------
+    segments = env._segments(state)  # [(idx, src, dst), ...]
     transport_methods: List[str] = []
+
     for idx, src, dst in segments:
         seg = state.segment_modes.get(idx)
         if seg:
@@ -180,7 +189,8 @@ def _structured_plan(env: TravelEnv) -> Dict[str, List[str]]:
             if mode == "flight" and isinstance(detail, dict):
                 transport_methods.append(
                     f"Flight {detail.get('id', '?')}, from {src} to {dst}, "
-                    f"Departure Time: {detail.get('depart', '?')}, Arrival Time: {detail.get('arrive', '?')}, "
+                    f"Departure Time: {detail.get('depart', '?')}, "
+                    f"Arrival Time: {detail.get('arrive', '?')}, "
                     f"cost: {detail.get('price', detail.get('cost', '?'))}"
                 )
             else:
@@ -193,14 +203,51 @@ def _structured_plan(env: TravelEnv) -> Dict[str, List[str]]:
         else:
             transport_methods.append(f"{src}->{dst} missing mode")
 
+    # ----------------------------
+    # 2. 交通日期：根据“每天所在城市”推断每段交通发生的日期
+    # ----------------------------
     transport_dates: List[str] = []
     if goal.start_date:
         start_dt = _parse_date_safe(goal.start_date)
         if start_dt:
-            for i in range(len(transport_methods)):
-                transport_dates.append((start_dt + timedelta(days=i)).strftime("%Y-%m-%d"))
+            total_days = goal.duration_days or env.total_days
 
-    restaurants_set = []
+            for idx, src, dst in segments:
+                transport_day = None  # 1-based day index
+
+                # 特例：最后一段返回 origin，优先对齐到行程最后一天
+                if dst == goal.origin and total_days:
+                    transport_day = total_days
+                else:
+                    # 一般情况：找到第一个 day，使 day 所在城市 == 该段的目标城市 dst
+                    for day in range(1, total_days + 1):
+                        city_d = env._city_for_day(state, day)
+                        if city_d == dst:
+                            transport_day = day
+                            break
+
+                # 兜底逻辑（极端情况下找不到 dst 对应的 day）
+                if transport_day is None:
+                    if src == goal.origin:
+                        # 出发段：默认第一天
+                        transport_day = 1
+                    elif dst == goal.origin and total_days:
+                        # 返回段：默认最后一天
+                        transport_day = total_days
+                    else:
+                        # 其他情况：用段编号近似映射到天数，但不超过 total_days
+                        if total_days:
+                            transport_day = min(idx + 1, total_days)
+                        else:
+                            transport_day = idx + 1  # 没有 total_days 信息时的兜底
+
+                date_str = (start_dt + timedelta(days=transport_day - 1)).strftime("%Y-%m-%d")
+                transport_dates.append(date_str)
+
+    # ----------------------------
+    # 3. 餐厅去重列表
+    # ----------------------------
+    restaurants_set: List[str] = []
     seen_rest = set()
     for day in range(1, env.total_days + 1):
         for slot, meal in state.meals.get(day, {}).items():
@@ -208,7 +255,10 @@ def _structured_plan(env: TravelEnv) -> Dict[str, List[str]]:
                 restaurants_set.append(f"{meal['name']}, {meal.get('city', goal.destination)}")
                 seen_rest.add(meal["id"])
 
-    attractions_set = []
+    # ----------------------------
+    # 4. 景点去重列表
+    # ----------------------------
+    attractions_set: List[str] = []
     seen_att = set()
     for day_map in state.attractions.values():
         for att in day_map.values():
@@ -216,7 +266,10 @@ def _structured_plan(env: TravelEnv) -> Dict[str, List[str]]:
                 attractions_set.append(f"{att['name']}, {att.get('city')}")
                 seen_att.add(att["id"])
 
-    accommodations_list = []
+    # ----------------------------
+    # 5. 每个城市的住宿
+    # ----------------------------
+    accommodations_list: List[str] = []
     for city in cities:
         stay = state.city_stays.get(city)
         if stay:
@@ -232,7 +285,6 @@ def _structured_plan(env: TravelEnv) -> Dict[str, List[str]]:
         "attractions": attractions_set,
         "accommodations": accommodations_list,
     }
-
 
 def _state_hint(kb: TravelKnowledgeBase, name: Optional[str]) -> Optional[str]:
     if not name:

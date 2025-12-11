@@ -212,7 +212,10 @@ class MCTSAgent:
 
         if state_node.done or depth == self.max_depth:
             return 0, state_node
-
+        if not state_node.children or len(state_node.children) == 0:
+            state_node.done = True
+            return 0, state_node
+        
         best_action_node_idx = self.greedy_action_node(state_node, self.exploration_constant, self.bonus_constant)
         best_action_node = state_node.children[best_action_node_idx]
         rollout_next = False
@@ -337,6 +340,13 @@ class MCTSAgent:
     def rollout(self, state_node, depth):
         if state_node.done or depth == self.max_depth:
             return 0
+        if not state_node.children or len(state_node.children) == 0:
+            print("[DEBUG][MCTS] rollout hit empty-children leaf at depth", depth)
+            if hasattr(state_node, "ob"):
+                print("  ob:", state_node.ob)
+            return 0.0
+
+        
         action_node = np.random.choice(state_node.children, 1)[0]
         action = action_node.action
 

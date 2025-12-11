@@ -301,6 +301,27 @@ class TravelKnowledgeBase:
                 expanded.append(loc)
         return expanded
 
+    def has_any_transport(self, origin: str, destination: str) -> bool:
+        """
+        Check if any transport data exists between two locations (flight or distance entry).
+        """
+        orig = self._normalize_city(origin)
+        dest = self._normalize_city(destination)
+        has_flight = not self.flights[
+            (self.flights.get("OriginCityName_norm") == orig) &
+            (self.flights.get("DestCityName_norm") == dest)
+        ].empty
+        if has_flight:
+            return True
+        if "origin_norm" in self.distances and "destination_norm" in self.distances:
+            has_distance = not self.distances[
+                (self.distances["origin_norm"] == orig) &
+                (self.distances["destination_norm"] == dest)
+            ].empty
+            if has_distance:
+                return True
+        return False
+
     def get_candidate_cities(self, destination_hint: Optional[str] = None,
                              must_visit: Optional[List[str]] = None,
                              priority: Optional[List[str]] = None,
