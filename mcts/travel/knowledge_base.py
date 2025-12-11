@@ -280,6 +280,27 @@ class TravelKnowledgeBase:
             return []
         return list(self.state_to_cities.get(canonical, []))
 
+    def expand_locations_to_cities(self, locations: List[str]) -> List[str]:
+        """Expand mixed city/state names into a unique city list."""
+        expanded: List[str] = []
+        seen = set()
+        for loc in locations or []:
+            norm = self._normalize_city(loc)
+            if not norm or norm in seen:
+                continue
+            seen.add(norm)
+            # If it's a state, add all its cities; otherwise keep as-is
+            cities = self.get_cities_for_state(loc)
+            if cities:
+                for city in cities:
+                    city_norm = self._normalize_city(city)
+                    if city_norm not in seen:
+                        seen.add(city_norm)
+                        expanded.append(city)
+            else:
+                expanded.append(loc)
+        return expanded
+
     def get_candidate_cities(self, destination_hint: Optional[str] = None,
                              must_visit: Optional[List[str]] = None,
                              priority: Optional[List[str]] = None,
@@ -359,4 +380,3 @@ class TravelKnowledgeBase:
             return float(match.group(1))
         except Exception:
             return None
-

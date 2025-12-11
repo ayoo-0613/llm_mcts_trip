@@ -106,6 +106,7 @@ class TravelEnv:
 
         # 初始化城市/phase（单城直接跳过城市搜索）
         self._ensure_destination_required()
+        self._expand_state_locations()
         self._init_cities_and_phase(self.base_state)
 
         self.state = self.base_state.clone()
@@ -129,12 +130,55 @@ class TravelEnv:
         dest = self.goal.destination
         if not dest:
             return
-        dest_norm = self.kb._normalize_city(dest)
-        must_norms = {self.kb._normalize_city(c) for c in self.goal.must_visit_cities}
-        if dest_norm not in must_norms and not self.goal.fixed_city_order:
-            self.goal.must_visit_cities.append(dest)
-        if dest not in self.goal.candidate_cities:
-            self.goal.candidate_cities.append(dest)
+        # 如果 destination 是州，则不把州名当作 must_city，而是将该州城市注入候选池
+        dest_cities = self.kb.get_cities_for_state(dest)
+        if dest_cities:
+            print(f"[DEBUG] Destination '{dest}' recognized as state with cities: {dest_cities}")
+        if dest_cities:
+            for city in dest_cities:
+                if city not in self.goal.candidate_cities:
+                    self.goal.candidate_cities.append(city)
+        else:
+            dest_norm = self.kb._normalize_city(dest)
+            must_norms = {self.kb._normalize_city(c) for c in self.goal.must_visit_cities}
+            if dest_norm not in must_norms and not self.goal.fixed_city_order:
+                self.goal.must_visit_cities.append(dest)
+            if dest not in self.goal.candidate_cities:
+                self.goal.candidate_cities.append(dest)
+
+    def _expand_state_locations(self) -> None:
+        """
+        如果 Goal 中包含州名而非城市，提前展开成城市列表，避免 CITY 阶段无候选。
+        """
+        # 候选城市：优先使用已给定的，若为空则保持空由后续逻辑填充
+        expanded_candidates = self.kb.expand_locations_to_cities(self.goal.candidate_cities)
+        if self.goal.candidate_cities:
+            print(f"[DEBUG] Expanded candidate inputs {self.goal.candidate_cities} -> {expanded_candidates}")
+
+        # must/priority 中的州也注入到候选池
+        expanded_must = self.kb.expand_locations_to_cities(self.goal.must_visit_cities)
+        expanded_priority = self.kb.expand_locations_to_cities(self.goal.priority_cities)
+        if expanded_must:
+            print(f"[DEBUG] Expanded must cities {self.goal.must_visit_cities} -> {expanded_must}")
+        if expanded_priority:
+            print(f"[DEBUG] Expanded priority cities {self.goal.priority_cities} -> {expanded_priority}")
+
+        for city in expanded_must + expanded_priority:
+            if city not in expanded_candidates:
+                expanded_candidates.append(city)
+
+        # 如果候选仍为空且目的地存在，按目的地（州/城）自动生成
+        if not expanded_candidates and self.goal.destination:
+            expanded_candidates = self.kb.get_candidate_cities(
+                destination_hint=self.goal.destination,
+                must_visit=self.goal.must_visit_cities,
+                priority=self.goal.priority_cities,
+                top_k=max(self.top_k * 2, self.goal.visiting_city_number or 1),
+            )
+            print(f"[DEBUG] Generated candidates from destination '{self.goal.destination}': {expanded_candidates}")
+
+        if expanded_candidates:
+            self.goal.candidate_cities = expanded_candidates
 
     def _init_cities_and_phase(self, state: TravelState) -> None:
         """
@@ -167,6 +211,7 @@ class TravelEnv:
             self.base_state = self._empty_state()
             self.base_history = []
             self._ensure_destination_required()
+            self._expand_state_locations()
             self._init_cities_and_phase(self.base_state)
 
         self.state = self.base_state.clone()
@@ -385,23 +430,37 @@ class TravelEnv:
         # 严格模式
         self.action_payloads = {}
         actions = self._build_phase_actions(state, relaxed=False)
+        print(f"[DEBUG] Strict actions (phase={state.phase}): {len(actions)}")
         if actions:
             return actions
 
         # 放宽模式（允许重复/超预算等，由 reward 惩罚）
         self.action_payloads = {}
         actions = self._build_phase_actions(state, relaxed=True)
+        print(f"[DEBUG] Relaxed actions (phase={state.phase}): {len(actions)}")
         return actions  # 可能为空，由 MCTS 上层自己处理
 
     def _build_phase_actions(self, state: TravelState, relaxed: bool) -> List[str]:
         if state.phase == Phase.CITY:
-            return self._build_city_actions(state, relaxed=relaxed)
+            acts = self._build_city_actions(state, relaxed=relaxed)
+            if not acts:
+                print(f"[DEBUG] City phase produced 0 actions (relaxed={relaxed})")
+            return acts
         elif state.phase == Phase.SEGMENT:
-            return self._build_segment_actions(state, relaxed=relaxed)
+            acts = self._build_segment_actions(state, relaxed=relaxed)
+            if not acts:
+                print(f"[DEBUG] Segment phase produced 0 actions (relaxed={relaxed}) | segments={self._segments(state)}")
+            return acts
         elif state.phase == Phase.STAY:
-            return self._build_stay_actions(state, relaxed=relaxed)
+            acts = self._build_stay_actions(state, relaxed=relaxed)
+            if not acts:
+                print(f"[DEBUG] Stay phase produced 0 actions (relaxed={relaxed}) | cities={state.city_sequence}")
+            return acts
         elif state.phase == Phase.DAILY:
-            return self._build_daily_actions(state, relaxed=relaxed)
+            acts = self._build_daily_actions(state, relaxed=relaxed)
+            if not acts:
+                print(f"[DEBUG] Daily phase produced 0 actions (relaxed={relaxed}) | day count={self.total_days}")
+            return acts
         else:
             return []
 
@@ -437,6 +496,10 @@ class TravelEnv:
                     self.action_payloads[action] = ("choose_city", city)
                     actions.append(action)
 
+        if state.phase == Phase.CITY:
+            print(f"[DEBUG] City phase valid_actions (relaxed={relaxed}): {actions}")
+        else:
+            print(f"[DEBUG] Phase {state.phase} produced {len(actions)} actions (relaxed={relaxed})")
         return actions
 
     def _build_segment_actions(self, state: TravelState, relaxed: bool = False) -> List[str]:

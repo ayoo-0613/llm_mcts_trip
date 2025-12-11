@@ -442,7 +442,10 @@ def main():
     os.makedirs(args.save_dir, exist_ok=True)
 
     for idx, q in enumerate(subset, start=args.start_index + 1):
+        # 先输出原始 query，方便观察
+        print(f"\n=== Query {idx} (raw) === {q}")
         parsed = _parse_nl_query(q, args.local_base, parser_model, timeout=args.parser_timeout)
+        print(f"LLM parsed JSON: {json.dumps(parsed, ensure_ascii=False)}")
         if not parsed.get("origin") or not parsed.get("destination"):
             fallback = _fallback_parse(q)
             parsed = {**fallback, **parsed}
@@ -450,6 +453,8 @@ def main():
             print(f"[{idx}] skip (parse failed): {q}")
             continue
         goal = _build_goal(parsed, args, kb)
+        # Debug: show candidate city list after state expansion
+        print(f"[DEBUG] Goal candidate_cities: {goal.candidate_cities}")
         result = _run_single(goal, kb, policy, args)
         structured = _structured_plan(result["env"])
         diagnostics = _goal_diagnostics(kb, goal)
@@ -467,7 +472,6 @@ def main():
                     "cost": result["cost"],
                     "violations": result["violations"],
                     "structured_plan": structured,
-                    "diagnostics": diagnostics,
                 },
                 f,
                 ensure_ascii=False,

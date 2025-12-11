@@ -203,8 +203,24 @@ def _load_goal_json(path: str) -> Dict[str, Any]:
             parsed = data["goal"]
         else:
             parsed = data
-        parsed["__query_text"] = _extract_query_text(data)
-        return parsed
+    else:
+        parsed = data
+    parsed["__query_text"] = _extract_query_text(data)
+    return parsed
+
+
+def _load_goal_json_inline(text: str) -> Dict[str, Any]:
+    """Parse inline JSON (debug helper)."""
+    try:
+        return json.loads(text)
+    except Exception:
+        try:
+            start = text.find("{")
+            end = text.rfind("}")
+            if start != -1 and end != -1:
+                return json.loads(text[start : end + 1])
+        except Exception:
+            return {}
     return {}
 
 
@@ -350,6 +366,7 @@ def parse_args():
     parser.add_argument("--database-root", default="database", help="Path to the tabular dataset.")
     parser.add_argument("--top-k", type=int, default=30, help="Limit of candidates per category.")
     parser.add_argument("--goal-json", default=None, help="Path to JSON file with parsed trip fields.")
+    parser.add_argument("--parsed-json", default=None, help="Inline JSON string with parsed trip fields (debug).")
     parser.add_argument("--output-path", default=None, help="Path to save the generated plan JSON.")
     parser.add_argument("--set-type", default="train", choices=["train", "validation", "test"],
                         help="Output split folder (train/validation/test).")
@@ -382,14 +399,24 @@ def main():
     args = parse_args()
     parsed: Dict[str, Any] = {}
     query_text: Optional[str] = None
-    if args.goal_json:
+    if args.parsed_json:
+        parsed = _load_goal_json_inline(args.parsed_json)
+        query_text = parsed.pop("__query_text", None)
+        print(f"[DEBUG] Parsed JSON (inline): {json.dumps(parsed, ensure_ascii=False)}")
+    elif args.goal_json:
         parsed = _load_goal_json(args.goal_json)
         query_text = parsed.pop("__query_text", None)
     elif args.nl_query:
         parser_model = args.parser_model or args.local_model or "deepseek-r1:14b"
         parsed = _parse_nl_query(args.nl_query, args.local_base, parser_model, timeout=args.parser_timeout)
+        print(f"[DEBUG] Parsed JSON (LLM): {json.dumps(parsed, ensure_ascii=False)}")
+        query_text = query_text or args.nl_query
+    else:
+        # no parsing source; rely on CLI args
+        parsed = {}
 
     goal = _build_goal(parsed, args)
+    print(f"[DEBUG] Goal candidate_cities: {goal.candidate_cities}")
     if not goal.origin or not goal.destination:
         raise ValueError("Origin and destination must be provided via JSON, arguments, or NL query.")
 
