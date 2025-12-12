@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import re
+import time
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 import requests
@@ -507,7 +508,9 @@ def main():
         goal = _build_goal(parsed, args, kb)
         # Debug: show candidate city list after state expansion
         print(f"[DEBUG] Goal candidate_cities: {goal.candidate_cities}")
+        t0 = time.perf_counter()
         result = _run_single(goal, kb, policy, args)
+        elapsed = time.perf_counter() - t0
         structured = _structured_plan(result["env"])
         diagnostics = _goal_diagnostics(kb, goal)
         filename = f"{idx:03d}_{goal.origin}_to_{goal.destination}_{goal.start_date or 'na'}_{goal.duration_days or 'days'}d.json"
@@ -524,6 +527,7 @@ def main():
                     "cost": result["cost"],
                     "violations": result["violations"],
                     "structured_plan": structured,
+                    "elapsed_seconds": elapsed,
                 },
                 f,
                 ensure_ascii=False,
@@ -535,6 +539,7 @@ def main():
         print(f"Success: {result['success']} | Cost: {result['cost']:.2f} | Violations: {result['violations']}")
         print(f"Actions: {result['actions']}")
         print(f"Dest state hint: {diagnostics['destination_state']} | Candidate cities seeded: {diagnostics['candidate_cities']}")
+        print(f"Elapsed: {elapsed:.2f}s")
         print(f"Saved to: {out_path}")
 
 

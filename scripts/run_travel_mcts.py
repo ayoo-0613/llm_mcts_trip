@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import sys
+import time
 from datetime import datetime, timedelta
 from types import SimpleNamespace
 from typing import Any, Dict, Optional, List
@@ -312,7 +313,8 @@ def _default_output_path(goal: TripGoal, args) -> str:
 
 
 def _save_plan(output_path: str, query_text: Optional[str], parsed: Dict[str, Any],
-               goal: TripGoal, actions: List[str], success: bool, env: TravelEnv) -> None:
+               goal: TripGoal, actions: List[str], success: bool, env: TravelEnv,
+               elapsed_seconds: Optional[float] = None) -> None:
     os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
     structured = _structured_plan(env)
     with open(output_path, "w", encoding="utf-8") as f:
@@ -326,6 +328,7 @@ def _save_plan(output_path: str, query_text: Optional[str], parsed: Dict[str, An
                 "cost": env.state.cost,
                 "violations": env.state.violations,
                 "structured_plan": structured,
+                "elapsed_seconds": elapsed_seconds,
             },
             f,
             ensure_ascii=False,
@@ -439,6 +442,7 @@ def main():
     )
     agent = MCTSAgent(mcts_args, env, policy=policy, uct_type=args.uct_type, use_llm=True)
 
+    t0 = time.perf_counter()
     obs, valid_actions = env.reset()
     history = list(env.base_history)
     done = False
@@ -463,6 +467,7 @@ def main():
             break
 
     success = env.is_success(env.state)
+    elapsed = time.perf_counter() - t0
     print("\nFinal plan:")
     _print_plan(env, success, plan_actions)
 
@@ -470,8 +475,8 @@ def main():
     if not output_path:
         output_path = _default_output_path(goal, args)
     if output_path:
-        _save_plan(output_path, query_text, parsed, goal, plan_actions, success, env)
-        print(f"\nSaved plan JSON to: {output_path}")
+        _save_plan(output_path, query_text, parsed, goal, plan_actions, success, env, elapsed_seconds=elapsed)
+        print(f"\nSaved plan JSON to: {output_path} | Elapsed: {elapsed:.2f}s")
 
 
 if __name__ == "__main__":
