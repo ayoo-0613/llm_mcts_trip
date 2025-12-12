@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import itertools
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Dict, List, Optional, Tuple
@@ -243,6 +244,17 @@ class TravelEnv:
         self.base_state = self.state.clone()
         self.base_history = list(self.history)
         return obs, reward, done, history, valid_actions
+
+    def replay(self, history: List[str]) -> None:
+        """
+        Reset env and replay a sequence of actions to rebuild state.
+        Used by MCTS simulations to align world state with history.
+        """
+        self.reset()
+        for act in history:
+            if act is None:
+                break
+            self.step(act)
 
     # ----------------------------
     # Cost / helper 统计
@@ -503,50 +515,106 @@ class TravelEnv:
         city_target = self.goal.visiting_city_number or 1
         origin = self.goal.origin
 
-        # 城市还不够 → 搜索候选城市
-        if len(state.city_sequence) < city_target:
-            candidates = self.goal.candidate_cities or self.kb.get_candidate_cities(
-                destination_hint=self.goal.destination,
-                must_visit=self.goal.must_visit_cities,
-                priority=self.goal.priority_cities,
-                top_k=max(self.top_k * 2, city_target),
-            )
-            for must in self.goal.must_visit_cities:
-                if must not in candidates:
-                    candidates.insert(0, must)
-            for pri in self.goal.priority_cities:
-                if pri not in candidates:
-                    candidates.append(pri)
+        # 已经满足城市数量 → 不需要更多动作
+        if len(state.city_sequence) >= city_target:
+            return actions
 
-            def _is_feasible_city_sequence(seq: List[str]) -> bool:
-                """增量检查：只校验新加入城市相关的路径，并带缓存。"""
-                if not seq:
-                    return False
-                require_flight = True  # 每个 segment 必须可飞行
-                if len(seq) == 1:
-                    # 只需 origin -> city
-                    return self._has_transport_cached(origin, seq[0], require_flight=require_flight)
-                # 只检查新增的边：last -> new
-                return self._has_transport_cached(seq[-2], seq[-1], require_flight=require_flight)
+        # 组合模式：一次性决定全组城市
+        candidates = self.goal.candidate_cities or self.kb.get_candidate_cities(
+            destination_hint=self.goal.destination,
+            must_visit=self.goal.must_visit_cities,
+            priority=self.goal.priority_cities,
+            top_k=max(self.top_k * 2, city_target),
+        )
+        for must in self.goal.must_visit_cities:
+            if must not in candidates:
+                candidates.insert(0, must)
+        for pri in self.goal.priority_cities:
+            if pri not in candidates:
+                candidates.append(pri)
 
-            for city in candidates:
-                if city not in state.city_sequence:
-                    new_seq = state.city_sequence + [city]
-                    if _is_feasible_city_sequence(new_seq):
-                        action = f"choose_city:{city}"
-                        self.action_payloads[action] = ("choose_city", city)
-                        actions.append(action)
+        # 不重复选择已在序列里的城市
+        prefix = list(state.city_sequence)
+        remaining_needed = city_target - len(prefix)
+        pool = [c for c in candidates if c not in prefix]
+        # 控制组合爆炸：限制搜索池大小
+        pool = pool[: max(self.top_k * 3, remaining_needed)]
 
-            # relaxed 模式下仍然为空时，可以允许重复城市（极端兜底）
-            if relaxed and not actions and candidates:
-                for city in candidates:
-                    new_seq = state.city_sequence + [city]
-                    if _is_feasible_city_sequence(new_seq):
-                        action = f"choose_city:{city}"
-                        self.action_payloads[action] = ("choose_city", city)
-                        actions.append(action)
+        combos: List[Tuple[List[str], float]] = []
+
+        for combo in itertools.permutations(pool, remaining_needed):
+            seq = prefix + list(combo)
+            score = self._score_city_bundle(seq, origin)
+            if score is None:
+                continue
+            combos.append((seq, score))
+            if len(combos) > 500:  # 防止极端爆炸
+                break
+
+        # relaxed 模式：允许重复城市兜底
+        if relaxed and not combos:
+            for combo in itertools.permutations(pool + prefix, remaining_needed):
+                seq = prefix + list(combo)
+                score = self._score_city_bundle(seq, origin, allow_repeat=True)
+                if score is None:
+                    continue
+                combos.append((seq, score))
+                if len(combos) > 500:
+                    break
+
+        # 按分数排序取前 top_k
+        combos = sorted(combos, key=lambda x: x[1], reverse=True)[: self.top_k]
+        for seq, score in combos:
+            action = f"choose_city_bundle:[{','.join(seq)}]"
+            self.action_payloads[action] = ("choose_city_bundle", seq)
+            actions.append(action)
 
         return actions
+
+    def _score_city_bundle(self, seq: List[str], origin: str, allow_repeat: bool = False) -> Optional[float]:
+        """对城市组合进行快速打分；返回 None 表示不可行。"""
+        if not seq:
+            return None
+        # 去重检查
+        if not allow_repeat and len(set(seq)) != len(seq):
+            return None
+
+        score = 0.0
+
+        # origin -> 第一城 的可达性（如 require_flight 则强制航班）
+        if self.goal.require_flight:
+            if not self._has_transport_cached(origin, seq[0], require_flight=True):
+                return None
+            score += 1.0
+        else:
+            if self.kb.has_any_transport(origin, seq[0], require_flight=False):
+                score += 0.5
+
+        # 城市间连通性（允许距离矩阵）
+        for i in range(len(seq) - 1):
+            if not self.kb.has_any_transport(seq[i], seq[i + 1], require_flight=False):
+                return None
+            score += 0.4
+
+        # 返程连通性（如果需要返程）
+        if self.goal.return_required:
+            if self.goal.require_flight:
+                # 返程必须可飞，否则直接丢弃该组合
+                if not self._has_transport_cached(seq[-1], origin, require_flight=True):
+                    return None
+                score += 0.5
+            else:
+                if self.kb.has_any_transport(seq[-1], origin, require_flight=False):
+                    score += 0.2
+
+        # 数据覆盖：住宿/餐饮/景点桶
+        for city in seq:
+            has_stay = bool(self.kb.get_accommodations(city, top_k=1))
+            has_rest = bool(self.kb.get_restaurants(city, preferences=self.goal.preferences, top_k=1))
+            has_att = bool(self.kb.get_attractions(city, top_k=1))
+            score += 0.1 * has_stay + 0.1 * has_rest + 0.1 * has_att
+
+        return score
 
     def _build_segment_actions(self, state: TravelState, relaxed: bool = False) -> List[str]:
         actions: List[str] = []
@@ -561,10 +629,8 @@ class TravelEnv:
                 continue
 
             # --- 关键逻辑：去程/返程在 require_flight=True 时只能用 flight ---
-            if self.goal.require_flight and (idx == 0 or idx == last_idx):
-                mode_candidates = ["flight"]
-            else:
-                mode_candidates = self._allowed_transport_modes()
+            require_flight_this = self.goal.require_flight and (idx == 0 or idx == last_idx)
+            mode_candidates = ["flight"] if require_flight_this else self._allowed_transport_modes()
 
             for mode in mode_candidates:
                 if mode == "flight":
@@ -597,6 +663,25 @@ class TravelEnv:
                     self.action_payloads[action] = ("segment_mode", idx, mode, payload_detail)
                     actions.append(action)
 
+            # 返程/去程无航班时，relaxed 下允许非航班兜底，避免死锁
+            if require_flight_this and not actions and relaxed:
+                alt_modes = [m for m in self._allowed_transport_modes() if m != "flight"]
+                for mode in alt_modes:
+                    dist_km = self.kb.distance_km(src, dst)
+                    if dist_km is None:
+                        continue
+                    cost = dist_km
+                    action = f"move:seg{idx}:{mode}:{src}->{dst} {dist_km:.0f}km cost {cost:.0f}"
+                    payload_detail = {
+                        "origin": src,
+                        "destination": dst,
+                        "distance": dist_km,
+                        "cost": cost,
+                        "fallback_nonflight": True,
+                    }
+                    self.action_payloads[action] = ("segment_mode", idx, mode, payload_detail)
+                    actions.append(action)
+
         return actions
 
 
@@ -620,9 +705,14 @@ class TravelEnv:
 
     def _build_daily_actions(self, state: TravelState, relaxed: bool = False) -> List[str]:
         actions: List[str] = []
+        used_global_rest = self._restaurant_ids_all(state)
+        used_att_all = self._attraction_ids_all(state)
 
-        # ---------- 餐厅 ----------
+        # ---------- 餐厅：只为第一个缺口槽位生成动作 ----------
         for day in range(1, self.total_days + 1):
+            missing_slots = [slot for slot, meal in state.meals[day].items() if meal is None]
+            if not missing_slots:
+                continue
             city = self._city_for_day(state, day)
             restaurants = self.kb.get_restaurants(
                 city,
@@ -630,46 +720,52 @@ class TravelEnv:
                 top_k=self.top_k if not relaxed else self.top_k * 3,
             )
             used_ids = self._restaurant_ids_day(state, day)
-            used_global = self._restaurant_ids_all(state)
+            slot = missing_slots[0]
+            for r in restaurants:
+                if not relaxed:
+                    # 严格模式：禁止当天重复 / 跨天重复
+                    if r["id"] in used_ids or r["id"] in used_global_rest:
+                        continue
+                # relaxed 模式：允许重复，交给 reward 去惩罚
+                action = (
+                    f"eat:d{day}:{slot}:{r['id']} "
+                    f"{r['name']} {r['cuisines']} ${r['cost']:.0f} rating {r['rating']}"
+                )
+                self.action_payloads[action] = ("meal", day, slot, r)
+                actions.append(action)
+            # 只处理一个槽位，如果这一槽位已经产出动作则立即退出
+            if actions:
+                break
 
-            for slot in self.meal_slots:
-                if state.meals[day][slot] is None:
-                    for r in restaurants:
-                        if not relaxed:
-                            # 严格模式：禁止当天重复 / 跨天重复
-                            if r["id"] in used_ids or r["id"] in used_global:
-                                continue
-                        # relaxed 模式：允许重复，交给 reward 去惩罚
-                        action = (
-                            f"eat:d{day}:{slot}:{r['id']} "
-                            f"{r['name']} {r['cuisines']} ${r['cost']:.0f} rating {r['rating']}"
-                        )
-                        self.action_payloads[action] = ("meal", day, slot, r)
-                        actions.append(action)
+        # ---------- 景点：只为第一个缺口槽位生成动作（在餐厅无可用动作或餐已填满时） ----------
+        if not actions:
+            for day in range(1, self.total_days + 1):
+                current_att = self._count_attractions_day(state, day)
+                if current_att >= self.goal.attractions_per_day_max:
+                    continue
 
-        # ---------- 景点 ----------
-        for day in range(1, self.total_days + 1):
-            city = self._city_for_day(state, day)
-            current_att = self._count_attractions_day(state, day)
-            if current_att >= self.goal.attractions_per_day_max:
-                continue
+                missing_slots = [slot for slot, att in state.attractions[day].items() if att is None]
+                if not missing_slots:
+                    continue
 
-            attractions = self.kb.get_attractions(
-                city,
-                top_k=self.top_k if not relaxed else self.top_k * 3,
-            )
-            used_att = self._attraction_ids_all(state)
-
-            for slot in self.attraction_slots:
-                if state.attractions[day][slot] is None:
-                    for a in attractions:
-                        if not relaxed:
-                            if a["id"] in used_att:
-                                continue
-                        # relaxed 模式：允许重复景点，由 reward 惩罚
-                        action = f"visit:d{day}:{slot}:{a['id']} {a['name']} @ {a['city']}"
-                        self.action_payloads[action] = ("attraction", day, slot, a)
-                        actions.append(action)
+                city = self._city_for_day(state, day)
+                attractions = self.kb.get_attractions(
+                    city,
+                    top_k=self.top_k if not relaxed else self.top_k * 3,
+                )
+                if not attractions:
+                    # 数据稀疏兜底：该城市没有景点数据时跳过该槽位约束
+                    continue
+                slot = missing_slots[0]
+                for a in attractions:
+                    if not relaxed and a["id"] in used_att_all:
+                        continue
+                    # relaxed 模式：允许重复景点，由 reward 惩罚
+                    action = f"visit:d{day}:{slot}:{a['id']} {a['name']} @ {a['city']}"
+                    self.action_payloads[action] = ("attraction", day, slot, a)
+                    actions.append(action)
+                if actions:
+                    break
 
         # 只在严格模式下且结构完整时提供 finish
         if not relaxed and self._can_finish(state):
@@ -716,9 +812,12 @@ class TravelEnv:
         for day in range(1, self.total_days + 1):
             if any(meal is None for meal in state.meals[day].values()):
                 return False
-            att_count = self._count_attractions_day(state, day)
-            if att_count < self.goal.attractions_per_day_min:
-                return False
+            city = self._city_for_day(state, day)
+            # 若该城市无景点数据，则跳过景点约束
+            if self.kb.get_attractions(city):
+                att_count = self._count_attractions_day(state, day)
+                if att_count < self.goal.attractions_per_day_min:
+                    return False
         if self.goal.budget is not None and state.cost > self.goal.budget:
             return False
         return True
@@ -805,11 +904,33 @@ class TravelEnv:
                     self.state.outbound_flight = detail
                 if self.goal.return_required and last_idx is not None and seg_idx == last_idx:
                     self.state.return_flight = detail
+            else:
+                # 非航班兜底：如果要求航班但使用了其他交通，记录违规
+                if self.goal.require_flight and (seg_idx == 0 or (self.goal.return_required and seg_idx == last_idx)):
+                    self._ensure_violation(self.state, "missing_flight")
 
         elif kind == "stay_city":
             _, city, stay = payload
             if self.state.city_stays.get(city) is None:
                 self.state.city_stays[city] = stay
+
+        elif kind == "choose_city_bundle":
+            _, seq = payload
+            self.state.city_sequence = list(seq)
+            # route 变化 → 清空已有决策
+            self.state.segment_modes = {}
+            self.state.outbound_flight = None
+            self.state.return_flight = None
+            self.state.city_stays = {}
+            # 清空每日餐饮/景点
+            self.state.meals = {day: {slot: None for slot in self.meal_slots}
+                                for day in range(1, self.total_days + 1)}
+            self.state.attractions = {day: {slot: None for slot in self.attraction_slots}
+                                      for day in range(1, self.total_days + 1)}
+            self.state.preference_matches = 0
+            self.state.violations = []
+            self.state.is_terminal = False
+            self.state.cost = 0.0
 
         elif kind == "meal":
             _, day, slot, rest = payload

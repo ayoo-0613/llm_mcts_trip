@@ -25,6 +25,8 @@ class StateNode:
         self.N = 0
         self.children = []
         self.children_probs = []
+        self.children_prob_pool = []
+        self.remaining_action_indices = []
         self.reward = reward / (1 - DISCOUNT_FACTOR)
         self.score = 0
         self.done = done
@@ -102,6 +104,9 @@ class MCTSAgent:
         self.state_dict = {}
         self.action_embedding = {}
         self.replay_file = replay_file
+        self.pw_c = getattr(args, "pw_c", 2.0)
+        self.pw_alpha = getattr(args, "pw_alpha", 0.5)
+        self.pw_min_children = max(1, int(getattr(args, "pw_min_children", 6)))
 
     # ----------------------------
     # Utility
@@ -109,6 +114,32 @@ class MCTSAgent:
     @staticmethod
     def state_id(history: list):
         return " ".join(history)
+
+    def _progressive_widen_limit(self, state_node):
+        if state_node is None or not state_node.valid_actions:
+            return 0
+        allowed = int(self.pw_c * (state_node.N ** self.pw_alpha)) if state_node.N > 0 else 0
+        return min(len(state_node.valid_actions), max(self.pw_min_children, allowed))
+
+    def _progressive_widen(self, state_node):
+        """Expand children gradually based on visit count to cap branching factor."""
+        if state_node is None:
+            return
+        if not state_node.valid_actions:
+            state_node.children = []
+            state_node.children_probs = []
+            return
+        limit = self._progressive_widen_limit(state_node)
+        while len(state_node.children) < limit and state_node.remaining_action_indices:
+            act_idx = state_node.remaining_action_indices.pop(0)
+            action = state_node.valid_actions[act_idx]
+            state_node.children.append(ActionNode(action))
+            prob_pool = state_node.children_prob_pool or []
+            if prob_pool and act_idx < len(prob_pool):
+                prob = prob_pool[act_idx]
+            else:
+                prob = 1.0 / len(state_node.valid_actions)
+            state_node.children_probs.append(prob)
 
     # ----------------------------
     # Policy scoring
@@ -153,22 +184,20 @@ class MCTSAgent:
         # children_probs
         if not use_llm:
             if not state.valid_actions:
-                state.children_probs = np.array([])
+                probs_full = np.array([])
             else:
-                state.children_probs = np.ones((len(state.valid_actions),)) / len(state.valid_actions)
+                probs_full = np.ones((len(state.valid_actions),)) / len(state.valid_actions)
         else:
-            state.children_probs, state.predicted_reward = self._score_actions_with_policy(
+            probs_full, state.predicted_reward = self._score_actions_with_policy(
                 history, ob, state.valid_actions
             )
 
         self.state_dict[state.id] = state
         state.children = []
-        if isinstance(state.valid_actions, dict):
-            for k in state.valid_actions:
-                state.children.append(ActionNode(state.valid_actions[k]))
-        else:
-            for a in state.valid_actions:
-                state.children.append(ActionNode(a))
+        state.children_prob_pool = probs_full.tolist() if hasattr(probs_full, "tolist") else list(probs_full)
+        state.children_probs = []
+        state.remaining_action_indices = list(range(len(state.valid_actions)))
+        self._progressive_widen(state)
 
         return state
 
@@ -196,22 +225,20 @@ class MCTSAgent:
         # children_probs
         if not use_llm:
             if not state.valid_actions:
-                state.children_probs = np.array([])
+                probs_full = np.array([])
             else:
-                state.children_probs = np.ones((len(state.valid_actions),)) / len(state.valid_actions)
+                probs_full = np.ones((len(state.valid_actions),)) / len(state.valid_actions)
         else:
-            state.children_probs, state.predicted_reward = self._score_actions_with_policy(
+            probs_full, state.predicted_reward = self._score_actions_with_policy(
                 history, ob, state.valid_actions
             )
 
         self.state_dict[state.id] = state
         state.children = []
-        if isinstance(state.valid_actions, dict):
-            for k in state.valid_actions:
-                state.children.append(ActionNode(state.valid_actions[k]))
-        else:
-            for a in state.valid_actions:
-                state.children.append(ActionNode(a))
+        state.children_prob_pool = probs_full.tolist() if hasattr(probs_full, "tolist") else list(probs_full)
+        state.children_probs = []
+        state.remaining_action_indices = list(range(len(state.valid_actions)))
+        self._progressive_widen(state)
 
         return state
 
@@ -235,9 +262,9 @@ class MCTSAgent:
             return None
 
         # 多次仿真
-        for _ in tqdm(range(self.simulation_num)):
-            self.env.reset()
-            self.env.history = init_history.copy()
+        for _ in range(self.simulation_num):
+            # 重建真实状态，而不是仅设置 history
+            self.env.replay(init_history)
             _, root = self.simulate(self.root, 0)
             self.root = root
 
@@ -261,6 +288,8 @@ class MCTSAgent:
         # 终止条件
         if state_node.done or depth == self.max_depth:
             return 0, state_node
+
+        self._progressive_widen(state_node)
 
         # 无 children → 死路（没有后续动作）
         if not state_node.children or len(state_node.children) == 0:
@@ -334,6 +363,7 @@ class MCTSAgent:
     def rollout(self, state_node, depth):
         if state_node.done or depth == self.max_depth:
             return 0.0
+        self._progressive_widen(state_node)
         if not state_node.children or len(state_node.children) == 0:
             return 0.0
 

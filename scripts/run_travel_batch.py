@@ -412,6 +412,9 @@ def _run_single(goal: TripGoal, kb: TravelKnowledgeBase, policy: TravelLLMPolicy
     plan_actions = []
     for step in range(args.max_episode_len):
         action = agent.search(obs, history, step, valid_actions, done)
+        if action is None:
+            print("[WARN] MCTS returned None, terminating early")
+            break
         obs, reward, done, history, valid_actions = env.apply_action(action)
         plan_actions.append(action)
         if done:

@@ -1,6 +1,6 @@
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Tuple, Set
 import os
 import pandas as pd
 
@@ -102,6 +102,7 @@ class TravelKnowledgeBase:
         self.states, self.cities, self.city_to_state, self.state_to_cities = self._load_background()
 
         self._normalize()
+        self._build_indexes()
 
     def _load_csv(self, relative_path: str) -> pd.DataFrame:
         path = os.path.join(self.root, relative_path)
@@ -162,6 +163,7 @@ class TravelKnowledgeBase:
         if "Average Cost" in self.restaurants:
             self.restaurants["Average Cost"] = pd.to_numeric(self.restaurants["Average Cost"], errors="coerce")
         self.restaurants["City_norm"] = self.restaurants["City"].apply(self._normalize_city)
+        self.restaurants["Cuisines_lc"] = self.restaurants["Cuisines"].fillna("").str.lower()
 
         self.attractions["City_norm"] = self.attractions["City"].apply(self._normalize_city)
 
@@ -183,90 +185,162 @@ class TravelKnowledgeBase:
             self._normalize_city(city): city for city in self.cities if city
         }
 
-    def get_flights(self, origin: str, destination: str, top_k: int = 5,
-                    max_price: Optional[float] = None) -> List[Dict]:
-        orig = self._normalize_city(origin)
-        dest = self._normalize_city(destination)
-        df = self.flights[
-            (self.flights["OriginCityName_norm"] == orig) &
-            (self.flights["DestCityName_norm"] == dest)
-        ]
-        if max_price is not None:
-            df = df[df["Price"] <= max_price]
-        df = df.sort_values(by=["Price", "ActualElapsedTime"], ascending=[True, True]).head(top_k)
-        return [
-            {
-                "id": row["Flight Number"],
-                "price": float(row["Price"]),
-                "origin": row["OriginCityName"],
-                "destination": row["DestCityName"],
-                "depart": row["DepTime"],
-                "arrive": row["ArrTime"],
-                "duration": row["ActualElapsedTime"],
-                "date": row["FlightDate"],
-                "distance": row.get("Distance"),
-            }
-            for _, row in df.iterrows()
-        ]
+    def _build_indexes(self) -> None:
+        """Pre-index heavy tables to avoid repeated DataFrame scans during planning."""
+        self._flight_pairs: Set[Tuple[str, str]] = set()
+        self._distance_pairs: Set[Tuple[str, str]] = set()
+        self._flight_buckets: Dict[Tuple[str, str], List[Dict]] = {}
+        self._accommodation_buckets: Dict[str, List[Dict]] = {}
+        self._restaurant_buckets: Dict[str, List[Dict]] = {}
+        self._attraction_buckets: Dict[str, List[Dict]] = {}
 
-    def get_accommodations(self, city: str, top_k: int = 5,
-                           max_price: Optional[float] = None) -> List[Dict]:
-        city_norm = self._normalize_city(city)
-        df = self.accommodations[self.accommodations["city_norm"] == city_norm]
-        if max_price is not None:
-            df = df[df["price"] <= max_price]
-        df = df.sort_values(by=["price", "review rate number"], ascending=[True, False]).head(top_k)
-        return [
-            {
+        # Flights by (origin, dest), pre-sorted by price then duration.
+        flight_buckets: Dict[Tuple[str, str], List[Dict]] = {}
+        for _, row in self.flights.iterrows():
+            orig = row.get("OriginCityName_norm")
+            dest = row.get("DestCityName_norm")
+            if pd.isna(orig) or pd.isna(dest):
+                continue
+            pair = (orig, dest)
+            self._flight_pairs.add(pair)
+            flight_buckets.setdefault(pair, []).append(
+                {
+                    "id": row["Flight Number"],
+                    "price": float(row["Price"]),
+                    "origin": row["OriginCityName"],
+                    "destination": row["DestCityName"],
+                    "depart": row["DepTime"],
+                    "arrive": row["ArrTime"],
+                    "duration": row["ActualElapsedTime"],
+                    "date": row["FlightDate"],
+                    "distance": row.get("Distance"),
+                }
+            )
+        for pair, items in flight_buckets.items():
+            items.sort(key=lambda f: (f.get("price", float("inf")), f.get("duration", float("inf"))))
+        self._flight_buckets = flight_buckets
+
+        # Distance matrix pairs for quick existence checks.
+        if "origin_norm" in self.distances and "destination_norm" in self.distances:
+            for _, row in self.distances.iterrows():
+                orig = row.get("origin_norm")
+                dest = row.get("destination_norm")
+                if pd.isna(orig) or pd.isna(dest):
+                    continue
+                self._distance_pairs.add((orig, dest))
+
+        # Accommodations by city, pre-sorted by price asc, review desc.
+        accom_buckets: Dict[str, List[Dict]] = {}
+        for idx, row in self.accommodations.iterrows():
+            city_norm = row.get("city_norm")
+            if pd.isna(city_norm):
+                continue
+            stay = {
                 "id": str(idx),
                 "name": row["NAME"],
-                "price": float(row["price"]),
+                "price": float(row["price"]) if not pd.isna(row["price"]) else None,
                 "room_type": row["room type"],
                 "review": row.get("review rate number"),
                 "occupancy": row.get("maximum occupancy"),
                 "city": row["city"],
                 "house_rules": row.get("house_rules"),
             }
-            for idx, row in df.iterrows()
-        ]
+            accom_buckets.setdefault(city_norm, []).append(stay)
+        def _review_score(val: Any) -> float:
+            try:
+                return float(val)
+            except Exception:
+                return 0.0
+        for city_norm, items in accom_buckets.items():
+            items.sort(
+                key=lambda s: (
+                    s.get("price") if s.get("price") is not None else float("inf"),
+                    -_review_score(s.get("review")),
+                )
+            )
+        self._accommodation_buckets = accom_buckets
 
-    def get_restaurants(self, city: str, preferences: Optional[List[str]] = None,
-                        top_k: int = 5) -> List[Dict]:
-        city_norm = self._normalize_city(city)
-        df = self.restaurants[self.restaurants["City_norm"] == city_norm]
-        prefs = [self._normalize_city(p) for p in preferences] if preferences else []
-        if prefs:
-            df = df[df["Cuisines"].apply(
-                lambda c: any(pref in str(c).lower() for pref in prefs)
-            )]
-        df = df.sort_values(by=["Aggregate Rating", "Average Cost"], ascending=[False, True]).head(top_k)
-        return [
-            {
+        # Restaurants by city, pre-sorted by rating desc then cost asc.
+        rest_buckets: Dict[str, List[Dict]] = {}
+        for idx, row in self.restaurants.iterrows():
+            city_norm = row.get("City_norm")
+            if pd.isna(city_norm):
+                continue
+            restaurant = {
                 "id": str(idx),
                 "name": row["Name"],
                 "city": row["City"],
                 "cuisines": row["Cuisines"],
-                "cost": float(row["Average Cost"]),
-                "rating": float(row["Aggregate Rating"]),
+                "cuisines_lc": row["Cuisines_lc"],
+                "cost": float(row["Average Cost"]) if not pd.isna(row["Average Cost"]) else None,
+                "rating": float(row["Aggregate Rating"]) if not pd.isna(row["Aggregate Rating"]) else 0.0,
             }
-            for idx, row in df.iterrows()
-        ]
+            rest_buckets.setdefault(city_norm, []).append(restaurant)
+        for city_norm, items in rest_buckets.items():
+            items.sort(key=lambda r: (-r.get("rating", 0.0), r.get("cost", float("inf"))))
+        self._restaurant_buckets = rest_buckets
 
-    def get_attractions(self, city: str, top_k: int = 5) -> List[Dict]:
-        city_norm = self._normalize_city(city)
-        df = self.attractions[self.attractions["City_norm"] == city_norm]
-        df = df.head(top_k)
-        return [
-            {
+        # Attractions by city (order preserved as in CSV).
+        att_buckets: Dict[str, List[Dict]] = {}
+        for idx, row in self.attractions.iterrows():
+            city_norm = row.get("City_norm")
+            if pd.isna(city_norm):
+                continue
+            att = {
                 "id": str(idx),
                 "name": row["Name"],
-                "address": row["Address"],
+                "address": row.get("Address"),
                 "phone": row.get("Phone"),
                 "website": row.get("Website"),
                 "city": row["City"],
             }
-            for idx, row in df.iterrows()
+            att_buckets.setdefault(city_norm, []).append(att)
+        self._attraction_buckets = att_buckets
+
+    def get_flights(self, origin: str, destination: str, top_k: int = 5,
+                    max_price: Optional[float] = None) -> List[Dict]:
+        orig = self._normalize_city(origin)
+        dest = self._normalize_city(destination)
+        flights = self._flight_buckets.get((orig, dest), [])
+        if max_price is not None:
+            flights = [f for f in flights if f.get("price") is not None and f["price"] <= max_price]
+        return flights[:top_k]
+
+    def get_accommodations(self, city: str, top_k: int = 5,
+                           max_price: Optional[float] = None) -> List[Dict]:
+        city_norm = self._normalize_city(city)
+        stays = self._accommodation_buckets.get(city_norm, [])
+        if max_price is not None:
+            stays = [s for s in stays if s.get("price") is not None and s["price"] <= max_price]
+        return stays[:top_k]
+
+    def get_restaurants(self, city: str, preferences: Optional[List[str]] = None,
+                        top_k: int = 5) -> List[Dict]:
+        city_norm = self._normalize_city(city)
+        restaurants = self._restaurant_buckets.get(city_norm, [])
+        prefs = [str(p).strip().lower() for p in preferences] if preferences else []
+        if prefs:
+            restaurants = [
+                r for r in restaurants
+                if any(pref and pref in r.get("cuisines_lc", "") for pref in prefs)
+            ]
+        restaurants = restaurants[:top_k]
+        return [
+            {
+                "id": r["id"],
+                "name": r["name"],
+                "city": r["city"],
+                "cuisines": r["cuisines"],
+                "cost": r["cost"] if r.get("cost") is not None else 0.0,
+                "rating": r["rating"],
+            }
+            for r in restaurants
         ]
+
+    def get_attractions(self, city: str, top_k: int = 5) -> List[Dict]:
+        city_norm = self._normalize_city(city)
+        attractions = self._attraction_buckets.get(city_norm, [])
+        return attractions[:top_k]
 
     def get_state_for_city(self, city: str) -> Optional[str]:
         """Return the state a city belongs to, if known."""
@@ -308,21 +382,12 @@ class TravelKnowledgeBase:
         """
         orig = self._normalize_city(origin)
         dest = self._normalize_city(destination)
-        has_flight = not self.flights[
-            (self.flights.get("OriginCityName_norm") == orig) &
-            (self.flights.get("DestCityName_norm") == dest)
-        ].empty
-        if has_flight:
+        if (orig, dest) in self._flight_pairs:
             return True
         if require_flight:
             return False
-        if "origin_norm" in self.distances and "destination_norm" in self.distances:
-            has_distance = not self.distances[
-                (self.distances["origin_norm"] == orig) &
-                (self.distances["destination_norm"] == dest)
-            ].empty
-            if has_distance:
-                return True
+        if self._distance_pairs and (orig, dest) in self._distance_pairs:
+            return True
         return False
 
     def get_candidate_cities(self, destination_hint: Optional[str] = None,
