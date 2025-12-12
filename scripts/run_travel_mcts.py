@@ -421,7 +421,7 @@ def main():
         raise ValueError("Origin and destination must be provided via JSON, arguments, or NL query.")
 
     kb = TravelKnowledgeBase(args.database_root)
-    env = TravelEnv(kb, goal, max_steps=args.max_episode_len, top_k=args.top_k)
+    env = TravelEnv(kb, goal, max_steps=args.max_episode_len, top_k=args.top_k, debug=args.debug)
     policy = TravelLLMPolicy(device=args.device, model_path=args.local_model, embedding_model=args.embedding_model)
 
     mcts_args = SimpleNamespace(

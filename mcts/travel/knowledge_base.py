@@ -301,9 +301,10 @@ class TravelKnowledgeBase:
                 expanded.append(loc)
         return expanded
 
-    def has_any_transport(self, origin: str, destination: str) -> bool:
+    def has_any_transport(self, origin: str, destination: str, require_flight: bool = False) -> bool:
         """
-        Check if any transport data exists between two locations (flight or distance entry).
+        Check if any transport data exists between two locations.
+        If require_flight=True, only consider flights; otherwise allow distance matrix fallback.
         """
         orig = self._normalize_city(origin)
         dest = self._normalize_city(destination)
@@ -313,6 +314,8 @@ class TravelKnowledgeBase:
         ].empty
         if has_flight:
             return True
+        if require_flight:
+            return False
         if "origin_norm" in self.distances and "destination_norm" in self.distances:
             has_distance = not self.distances[
                 (self.distances["origin_norm"] == orig) &

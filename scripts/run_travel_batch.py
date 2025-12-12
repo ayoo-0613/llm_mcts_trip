@@ -389,7 +389,7 @@ def _build_goal(parsed: Dict[str, Any], args, kb: TravelKnowledgeBase) -> TripGo
 
 
 def _run_single(goal: TripGoal, kb: TravelKnowledgeBase, policy: TravelLLMPolicy, args):
-    env = TravelEnv(kb, goal, max_steps=args.max_episode_len, top_k=args.top_k)
+    env = TravelEnv(kb, goal, max_steps=args.max_episode_len, top_k=args.top_k, debug=args.debug)
     mcts_args = argparse.Namespace(
         exploration_constant=args.exploration_constant,
         bonus_constant=args.bonus_constant,

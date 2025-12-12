@@ -90,12 +90,13 @@ class TravelState:
 class TravelEnv:
     def __init__(self, knowledge_base: TravelKnowledgeBase, goal: TripGoal,
                  max_steps: int = 40, top_k: int = 5,
-                 reward_cfg: Optional[Dict] = None):
+                 reward_cfg: Optional[Dict] = None, debug: bool = False):
         self.kb = knowledge_base
         self.goal = goal
         self.max_steps = max_steps
         self.top_k = top_k
         self.reward_cfg = reward_cfg.copy() if reward_cfg is not None else DEFAULT_REWARD_CFG.copy()
+        self.debug = debug
 
         self.total_days = goal.duration_days or 3
         self.meal_slots = MEAL_SLOTS
@@ -146,11 +147,11 @@ class TravelEnv:
             if dest not in self.goal.candidate_cities:
                 self.goal.candidate_cities.append(dest)
 
-    def _has_transport_cached(self, src: str, dst: str) -> bool:
-        key = (self.kb._normalize_city(src), self.kb._normalize_city(dst))
+    def _has_transport_cached(self, src: str, dst: str, require_flight: bool = False) -> bool:
+        key = (self.kb._normalize_city(src), self.kb._normalize_city(dst), require_flight)
         if hasattr(self, "_transport_cache") and key in self._transport_cache:
             return self._transport_cache[key]
-        has = self.kb.has_any_transport(src, dst)
+        has = self.kb.has_any_transport(src, dst, require_flight=require_flight)
         if hasattr(self, "_transport_cache"):
             self._transport_cache[key] = has
         return has
@@ -180,7 +181,9 @@ class TravelEnv:
             )
 
         if expanded_candidates:
-            self.goal.candidate_cities = expanded_candidates
+            # self.goal.candidate_cities = expanded_candidates
+            self.goal.candidate_cities = expanded_candidates[: max(self.top_k, 10)]
+
 
     def _init_cities_and_phase(self, state: TravelState) -> None:
         """
@@ -190,6 +193,9 @@ class TravelEnv:
         - fixed_city_order 场景直接用给定顺序并从 SEGMENT 开始
         """
         city_target = self.goal.visiting_city_number or 1
+        dest_norm = self.kb._normalize_city(self.goal.destination) if self.goal.destination else None
+        dest_is_city = bool(dest_norm and dest_norm in getattr(self.kb, "city_set_norm", {}))
+        dest_is_state = bool(dest_norm and dest_norm in getattr(self.kb, "state_norm_map", {}))
 
         # 1) fixed_city_order：已经完全给定城市顺序 → 不需要 CITY 搜索
         if self.goal.fixed_city_order:
@@ -197,8 +203,8 @@ class TravelEnv:
             state.phase = Phase.SEGMENT
             return
 
-        # 2) 单城市 & destination 明确 → 直接锁定城市，跳过 CITY
-        if city_target == 1 and self.goal.destination:
+        # 2) 单城市 & destination 是明确城市 → 直接锁定城市，跳过 CITY
+        if city_target == 1 and self.goal.destination and dest_is_city and not dest_is_state:
             state.city_sequence = [self.goal.destination]
             state.phase = Phase.SEGMENT
             return
@@ -433,29 +439,64 @@ class TravelEnv:
         # 严格模式
         self.action_payloads = {}
         actions = self._build_phase_actions(state, relaxed=False)
+        if self.debug:
+            print(f"[DEBUG] Strict actions (phase={state.phase}): {len(actions)}")
         if actions:
             return actions
 
         # 放宽模式（允许重复/超预算等，由 reward 惩罚）
         self.action_payloads = {}
         actions = self._build_phase_actions(state, relaxed=True)
+        if self.debug:
+            print(f"[DEBUG] Relaxed actions (phase={state.phase}): {len(actions)}")
+            if not actions:
+                self._log_empty_actions(state)
         return actions  # 可能为空，由 MCTS 上层自己处理
 
     def _build_phase_actions(self, state: TravelState, relaxed: bool) -> List[str]:
         if state.phase == Phase.CITY:
             acts = self._build_city_actions(state, relaxed=relaxed)
+            if self.debug and not acts:
+                print(f"[DEBUG] City phase produced 0 actions (relaxed={relaxed})")
             return acts
         elif state.phase == Phase.SEGMENT:
             acts = self._build_segment_actions(state, relaxed=relaxed)
+            if self.debug and not acts:
+                print(f"[DEBUG] Segment phase produced 0 actions (relaxed={relaxed}) | segments={self._segments(state)}")
             return acts
         elif state.phase == Phase.STAY:
             acts = self._build_stay_actions(state, relaxed=relaxed)
+            if self.debug and not acts:
+                print(f"[DEBUG] Stay phase produced 0 actions (relaxed={relaxed}) | cities={state.city_sequence}")
             return acts
         elif state.phase == Phase.DAILY:
             acts = self._build_daily_actions(state, relaxed=relaxed)
+            if self.debug and not acts:
+                print(f"[DEBUG] Daily phase produced 0 actions (relaxed={relaxed}) | day count={self.total_days}")
             return acts
         else:
             return []
+
+    def _log_empty_actions(self, state: TravelState) -> None:
+        """仅在 debug 下打印空动作原因，便于定位。"""
+        if not self.debug:
+            return
+        phase = state.phase.name if isinstance(state.phase, Phase) else state.phase
+        pending = []
+        segments = self._segments(state)
+        for idx, src, dst in segments:
+            if idx not in state.segment_modes:
+                pending.append(f"seg{idx}:{src}->{dst}")
+        for day in range(1, self.total_days + 1):
+            meals_missing = [slot for slot, meal in state.meals[day].items() if meal is None]
+            att_missing = self.goal.attractions_per_day_min - self._count_attractions_day(state, day)
+            pending.append(f"d{day}:meals_missing={len(meals_missing)},att_missing={max(att_missing,0)}")
+        print(
+            "[DEBUG] No valid actions | "
+            f"phase={phase}, cities={state.city_sequence}, "
+            f"candidates={self.goal.candidate_cities}, must={self.goal.must_visit_cities}, "
+            f"priority={self.goal.priority_cities}, pending=({'; '.join(pending)})"
+        )
 
     def _build_city_actions(self, state: TravelState, relaxed: bool = False) -> List[str]:
         actions: List[str] = []
@@ -481,16 +522,12 @@ class TravelEnv:
                 """增量检查：只校验新加入城市相关的路径，并带缓存。"""
                 if not seq:
                     return False
+                require_flight = True  # 每个 segment 必须可飞行
                 if len(seq) == 1:
-                    pairs = [(origin, seq[0])]
-                else:
-                    pairs = [(seq[-2], seq[-1])]
-                if self.goal.return_required and len(seq) >= city_target:
-                    pairs.append((seq[-1], origin))
-                for src, dst in pairs:
-                    if not self._has_transport_cached(src, dst):
-                        return False
-                return True
+                    # 只需 origin -> city
+                    return self._has_transport_cached(origin, seq[0], require_flight=require_flight)
+                # 只检查新增的边：last -> new
+                return self._has_transport_cached(seq[-2], seq[-1], require_flight=require_flight)
 
             for city in candidates:
                 if city not in state.city_sequence:
@@ -531,6 +568,11 @@ class TravelEnv:
 
             for mode in mode_candidates:
                 if mode == "flight":
+                    # 先检查是否存在航班/航程数据，避免后续为空
+                    if not self._has_transport_cached(src, dst, require_flight=True):
+                        if self.debug:
+                            print(f"[DEBUG] No flight transport found for {src}->{dst}, skip segment {idx}")
+                        continue
                     # 这里不再用 max_price，避免因为预算筛空
                     flights = self.kb.get_flights(
                         src,
