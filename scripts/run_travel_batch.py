@@ -22,6 +22,7 @@ from mcts.mcts.mcts import MCTSAgent  # noqa: E402
 from mcts.travel.knowledge_base import TripGoal, TravelKnowledgeBase  # noqa: E402
 from mcts.travel.llm_policy import TravelLLMPolicy  # noqa: E402
 from mcts.travel.travel_env import TravelEnv  # noqa: E402
+from mcts.travel.preference_router import route_preferences  # noqa: E402
 
 
 def _call_local_llm(base_url: str, model: str, prompt: str, timeout: float = 60.0) -> Optional[str]:
@@ -332,7 +333,9 @@ def _load_queries(args) -> List[str]:
 
 
 def _build_goal(parsed: Dict[str, Any], args, kb: TravelKnowledgeBase) -> TripGoal:
-    visit_num = parsed.get("visiting_city_number") or args.visiting_city_number or 1
+    visit_num = parsed.get("visiting_city_number")
+    if not visit_num or visit_num <= 0:
+        visit_num = args.visiting_city_number or 1
     must_cities = parsed.get("must_visit_cities") or args.must_city or []
     priority_cities = parsed.get("priority_cities") or args.priority_city or []
     fixed_city_order = parsed.get("fixed_city_order") or args.fixed_city_order or []
@@ -342,6 +345,15 @@ def _build_goal(parsed: Dict[str, Any], args, kb: TravelKnowledgeBase) -> TripGo
 
     allow_modes = parsed.get("transport_allow") or args.allow_transport or []
     forbid_modes = parsed.get("transport_forbid") or parsed.get("transport_forbidden") or args.forbid_transport or []
+    raw_prefs = parsed.get("preferences") or args.preferences or []
+    people_n = parsed.get("people_number") or 1
+
+    constraints = route_preferences(
+        raw_prefs=raw_prefs,
+        transport_allow=allow_modes,
+        transport_forbid=forbid_modes,
+        people_number=people_n,
+    )
 
     def _norm_modes(modes):
         if modes is None:
@@ -373,7 +385,8 @@ def _build_goal(parsed: Dict[str, Any], args, kb: TravelKnowledgeBase) -> TripGo
         require_accommodation=not args.no_stay,
         num_restaurants=parsed.get("restaurants") or args.restaurants,
         num_attractions=args.attractions,
-        preferences=parsed.get("preferences") or args.preferences,
+        preferences=raw_prefs,
+        constraints=constraints,
         visiting_city_number=visit_num,
         must_visit_cities=must_cities,
         priority_cities=priority_cities,

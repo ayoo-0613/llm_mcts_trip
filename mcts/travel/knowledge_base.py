@@ -33,6 +33,13 @@ class TripGoal:
 
     # 偏好（可从 cuisine / NL 里抽取）
     preferences: List[str] = field(default_factory=list)
+    # 结构化约束（由 preference router 生成）
+    constraints: Dict[str, Any] = field(default_factory=lambda: {
+        "meal": {"cuisines": [], "must_have": [], "avoid": []},
+        "stay": {"house_rules": [], "room_type": [], "min_occupancy": None},
+        "transport": {"allow": None, "forbid": []},
+        "other": [],
+    })
     # 规划扩展
     must_visit_cities: List[str] = field(default_factory=list)
     priority_cities: List[str] = field(default_factory=list)
@@ -235,6 +242,13 @@ class TravelKnowledgeBase:
             city_norm = row.get("city_norm")
             if pd.isna(city_norm):
                 continue
+            raw_rules = row.get("house_rules")
+            if isinstance(raw_rules, str):
+                tokens = {tok.strip().lower().replace(" ", "_") for tok in raw_rules.split(",") if tok}
+            elif isinstance(raw_rules, list):
+                tokens = {str(tok).strip().lower().replace(" ", "_") for tok in raw_rules if tok}
+            else:
+                tokens = set()
             stay = {
                 "id": str(idx),
                 "name": row["NAME"],
@@ -244,6 +258,7 @@ class TravelKnowledgeBase:
                 "occupancy": row.get("maximum occupancy"),
                 "city": row["city"],
                 "house_rules": row.get("house_rules"),
+                "house_rules_tokens": tokens,
             }
             accom_buckets.setdefault(city_norm, []).append(stay)
         def _review_score(val: Any) -> float:
@@ -307,11 +322,24 @@ class TravelKnowledgeBase:
         return flights[:top_k]
 
     def get_accommodations(self, city: str, top_k: int = 5,
-                           max_price: Optional[float] = None) -> List[Dict]:
+                           max_price: Optional[float] = None,
+                           house_rules: Optional[List[str]] = None,
+                           min_occupancy: Optional[int] = None) -> List[Dict]:
         city_norm = self._normalize_city(city)
         stays = self._accommodation_buckets.get(city_norm, [])
         if max_price is not None:
             stays = [s for s in stays if s.get("price") is not None and s["price"] <= max_price]
+        if min_occupancy is not None:
+            stays = [
+                s for s in stays
+                if s.get("occupancy") is None or s.get("occupancy") >= min_occupancy
+            ]
+        if house_rules:
+            rules = {str(r).strip().lower().replace(" ", "_") for r in house_rules if r}
+            stays = [
+                s for s in stays
+                if rules.issubset(s.get("house_rules_tokens") or set())
+            ]
         return stays[:top_k]
 
     def get_restaurants(self, city: str, preferences: Optional[List[str]] = None,

@@ -288,10 +288,41 @@ class TravelEnv:
             state.violations.append(violation)
 
     def _matches_preference(self, restaurant: Dict) -> bool:
-        if not self.goal.preferences:
+        meal_cuisines = []
+        if hasattr(self.goal, "constraints"):
+            meal_cuisines = (self.goal.constraints.get("meal", {}) or {}).get("cuisines", [])
+        if not meal_cuisines:
             return False
         cuisines = str(restaurant.get("cuisines") or restaurant.get("Cuisines") or "").lower()
-        return any(pref.lower() in cuisines for pref in self.goal.preferences)
+        return any(pref.lower() in cuisines for pref in meal_cuisines)
+
+    def _failure_reasons(self, state: TravelState) -> Dict[str, List[str]]:
+        reasons: Dict[str, List[str]] = {
+            "missing_meals": [],
+            "missing_attractions": [],
+            "missing_stays": [],
+            "missing_segments": [],
+            "budget_over": [],
+        }
+        segments = self._segments(state)
+        for idx, src, dst in segments:
+            if idx not in state.segment_modes:
+                reasons["missing_segments"].append(f"seg{idx}:{src}->{dst}")
+        for city in state.city_sequence:
+            if self.goal.require_accommodation and state.city_stays.get(city) is None:
+                reasons["missing_stays"].append(city)
+        for day in range(1, self.total_days + 1):
+            for slot, meal in state.meals.get(day, {}).items():
+                if meal is None:
+                    reasons["missing_meals"].append(f"d{day}:{slot}")
+            city = self._city_for_day(state, day)
+            if self.kb.get_attractions(city):
+                for slot, att in state.attractions.get(day, {}).items():
+                    if att is None:
+                        reasons["missing_attractions"].append(f"d{day}:{slot}")
+        if self.goal.budget is not None and state.cost > self.goal.budget:
+            reasons["budget_over"].append(f"{state.cost:.1f}>{self.goal.budget:.1f}")
+        return {k: v for k, v in reasons.items() if v}
 
     def _count_attractions_day(self, state: TravelState, day: int) -> int:
         return sum(1 for a in state.attractions.get(day, {}).values() if a is not None)
@@ -341,6 +372,13 @@ class TravelEnv:
     def _allowed_transport_modes(self) -> List[str]:
         allowed = self.goal.transport_allowed_modes or ["flight", "taxi", "self-driving"]
         forbidden = set(m.lower() for m in (self.goal.transport_forbidden_modes or []))
+
+        if hasattr(self.goal, "constraints"):
+            tcons = self.goal.constraints.get("transport", {}) or {}
+            if tcons.get("allow"):
+                allowed = list(tcons["allow"])
+            forbidden |= set(m.lower() for m in (tcons.get("forbid") or []))
+
         return [m for m in allowed if m not in forbidden]
 
     # ----------------------------
@@ -692,11 +730,24 @@ class TravelEnv:
 
         for city in state.city_sequence:
             if state.city_stays.get(city) is None:
+                stay_cons = (self.goal.constraints.get("stay", {}) or {}) if hasattr(self.goal, "constraints") else {}
+                house_rules = stay_cons.get("house_rules", [])
+                min_occ = stay_cons.get("min_occupancy")
                 stays = self.kb.get_accommodations(
                     city,
                     top_k=self.top_k if not relaxed else self.top_k * 3,
                     max_price=None if relaxed else self.goal.budget,
+                    house_rules=house_rules,
+                    min_occupancy=min_occ,
                 )
+                if not stays and house_rules:
+                    stays = self.kb.get_accommodations(
+                        city,
+                        top_k=self.top_k if not relaxed else self.top_k * 3,
+                        max_price=None if relaxed else self.goal.budget,
+                        house_rules=None,
+                        min_occupancy=min_occ,
+                    )
                 for s in stays:
                     action = f"stay:{city}:{s['id']} {s['name']} {s['room_type']} ${s['price']:.0f}"
                     self.action_payloads[action] = ("stay_city", city, s)
@@ -714,11 +765,21 @@ class TravelEnv:
             if not missing_slots:
                 continue
             city = self._city_for_day(state, day)
+            meal_cuisines = []
+            if hasattr(self.goal, "constraints"):
+                meal_cuisines = (self.goal.constraints.get("meal", {}) or {}).get("cuisines", [])
             restaurants = self.kb.get_restaurants(
                 city,
-                preferences=self.goal.preferences,
-                top_k=self.top_k if not relaxed else self.top_k * 3,
+                preferences=meal_cuisines,
+                top_k=max(self.top_k, self.total_days * len(self.meal_slots)) if not relaxed else self.top_k * 3,
             )
+            if not restaurants and meal_cuisines:
+                # fallback: 不按偏好筛选，避免动作为空
+                restaurants = self.kb.get_restaurants(
+                    city,
+                    preferences=None,
+                    top_k=max(self.top_k, self.total_days * len(self.meal_slots)) if not relaxed else self.top_k * 3,
+                )
             used_ids = self._restaurant_ids_day(state, day)
             slot = missing_slots[0]
             for r in restaurants:
@@ -764,6 +825,30 @@ class TravelEnv:
                     action = f"visit:d{day}:{slot}:{a['id']} {a['name']} @ {a['city']}"
                     self.action_payloads[action] = ("attraction", day, slot, a)
                     actions.append(action)
+                if actions:
+                    break
+
+        # relaxed 兜底：仍然缺口且无动作时，注入占位动作防止死锁
+        if relaxed and not actions:
+            for day in range(1, self.total_days + 1):
+                for slot, meal in state.meals[day].items():
+                    if meal is None:
+                        placeholder = {"id": f"any_rest_{day}_{slot}", "name": "Any Restaurant", "cuisines": "", "cost": 0.0, "rating": 0.0, "city": self._city_for_day(state, day)}
+                        action = f"eat:d{day}:{slot}:ANY"
+                        self.action_payloads[action] = ("meal", day, slot, placeholder)
+                        actions.append(action)
+                        break
+                if actions:
+                    break
+        if relaxed and not actions:
+            for day in range(1, self.total_days + 1):
+                for slot, att in state.attractions[day].items():
+                    if att is None:
+                        placeholder = {"id": f"any_att_{day}_{slot}", "name": "Any Attraction", "city": self._city_for_day(state, day)}
+                        action = f"visit:d{day}:{slot}:ANY"
+                        self.action_payloads[action] = ("attraction", day, slot, placeholder)
+                        actions.append(action)
+                        break
                 if actions:
                     break
 
@@ -820,6 +905,8 @@ class TravelEnv:
                     return False
         if self.goal.budget is not None and state.cost > self.goal.budget:
             return False
+        # 记录失败原因以便调试/输出
+        self.last_failure_reasons = {}
         return True
 
     def _can_finish(self, state: Optional[TravelState] = None) -> bool:
@@ -972,7 +1059,12 @@ class TravelEnv:
 
         obs = self._observation(self.state)
         valid_actions = self._build_valid_actions(self.state) if not done else []
-        self.last_info = {"violations": list(self.state.violations), "cost": self.state.cost}
+        failure_reasons = self._failure_reasons(self.state) if not self.is_success(self.state) else {}
+        self.last_info = {
+            "violations": list(self.state.violations),
+            "cost": self.state.cost,
+            "failure_reasons": failure_reasons,
+        }
         return obs, reward, done, self.history, valid_actions
 
     def _finish_and_score(self, state: TravelState) -> float:
