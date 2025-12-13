@@ -17,6 +17,7 @@ from mcts.mcts.mcts import MCTSAgent
 from mcts.travel.knowledge_base import TravelKnowledgeBase, TripGoal
 from mcts.travel.travel_env import TravelEnv
 from mcts.travel.llm_policy import TravelLLMPolicy
+from mcts.travel.phase_plan import PhasePlanGenerator
 
 
 def _print_plan(env: TravelEnv, success: bool, actions):
@@ -328,6 +329,7 @@ def _save_plan(output_path: str, query_text: Optional[str], parsed: Dict[str, An
                 "cost": env.state.cost,
                 "violations": env.state.violations,
                 "structured_plan": structured,
+                "filter_usage": getattr(env, "filter_events", []),
                 "elapsed_seconds": elapsed_seconds,
             },
             f,
@@ -384,6 +386,36 @@ def parse_args():
     parser.add_argument("--simulation-per-act", type=int, default=1)
     parser.add_argument("--simulation-num", type=int, default=30)
     parser.add_argument("--discount-factor", type=float, default=0.95)
+    parser.add_argument("--candidate-cap", type=int, default=80, help="Max candidates returned per slot.")
+    parser.add_argument(
+        "--use-llm-filters",
+        dest="use_llm_filters",
+        action="store_true",
+        help="Enable LLM filter generation for candidate retrieval.",
+    )
+    parser.add_argument(
+        "--no-llm-filters",
+        dest="use_llm_filters",
+        action="store_false",
+        help="Disable LLM filter generation and use defaults.",
+    )
+    parser.add_argument(
+        "--use-llm-prior",
+        choices=["root", "all", "none"],
+        default="root",
+        help="Apply LLM priors at root, all nodes, or disable.",
+    )
+    parser.add_argument(
+        "--relax-max-tries",
+        type=int,
+        default=6,
+        help="Max relaxation attempts when KB query returns empty candidates.",
+    )
+    parser.add_argument(
+        "--log-filter-usage",
+        action="store_true",
+        help="Print filters and whether LLM/cache was used when building candidates.",
+    )
     parser.add_argument("--uct-type", default="PUCT")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--debug", action="store_true", help="Print debug info for root stats and rewards.")
@@ -395,6 +427,7 @@ def parse_args():
     parser.add_argument("--device", default="mps", help="Device string for LLM/embeddings, e.g. cuda:0, mps, or cpu.")
     parser.add_argument("--parser-model", default=None, help="Model name/path for NL parsing (defaults to --local-model).")
     parser.add_argument("--parser-timeout", type=float, default=60.0, help="Timeout (s) for NL parser call.")
+    parser.set_defaults(use_llm_filters=True)
     return parser.parse_args()
 
 
@@ -424,7 +457,47 @@ def main():
         raise ValueError("Origin and destination must be provided via JSON, arguments, or NL query.")
 
     kb = TravelKnowledgeBase(args.database_root)
-    env = TravelEnv(kb, goal, max_steps=args.max_episode_len, top_k=args.top_k, debug=args.debug)
+    plan_llm = None
+    if args.use_llm_filters:
+        model_for_plan = args.parser_model or args.local_model
+        base_for_plan = args.local_base
+        if base_for_plan and model_for_plan:
+
+            def _plan_call(prompt: str, base=base_for_plan, model=model_for_plan):
+                payload = {
+                    "model": model,
+                    "prompt": prompt,
+                    "temperature": 0.0,
+                    "stream": False,
+                }
+                try:
+                    resp = requests.post(f"{base.rstrip('/')}/api/generate", json=payload, timeout=args.parser_timeout)
+                    resp.raise_for_status()
+                    data = resp.json()
+                    for key in ("response", "text", "output", "content"):
+                        if key in data:
+                            return data[key]
+                    return ""
+                except Exception:
+                    return ""
+
+            plan_llm = _plan_call
+        else:
+            print("[WARN] use_llm_filters is True but local_base or model is missing; filters will fall back to defaults.")
+
+    env = TravelEnv(
+        kb,
+        goal,
+        max_steps=args.max_episode_len,
+        top_k=args.top_k,
+        debug=args.debug,
+        candidate_cap=args.candidate_cap,
+        use_llm_filters=args.use_llm_filters,
+        relax_max_tries=args.relax_max_tries,
+        user_query=query_text or args.nl_query or "",
+        log_filter_usage=args.log_filter_usage,
+        phase_planner=PhasePlanGenerator(llm=plan_llm, enable=args.use_llm_filters),
+    )
     policy = TravelLLMPolicy(device=args.device, model_path=args.local_model, embedding_model=args.embedding_model)
 
     mcts_args = SimpleNamespace(
@@ -439,8 +512,15 @@ def main():
         seed=args.seed,
         model=args.local_model,
         debug=args.debug,
+        use_llm_prior=args.use_llm_prior,
     )
-    agent = MCTSAgent(mcts_args, env, policy=policy, uct_type=args.uct_type, use_llm=True)
+    agent = MCTSAgent(
+        mcts_args,
+        env,
+        policy=policy,
+        uct_type=args.uct_type,
+        use_llm=args.use_llm_prior != "none",
+    )
 
     t0 = time.perf_counter()
     obs, valid_actions = env.reset()

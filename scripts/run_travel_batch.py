@@ -22,6 +22,7 @@ from mcts.mcts.mcts import MCTSAgent  # noqa: E402
 from mcts.travel.knowledge_base import TripGoal, TravelKnowledgeBase  # noqa: E402
 from mcts.travel.llm_policy import TravelLLMPolicy  # noqa: E402
 from mcts.travel.travel_env import TravelEnv  # noqa: E402
+from mcts.travel.phase_plan import PhasePlanGenerator  # noqa: E402
 from mcts.travel.preference_router import route_preferences  # noqa: E402
 
 
@@ -401,9 +402,32 @@ def _build_goal(parsed: Dict[str, Any], args, kb: TravelKnowledgeBase) -> TripGo
         notes=args.notes or parsed.get("notes"),
     )
 
+    
+def _run_single(goal: TripGoal, kb: TravelKnowledgeBase, policy: TravelLLMPolicy, args, raw_query: str = ""):
+    # Reuse the same LLM endpoint as NL parser for filter generation (no extra CLI needed).
+    plan_llm = None
+    model_for_plan = args.parser_model or args.local_model
+    base_for_plan = args.local_base
+    if args.use_llm_filters and model_for_plan and base_for_plan:
+        def _plan_call(prompt: str, base=base_for_plan, model=model_for_plan):
+            return _call_local_llm(base, model, prompt, timeout=args.parser_timeout)
+        plan_llm = _plan_call
 
-def _run_single(goal: TripGoal, kb: TravelKnowledgeBase, policy: TravelLLMPolicy, args):
-    env = TravelEnv(kb, goal, max_steps=args.max_episode_len, top_k=args.top_k, debug=args.debug)
+    phase_planner = PhasePlanGenerator(llm=plan_llm, enable=args.use_llm_filters)
+
+    env = TravelEnv(
+        kb,
+        goal,
+        max_steps=args.max_episode_len,
+        top_k=args.top_k,
+        debug=args.debug,
+        candidate_cap=args.candidate_cap,
+        use_llm_filters=args.use_llm_filters,
+        relax_max_tries=args.relax_max_tries,
+        user_query=raw_query,
+        log_filter_usage=args.log_filter_usage,
+        phase_planner=phase_planner,
+    )
     mcts_args = argparse.Namespace(
         exploration_constant=args.exploration_constant,
         bonus_constant=args.bonus_constant,
@@ -416,8 +440,15 @@ def _run_single(goal: TripGoal, kb: TravelKnowledgeBase, policy: TravelLLMPolicy
         seed=args.seed,
         model=args.local_model,
         debug=args.debug,
+        use_llm_prior=args.use_llm_prior,
     )
-    agent = MCTSAgent(mcts_args, env, policy=policy, uct_type=args.uct_type, use_llm=True)
+    agent = MCTSAgent(
+        mcts_args,
+        env,
+        policy=policy,
+        uct_type=args.uct_type,
+        use_llm=args.use_llm_prior != "none",
+    )
 
     obs, valid_actions = env.reset()
     history = list(env.base_history)
@@ -441,6 +472,7 @@ def _run_single(goal: TripGoal, kb: TravelKnowledgeBase, policy: TravelLLMPolicy
         "state": env.state,
         "goal": goal,
         "env": env,
+        "filter_usage": list(env.filter_events),
     }
 
 
@@ -473,7 +505,7 @@ def parse_args():
     parser.add_argument("--forbid-transport", action="append", dest="forbid_transport", default=[],
                         help="Ban these transport modes (flight, taxi, self-driving).")
     parser.add_argument("--top-k", type=int, default=5)
-    parser.add_argument("--limit", type=int, default=5, help="Max number of queries to process.")
+    parser.add_argument("--limit", type=int, default=1, help="Max number of queries to process.")
     parser.add_argument("--start-index", type=int, default=0, help="Start index into query list (0-based).")
     # MCTS params
     parser.add_argument("--exploration-constant", type=float, default=8.0)
@@ -483,6 +515,36 @@ def parse_args():
     parser.add_argument("--simulation-per-act", type=int, default=1)
     parser.add_argument("--simulation-num", type=int, default=50)
     parser.add_argument("--discount-factor", type=float, default=0.95)
+    parser.add_argument("--candidate-cap", type=int, default=80, help="Max candidates returned per slot.")
+    parser.add_argument(
+        "--use-llm-filters",
+        dest="use_llm_filters",
+        action="store_true",
+        help="Enable LLM filter generation for candidate retrieval.",
+    )
+    parser.add_argument(
+        "--no-llm-filters",
+        dest="use_llm_filters",
+        action="store_false",
+        help="Disable LLM filter generation (use defaults only).",
+    )
+    parser.add_argument(
+        "--use-llm-prior",
+        choices=["root", "all", "none"],
+        default="root",
+        help="Apply LLM policy priors at root, all nodes, or disable.",
+    )
+    parser.add_argument(
+        "--relax-max-tries",
+        type=int,
+        default=6,
+        help="Max relaxation attempts when KB query returns empty candidates.",
+    )
+    parser.add_argument(
+        "--log-filter-usage",
+        action="store_true",
+        help="Print filters and whether LLM/cache was used when building candidates.",
+    )
     parser.add_argument("--uct-type", default="PUCT")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--debug", action="store_true")
@@ -495,6 +557,7 @@ def parse_args():
     parser.add_argument("--database-root", default="database")
     parser.add_argument("--save-dir", default="plans_out", help="Directory to save generated plans as JSON.")
     parser.add_argument("--notes", default=None, help="Optional notes saved with each plan.")
+    parser.set_defaults(use_llm_filters=True)
     return parser.parse_args()
 
 
@@ -525,7 +588,7 @@ def main():
         # Debug: show candidate city list after state expansion
         print(f"[DEBUG] Goal candidate_cities: {goal.candidate_cities}")
         t0 = time.perf_counter()
-        result = _run_single(goal, kb, policy, args)
+        result = _run_single(goal, kb, policy, args, raw_query=q)
         elapsed = time.perf_counter() - t0
         structured = _structured_plan(result["env"])
         diagnostics = _goal_diagnostics(kb, goal)
@@ -543,6 +606,7 @@ def main():
                     "cost": result["cost"],
                     "violations": result["violations"],
                     "structured_plan": structured,
+                    "filter_usage": result.get("filter_usage", []),
                     "elapsed_seconds": elapsed,
                 },
                 f,

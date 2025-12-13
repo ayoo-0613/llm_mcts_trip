@@ -497,3 +497,280 @@ class TravelKnowledgeBase:
             return float(match.group(1))
         except Exception:
             return None
+
+    # ----------------------------
+    # Unified slot queries
+    # ----------------------------
+    @staticmethod
+    def _slot_attr(slot: Any, name: str):
+        if slot is None:
+            return None
+        if hasattr(slot, name):
+            return getattr(slot, name)
+        if isinstance(slot, dict):
+            return slot.get(name)
+        return None
+
+    @staticmethod
+    def _time_to_minutes(val: Any) -> Optional[int]:
+        try:
+            text = str(val)
+            if not text or text.lower() == "nan":
+                return None
+            parts = text.replace(".", ":").split(":")
+            if len(parts) < 2:
+                return None
+            return int(parts[0]) * 60 + int(parts[1])
+        except Exception:
+            return None
+
+    @staticmethod
+    def _used_restaurant_ids(state: Any) -> Set[str]:
+        ids: Set[str] = set()
+        if not state or not hasattr(state, "meals"):
+            return ids
+        try:
+            for day_map in state.meals.values():
+                for meal in day_map.values():
+                    if meal and "id" in meal:
+                        ids.add(str(meal["id"]))
+        except Exception:
+            return ids
+        return ids
+
+    @staticmethod
+    def _used_attraction_ids(state: Any) -> Set[str]:
+        ids: Set[str] = set()
+        if not state or not hasattr(state, "attractions"):
+            return ids
+        try:
+            for day_map in state.attractions.values():
+                for att in day_map.values():
+                    if att and "id" in att:
+                        ids.add(str(att["id"]))
+        except Exception:
+            return ids
+        return ids
+
+    def query(self, slot, filt: Dict[str, Any], state: Any, cap: int = 80) -> List[Any]:
+        stype = self._slot_attr(slot, "type")
+        if not stype:
+            return []
+        stype = str(stype).lower()
+        if stype == "flight":
+            return self.query_flights(slot, filt, state, cap=cap)
+        if stype == "hotel":
+            return self.query_hotels(slot, filt, state, cap=cap)
+        if stype == "meal" or stype == "restaurant":
+            return self.query_restaurants(slot, filt, state, cap=cap)
+        if stype == "attraction":
+            return self.query_attractions(slot, filt, state, cap=cap)
+        if stype == "finish":
+            return ["finish"]
+        if stype == "city":
+            return []
+        return []
+
+    def _flight_sort_key(self, item: Dict[str, Any], idx: int, sort_by: str):
+        price = item.get("price") if item.get("price") is not None else float("inf")
+        duration = item.get("duration") if item.get("duration") is not None else float("inf")
+        depart_m = self._time_to_minutes(item.get("depart")) or float("inf")
+        arrive_m = self._time_to_minutes(item.get("arrive")) or float("inf")
+        if sort_by == "duration":
+            return (duration, price, depart_m, idx)
+        if sort_by == "depart":
+            return (depart_m, price, duration, idx)
+        if sort_by == "arrive":
+            return (arrive_m, price, duration, idx)
+        return (price, duration, depart_m, idx)
+
+    def query_flights(self, slot, filt: Dict[str, Any], state: Any, cap: int = 80) -> List[Dict]:
+        origin = self._slot_attr(slot, "origin") or self._slot_attr(slot, "from_city") or self._slot_attr(slot, "from")
+        destination = (
+            self._slot_attr(slot, "destination") or self._slot_attr(slot, "to_city") or self._slot_attr(slot, "to")
+        )
+        if not origin or not destination:
+            return []
+        orig_norm = self._normalize_city(origin)
+        dest_norm = self._normalize_city(destination)
+        flights = list(self._flight_buckets.get((orig_norm, dest_norm), []))
+        avoid_ids = {str(x) for x in (filt.get("avoid_ids") or [])}
+
+        max_price = filt.get("max_price")
+        min_price = filt.get("min_price")
+        earliest = self._time_to_minutes(filt.get("earliest_depart"))
+        latest = self._time_to_minutes(filt.get("latest_depart"))
+        max_duration = filt.get("max_duration")
+        max_stops = filt.get("max_stops")
+        filter_date = filt.get("date")
+
+        filtered: List[Tuple[Dict, int]] = []
+        for idx, row in enumerate(flights):
+            if avoid_ids and str(row.get("id")) in avoid_ids:
+                continue
+            if max_price is not None and row.get("price") is not None and row["price"] > max_price:
+                continue
+            if min_price is not None and row.get("price") is not None and row["price"] < min_price:
+                continue
+            if max_duration is not None and row.get("duration") is not None and row["duration"] > max_duration:
+                continue
+            if max_stops is not None and row.get("stops") is not None and row["stops"] > max_stops:
+                continue
+            depart_m = self._time_to_minutes(row.get("depart"))
+            if earliest is not None and depart_m is not None and depart_m < earliest:
+                continue
+            if latest is not None and depart_m is not None and depart_m > latest:
+                continue
+            if filter_date and row.get("date") and str(row.get("date")) != str(filter_date):
+                continue
+            filtered.append((row, idx))
+
+        if not filtered:
+            return []
+        sort_by = str(filt.get("sort_by") or "price").lower()
+        filtered.sort(key=lambda pair: self._flight_sort_key(pair[0], pair[1], sort_by))
+        return [item for item, _ in filtered[:cap]]
+
+    def _hotel_sort_key(self, item: Dict[str, Any], idx: int, sort_by: str):
+        price = item.get("price") if item.get("price") is not None else float("inf")
+        review = item.get("review") if item.get("review") is not None else 0.0
+        if sort_by == "review":
+            return (-review, price, idx)
+        return (price, -review, idx)
+
+    def query_hotels(self, slot, filt: Dict[str, Any], state: Any, cap: int = 80) -> List[Dict]:
+        city = self._slot_attr(slot, "city") or self._slot_attr(slot, "destination")
+        if not city:
+            return []
+        city_norm = self._normalize_city(city)
+        stays = list(self._accommodation_buckets.get(city_norm, []))
+        avoid_ids = {str(x) for x in (filt.get("avoid_ids") or [])}
+
+        max_price = filt.get("max_price")
+        min_price = filt.get("min_price")
+        min_review = filt.get("min_review")
+        room_types = {s.lower() for s in filt.get("room_type") or []}
+        house_rules = {str(s).lower().replace(" ", "_") for s in filt.get("house_rules") or []}
+        min_occupancy = filt.get("min_occupancy")
+
+        filtered: List[Tuple[Dict, int]] = []
+        for idx, stay in enumerate(stays):
+            if avoid_ids and str(stay.get("id")) in avoid_ids:
+                continue
+            if max_price is not None and stay.get("price") is not None and stay["price"] > max_price:
+                continue
+            if min_price is not None and stay.get("price") is not None and stay["price"] < min_price:
+                continue
+            if min_review is not None and stay.get("review") is not None and stay["review"] < min_review:
+                continue
+            if room_types and stay.get("room_type") and stay["room_type"].lower() not in room_types:
+                continue
+            if min_occupancy is not None and stay.get("occupancy") is not None and stay["occupancy"] < min_occupancy:
+                continue
+            if house_rules:
+                tokens = stay.get("house_rules_tokens") or set()
+                if not house_rules.issubset(tokens):
+                    continue
+            filtered.append((stay, idx))
+
+        if not filtered:
+            return []
+        sort_by = str(filt.get("sort_by") or "price").lower()
+        filtered.sort(key=lambda pair: self._hotel_sort_key(pair[0], pair[1], sort_by))
+        return [item for item, _ in filtered[:cap]]
+
+    def _restaurant_sort_key(self, item: Dict[str, Any], idx: int, sort_by: str):
+        cost = item.get("cost") if item.get("cost") is not None else float("inf")
+        rating = item.get("rating") if item.get("rating") is not None else 0.0
+        if sort_by == "cost":
+            return (cost, -rating, idx)
+        return (-rating, cost, idx)
+
+    def query_restaurants(self, slot, filt: Dict[str, Any], state: Any, cap: int = 80) -> List[Dict]:
+        city = self._slot_attr(slot, "city") or self._slot_attr(slot, "destination")
+        if not city:
+            return []
+        city_norm = self._normalize_city(city)
+        restaurants = list(self._restaurant_buckets.get(city_norm, []))
+        avoid_ids = {str(x) for x in (filt.get("avoid_ids") or [])}
+        avoid_ids |= self._used_restaurant_ids(state)
+
+        cuisines = [str(c).lower() for c in (filt.get("cuisines") or []) if c]
+        max_cost = filt.get("max_cost")
+        min_rating = filt.get("min_rating")
+
+        filtered: List[Tuple[Dict, int]] = []
+        for idx, rest in enumerate(restaurants):
+            if avoid_ids and str(rest.get("id")) in avoid_ids:
+                continue
+            if cuisines and not any(c in (rest.get("cuisines_lc") or "") for c in cuisines):
+                continue
+            if max_cost is not None and rest.get("cost") is not None and rest["cost"] > max_cost:
+                continue
+            if min_rating is not None and rest.get("rating") is not None and rest["rating"] < min_rating:
+                continue
+            filtered.append((rest, idx))
+
+        if not filtered:
+            return []
+        sort_by = str(filt.get("sort_by") or "rating").lower()
+        filtered.sort(key=lambda pair: self._restaurant_sort_key(pair[0], pair[1], sort_by))
+        return [item for item, _ in filtered[:cap]]
+
+    def query_attractions(self, slot, filt: Dict[str, Any], state: Any, cap: int = 80) -> List[Dict]:
+        city = self._slot_attr(slot, "city") or self._slot_attr(slot, "destination")
+        if not city:
+            return []
+        city_norm = self._normalize_city(city)
+        attractions = list(self._attraction_buckets.get(city_norm, []))
+        avoid_ids = {str(x) for x in (filt.get("avoid_ids") or [])}
+        avoid_ids |= self._used_attraction_ids(state)
+
+        filtered: List[Tuple[Dict, int]] = []
+        for idx, att in enumerate(attractions):
+            if avoid_ids and str(att.get("id")) in avoid_ids:
+                continue
+            filtered.append((att, idx))
+
+        if not filtered:
+            return []
+        sort_by = str(filt.get("sort_by") or "rating").lower()
+        if sort_by == "name":
+            filtered.sort(key=lambda pair: (pair[0].get("name") or "", pair[1]))
+        elif sort_by == "distance":
+            filtered.sort(key=lambda pair: pair[1])
+        else:
+            filtered.sort(
+                key=lambda pair: (
+                    -(pair[0].get("rating") if pair[0].get("rating") is not None else 0.0),
+                    pair[1],
+                )
+            )
+        return [item for item, _ in filtered[:cap]]
+
+    def fallback_candidates(self, slot, state: Any, cap: int = 20) -> List[Any]:
+        stype = self._slot_attr(slot, "type")
+        stype = str(stype or "").lower()
+        if stype == "flight":
+            origin = self._slot_attr(slot, "origin") or self._slot_attr(slot, "from")
+            destination = self._slot_attr(slot, "destination") or self._slot_attr(slot, "to")
+            if not origin or not destination:
+                return []
+            pair = (self._normalize_city(origin), self._normalize_city(destination))
+            return list(self._flight_buckets.get(pair, []))[:cap]
+        if stype == "hotel":
+            city = self._slot_attr(slot, "city") or self._slot_attr(slot, "destination")
+            if not city:
+                return []
+            return list(self._accommodation_buckets.get(self._normalize_city(city), []))[:cap]
+        if stype == "restaurant":
+            city = self._slot_attr(slot, "city") or self._slot_attr(slot, "destination")
+            if not city:
+                return []
+            return list(self._restaurant_buckets.get(self._normalize_city(city), []))[:cap]
+        if stype == "attraction":
+            city = self._slot_attr(slot, "city") or self._slot_attr(slot, "destination")
+            if not city:
+                return []
+            return list(self._attraction_buckets.get(self._normalize_city(city), []))[:cap]
+        return []

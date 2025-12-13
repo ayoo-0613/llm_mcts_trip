@@ -107,6 +107,9 @@ class MCTSAgent:
         self.pw_c = getattr(args, "pw_c", 2.0)
         self.pw_alpha = getattr(args, "pw_alpha", 0.5)
         self.pw_min_children = max(1, int(getattr(args, "pw_min_children", 6)))
+        self.llm_prior_mode = getattr(args, "use_llm_prior", "all")
+        if self.llm_prior_mode not in ("all", "root", "none"):
+            self.llm_prior_mode = "all"
 
     # ----------------------------
     # Utility
@@ -114,6 +117,25 @@ class MCTSAgent:
     @staticmethod
     def state_id(history: list):
         return " ".join(history)
+
+    def _use_llm_for_depth(self, depth: int) -> bool:
+        if not self.use_llm:
+            return False
+        if self.llm_prior_mode == "none":
+            return False
+        if self.llm_prior_mode == "root":
+            return depth == 0
+        return True
+
+    @staticmethod
+    def _sorted_indices_from_probs(probs_full, length: int):
+        try:
+            arr = np.array(probs_full, dtype=np.float32)
+            if len(arr) != length:
+                return list(range(length))
+            return list(np.argsort(-arr))
+        except Exception:
+            return list(range(length))
 
     def _progressive_widen_limit(self, state_node):
         if state_node is None or not state_node.valid_actions:
@@ -196,7 +218,9 @@ class MCTSAgent:
         state.children = []
         state.children_prob_pool = probs_full.tolist() if hasattr(probs_full, "tolist") else list(probs_full)
         state.children_probs = []
-        state.remaining_action_indices = list(range(len(state.valid_actions)))
+        state.remaining_action_indices = self._sorted_indices_from_probs(
+            state.children_prob_pool, len(state.valid_actions)
+        )
         self._progressive_widen(state)
 
         return state
@@ -237,7 +261,9 @@ class MCTSAgent:
         state.children = []
         state.children_prob_pool = probs_full.tolist() if hasattr(probs_full, "tolist") else list(probs_full)
         state.children_probs = []
-        state.remaining_action_indices = list(range(len(state.valid_actions)))
+        state.remaining_action_indices = self._sorted_indices_from_probs(
+            state.children_prob_pool, len(state.valid_actions)
+        )
         self._progressive_widen(state)
 
         return state
@@ -253,7 +279,7 @@ class MCTSAgent:
         init_history = history.copy()
 
         # 建立根节点
-        self.root = self.build_state(ob, history, valid_actions, done, use_llm=self.use_llm)
+        self.root = self.build_state(ob, history, valid_actions, done, use_llm=self._use_llm_for_depth(0))
 
         # 如果一开始就无动作，直接返回 None
         if not self.root.valid_actions:
@@ -320,7 +346,7 @@ class MCTSAgent:
                     done,
                     reward,
                     prev_action=best_action_node.action,
-                    use_llm=self.use_llm,
+                    use_llm=self._use_llm_for_depth(depth + 1),
                 )
                 next_state_node.parent = state_node
                 rollout_next = True
@@ -332,7 +358,7 @@ class MCTSAgent:
                 done,
                 reward,
                 prev_action=best_action_node.action,
-                use_llm=self.use_llm,
+                use_llm=self._use_llm_for_depth(depth + 1),
             )
             next_state_node.parent = state_node
             best_action_node.children = next_state_node
@@ -377,7 +403,13 @@ class MCTSAgent:
             next_state_node = action_node.children
         else:
             next_state_node = self.build_state(
-                ob, history, valid_actions, done, reward, prev_action=action, use_llm=self.use_llm
+                ob,
+                history,
+                valid_actions,
+                done,
+                reward,
+                prev_action=action,
+                use_llm=self._use_llm_for_depth(depth + 1),
             )
             next_state_node.parent = state_node
             action_node.children = next_state_node
