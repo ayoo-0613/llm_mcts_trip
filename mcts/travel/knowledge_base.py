@@ -111,6 +111,19 @@ class TravelKnowledgeBase:
         self._normalize()
         self._build_indexes()
 
+    # ----------------------------
+    # State / city helpers
+    # ----------------------------
+    def is_state(self, name: str) -> bool:
+        """Return True if the given name matches a known state."""
+        norm = self._normalize_city(name)
+        return bool(norm and norm in getattr(self, "state_norm_map", {}))
+
+    def cities_in_state(self, state_name: str) -> List[str]:
+        """Return all cities recorded for a given state (original casing)."""
+        norm = self._normalize_city(state_name)
+        return list(getattr(self, "state_to_cities_norm", {}).get(norm, []))
+
     def _load_csv(self, relative_path: str) -> pd.DataFrame:
         path = os.path.join(self.root, relative_path)
         if not os.path.exists(path):
@@ -552,6 +565,21 @@ class TravelKnowledgeBase:
             return ids
         return ids
 
+    @staticmethod
+    def _apply_numeric_cap(df, col: str, cap):
+        """Hard filter dataframe by numeric cap; cap<=0 yields empty."""
+        if cap is None:
+            return df
+        try:
+            cap_v = float(cap)
+        except Exception:
+            return df
+        if cap_v <= 0:
+            return df.iloc[0:0]
+        if col in df.columns:
+            return df[df[col].notna() & (df[col].astype(float) <= cap_v)]
+        return df
+
     def query(self, slot, filt: Dict[str, Any], state: Any, cap: int = 80) -> List[Any]:
         stype = self._slot_attr(slot, "type")
         if not stype:
@@ -604,32 +632,53 @@ class TravelKnowledgeBase:
         max_stops = filt.get("max_stops")
         filter_date = filt.get("date")
 
+        df = pd.DataFrame(flights)
+        if not df.empty:
+            df = df[~df["id"].astype(str).isin(avoid_ids)]
+            df = self._apply_numeric_cap(df, "price", max_price)
+            if min_price is not None and "price" in df.columns:
+                try:
+                    df = df[df["price"].notna() & (df["price"].astype(float) >= float(min_price))]
+                except Exception:
+                    pass
+            if max_duration is not None:
+                try:
+                    df = df[(df["duration"].notna()) & (df["duration"].astype(float) <= float(max_duration))]
+                except Exception:
+                    pass
+            if max_stops is not None and "stops" in df.columns:
+                try:
+                    df = df[(df["stops"].notna()) & (df["stops"].astype(float) <= float(max_stops))]
+                except Exception:
+                    pass
+            if filter_date is not None and "date" in df.columns:
+                df = df[df["date"].astype(str) == str(filter_date)]
+            # time window filters
+            if earliest is not None:
+                df = df[df["depart"].apply(lambda t: self._time_to_minutes(t) is not None and self._time_to_minutes(t) >= earliest)]
+            if latest is not None:
+                df = df[df["depart"].apply(lambda t: self._time_to_minutes(t) is not None and self._time_to_minutes(t) <= latest)]
+
         filtered: List[Tuple[Dict, int]] = []
-        for idx, row in enumerate(flights):
-            if avoid_ids and str(row.get("id")) in avoid_ids:
-                continue
-            if max_price is not None and row.get("price") is not None and row["price"] > max_price:
-                continue
-            if min_price is not None and row.get("price") is not None and row["price"] < min_price:
-                continue
-            if max_duration is not None and row.get("duration") is not None and row["duration"] > max_duration:
-                continue
-            if max_stops is not None and row.get("stops") is not None and row["stops"] > max_stops:
-                continue
-            depart_m = self._time_to_minutes(row.get("depart"))
-            if earliest is not None and depart_m is not None and depart_m < earliest:
-                continue
-            if latest is not None and depart_m is not None and depart_m > latest:
-                continue
-            if filter_date and row.get("date") and str(row.get("date")) != str(filter_date):
-                continue
-            filtered.append((row, idx))
+        for idx, row in df.reset_index(drop=True).iterrows() if not df.empty else []:
+            filtered.append((row.to_dict(), idx))
 
         if not filtered:
             return []
         sort_by = str(filt.get("sort_by") or "price").lower()
         filtered.sort(key=lambda pair: self._flight_sort_key(pair[0], pair[1], sort_by))
-        return [item for item, _ in filtered[:cap]]
+        candidates = [item for item, _ in filtered[:cap]]
+        if max_price is not None:
+            try:
+                mp = float(max_price)
+                bad = [c for c in candidates if c.get("price") is not None and float(c["price"]) > mp + 1e-6]
+                if bad:
+                    raise RuntimeError(
+                        f"[KB] flight cap violated max_price={mp} bad0_price={bad[0].get('price')} bad0={bad[0]}"
+                    )
+            except Exception:
+                pass
+        return candidates
 
     def _hotel_sort_key(self, item: Dict[str, Any], idx: int, sort_by: str):
         price = item.get("price") if item.get("price") is not None else float("inf")
@@ -653,31 +702,54 @@ class TravelKnowledgeBase:
         house_rules = {str(s).lower().replace(" ", "_") for s in filt.get("house_rules") or []}
         min_occupancy = filt.get("min_occupancy")
 
-        filtered: List[Tuple[Dict, int]] = []
-        for idx, stay in enumerate(stays):
-            if avoid_ids and str(stay.get("id")) in avoid_ids:
-                continue
-            if max_price is not None and stay.get("price") is not None and stay["price"] > max_price:
-                continue
-            if min_price is not None and stay.get("price") is not None and stay["price"] < min_price:
-                continue
-            if min_review is not None and stay.get("review") is not None and stay["review"] < min_review:
-                continue
-            if room_types and stay.get("room_type") and stay["room_type"].lower() not in room_types:
-                continue
-            if min_occupancy is not None and stay.get("occupancy") is not None and stay["occupancy"] < min_occupancy:
-                continue
+        df = pd.DataFrame(stays)
+        if not df.empty:
+            df = df[~df["id"].astype(str).isin(avoid_ids)]
+            df = self._apply_numeric_cap(df, "price", max_price)
+            if min_price is not None and "price" in df.columns:
+                try:
+                    df = df[df["price"].notna() & (df["price"].astype(float) >= float(min_price))]
+                except Exception:
+                    pass
+            if min_review is not None and "review" in df.columns:
+                try:
+                    df = df[df["review"].notna() & (df["review"].astype(float) >= float(min_review))]
+                except Exception:
+                    pass
+            if room_types:
+                df = df[df["room_type"].apply(lambda x: isinstance(x, str) and x.lower() in room_types)]
+            if min_occupancy is not None and "occupancy" in df.columns:
+                try:
+                    df = df[
+                        df["occupancy"].apply(
+                            lambda v: v is None or (not pd.isna(v) and float(v) >= float(min_occupancy))
+                        )
+                    ]
+                except Exception:
+                    pass
             if house_rules:
-                tokens = stay.get("house_rules_tokens") or set()
-                if not house_rules.issubset(tokens):
-                    continue
-            filtered.append((stay, idx))
+                df = df[df["house_rules_tokens"].apply(lambda tokens: house_rules.issubset(tokens if isinstance(tokens, set) else set(tokens or [])))]
+
+        filtered: List[Tuple[Dict, int]] = []
+        for idx, row in df.reset_index(drop=True).iterrows() if not df.empty else []:
+            filtered.append((row.to_dict(), idx))
 
         if not filtered:
             return []
         sort_by = str(filt.get("sort_by") or "price").lower()
         filtered.sort(key=lambda pair: self._hotel_sort_key(pair[0], pair[1], sort_by))
-        return [item for item, _ in filtered[:cap]]
+        candidates = [item for item, _ in filtered[:cap]]
+        if max_price is not None:
+            try:
+                mp = float(max_price)
+                bad = [c for c in candidates if c.get("price") is not None and float(c["price"]) > mp + 1e-6]
+                if bad:
+                    raise RuntimeError(
+                        f"[KB] hotel cap violated max_price={mp} bad0_price={bad[0].get('price')} bad0={bad[0]}"
+                    )
+            except Exception:
+                pass
+        return candidates
 
     def _restaurant_sort_key(self, item: Dict[str, Any], idx: int, sort_by: str):
         cost = item.get("cost") if item.get("cost") is not None else float("inf")
@@ -699,23 +771,38 @@ class TravelKnowledgeBase:
         max_cost = filt.get("max_cost")
         min_rating = filt.get("min_rating")
 
+        df = pd.DataFrame(restaurants)
+        if not df.empty:
+            df = df[~df["id"].astype(str).isin(avoid_ids)]
+            if cuisines:
+                df = df[df["cuisines_lc"].apply(lambda s: any(c in (s or "") for c in cuisines))]
+            df = self._apply_numeric_cap(df, "cost", max_cost)
+            if min_rating is not None and "rating" in df.columns:
+                try:
+                    df = df[df["rating"].notna() & (df["rating"].astype(float) >= float(min_rating))]
+                except Exception:
+                    pass
+
         filtered: List[Tuple[Dict, int]] = []
-        for idx, rest in enumerate(restaurants):
-            if avoid_ids and str(rest.get("id")) in avoid_ids:
-                continue
-            if cuisines and not any(c in (rest.get("cuisines_lc") or "") for c in cuisines):
-                continue
-            if max_cost is not None and rest.get("cost") is not None and rest["cost"] > max_cost:
-                continue
-            if min_rating is not None and rest.get("rating") is not None and rest["rating"] < min_rating:
-                continue
-            filtered.append((rest, idx))
+        for idx, row in df.reset_index(drop=True).iterrows() if not df.empty else []:
+            filtered.append((row.to_dict(), idx))
 
         if not filtered:
             return []
         sort_by = str(filt.get("sort_by") or "rating").lower()
         filtered.sort(key=lambda pair: self._restaurant_sort_key(pair[0], pair[1], sort_by))
-        return [item for item, _ in filtered[:cap]]
+        candidates = [item for item, _ in filtered[:cap]]
+        if max_cost is not None:
+            try:
+                mc = float(max_cost)
+                bad = [c for c in candidates if c.get("cost") is not None and float(c["cost"]) > mc + 1e-6]
+                if bad:
+                    raise RuntimeError(
+                        f"[KB] meal cap violated max_cost={mc} bad0_cost={bad[0].get('cost')} bad0={bad[0]}"
+                    )
+            except Exception:
+                pass
+        return candidates
 
     def query_attractions(self, slot, filt: Dict[str, Any], state: Any, cap: int = 80) -> List[Dict]:
         city = self._slot_attr(slot, "city") or self._slot_attr(slot, "destination")
@@ -726,11 +813,13 @@ class TravelKnowledgeBase:
         avoid_ids = {str(x) for x in (filt.get("avoid_ids") or [])}
         avoid_ids |= self._used_attraction_ids(state)
 
+        df = pd.DataFrame(attractions)
+        if not df.empty:
+            df = df[~df["id"].astype(str).isin(avoid_ids)]
+            df = self._apply_numeric_cap(df, "cost", filt.get("max_cost"))
         filtered: List[Tuple[Dict, int]] = []
-        for idx, att in enumerate(attractions):
-            if avoid_ids and str(att.get("id")) in avoid_ids:
-                continue
-            filtered.append((att, idx))
+        for idx, row in df.reset_index(drop=True).iterrows() if not df.empty else []:
+            filtered.append((row.to_dict(), idx))
 
         if not filtered:
             return []
@@ -746,7 +835,19 @@ class TravelKnowledgeBase:
                     pair[1],
                 )
             )
-        return [item for item, _ in filtered[:cap]]
+        candidates = [item for item, _ in filtered[:cap]]
+        max_cost = filt.get("max_cost")
+        if max_cost is not None:
+            try:
+                mc = float(max_cost)
+                bad = [c for c in candidates if c.get("cost") is not None and float(c["cost"]) > mc + 1e-6]
+                if bad:
+                    raise RuntimeError(
+                        f"[KB] attraction cap violated max_cost={mc} bad0_cost={bad[0].get('cost')} bad0={bad[0]}"
+                    )
+            except Exception:
+                pass
+        return candidates
 
     def fallback_candidates(self, slot, state: Any, cap: int = 20) -> List[Any]:
         stype = self._slot_attr(slot, "type")

@@ -5,6 +5,7 @@ import logging
 from typing import Any, Dict, Optional, Tuple
 
 from mcts.travel import filters
+from mcts.travel.llm_utils import call_llm
 
 logger = logging.getLogger(__name__)
 
@@ -94,13 +95,7 @@ class LLMFilterGenerator:
         return filt
 
     def _call_llm(self, prompt: str) -> str:
-        if callable(self.llm):
-            return self.llm(prompt)
-        if hasattr(self.llm, "generate"):
-            return self.llm.generate(prompt)  # type: ignore[attr-defined]
-        if hasattr(self.llm, "__call__"):
-            return self.llm(prompt)
-        raise RuntimeError("No callable LLM provided for LLMFilterGenerator")
+        return call_llm(self.llm, prompt)
 
     @staticmethod
     def _parse_json(raw: str) -> Dict[str, Any]:

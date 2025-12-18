@@ -110,6 +110,7 @@ class MCTSAgent:
         self.llm_prior_mode = getattr(args, "use_llm_prior", "all")
         if self.llm_prior_mode not in ("all", "root", "none"):
             self.llm_prior_mode = "all"
+        self.prior_logs = []
 
     # ----------------------------
     # Utility
@@ -166,13 +167,38 @@ class MCTSAgent:
     # ----------------------------
     # Policy scoring
     # ----------------------------
-    def _score_actions_with_policy(self, history, ob, valid_actions):
+    def _score_actions_with_policy(
+        self,
+        history,
+        ob,
+        valid_actions,
+        slot=None,
+        payloads=None,
+        state_signature=None,
+    ):
         if valid_actions is None or len(valid_actions) == 0:
             return np.array([]), 0
         goal_text = ""
+        goal_obj = getattr(self.env, "goal", None)
         if hasattr(self.env, "get_goal"):
             goal_text = self.env.get_goal()
         if self.llm_policy is not None:
+            if hasattr(self.llm_policy, "score_prior"):
+                try:
+                    priors, pred_reward = self.llm_policy.score_prior(
+                        obs=ob,
+                        slot=slot,
+                        actions=valid_actions,
+                        payloads=payloads,
+                        history=history,
+                        goal=goal_obj or goal_text,
+                        state_signature=state_signature,
+                    )
+                    if priors is not None and len(priors) == len(valid_actions):
+                        self._log_prior(slot, valid_actions, priors, source="score_prior")
+                        return priors, pred_reward
+                except Exception:
+                    pass
             if hasattr(self.llm_policy, "_calculate_emperical_prob"):
                 return self.llm_policy._calculate_emperical_prob(
                     history, ob, valid_actions, goal_text, 10, self.round, self.discount_factor
@@ -202,6 +228,15 @@ class MCTSAgent:
         state.id = self.state_id(history)
         state.valid_actions = valid_actions if valid_actions is not None else []
         state.use_llm = use_llm
+        slot = getattr(self.env, "last_slot", None)
+        payloads = getattr(self.env, "action_payloads", None)
+        state_signature = None
+        try:
+            env_state = getattr(self.env, "state", None)
+            if env_state is not None and hasattr(env_state, "signature"):
+                state_signature = env_state.signature()
+        except Exception:
+            state_signature = None
 
         # children_probs
         if not use_llm:
@@ -211,7 +246,12 @@ class MCTSAgent:
                 probs_full = np.ones((len(state.valid_actions),)) / len(state.valid_actions)
         else:
             probs_full, state.predicted_reward = self._score_actions_with_policy(
-                history, ob, state.valid_actions
+                history,
+                ob,
+                state.valid_actions,
+                slot=slot,
+                payloads=payloads,
+                state_signature=state_signature,
             )
 
         self.state_dict[state.id] = state
@@ -224,6 +264,49 @@ class MCTSAgent:
         self._progressive_widen(state)
 
         return state
+
+    # ----------------------------
+    # Logging helpers
+    # ----------------------------
+    def _format_slot(self, slot):
+        if slot is None:
+            return "slot=None"
+        parts = [f"type={getattr(slot, 'type', None)}"]
+        for key in ("day", "meal_type", "seg", "city", "origin", "destination"):
+            val = getattr(slot, key, None)
+            if val is not None:
+                parts.append(f"{key}={val}")
+        return " ".join(parts)
+
+    def _log_prior(self, slot, actions, priors, source=""):
+        entry = {}
+        try:
+            slot_txt = self._format_slot(slot)
+            arr = np.array(priors, dtype=np.float32)
+            order = list(np.argsort(-arr))
+            topk = order[: min(3, len(order))]
+            top_list = []
+            for idx in topk:
+                prob = float(arr[idx])
+                act = actions[idx] if idx < len(actions) else "<out_of_range>"
+                top_list.append({"index": int(idx), "p": prob, "action": act})
+            entry = {
+                "slot": slot_txt,
+                "source": source or "llm",
+                "candidates": len(actions),
+                "top": top_list,
+            }
+            self.prior_logs.append(entry)
+            if self.debug:
+                header = f"[PRIOR] {source or 'llm'} {slot_txt}"
+                print(header)
+                for item in top_list:
+                    print(f"  [{item['index']}] p={item['p']:.3f} | {item['action']}")
+        except Exception:
+            try:
+                self.prior_logs.append(entry or {"slot": "error", "source": source or "llm"})
+            except Exception:
+                pass
 
     def build_state(
         self,
@@ -245,6 +328,15 @@ class MCTSAgent:
         state.id = self.state_id(history)
         state.valid_actions = valid_actions if valid_actions is not None else []
         state.use_llm = use_llm
+        slot = getattr(self.env, "last_slot", None)
+        payloads = getattr(self.env, "action_payloads", None)
+        state_signature = None
+        try:
+            env_state = getattr(self.env, "state", None)
+            if env_state is not None and hasattr(env_state, "signature"):
+                state_signature = env_state.signature()
+        except Exception:
+            state_signature = None
 
         # children_probs
         if not use_llm:
@@ -254,7 +346,12 @@ class MCTSAgent:
                 probs_full = np.ones((len(state.valid_actions),)) / len(state.valid_actions)
         else:
             probs_full, state.predicted_reward = self._score_actions_with_policy(
-                history, ob, state.valid_actions
+                history,
+                ob,
+                state.valid_actions,
+                slot=slot,
+                payloads=payloads,
+                state_signature=state_signature,
             )
 
         self.state_dict[state.id] = state

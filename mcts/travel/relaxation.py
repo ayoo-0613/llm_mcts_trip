@@ -15,11 +15,15 @@ class RelaxationController:
 
     def relax_and_query(self, kb, slot, filt: Dict[str, Any], state: Any, cap: int) -> List[Any]:
         current = copy.deepcopy(filt) if isinstance(filt, dict) else {}
+        budget_fields = {k: current.get(k) for k in ("max_price", "max_cost") if k in current}
         for attempt in range(max(1, self.max_tries)):
             candidates = kb.query(slot, current, state, cap=cap)
             if candidates:
                 return candidates
             current = self._relax_once(slot, current, attempt)
+            for k, v in budget_fields.items():
+                if v is not None:
+                    current[k] = v
 
         # Final fallback: cheapest/closest options ignoring the failing filter.
         if hasattr(kb, "fallback_candidates"):

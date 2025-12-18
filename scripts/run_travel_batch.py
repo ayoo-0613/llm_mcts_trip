@@ -22,7 +22,7 @@ from mcts.mcts.mcts import MCTSAgent  # noqa: E402
 from mcts.travel.knowledge_base import TripGoal, TravelKnowledgeBase  # noqa: E402
 from mcts.travel.llm_policy import TravelLLMPolicy  # noqa: E402
 from mcts.travel.travel_env import TravelEnv  # noqa: E402
-from mcts.travel.phase_plan import PhasePlanGenerator  # noqa: E402
+from mcts.travel.filtering import PhasePlanGenerator  # noqa: E402
 from mcts.travel.preference_router import route_preferences  # noqa: E402
 
 
@@ -413,7 +413,7 @@ def _run_single(goal: TripGoal, kb: TravelKnowledgeBase, policy: TravelLLMPolicy
             return _call_local_llm(base, model, prompt, timeout=args.parser_timeout)
         plan_llm = _plan_call
 
-    phase_planner = PhasePlanGenerator(llm=plan_llm, enable=args.use_llm_filters)
+    phase_planner = PhasePlanGenerator(llm_client=plan_llm, enable=args.use_llm_filters)
 
     env = TravelEnv(
         kb,
@@ -422,7 +422,6 @@ def _run_single(goal: TripGoal, kb: TravelKnowledgeBase, policy: TravelLLMPolicy
         top_k=args.top_k,
         debug=args.debug,
         candidate_cap=args.candidate_cap,
-        use_llm_filters=args.use_llm_filters,
         relax_max_tries=args.relax_max_tries,
         user_query=raw_query,
         log_filter_usage=args.log_filter_usage,
@@ -450,6 +449,7 @@ def _run_single(goal: TripGoal, kb: TravelKnowledgeBase, policy: TravelLLMPolicy
         use_llm=args.use_llm_prior != "none",
     )
 
+    agent.prior_logs = []
     obs, valid_actions = env.reset()
     history = list(env.base_history)
     done = False
@@ -473,6 +473,7 @@ def _run_single(goal: TripGoal, kb: TravelKnowledgeBase, policy: TravelLLMPolicy
         "goal": goal,
         "env": env,
         "filter_usage": list(env.filter_events),
+        "prior_usage": list(getattr(agent, "prior_logs", [])),
     }
 
 
@@ -551,13 +552,13 @@ def parse_args():
     # LLM params
     parser.add_argument("--local-model", default=None, help="Local LLM for action priors and NL parsing.")
     parser.add_argument("--local-base", default=os.getenv("LOCAL_LLM_BASE", "http://localhost:11434"))
-    parser.add_argument("--device", default="cpu", help="cpu/mps/cuda:0 etc.")
+    parser.add_argument("--device", default="mps", help="cpu/mps/cuda:0 etc.")
     parser.add_argument("--parser-model", default=None, help="Parser model (defaults to --local-model).")
     parser.add_argument("--parser-timeout", type=float, default=180.0)
     parser.add_argument("--database-root", default="database")
     parser.add_argument("--save-dir", default="plans_out", help="Directory to save generated plans as JSON.")
     parser.add_argument("--notes", default=None, help="Optional notes saved with each plan.")
-    parser.set_defaults(use_llm_filters=True)
+    parser.set_defaults(use_llm_filters=False)
     return parser.parse_args()
 
 
@@ -570,8 +571,18 @@ def main():
 
     parser_model = args.parser_model or args.local_model or "deepseek-r1:14b"
     kb = TravelKnowledgeBase(args.database_root)
-    policy = TravelLLMPolicy(device=args.device, model_path=args.local_model, embedding_model="all-MiniLM-L6-v2")
-    os.makedirs(args.save_dir, exist_ok=True)
+    policy = TravelLLMPolicy(
+        device=args.device,
+        model_path=args.local_model,
+        embedding_model="all-MiniLM-L6-v2",
+        local_base=args.local_base,
+        model_name=args.local_model,
+    )
+    # 如果开启 use_llm_filters，则输出到 save_dir/llm_filters 子文件夹
+    output_dir = args.save_dir
+    if getattr(args, "use_llm_filters", False):
+        output_dir = os.path.join(args.save_dir, "llm_filters")
+    os.makedirs(output_dir, exist_ok=True)
 
     for idx, q in enumerate(subset, start=args.start_index + 1):
         # 先输出原始 query，方便观察
@@ -594,7 +605,7 @@ def main():
         diagnostics = _goal_diagnostics(kb, goal)
         filename = f"{idx:03d}_{goal.origin}_to_{goal.destination}_{goal.start_date or 'na'}_{goal.duration_days or 'days'}d.json"
         safe_name = filename.replace(" ", "_").replace("/", "-")
-        out_path = os.path.join(args.save_dir, safe_name)
+        out_path = os.path.join(output_dir, safe_name)
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump(
                 {
@@ -607,6 +618,7 @@ def main():
                     "violations": result["violations"],
                     "structured_plan": structured,
                     "filter_usage": result.get("filter_usage", []),
+                    "prior_usage": result.get("prior_usage", []),
                     "elapsed_seconds": elapsed,
                 },
                 f,
