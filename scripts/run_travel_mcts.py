@@ -16,8 +16,7 @@ if ROOT not in sys.path:
 from mcts.mcts.mcts import MCTSAgent
 from mcts.travel.knowledge_base import TravelKnowledgeBase, TripGoal
 from mcts.travel.travel_env import TravelEnv
-from mcts.travel.llm_policy import TravelLLMPolicy
-from mcts.travel.filtering import PhasePlanGenerator
+from mcts.travel.agents import SemanticAgent
 
 
 def _print_plan(env: TravelEnv, success: bool, actions):
@@ -485,6 +484,8 @@ def main():
         else:
             print("[WARN] use_llm_filters is True but local_base or model is missing; filters will fall back to defaults.")
 
+    semantic = SemanticAgent(embedding_model=args.embedding_model)
+
     env = TravelEnv(
         kb,
         goal,
@@ -495,9 +496,9 @@ def main():
         relax_max_tries=args.relax_max_tries,
         user_query=query_text or args.nl_query or "",
         log_filter_usage=args.log_filter_usage,
-        phase_planner=PhasePlanGenerator(llm_client=plan_llm, enable=args.use_llm_filters),
+        phase_planner=semantic.build_phase_planner(args, llm_call=plan_llm),
     )
-    policy = TravelLLMPolicy(device=args.device, model_path=args.local_model, embedding_model=args.embedding_model)
+    policy = semantic.build_policy(args)
 
     mcts_args = SimpleNamespace(
         exploration_constant=args.exploration_constant,

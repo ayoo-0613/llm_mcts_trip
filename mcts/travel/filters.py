@@ -116,9 +116,17 @@ def default_filter(filter_type: str, goal=None, state=None, slot=None) -> Dict[s
         ).__dict__
     if filter_type == "hotel":
         city = getattr(slot, "city", None) or getattr(goal, "destination", None)
+        room_type: List[str] = []
+        house_rules: List[str] = []
+        if goal and hasattr(goal, "constraints"):
+            stay_cons = (goal.constraints.get("stay", {}) or {}) if isinstance(goal.constraints, dict) else {}
+            room_type = list(stay_cons.get("room_type") or [])
+            house_rules = list(stay_cons.get("house_rules") or [])
         return HotelFilter(
             city=city,
             max_price=getattr(goal, "budget", None),
+            room_type=room_type,
+            house_rules=house_rules,
             min_occupancy=getattr(goal, "people_number", None),
             sort_by="price",
         ).__dict__

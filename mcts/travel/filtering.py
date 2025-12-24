@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
@@ -460,7 +461,7 @@ class PhasePlanFilterPolicy(FilterPolicy):
             "phase": phase_name,
         }
         try:
-            spend = self._phase_spend_so_far(state)
+            spend = self._phase_spend_so_far(goal, state)
             total_left = None
             if getattr(goal, "budget", None) is not None:
                 total_left = max(0.0, float(goal.budget) - float(self.cost_estimator(state)))
@@ -579,42 +580,82 @@ class PhasePlanFilterPolicy(FilterPolicy):
                 updated["max_cost"] = cap
         return updated
 
-    def _phase_spend_so_far(self, state) -> Dict[str, float]:
+    def _phase_spend_so_far(self, goal, state) -> Dict[str, float]:
         spend = {"flight": 0.0, "stay": 0.0, "meal": 0.0, "attraction": 0.0}
+        people = int(getattr(goal, "people_number", 1) or 1)
+        people = max(1, people)
 
         for seg in getattr(state, "segment_modes", {}).values():
-            if isinstance(seg, dict) and seg.get("mode") == "flight":
-                detail = seg.get("detail", {}) or {}
-                try:
-                    if detail.get("price") is not None:
-                        spend["flight"] += float(detail["price"])
-                    elif detail.get("cost") is not None:
-                        spend["flight"] += float(detail["cost"])
-                except Exception:
-                    continue
+            if not isinstance(seg, dict):
+                continue
+            mode = str(seg.get("mode") or "").lower()
+            detail = seg.get("detail", {}) or {}
+            if not isinstance(detail, dict):
+                continue
+            base = detail.get("price")
+            if base is None:
+                base = detail.get("cost")
+            if base is None:
+                continue
+            try:
+                base_f = float(base)
+            except Exception:
+                continue
+            if mode == "flight":
+                spend["flight"] += base_f * people
+            elif mode == "taxi":
+                spend["flight"] += base_f * math.ceil(people / 4.0)
+            elif mode == "self-driving":
+                spend["flight"] += base_f * math.ceil(people / 5.0)
+            else:
+                spend["flight"] += base_f
 
-        for stay in getattr(state, "city_stays", {}).values():
-            if stay and stay.get("price") is not None:
-                try:
-                    spend["stay"] += float(stay["price"])
-                except Exception:
-                    continue
+        # Approximate nights by counting non-last days per city based on day_to_city mapping.
+        nights_by_city: Dict[str, int] = {}
+        day_to_city = getattr(state, "day_to_city", None) or {}
+        if isinstance(day_to_city, dict) and day_to_city:
+            for day in range(1, max(1, int(self.total_days))):
+                city = day_to_city.get(day)
+                if city:
+                    nights_by_city[str(city)] = nights_by_city.get(str(city), 0) + 1
+        else:
+            seq = getattr(state, "city_sequence", None) or getattr(goal, "fixed_city_order", None) or []
+            if seq:
+                total = max(1, int(self.total_days))
+                for day in range(1, max(1, total)):
+                    idx = min(len(seq) - 1, int((day - 1) * len(seq) / max(1, total)))
+                    city = seq[idx]
+                    if city:
+                        nights_by_city[str(city)] = nights_by_city.get(str(city), 0) + 1
+
+        for city, stay in getattr(state, "city_stays", {}).items():
+            if not stay or stay.get("price") is None:
+                continue
+            nights = int(nights_by_city.get(str(city), 0) or 0)
+            if nights <= 0:
+                continue
+            try:
+                price = float(stay["price"])
+            except Exception:
+                continue
+            occ = stay.get("occupancy")
+            try:
+                occ_i = int(occ) if occ is not None else None
+            except Exception:
+                occ_i = None
+            occ_i = max(1, occ_i) if occ_i else None
+            rooms = math.ceil(people / float(occ_i or people))
+            spend["stay"] += price * rooms * nights
 
         for day_map in getattr(state, "meals", {}).values():
             for meal in day_map.values():
                 if meal and meal.get("cost") is not None:
                     try:
-                        spend["meal"] += float(meal["cost"])
+                        spend["meal"] += float(meal["cost"]) * people
                     except Exception:
                         continue
 
-        for day_map in getattr(state, "attractions", {}).values():
-            for att in day_map.values():
-                if att and att.get("cost") is not None:
-                    try:
-                        spend["attraction"] += float(att["cost"])
-                    except Exception:
-                        continue
+        # Attractions: ignore costs to match evaluation (hard_constraint.get_total_cost).
         return spend
 
     def _apply_phase_budget_caps(self, goal, state, slot, filt: Dict[str, Any], plan: Any) -> Dict[str, Any]:
@@ -627,7 +668,7 @@ class PhasePlanFilterPolicy(FilterPolicy):
 
         caps = getattr(bp, "caps", {}) or {}
         per_unit = getattr(bp, "per_unit", {}) or {}
-        spend = self._phase_spend_so_far(state)
+        spend = self._phase_spend_so_far(goal, state)
         try:
             total_left = max(0.0, float(goal.budget) - float(self.cost_estimator(state)))
         except Exception:

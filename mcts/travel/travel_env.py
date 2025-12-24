@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 import copy
-import itertools
+import math
 from dataclasses import asdict, dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 
-from mcts.travel import filters
 from mcts.travel.filtering import FilterPolicy, PhasePlanFilterPolicy, PhasePlanGenerator
 from mcts.travel.knowledge_base import TravelKnowledgeBase, TripGoal
+from mcts.travel.retrieval_agent import RetrievalAgent
 from mcts.travel.relaxation import RelaxationController
 
 
@@ -65,6 +65,9 @@ class TravelState:
     city_sequence: List[str] = field(default_factory=list)
     segment_modes: Dict[int, Dict] = field(default_factory=dict)  # segment idx -> {"mode": str, "detail": Dict}
 
+    # Optional: explicit day-to-city allocation (CITY phase output)
+    day_to_city: Dict[int, str] = field(default_factory=dict)  # day (1-based) -> city
+
     cost: float = 0.0
     preference_matches: int = 0
     violations: List[str] = field(default_factory=list)
@@ -83,6 +86,7 @@ class TravelState:
             attractions=copy.deepcopy(self.attractions),
             city_sequence=list(self.city_sequence),
             segment_modes=copy.deepcopy(self.segment_modes),
+            day_to_city=copy.deepcopy(self.day_to_city),
             cost=self.cost,
             preference_matches=self.preference_matches,
             violations=list(self.violations),
@@ -94,6 +98,11 @@ class TravelState:
         """Deterministic signature for caching."""
         parts: List[str] = [f"phase:{self.phase.name}"]
         parts.append("cities:" + "|".join(self.city_sequence))
+        if self.day_to_city:
+            day_parts = [f"{d}:{self.day_to_city[d]}" for d in sorted(self.day_to_city)]
+            parts.append("day_city:" + ",".join(day_parts))
+        else:
+            parts.append("day_city:")
 
         seg_parts = []
         for idx in sorted(self.segment_modes):
@@ -164,7 +173,8 @@ class TravelEnv:
                  relax_max_tries: int = 6,
                  user_query: str = "",
                  log_filter_usage: bool = False,
-                 enable_budget_caps: bool = False):
+                 enable_budget_caps: bool = False,
+                 retrieval_agent: Optional[RetrievalAgent] = None):
         self.kb = knowledge_base
         self.goal = goal
         self.max_steps = max_steps
@@ -192,7 +202,6 @@ class TravelEnv:
         self.base_history: List[str] = []
 
         # 初始化城市/phase（单城直接跳过城市搜索）
-        self._transport_cache: Dict[Tuple[str, str], bool] = {}
         self._ensure_destination_required()
         self._expand_state_locations()
         self._init_cities_and_phase(self.base_state)
@@ -203,10 +212,18 @@ class TravelEnv:
         self.action_payloads: Dict[str, Tuple] = {}
         self.last_info: Dict = {}
         self.last_slot: Optional[Slot] = None
-        self._transport_cache: Dict[Tuple[str, str], bool] = {}
         self._last_phase_plan = None
 
         self.relaxer = relaxer or RelaxationController(max_tries=relax_max_tries, goal=goal)
+        self.retrieval_agent = retrieval_agent or RetrievalAgent(
+            kb=self.kb,
+            filter_policy=self.filter_policy,
+            relaxer=self.relaxer,
+            top_k=self.top_k,
+            candidate_cap=self.candidate_cap,
+            debug=self.debug,
+            log_filter_usage=self.log_filter_usage,
+        )
         self.candidate_cache: Dict[Tuple[str, Slot], Dict[str, Any]] = {}
         self.filter_cache: Dict[Tuple[str, Slot], Dict[str, Any]] = {}
         self.filter_events: List[Dict[str, Any]] = []
@@ -245,15 +262,6 @@ class TravelEnv:
                 "No candidate_cities will be built automatically; please provide candidate_city list "
                 "or change destination to a state."
             )
-
-    def _has_transport_cached(self, src: str, dst: str, require_flight: bool = False) -> bool:
-        key = (self.kb._normalize_city(src), self.kb._normalize_city(dst), require_flight)
-        if hasattr(self, "_transport_cache") and key in self._transport_cache:
-            return self._transport_cache[key]
-        has = self.kb.has_any_transport(src, dst, require_flight=require_flight)
-        if hasattr(self, "_transport_cache"):
-            self._transport_cache[key] = has
-        return has
 
     def _expand_state_locations(self) -> None:
         """Only expand when destination is a state; city destinations stay untouched."""
@@ -322,7 +330,10 @@ class TravelEnv:
         self.state.cost = self._estimate_cost(self.state)
         self.history = list(self.base_history)
         self.steps = 0
-        self._transport_cache = {}
+        try:
+            self.retrieval_agent.reset()
+        except Exception:
+            pass
         self._last_phase_plan = None
         if not getattr(self, "_preserve_filter_log", False):
             self.filter_events = []
@@ -366,41 +377,105 @@ class TravelEnv:
     # Cost / helper 统计
     # ----------------------------
     def _estimate_cost(self, state: TravelState) -> float:
-        """Single-source cost estimator to avoid double counting."""
-        cost = 0.0
+        """
+        Cost estimator aligned with TravelPlanner evaluation logic.
 
-        # Transport: only from segment_modes
+        Key points (match evaluation/hard_constraint.py):
+        - flight: price * people_number
+        - taxi/self-driving: base_cost * ceil(people_number / k) where k is 4/5
+        - accommodation: price * ceil(people_number / max_occupancy) * nights
+          where nights ~= number of (non-last) days spent in that city.
+        - meals: per-meal cost * people_number
+        - attractions: ignored (evaluation does not count attraction costs)
+        """
+        cost = 0.0
+        people = int(getattr(self.goal, "people_number", 1) or 1)
+        people = max(1, people)
+
+        # Transport: from segment_modes
         for seg in (state.segment_modes or {}).values():
             if not isinstance(seg, dict):
                 continue
+            mode = str(seg.get("mode") or "").lower()
             detail = seg.get("detail", {}) or {}
             if not isinstance(detail, dict):
                 continue
-            if detail.get("price") is not None:
-                cost += float(detail["price"])
-            elif detail.get("cost") is not None:
-                cost += float(detail["cost"])
+            base = detail.get("price")
+            if base is None:
+                base = detail.get("cost")
+            if base is None:
+                continue
+            try:
+                base_f = float(base)
+            except Exception:
+                continue
+            if mode == "flight":
+                cost += base_f * people
+            elif mode == "taxi":
+                cost += base_f * math.ceil(people / 4.0)
+            elif mode == "self-driving":
+                cost += base_f * math.ceil(people / 5.0)
+            else:
+                cost += base_f
 
-        # Stay: prefer city_stays; fallback to legacy accommodation only if city_stays empty
+        # Stay: prefer city_stays; fallback to legacy accommodation only if city_stays empty.
+        #
+        # We model "nights" as the number of non-last days allocated to the city.
+        # This aligns with commonsense_constraint.is_not_absent which allows
+        # accommodation to be absent on the last day, and our submission formatter
+        # which emits accommodation="-" on the last day.
+        nights_by_city: Dict[str, int] = {}
+        for day in range(1, max(1, self.total_days)):  # exclude last day
+            city = self._city_for_day(state, day)
+            if not city:
+                continue
+            nights_by_city[city] = nights_by_city.get(city, 0) + 1
+
         if state.city_stays:
-            for stay in state.city_stays.values():
-                if stay is not None and stay.get("price") is not None:
-                    cost += float(stay["price"])
+            for city, stay in state.city_stays.items():
+                if not stay or stay.get("price") is None:
+                    continue
+                nights = int(nights_by_city.get(city, 0) or 0)
+                if nights <= 0:
+                    continue
+                try:
+                    price = float(stay["price"])
+                except Exception:
+                    continue
+                occ = stay.get("occupancy")
+                try:
+                    occ_i = int(occ) if occ is not None and not math.isnan(float(occ)) else None
+                except Exception:
+                    occ_i = None
+                occ_i = max(1, occ_i) if occ_i else None
+                rooms = math.ceil(people / float(occ_i or people))
+                cost += price * rooms * nights
         else:
-            if state.accommodation is not None and state.accommodation.get("price") is not None:
-                cost += float(state.accommodation["price"])
+            # Legacy single accommodation (rare)
+            stay = state.accommodation
+            if stay is not None and stay.get("price") is not None:
+                try:
+                    price = float(stay["price"])
+                except Exception:
+                    price = 0.0
+                occ = stay.get("occupancy")
+                try:
+                    occ_i = int(occ) if occ is not None else None
+                except Exception:
+                    occ_i = None
+                occ_i = max(1, occ_i) if occ_i else None
+                rooms = math.ceil(people / float(occ_i or people))
+                nights = max(0, self.total_days - 1)
+                cost += price * rooms * nights
 
-        # Meals
+        # Meals (per person)
         for day in (state.meals or {}).values():
             for meal in (day or {}).values():
                 if meal is not None and meal.get("cost") is not None:
-                    cost += float(meal["cost"])
-
-        # Attractions (if priced)
-        for day in (state.attractions or {}).values():
-            for att in (day or {}).values():
-                if att is not None and att.get("cost") is not None:
-                    cost += float(att["cost"])
+                    try:
+                        cost += float(meal["cost"]) * people
+                    except Exception:
+                        continue
 
         return cost
 
@@ -468,6 +543,8 @@ class TravelEnv:
         return ids
 
     def _city_for_day(self, state: TravelState, day: int) -> Optional[str]:
+        if state.day_to_city and day in state.day_to_city:
+            return state.day_to_city.get(day)
         seq = state.city_sequence or self.goal.fixed_city_order or self.goal.must_visit_cities
         if not seq:
             return self.goal.destination
@@ -644,84 +721,6 @@ class TravelEnv:
             return Slot(type="finish")
         return None
 
-    def _actions_from_candidates(self, slot: Slot, candidates: List[Dict]) -> List[str]:
-        """Convert KB candidates into action strings + payloads."""
-        actions: List[str] = []
-        self.action_payloads = {}
-        if not candidates:
-            return actions
-
-        if slot.type == "flight":
-            for f in candidates:
-                seg_idx = slot.seg if slot.seg is not None else -1
-                price_val = float(f.get("price", 0) or 0.0)
-                action = (
-                    f"move:seg{seg_idx}:flight:{f.get('id')} {f.get('origin')}->{f.get('destination')} "
-                    f"${price_val:.0f} {f.get('depart', '?')}-{f.get('arrive', '?')}"
-                )
-                self.action_payloads[action] = ("segment_mode", seg_idx, "flight", f)
-                actions.append(action)
-        elif slot.type == "hotel":
-            for stay in candidates:
-                city = slot.city or stay.get("city")
-                price_val = float(stay.get("price", 0) or 0.0)
-                action = (
-                    f"stay:{city}:{stay.get('id')} {stay.get('name')} "
-                    f"{stay.get('room_type')} ${price_val:.0f}"
-                )
-                self.action_payloads[action] = ("stay_city", city, stay)
-                actions.append(action)
-        elif slot.type == "meal":
-            for rest in candidates:
-                cost_val = float(rest.get("cost", 0) or 0.0)
-                action = (
-                    f"eat:d{slot.day}:{slot.meal_type}:{rest.get('id')} "
-                    f"{rest.get('name')} {rest.get('cuisines')} ${cost_val:.0f} rating {rest.get('rating', 0)}"
-                )
-                self.action_payloads[action] = ("meal", slot.day, slot.meal_type, rest)
-                actions.append(action)
-        elif slot.type == "attraction":
-            for att in candidates:
-                city = att.get("city") or slot.city
-                action = f"visit:d{slot.day}:{slot.meal_type or 'spot'}:{att.get('id')} {att.get('name')} @ {city}"
-                self.action_payloads[action] = ("attraction", slot.day, slot.meal_type or "spot", att)
-                actions.append(action)
-        elif slot.type == "finish":
-            actions.append("finish")
-        return actions
-
-    @staticmethod
-    def _assert_candidates_respect_caps(slot: Slot, filt: Dict[str, Any], candidates: List[Dict]) -> None:
-        stype = getattr(slot, "type", None)
-        if stype in ("flight", "hotel"):
-            mp = filt.get("max_price")
-            if mp is not None:
-                try:
-                    mp_f = float(mp)
-                    bad = [
-                        c for c in candidates if c.get("price") is not None and float(c["price"]) > mp_f + 1e-6
-                    ]
-                    if bad:
-                        raise RuntimeError(
-                            f"[CAP VIOLATION] {stype} max_price={mp_f} bad0_price={bad[0].get('price')} bad0={bad[0]}"
-                        )
-                except Exception:
-                    pass
-        if stype in ("meal", "restaurant", "attraction"):
-            mc = filt.get("max_cost")
-            if mc is not None:
-                try:
-                    mc_f = float(mc)
-                    bad = [
-                        c for c in candidates if c.get("cost") is not None and float(c["cost"]) > mc_f + 1e-6
-                    ]
-                    if bad:
-                        raise RuntimeError(
-                            f"[CAP VIOLATION] {stype} max_cost={mc_f} bad0_cost={bad[0].get('cost')} bad0={bad[0]}"
-                        )
-                except Exception:
-                    pass
-
     @staticmethod
     def _slot_to_dict(slot: Slot) -> Dict[str, Any]:
         try:
@@ -737,34 +736,6 @@ class TravelEnv:
                 "origin": getattr(slot, "origin", None),
                 "destination": getattr(slot, "destination", None),
             }
-
-    def _ground_fallback_actions(self, slot: Slot) -> List[str]:
-        """Non-flight transport fallback for segments when flight candidates are empty."""
-        actions: List[str] = []
-        if not slot.origin or not slot.destination:
-            return actions
-        distance = self.kb.distance_km(slot.origin, slot.destination)
-        if distance is None:
-            return actions
-        for mode in self._allowed_transport_modes():
-            if mode == "flight":
-                continue
-            cost = distance
-            seg_idx = slot.seg if slot.seg is not None else -1
-            action = (
-                f"move:seg{seg_idx}:{mode}:{slot.origin}->{slot.destination} "
-                f"{distance:.0f}km cost {cost:.0f}"
-            )
-            payload_detail = {
-                "origin": slot.origin,
-                "destination": slot.destination,
-                "distance": distance,
-                "cost": cost,
-                "fallback_nonflight": True,
-            }
-            self.action_payloads[action] = ("segment_mode", seg_idx, mode, payload_detail)
-            actions.append(action)
-        return actions
 
     def _compute_actions_for_slot(self, slot: Optional[Slot]) -> List[str]:
         """Core action builder that also tracks the current slot for callers."""
@@ -794,66 +765,15 @@ class TravelEnv:
                 self.filter_event_keys.add(key)
             return list(cached.get("actions", []))
 
-        actions: List[str] = []
-        candidates: List[Dict] = []
-        relaxed = False
-        filt: Dict[str, Any] = {}
-        policy_event: Dict[str, Any] = {}
-
-        if slot.type == "city":
-            self.action_payloads = {}
-            actions = self._build_city_actions(self.state, relaxed=False)
-            if not actions:
-                actions = self._build_city_actions(self.state, relaxed=True)
-            self._last_phase_plan = None
-        else:
-            res = self.filter_policy.build_slot_filter(self.goal, self.state, slot, user_query=self.user_query)
-            filt = res.filt if res is not None else filters.default_filter(slot.type, self.goal, self.state, slot)
-            self._last_phase_plan = getattr(res, "plan", None) if res else None
-            policy_event = getattr(res, "event", {}) if res else {}
-            uncapped_filt = getattr(res, "uncapped_filter", None) if res else None
-            self.filter_cache[key] = filt
-            if self.log_filter_usage:
-                print(
-                    f"[FILTER] slot={slot.type} phase={self.state.phase.name} "
-                    f"event={policy_event} filter={filt}"
-                )
-            candidates = self.kb.query(slot, filt, self.state, cap=self.candidate_cap)
-            try:
-                self._assert_candidates_respect_caps(slot, filt, candidates)
-            except Exception as e:
-                if self.debug:
-                    raise
-                else:
-                    print(f"[WARN] {e}")
-            relaxed = False
-            if not candidates:
-                # Soft-cap fallback: re-query without budget caps if provided
-                if uncapped_filt and uncapped_filt != filt:
-                    filt = uncapped_filt
-                    candidates = self.kb.query(slot, filt, self.state, cap=self.candidate_cap)
-                    policy_event["soft_cap_relaxed"] = True
-                    if self.log_filter_usage:
-                        print(f"[FILTER] slot={slot.type} soft-cap relaxed -> {len(candidates)} candidates")
-                # Budget-only relaxation: drop price caps for this slot before invoking relaxer
-                if not candidates and hasattr(self.filter_policy, "relax_budget_for_slot"):
-                    relaxed_budget_filt = self.filter_policy.relax_budget_for_slot(filt, slot)
-                    if relaxed_budget_filt:
-                        filt = relaxed_budget_filt
-                        candidates = self.kb.query(slot, filt, self.state, cap=self.candidate_cap)
-                        policy_event["budget_relaxed"] = True
-                        if self.log_filter_usage:
-                            print(f"[FILTER] slot={slot.type} budget-relaxed -> {len(candidates)} candidates")
-                if not candidates:
-                    candidates = self.relaxer.relax_and_query(self.kb, slot, filt, self.state, cap=self.candidate_cap)
-                    relaxed = True
-                    if self.log_filter_usage:
-                        print(f"[FILTER] slot={slot.type} relaxed -> {len(candidates)} candidates")
-            actions = self._actions_from_candidates(slot, candidates)
-            if not actions and slot.type == "flight":
-                actions = self._ground_fallback_actions(slot)
-
-            # update cache with the final filter actually used after any soft-cap relaxation
+        result = self.retrieval_agent.compute(self.goal, self.state, slot, user_query=self.user_query)
+        actions: List[str] = list(result.actions or [])
+        self.action_payloads = copy.deepcopy(result.payloads or {})
+        candidates: List[Dict[str, Any]] = list(result.candidates or [])
+        relaxed = bool(result.relaxed)
+        filt: Dict[str, Any] = dict(result.filt or {})
+        policy_event: Dict[str, Any] = dict(result.policy_event or {})
+        self._last_phase_plan = getattr(result, "plan", None)
+        if slot.type != "city":
             self.filter_cache[key] = filt
 
         event = dict(policy_event or {})
@@ -906,133 +826,6 @@ class TravelEnv:
         # Legacy path disabled; always use slot-based action builder.
         self.state = state
         return self.get_valid_actions()
-
-    def _log_empty_actions(self, state: TravelState) -> None:
-        """仅在 debug 下打印空动作原因，便于定位。"""
-        if not self.debug:
-            return
-        phase = state.phase.name if isinstance(state.phase, Phase) else state.phase
-        pending = []
-        segments = self._segments(state)
-        for idx, src, dst in segments:
-            if idx not in state.segment_modes:
-                pending.append(f"seg{idx}:{src}->{dst}")
-        for day in range(1, self.total_days + 1):
-            meals_missing = [slot for slot, meal in state.meals[day].items() if meal is None]
-            att_missing = self.goal.attractions_per_day_min - self._count_attractions_day(state, day)
-            pending.append(f"d{day}:meals_missing={len(meals_missing)},att_missing={max(att_missing,0)}")
-        print(
-            "[DEBUG] No valid actions | "
-            f"phase={phase}, cities={state.city_sequence}, "
-            f"candidates={self.goal.candidate_cities}, must={self.goal.must_visit_cities}, "
-            f"priority={self.goal.priority_cities}, pending=({'; '.join(pending)})"
-        )
-
-    def _build_city_actions(self, state: TravelState, relaxed: bool = False) -> List[str]:
-        actions: List[str] = []
-        city_target = self.goal.visiting_city_number or 1
-        origin = self.goal.origin
-
-        # 已经满足城市数量 → 不需要更多动作
-        if len(state.city_sequence) >= city_target:
-            return actions
-
-        # 组合模式：一次性决定全组城市
-        candidates = self.goal.candidate_cities or self.kb.get_candidate_cities(
-            destination_hint=self.goal.destination,
-            must_visit=self.goal.must_visit_cities,
-            priority=self.goal.priority_cities,
-            top_k=max(self.top_k * 2, city_target),
-        )
-        for must in self.goal.must_visit_cities:
-            if must not in candidates:
-                candidates.insert(0, must)
-        for pri in self.goal.priority_cities:
-            if pri not in candidates:
-                candidates.append(pri)
-
-        # 不重复选择已在序列里的城市
-        prefix = list(state.city_sequence)
-        remaining_needed = city_target - len(prefix)
-        pool = [c for c in candidates if c not in prefix]
-        # 控制组合爆炸：限制搜索池大小
-        pool = pool[: max(self.top_k * 3, remaining_needed)]
-
-        combos: List[Tuple[List[str], float]] = []
-
-        for combo in itertools.permutations(pool, remaining_needed):
-            seq = prefix + list(combo)
-            score = self._score_city_bundle(seq, origin)
-            if score is None:
-                continue
-            combos.append((seq, score))
-            if len(combos) > 500:  # 防止极端爆炸
-                break
-
-        # relaxed 模式：允许重复城市兜底
-        if relaxed and not combos:
-            for combo in itertools.permutations(pool + prefix, remaining_needed):
-                seq = prefix + list(combo)
-                score = self._score_city_bundle(seq, origin, allow_repeat=True)
-                if score is None:
-                    continue
-                combos.append((seq, score))
-                if len(combos) > 500:
-                    break
-
-        # 按分数排序取前 top_k
-        combos = sorted(combos, key=lambda x: x[1], reverse=True)[: self.top_k]
-        for seq, score in combos:
-            action = f"choose_city_bundle:[{','.join(seq)}]"
-            self.action_payloads[action] = ("choose_city_bundle", seq)
-            actions.append(action)
-
-        return actions
-
-    def _score_city_bundle(self, seq: List[str], origin: str, allow_repeat: bool = False) -> Optional[float]:
-        """对城市组合进行快速打分；返回 None 表示不可行。"""
-        if not seq:
-            return None
-        # 去重检查
-        if not allow_repeat and len(set(seq)) != len(seq):
-            return None
-
-        score = 0.0
-
-        # origin -> 第一城 的可达性（如 require_flight 则强制航班）
-        if self.goal.require_flight:
-            if not self._has_transport_cached(origin, seq[0], require_flight=True):
-                return None
-            score += 1.0
-        else:
-            if self.kb.has_any_transport(origin, seq[0], require_flight=False):
-                score += 0.5
-
-        # 城市间连通性（允许距离矩阵）
-        for i in range(len(seq) - 1):
-            if not self.kb.has_any_transport(seq[i], seq[i + 1], require_flight=False):
-                return None
-            score += 0.4
-
-        # 返程连通性（如果需要返程）
-        if self.goal.return_required:
-            if self.goal.require_flight:
-                # 返程必须可飞，否则直接丢弃该组合
-                if not self._has_transport_cached(seq[-1], origin, require_flight=True):
-                    return None
-                score += 0.5
-            else:
-                if self.kb.has_any_transport(seq[-1], origin, require_flight=False):
-                    score += 0.2
-
-        # 数据覆盖：住宿/餐饮/景点桶
-        for city in seq:
-            has_stay = bool(self.kb.get_accommodations(city, top_k=1))
-            has_rest = bool(self.kb.get_restaurants(city, preferences=self.goal.preferences, top_k=1))
-            has_att = bool(self.kb.get_attractions(city, top_k=1))
-            score += 0.1 * has_stay + 0.1 * has_rest + 0.1 * has_att
-
-        return score
 
     def _build_segment_actions(self, state: TravelState, relaxed: bool = False) -> List[str]:
         raise RuntimeError("Legacy _build_segment_actions called; use get_valid_actions() instead")
@@ -1178,6 +971,7 @@ class TravelEnv:
             _, city = payload
             if city not in self.state.city_sequence:
                 self.state.city_sequence.append(city)
+                self.state.day_to_city = {}
                 # route 变化 → 清空已有 segment 决策
                 self.state.segment_modes = {}
                 self.state.outbound_flight = None
@@ -1206,8 +1000,41 @@ class TravelEnv:
             self.state.accommodation = None
 
         elif kind == "choose_city_bundle":
-            _, seq = payload
-            self.state.city_sequence = list(seq)
+            seq = payload[1] if len(payload) >= 2 else []
+            day_splits = payload[2] if len(payload) >= 3 else None
+            self.state.city_sequence = list(seq or [])
+            self.state.day_to_city = {}
+
+            # Apply explicit day allocation if present; otherwise default to even split + tail absorbs remainder.
+            mapping: Dict[int, str] = {}
+            if isinstance(day_splits, list):
+                for item in day_splits:
+                    if not isinstance(item, dict):
+                        continue
+                    try:
+                        c = str(item.get("city"))
+                        start = int(item.get("start_day"))
+                        end = int(item.get("end_day"))
+                    except Exception:
+                        continue
+                    if not c or start <= 0 or end < start:
+                        continue
+                    for d in range(start, end + 1):
+                        mapping[d] = c
+            if not mapping and self.state.city_sequence and self.total_days > 0:
+                n = len(self.state.city_sequence)
+                base = self.total_days // n
+                rem = self.total_days % n
+                spans = [base] * n
+                if rem:
+                    spans[-1] += rem
+                day = 1
+                for c, span in zip(self.state.city_sequence, spans):
+                    for _ in range(max(0, int(span))):
+                        mapping[day] = c
+                        day += 1
+            self.state.day_to_city = mapping
+
             # route 变化 → 清空已有决策
             self.state.segment_modes = {}
             self.state.outbound_flight = None

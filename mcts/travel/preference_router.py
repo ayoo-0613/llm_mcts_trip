@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional
 
 HOUSE_RULES = {"parties", "smoking", "children under 10", "pets", "visitors"}
 TRANSPORT_MODES = {"flight", "taxi", "self-driving"}
+CANON_ROOM_TYPES = {"shared room", "private room", "entire home/apt"}
 
 
 def _norm(text: str) -> str:
@@ -36,6 +37,21 @@ def route_preferences(
         if not t:
             continue
 
+        # room type hints
+        # Dataset uses: "Shared room", "Private room", "Entire home/apt"
+        if "not shared room" in t or ("not" in t and "shared" in t and "room" in t):
+            cons["stay"]["room_type"].extend(["private room", "entire home/apt"])
+            continue
+        if "shared room" in t:
+            cons["stay"]["room_type"].append("shared room")
+            continue
+        if "private room" in t:
+            cons["stay"]["room_type"].append("private room")
+            continue
+        if "entire home/apt" in t or "entire home" in t or "entire room" in t:
+            cons["stay"]["room_type"].append("entire home/apt")
+            continue
+
         # house rules → canonical tokens
         if "party" in t:
             cons["stay"]["house_rules"].append("parties")
@@ -65,6 +81,7 @@ def route_preferences(
         cons["meal"]["cuisines"].append(t)
 
     cons["stay"]["house_rules"] = sorted(set(cons["stay"]["house_rules"]))
+    cons["stay"]["room_type"] = [x for x in sorted(set(cons["stay"]["room_type"])) if x in CANON_ROOM_TYPES]
     cons["meal"]["cuisines"] = [
         x for x in sorted(set(cons["meal"]["cuisines"])) if x and x not in HOUSE_RULES
     ]

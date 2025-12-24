@@ -99,7 +99,7 @@ class TripGoal:
 
 
 class TravelKnowledgeBase:
-    def __init__(self, root: str = "database"):
+    def __init__(self, root: str = "database", *, keep_raw_frames: bool = True):
         self.root = root
         self.flights = self._load_csv("flights/clean_Flights_2022.csv")
         self.accommodations = self._load_csv("accommodations/clean_accommodations_2022.csv")
@@ -110,6 +110,13 @@ class TravelKnowledgeBase:
 
         self._normalize()
         self._build_indexes()
+        if not keep_raw_frames:
+            # Indexes are built from the raw DataFrames into lightweight bucket structures;
+            # drop the big frames to reduce peak RSS in long-running experiments.
+            self.flights = pd.DataFrame()
+            self.accommodations = pd.DataFrame()
+            self.restaurants = pd.DataFrame()
+            self.attractions = pd.DataFrame()
 
     # ----------------------------
     # State / city helpers
@@ -266,6 +273,7 @@ class TravelKnowledgeBase:
                 "id": str(idx),
                 "name": row["NAME"],
                 "price": float(row["price"]) if not pd.isna(row["price"]) else None,
+                "minimum_nights": None,
                 "room_type": row["room type"],
                 "review": row.get("review rate number"),
                 "occupancy": row.get("maximum occupancy"),
@@ -273,6 +281,12 @@ class TravelKnowledgeBase:
                 "house_rules": row.get("house_rules"),
                 "house_rules_tokens": tokens,
             }
+            mn = row.get("minimum nights")
+            try:
+                if mn is not None and not pd.isna(mn):
+                    stay["minimum_nights"] = int(float(mn))
+            except Exception:
+                stay["minimum_nights"] = None
             accom_buckets.setdefault(city_norm, []).append(stay)
         def _review_score(val: Any) -> float:
             try:
@@ -698,6 +712,7 @@ class TravelKnowledgeBase:
         max_price = filt.get("max_price")
         min_price = filt.get("min_price")
         min_review = filt.get("min_review")
+        max_minimum_nights = filt.get("max_minimum_nights") or filt.get("max_min_nights")
         room_types = {s.lower() for s in filt.get("room_type") or []}
         house_rules = {str(s).lower().replace(" ", "_") for s in filt.get("house_rules") or []}
         min_occupancy = filt.get("min_occupancy")
@@ -714,6 +729,16 @@ class TravelKnowledgeBase:
             if min_review is not None and "review" in df.columns:
                 try:
                     df = df[df["review"].notna() & (df["review"].astype(float) >= float(min_review))]
+                except Exception:
+                    pass
+            if max_minimum_nights is not None and "minimum_nights" in df.columns:
+                try:
+                    cap_n = float(max_minimum_nights)
+                    df = df[
+                        df["minimum_nights"].apply(
+                            lambda v: v is None or pd.isna(v) or float(v) <= cap_n
+                        )
+                    ]
                 except Exception:
                     pass
             if room_types:
