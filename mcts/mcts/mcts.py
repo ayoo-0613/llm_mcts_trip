@@ -211,6 +211,92 @@ class MCTSAgent:
         uniform = np.ones((len(valid_actions),)) / len(valid_actions)
         return uniform, 0
 
+    def _score_actions_with_budget(self, actions, payloads):
+        if not actions:
+            return np.array([])
+        budget = None
+        people = 1
+        env = getattr(self, "env", None)
+        if env is not None:
+            parsed = getattr(env, "goal_parsed", None)
+            if isinstance(parsed, dict):
+                budget = parsed.get("budget")
+                if parsed.get("people_number") is not None:
+                    try:
+                        people = int(parsed.get("people_number") or 1)
+                    except Exception:
+                        people = 1
+            if budget is None:
+                goal = getattr(env, "goal", None)
+                budget = getattr(goal, "budget", None)
+                if goal is not None and getattr(goal, "people_number", None) is not None:
+                    try:
+                        people = int(getattr(goal, "people_number") or 1)
+                    except Exception:
+                        people = 1
+        try:
+            budget_f = float(budget)
+        except Exception:
+            budget_f = None
+
+        if budget_f is None or budget_f <= 0:
+            return np.ones((len(actions),)) / len(actions)
+
+        scores = []
+        for action in actions:
+            cost = None
+            if payloads and action in payloads:
+                payload = payloads.get(action)
+                kind = payload[0] if payload else None
+                if kind == "segment_mode":
+                    mode = payload[2] if len(payload) > 2 else None
+                    detail = payload[3] if len(payload) > 3 else None
+                    if isinstance(detail, dict):
+                        cost = detail.get("price")
+                        if cost is None:
+                            cost = detail.get("cost")
+                    if cost is not None:
+                        try:
+                            base = float(cost)
+                        except Exception:
+                            base = None
+                        if base is not None:
+                            if mode == "flight":
+                                cost = base * max(1, people)
+                            elif mode == "taxi":
+                                cost = base * max(1, math.ceil(people / 4.0))
+                            elif mode == "self-driving":
+                                cost = base * max(1, math.ceil(people / 5.0))
+                            else:
+                                cost = base
+                elif kind == "stay_city":
+                    detail = payload[2] if len(payload) > 2 else None
+                    if isinstance(detail, dict):
+                        cost = detail.get("price")
+                elif kind == "meal":
+                    detail = payload[3] if len(payload) > 3 else None
+                    if isinstance(detail, dict):
+                        cost = detail.get("cost")
+                    if cost is not None:
+                        try:
+                            cost = float(cost) * max(1, people)
+                        except Exception:
+                            cost = None
+
+            ratio = 0.0
+            if cost is not None:
+                try:
+                    ratio = float(cost) / budget_f
+                except Exception:
+                    ratio = 0.0
+            score = 1.0 / (1.0 + max(0.0, ratio))
+            scores.append(score)
+
+        score_sum = float(sum(scores))
+        if score_sum <= 0:
+            return np.ones((len(actions),)) / len(actions)
+        return np.array([s / score_sum for s in scores], dtype=np.float32)
+
     # ----------------------------
     # Build / Rebuild State
     # ----------------------------
@@ -243,7 +329,10 @@ class MCTSAgent:
             if not state.valid_actions:
                 probs_full = np.array([])
             else:
-                probs_full = np.ones((len(state.valid_actions),)) / len(state.valid_actions)
+                if self.llm_prior_mode == "none":
+                    probs_full = self._score_actions_with_budget(state.valid_actions, payloads)
+                else:
+                    probs_full = np.ones((len(state.valid_actions),)) / len(state.valid_actions)
         else:
             probs_full, state.predicted_reward = self._score_actions_with_policy(
                 history,

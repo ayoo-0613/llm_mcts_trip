@@ -1,4 +1,6 @@
 import argparse
+import ast
+import csv
 import json
 import os
 import time
@@ -18,6 +20,7 @@ from mcts.travel.query_parsing import (
     call_local_llm,
     fallback_parse,
     load_queries,
+    normalize_parsed_query,
     parse_nl_query,
 )  # noqa: E402
 
@@ -35,6 +38,45 @@ def _parse_date_safe(date_str: str) -> Optional[datetime]:
         return datetime.fromisoformat(date_str)
     except Exception:
         return None
+
+
+def _safe_literal_eval(text: str):
+    if text is None:
+        return None
+    s = str(text).strip()
+    if not s:
+        return None
+    try:
+        return ast.literal_eval(s)
+    except Exception:
+        try:
+            return json.loads(s)
+        except Exception:
+            return None
+
+
+def _load_queries_from_csv(path: str) -> List[Dict[str, Any]]:
+    entries: List[Dict[str, Any]] = []
+    with open(path, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            parsed: Dict[str, Any] = {}
+            parsed["org"] = row.get("org") or row.get("origin")
+            parsed["dest"] = row.get("dest") or row.get("destination")
+            parsed["days"] = _safe_literal_eval(row.get("days")) if row.get("days") else row.get("days")
+            parsed["visiting_city_number"] = _safe_literal_eval(row.get("visiting_city_number")) if row.get("visiting_city_number") else None
+            parsed["date"] = _safe_literal_eval(row.get("date")) if row.get("date") else None
+            parsed["people_number"] = _safe_literal_eval(row.get("people_number")) if row.get("people_number") else None
+            parsed["local_constraint"] = _safe_literal_eval(row.get("local_constraint")) if row.get("local_constraint") else None
+            parsed["budget"] = _safe_literal_eval(row.get("budget")) if row.get("budget") else None
+            normalized = normalize_parsed_query(parsed)
+            entries.append(
+                {
+                    "query": row.get("query") or "",
+                    "parsed": normalized,
+                }
+            )
+    return entries
 
 
 def _structured_plan(env: EnvAgent) -> Dict[str, List[str]]:
@@ -188,7 +230,16 @@ def _build_goal(parsed: Dict[str, Any], args, kb: TravelKnowledgeBase, semantic:
     return semantic.build_goal(parsed, args, kb)
 
     
-def _run_single(goal: TripGoal, kb: TravelKnowledgeBase, policy: Optional[Any], args, *, raw_query: str = "", semantic: SemanticAgent):
+def _run_single(
+    goal: TripGoal,
+    kb: TravelKnowledgeBase,
+    policy: Optional[Any],
+    args,
+    *,
+    raw_query: str = "",
+    semantic: SemanticAgent,
+    goal_parsed: Optional[Dict[str, Any]] = None,
+):
     # Reuse the same LLM endpoint as NL parser for filter generation (no extra CLI needed).
     plan_llm = None
     model_for_plan = args.parser_model or args.local_model
@@ -211,6 +262,7 @@ def _run_single(goal: TripGoal, kb: TravelKnowledgeBase, policy: Optional[Any], 
         user_query=raw_query,
         log_filter_usage=args.log_filter_usage,
         phase_planner=phase_planner,
+        goal_parsed=goal_parsed,
     )
     planner = MCTSPlanningAgent(args, env, policy)
     result = planner.run(max_episode_len=args.max_episode_len)
@@ -224,6 +276,7 @@ def parse_args():
     parser.add_argument("--set-type", default="train", choices=["train", "validation", "test"],
                         help="HF dataset split to load.")
     parser.add_argument("--dataset-id", default="osunlp/TravelPlanner", help="HF dataset id to load queries from.")
+    parser.add_argument("--query-csv", default=None, help="Local CSV file with structured TravelPlanner fields.")
     parser.add_argument("--origin", default=None, help="Override origin city for all queries.")
     parser.add_argument("--destination", default=None, help="Override destination city/state for all queries.")
     parser.add_argument("--start-date", default=None)
@@ -274,7 +327,7 @@ def parse_args():
     parser.add_argument(
         "--use-llm-prior",
         choices=["root", "all", "none"],
-        default="root",
+        default="none",
         help="Apply LLM policy priors at root, all nodes, or disable.",
     )
     parser.add_argument(
@@ -322,10 +375,17 @@ def parse_args():
 
 def main():
     args = parse_args()
-    queries = load_queries(args)
-    if not queries:
-        raise RuntimeError("No queries loaded. Check dataset path or network.")
-    subset = queries[args.start_index: args.start_index + args.limit]
+    csv_entries: Optional[List[Dict[str, Any]]] = None
+    if args.query_csv:
+        csv_entries = _load_queries_from_csv(args.query_csv)
+        if not csv_entries:
+            raise RuntimeError("No queries loaded from CSV. Check file path/content.")
+        subset = csv_entries[args.start_index: args.start_index + args.limit]
+    else:
+        queries = load_queries(args)
+        if not queries:
+            raise RuntimeError("No queries loaded. Check dataset path or network.")
+        subset = queries[args.start_index: args.start_index + args.limit]
 
     parser_model = args.parser_model or args.local_model or "deepseek-r1:14b"
     kb = TravelKnowledgeBase(args.database_root)
@@ -355,22 +415,27 @@ def main():
         mode = "w" if args.submission_overwrite else "a"
         submission_fp = open(submission_path, mode, encoding="utf-8")
 
-    for idx, q in enumerate(subset, start=args.start_index + 1):
+    for idx, entry in enumerate(subset, start=args.start_index + 1):
+        q = entry if isinstance(entry, str) else str(entry.get("query") or "")
         # 先输出原始 query，方便观察
         print(f"\n=== Query {idx} (raw) === {q}")
-        parsed = parse_nl_query(q, args.local_base, parser_model, timeout=args.parser_timeout)
-        print(f"LLM parsed JSON: {json.dumps(parsed, ensure_ascii=False)}")
-        if not parsed.get("origin") or not parsed.get("destination"):
-            fallback = fallback_parse(q)
-            parsed = {**fallback, **parsed}
-        if not parsed.get("origin") or not parsed.get("destination"):
-            print(f"[{idx}] skip (parse failed): {q}")
-            continue
+        if isinstance(entry, dict) and entry.get("parsed"):
+            parsed = entry.get("parsed") or {}
+            print(f"Parsed JSON (CSV): {json.dumps(parsed, ensure_ascii=False)}")
+        else:
+            parsed = parse_nl_query(q, args.local_base, parser_model, timeout=args.parser_timeout)
+            print(f"LLM parsed JSON: {json.dumps(parsed, ensure_ascii=False)}")
+            if not parsed.get("origin") or not parsed.get("destination"):
+                fallback = fallback_parse(q)
+                parsed = {**fallback, **parsed}
+            if not parsed.get("origin") or not parsed.get("destination"):
+                print(f"[{idx}] skip (parse failed): {q}")
+                continue
         goal = _build_goal(parsed, args, kb, semantic)
         # Debug: show candidate city list after state expansion
         print(f"[DEBUG] Goal candidate_cities: {goal.candidate_cities}")
         t0 = time.perf_counter()
-        result = _run_single(goal, kb, policy, args, raw_query=q, semantic=semantic)
+        result = _run_single(goal, kb, policy, args, raw_query=q, semantic=semantic, goal_parsed=parsed)
         elapsed = time.perf_counter() - t0
         structured = _structured_plan(result["env"])
         diagnostics = _goal_diagnostics(kb, goal)

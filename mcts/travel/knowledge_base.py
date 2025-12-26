@@ -4,6 +4,12 @@ from typing import List, Optional, Dict, Any, Tuple, Set
 import os
 import pandas as pd
 
+from tools.accommodations.apis import Accommodations
+from tools.attractions.apis import Attractions
+from tools.flights.apis import Flights
+from tools.googleDistanceMatrix.apis import GoogleDistanceMatrix
+from tools.restaurants.apis import Restaurants
+
 
 @dataclass
 class TripGoal:
@@ -133,6 +139,16 @@ class TravelKnowledgeBase:
 
     def _load_csv(self, relative_path: str) -> pd.DataFrame:
         path = os.path.join(self.root, relative_path)
+        if relative_path.startswith("flights/"):
+            return Flights(csv_path=path).data
+        if relative_path.startswith("accommodations/"):
+            return Accommodations(csv_path=path).data
+        if relative_path.startswith("restaurants/"):
+            return Restaurants(csv_path=path).data
+        if relative_path.startswith("attractions/"):
+            return Attractions(csv_path=path).data
+        if relative_path.startswith("googleDistanceMatrix/"):
+            return GoogleDistanceMatrix(csv_path=path).data
         if not os.path.exists(path):
             raise FileNotFoundError(f"Expected dataset at {path}")
         return pd.read_csv(path)
