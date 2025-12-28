@@ -15,11 +15,10 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-from mcts.travel.filtering import PhasePlanGenerator  # noqa: E402
-from mcts.travel.knowledge_base import TravelKnowledgeBase, TripGoal  # noqa: E402
-from mcts.travel.preference_router import route_preferences  # noqa: E402
+from mcts.travel.knowledge_base import TravelKnowledgeBase  # noqa: E402
 from mcts.travel.submission import env_to_submission_record  # noqa: E402
 from mcts.travel.travel_env import TravelEnv  # noqa: E402
+from mcts.travel.query_parsing import normalize_parsed_query  # noqa: E402
 
 
 def _infer_idx_from_filename(path: str) -> Optional[int]:
@@ -182,79 +181,21 @@ def normalize_question_from_parsed(parsed: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def build_goal_from_parsed(parsed: Dict[str, Any], args: argparse.Namespace, kb: TravelKnowledgeBase) -> TripGoal:
-    """
-    Local copy of `SemanticAgent.build_goal` that avoids importing torch-dependent modules.
-
-    Note: to stay consistent with existing saved outputs produced via `SemanticAgent.build_goal`,
-    we intentionally do NOT pass `people_number` into TripGoal (it remains default=1).
-    """
-    parsed = dict(parsed or {})
-
-    visit_num = parsed.get("visiting_city_number") or getattr(args, "visiting_city_number", None) or 1
-    must_cities = parsed.get("must_visit_cities") or []
-    priority_cities = parsed.get("priority_cities") or []
-    fixed_city_order = parsed.get("fixed_city_order") or []
-    candidate_cities = parsed.get("candidate_cities") or []
-    if not parsed.get("visiting_city_number") and fixed_city_order:
-        visit_num = len(fixed_city_order)
-
-    allow_modes = parsed.get("transport_allow") or parsed.get("transport_allowed_modes") or []
-    forbid_modes = (
-        parsed.get("transport_forbid")
-        or parsed.get("transport_forbidden")
-        or parsed.get("transport_forbidden_modes")
-        or []
-    )
-    raw_prefs = parsed.get("preferences") or []
-    people_n = parsed.get("people_number") or 1
-
-    constraints = route_preferences(
-        raw_prefs=raw_prefs,
-        transport_allow=allow_modes,
-        transport_forbid=forbid_modes,
-        people_number=people_n,
-    )
-
-    def _norm_modes(modes: Any) -> List[str]:
-        if modes is None:
-            return []
-        if isinstance(modes, str):
-            return [modes]
-        try:
-            return list(modes)
-        except Exception:
-            return []
-
-    allow_modes_norm = [m.lower() for m in _norm_modes(allow_modes)] or None
-    forbid_modes_norm = [m.lower() for m in _norm_modes(forbid_modes)]
-    require_flight = (not getattr(args, "no_flight", False)) and ("flight" not in forbid_modes_norm)
-
-    return TripGoal(
-        origin=parsed.get("origin") or getattr(args, "origin", None),
-        destination=parsed.get("destination") or getattr(args, "destination", None),
-        start_date=parsed.get("start_date") or getattr(args, "start_date", None),
-        duration_days=parsed.get("duration_days") or getattr(args, "days", 3),
-        budget=parsed.get("budget") or getattr(args, "budget", None),
-        require_flight=require_flight,
-        require_accommodation=not getattr(args, "no_stay", False),
-        num_restaurants=parsed.get("restaurants") or getattr(args, "restaurants", 3),
-        num_attractions=getattr(args, "attractions", 2),
-        preferences=raw_prefs,
-        constraints=constraints,
-        visiting_city_number=int(visit_num) if visit_num else 1,
-        must_visit_cities=must_cities,
-        priority_cities=priority_cities,
-        candidate_cities=candidate_cities,
-        fixed_city_order=list(fixed_city_order or []),
-        transport_allowed_modes=allow_modes_norm,
-        transport_forbidden_modes=forbid_modes_norm,
-        return_required=True,
-        meals_per_day=3,
-        attractions_per_day_min=parsed.get("attractions_min") or 1,
-        attractions_per_day_max=parsed.get("attractions_max") or 1,
-        notes=getattr(args, "notes", None) or parsed.get("notes"),
-    )
+def _merge_args_into_parsed(parsed: Dict[str, Any], args: argparse.Namespace) -> Dict[str, Any]:
+    out = dict(parsed or {})
+    if out.get("origin") is None and getattr(args, "origin", None):
+        out["origin"] = args.origin
+    if out.get("destination") is None and getattr(args, "destination", None):
+        out["destination"] = args.destination
+    if out.get("start_date") is None and getattr(args, "start_date", None):
+        out["start_date"] = args.start_date
+    if out.get("duration_days") is None and getattr(args, "days", None):
+        out["duration_days"] = args.days
+    if out.get("visiting_city_number") is None and getattr(args, "visiting_city_number", None):
+        out["visiting_city_number"] = args.visiting_city_number
+    if out.get("budget") is None and getattr(args, "budget", None):
+        out["budget"] = args.budget
+    return out
 
 
 def _run_random_episode(env: TravelEnv, rng: random.Random, *, max_episode_len: int) -> Dict[str, Any]:
@@ -327,8 +268,10 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--days", type=int, default=3)
     p.add_argument("--budget", type=float, default=None)
     p.add_argument("--notes", default=None)
-    p.add_argument("--use-llm-filters", dest="use_llm_filters", action="store_true")
-    p.add_argument("--no-llm-filters", dest="use_llm_filters", action="store_false")
+    p.add_argument("--use-llm-filters", dest="use_llm_filters", action="store_true",
+                   help="Deprecated (no-op): LLM filter generation removed.")
+    p.add_argument("--no-llm-filters", dest="use_llm_filters", action="store_false",
+                   help="Deprecated (no-op): LLM filter generation removed.")
     p.set_defaults(use_llm_filters=False)
     p.add_argument("--debug", action="store_true")
     p.add_argument("--log-filter-usage", action="store_true")
@@ -349,8 +292,6 @@ def main() -> None:
     out_path = args.output_jsonl
     questions_path = args.questions_json
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
-
-    phase_planner = PhasePlanGenerator(llm_client=None, enable=bool(getattr(args, "use_llm_filters", False)))
 
     paths = _iter_output_json_paths(input_dir)
     if args.limit is not None:
@@ -405,18 +346,17 @@ def main() -> None:
             plan: List[Dict[str, Any]] = []
             result: Optional[Dict[str, Any]] = None
             try:
-                goal: TripGoal = build_goal_from_parsed(parsed, args, kb)
+                parsed = normalize_parsed_query(parsed)
+                parsed = _merge_args_into_parsed(parsed, args)
                 env = TravelEnv(
                     kb,
-                    goal,
                     max_steps=args.max_episode_len,
                     top_k=args.top_k,
                     debug=args.debug,
                     candidate_cap=args.candidate_cap,
-                    relax_max_tries=args.relax_max_tries,
                     user_query=q_text,
                     log_filter_usage=args.log_filter_usage,
-                    phase_planner=phase_planner,
+                    goal_parsed=parsed,
                 )
 
                 # Per-sample RNG: deterministic w.r.t (seed, idx), so reruns are stable.

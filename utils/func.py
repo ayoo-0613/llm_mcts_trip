@@ -9,7 +9,6 @@ def extract_before_parenthesis(text: str) -> str:
     if text is None:
         return ""
     s = str(text).strip()
-    s = re.sub(r"\s*\(.*?\)\s*", "", s).strip()
     # drop trailing cost / extra segments: "Name, City; Cost: 12" -> "Name, City"
     s = s.split(";")[0].strip()
     return s
@@ -45,4 +44,3 @@ def extract_numbers_from_filenames(path: str) -> List[int]:
         except Exception:
             continue
     return out
-

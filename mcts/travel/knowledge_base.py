@@ -1,5 +1,4 @@
 from collections import defaultdict
-from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any, Tuple, Set
 import os
 import pandas as pd
@@ -9,100 +8,6 @@ from tools.attractions.apis import Attractions
 from tools.flights.apis import Flights
 from tools.googleDistanceMatrix.apis import GoogleDistanceMatrix
 from tools.restaurants.apis import Restaurants
-
-
-@dataclass
-class TripGoal:
-    # === 核心来自 JSON ===
-    origin: str                    # JSON: org
-    destination: str               # JSON: dest
-    start_date: Optional[str]      # JSON: date[0]（如果有）
-    duration_days: int             # JSON: days
-    visiting_city_number: int      # JSON: visiting_city_number
-    budget: Optional[float]        # JSON: budget
-    people_number: int = 1         # JSON: people_number（可选）
-
-    # local_constraint 拆成更结构化的字段（或直接保留原 dict 也可以）
-    house_rule: Optional[List[str]] = None      # local_constraint["house rule"]
-    cuisine: Optional[List[str]] = None         # local_constraint["cuisine"]
-    room_type: Optional[List[str]] = None       # local_constraint["room type"]
-    transportation: Optional[List[str]] = None  # local_constraint["transportation"]
-
-    # === 内部规划用的默认约束（不是 JSON 里有，而是你系统需要）===
-    return_required: bool = True
-    require_flight: bool = True
-    require_accommodation: bool = True
-
-    meals_per_day: int = 3
-    attractions_per_day_min: int = 2
-    attractions_per_day_max: int = 3
-
-    # 偏好（可从 cuisine / NL 里抽取）
-    preferences: List[str] = field(default_factory=list)
-    # 结构化约束（由 preference router 生成）
-    constraints: Dict[str, Any] = field(default_factory=lambda: {
-        "meal": {"cuisines": [], "must_have": [], "avoid": []},
-        "stay": {"house_rules": [], "room_type": [], "min_occupancy": None},
-        "transport": {"allow": None, "forbid": []},
-        "other": [],
-    })
-    # 规划扩展
-    must_visit_cities: List[str] = field(default_factory=list)
-    priority_cities: List[str] = field(default_factory=list)
-    candidate_cities: List[str] = field(default_factory=list)
-    fixed_city_order: List[str] = field(default_factory=list)
-    transport_allowed_modes: Optional[List[str]] = None
-    transport_forbidden_modes: List[str] = field(default_factory=list)
-    num_restaurants: int = 1
-    num_attractions: int = 1
-    notes: Optional[str] = None
-
-    def as_text(self) -> str:
-        prefs = ", ".join(self.preferences) if self.preferences else "None"
-        budget_text = f"${self.budget:.0f}" if self.budget is not None else "unspecified"
-        days_text = f"{self.duration_days} day(s)"
-        parts = [
-            f"Trip from {self.origin} to {self.destination}",
-            f"start date: {self.start_date or 'unspecified'}",
-            f"duration: {days_text}",
-            f"budget: {budget_text}",
-            f"people: {self.people_number}",
-            f"city count target: {self.visiting_city_number}",
-            f"preferences: {prefs}",
-            f"must cities: {', '.join(self.must_visit_cities) or 'None'}",
-            f"priority cities: {', '.join(self.priority_cities) or 'None'}",
-        ]
-        return "; ".join(parts)
-
-
-    @staticmethod
-    def trip_goal_from_json(data: Dict[str, Any]) -> "TripGoal":
-        """把 NL 抽取出来的 JSON 转成 TripGoal 对象。"""
-        lc = data.get("local_constraint") or {}
-        dates = data.get("date") or []
-        return TripGoal(
-            origin=data["org"],
-            destination=data["dest"],
-            start_date=dates[0] if dates else None,
-            duration_days=data["days"],
-            visiting_city_number=data.get("visiting_city_number", 1),
-            budget=data.get("budget"),
-            people_number=data.get("people_number", 1),
-            house_rule=lc.get("house rule"),
-            cuisine=lc.get("cuisine"),
-            room_type=lc.get("room type"),
-            transportation=lc.get("transportation"),
-            must_visit_cities=data.get("must_visit_cities", []),
-            priority_cities=data.get("priority_cities", []),
-            candidate_cities=data.get("candidate_cities", []),
-            fixed_city_order=data.get("fixed_city_order") or [],
-            transport_allowed_modes=data.get("transport_allow") or data.get("transport_allowed_modes"),
-            transport_forbidden_modes=data.get("transport_forbid") or data.get("transport_forbidden_modes", []),
-            num_restaurants=data.get("restaurants", 1),
-            num_attractions=data.get("attractions", 1),
-            notes=data.get("notes"),
-        )
-
 
 class TravelKnowledgeBase:
     def __init__(self, root: str = "database", *, keep_raw_frames: bool = True):
@@ -280,7 +185,8 @@ class TravelKnowledgeBase:
                 continue
             raw_rules = row.get("house_rules")
             if isinstance(raw_rules, str):
-                tokens = {tok.strip().lower().replace(" ", "_") for tok in raw_rules.split(",") if tok}
+                cleaned = raw_rules.replace("&", ",").replace(" and ", ",")
+                tokens = {tok.strip().lower().replace(" ", "_") for tok in cleaned.split(",") if tok}
             elif isinstance(raw_rules, list):
                 tokens = {str(tok).strip().lower().replace(" ", "_") for tok in raw_rules if tok}
             else:
@@ -731,6 +637,9 @@ class TravelKnowledgeBase:
         max_minimum_nights = filt.get("max_minimum_nights") or filt.get("max_min_nights")
         room_types = {s.lower() for s in filt.get("room_type") or []}
         house_rules = {str(s).lower().replace(" ", "_") for s in filt.get("house_rules") or []}
+        deny_rules = {r for r in house_rules if r.startswith("no_")}
+        allow_rules = {r for r in house_rules if not r.startswith("no_")}
+        forbid_tokens = {f"no_{r}" for r in allow_rules}
         min_occupancy = filt.get("min_occupancy")
 
         df = pd.DataFrame(stays)
@@ -768,8 +677,17 @@ class TravelKnowledgeBase:
                     ]
                 except Exception:
                     pass
-            if house_rules:
-                df = df[df["house_rules_tokens"].apply(lambda tokens: house_rules.issubset(tokens if isinstance(tokens, set) else set(tokens or [])))]
+            if deny_rules or forbid_tokens:
+                def _tok_set(tokens: Any) -> set:
+                    if isinstance(tokens, set):
+                        return tokens
+                    if isinstance(tokens, (list, tuple)):
+                        return set(tokens)
+                    return set()
+                if deny_rules:
+                    df = df[df["house_rules_tokens"].apply(lambda tokens: deny_rules.issubset(_tok_set(tokens)))]
+                if forbid_tokens:
+                    df = df[df["house_rules_tokens"].apply(lambda tokens: forbid_tokens.isdisjoint(_tok_set(tokens)))]
 
         filtered: List[Tuple[Dict, int]] = []
         for idx, row in df.reset_index(drop=True).iterrows() if not df.empty else []:

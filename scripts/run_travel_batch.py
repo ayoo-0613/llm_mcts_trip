@@ -5,7 +5,7 @@ import json
 import os
 import time
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 import sys  # noqa: E402
@@ -13,7 +13,7 @@ import sys  # noqa: E402
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-from mcts.travel.knowledge_base import TripGoal, TravelKnowledgeBase  # noqa: E402
+from mcts.travel.knowledge_base import TravelKnowledgeBase  # noqa: E402
 from mcts.travel.agents import EnvAgent, MCTSPlanningAgent, SemanticAgent  # noqa: E402
 from mcts.travel.submission import env_to_submission_record  # noqa: E402
 from mcts.travel.query_parsing import (
@@ -23,6 +23,8 @@ from mcts.travel.query_parsing import (
     normalize_parsed_query,
     parse_nl_query,
 )  # noqa: E402
+from evaluation.hard_constraint import evaluation as hard_eval  # noqa: E402
+from evaluation.commonsense_constraint import evaluation as commonsense_eval  # noqa: E402
 
 
 def _parse_date_safe(date_str: str) -> Optional[datetime]:
@@ -79,16 +81,100 @@ def _load_queries_from_csv(path: str) -> List[Dict[str, Any]]:
     return entries
 
 
+def _merge_args_into_parsed(parsed: Dict[str, Any], args) -> Dict[str, Any]:
+    out = dict(parsed or {})
+    if out.get("origin") is None and getattr(args, "origin", None):
+        out["origin"] = args.origin
+    if out.get("destination") is None and getattr(args, "destination", None):
+        out["destination"] = args.destination
+    if out.get("start_date") is None and getattr(args, "start_date", None):
+        out["start_date"] = args.start_date
+    if out.get("duration_days") is None and getattr(args, "days", None):
+        out["duration_days"] = args.days
+    if out.get("visiting_city_number") is None and getattr(args, "visiting_city_number", None):
+        out["visiting_city_number"] = args.visiting_city_number
+    if out.get("budget") is None and getattr(args, "budget", None):
+        out["budget"] = args.budget
+    return out
+
+
+def _query_data_for_eval(parsed: Dict[str, Any]) -> Dict[str, Any]:
+    org = parsed.get("org") or parsed.get("origin")
+    dest = parsed.get("dest") or parsed.get("destination")
+    dates = parsed.get("date") or parsed.get("dates") or []
+    if isinstance(dates, str):
+        dates = [dates]
+    elif dates is None:
+        dates = []
+    days = parsed.get("days")
+    if days is None:
+        days = parsed.get("duration_days")
+    if days is None and dates:
+        days = len(dates)
+    try:
+        days = int(days) if days is not None else 0
+    except Exception:
+        days = 0
+    visit_num = parsed.get("visiting_city_number")
+    try:
+        visit_num = int(visit_num) if visit_num is not None else 1
+    except Exception:
+        visit_num = 1
+    people = parsed.get("people_number")
+    try:
+        people = int(people) if people is not None else 1
+    except Exception:
+        people = 1
+    budget = parsed.get("budget")
+    try:
+        budget = float(budget) if budget is not None else 0.0
+    except Exception:
+        budget = 0.0
+    local_constraint = parsed.get("local_constraint")
+    if not isinstance(local_constraint, dict):
+        local_constraint = {
+            "house rule": None,
+            "cuisine": None,
+            "room type": None,
+            "transportation": None,
+        }
+    return {
+        "org": org,
+        "dest": dest,
+        "days": days,
+        "visiting_city_number": visit_num,
+        "date": dates,
+        "people_number": people,
+        "local_constraint": local_constraint,
+        "budget": budget,
+    }
+
+
+def _evaluate_plan(parsed: Dict[str, Any], plan: List[Dict[str, Any]]) -> Tuple[bool, List[str]]:
+    query_data = _query_data_for_eval(parsed)
+    hard = hard_eval(query_data, plan)
+    commonsense = commonsense_eval(query_data, plan)
+    violations: List[str] = []
+    for name, info in (hard or {}).items():
+        passed = info[0] if isinstance(info, (tuple, list)) and info else info
+        if passed is False:
+            violations.append(f"hard:{name}")
+    for name, info in (commonsense or {}).items():
+        passed = info[0] if isinstance(info, (tuple, list)) and info else info
+        if passed is False:
+            violations.append(f"commonsense:{name}")
+    success = not violations
+    return success, violations
+
+
 def _structured_plan(env: EnvAgent) -> Dict[str, List[str]]:
     state = env.state
-    goal = env.goal
+    parsed = env.goal_parsed or {}
 
     # 目的地城市列表：优先使用已选城市序列，其次 fixed_city_order，最后 fallback 到 destination
-    cities = list(
-        state.city_sequence
-        or goal.fixed_city_order
-        or ([goal.destination] if goal.destination else [])
-    )
+    fixed_order = parsed.get("fixed_city_order") or []
+    destination = parsed.get("destination") or parsed.get("dest")
+    cities = list(state.city_sequence or fixed_order or ([destination] if destination else []))
 
     # ----------------------------
     # 1. 交通方式（先根据状态中已经选好的 segment_modes）
@@ -122,16 +208,17 @@ def _structured_plan(env: EnvAgent) -> Dict[str, List[str]]:
     # 2. 交通日期：根据“每天所在城市”推断每段交通发生的日期
     # ----------------------------
     transport_dates: List[str] = []
-    if goal.start_date:
-        start_dt = _parse_date_safe(goal.start_date)
+    start_date = parsed.get("start_date")
+    if start_date:
+        start_dt = _parse_date_safe(start_date)
         if start_dt:
-            total_days = goal.duration_days or env.total_days
+            total_days = parsed.get("duration_days") or parsed.get("days") or env.total_days
 
             for idx, src, dst in segments:
                 transport_day = None  # 1-based day index
 
                 # 特例：最后一段返回 origin，优先对齐到行程最后一天
-                if dst == goal.origin and total_days:
+                if dst == (parsed.get("origin") or parsed.get("org")) and total_days:
                     transport_day = total_days
                 else:
                     # 一般情况：找到第一个 day，使 day 所在城市 == 该段的目标城市 dst
@@ -143,10 +230,10 @@ def _structured_plan(env: EnvAgent) -> Dict[str, List[str]]:
 
                 # 兜底逻辑（极端情况下找不到 dst 对应的 day）
                 if transport_day is None:
-                    if src == goal.origin:
+                    if src == (parsed.get("origin") or parsed.get("org")):
                         # 出发段：默认第一天
                         transport_day = 1
-                    elif dst == goal.origin and total_days:
+                    elif dst == (parsed.get("origin") or parsed.get("org")) and total_days:
                         # 返回段：默认最后一天
                         transport_day = total_days
                     else:
@@ -167,7 +254,7 @@ def _structured_plan(env: EnvAgent) -> Dict[str, List[str]]:
     for day in range(1, env.total_days + 1):
         for slot, meal in state.meals.get(day, {}).items():
             if meal and meal["id"] not in seen_rest:
-                restaurants_set.append(f"{meal['name']}, {meal.get('city', goal.destination)}")
+                restaurants_set.append(f"{meal['name']}, {meal.get('city', destination)}")
                 seen_rest.add(meal["id"])
 
     # ----------------------------
@@ -208,65 +295,49 @@ def _state_hint(kb: TravelKnowledgeBase, name: Optional[str]) -> Optional[str]:
     return kb.state_norm_map.get(norm) or kb.city_to_state_norm.get(norm)
 
 
-def _goal_diagnostics(kb: TravelKnowledgeBase, goal: TripGoal) -> Dict[str, Any]:
-    dest_state = _state_hint(kb, goal.destination)
-    origin_state = _state_hint(kb, goal.origin)
+def _goal_diagnostics(kb: TravelKnowledgeBase, parsed: Dict[str, Any]) -> Dict[str, Any]:
+    dest = parsed.get("destination") or parsed.get("dest")
+    origin = parsed.get("origin") or parsed.get("org")
+    dest_state = _state_hint(kb, dest)
+    origin_state = _state_hint(kb, origin)
     state_city_pool = kb.get_cities_for_state(dest_state) if dest_state else []
-    must_states = {c: kb.get_state_for_city(c) or _state_hint(kb, c) for c in goal.must_visit_cities}
-    pri_states = {c: kb.get_state_for_city(c) or _state_hint(kb, c) for c in goal.priority_cities}
-    candidate_states = {c: kb.get_state_for_city(c) or _state_hint(kb, c) for c in goal.candidate_cities}
+    must_cities = parsed.get("must_visit_cities") or []
+    priority_cities = parsed.get("priority_cities") or []
+    candidate_cities = parsed.get("candidate_cities") or []
+    must_states = {c: kb.get_state_for_city(c) or _state_hint(kb, c) for c in must_cities}
+    pri_states = {c: kb.get_state_for_city(c) or _state_hint(kb, c) for c in priority_cities}
+    candidate_states = {c: kb.get_state_for_city(c) or _state_hint(kb, c) for c in candidate_cities}
     return {
         "destination_state": dest_state,
         "origin_state": origin_state,
         "state_city_pool": state_city_pool,
-        "candidate_cities": goal.candidate_cities,
+        "candidate_cities": candidate_cities,
         "must_city_states": must_states,
         "priority_city_states": pri_states,
         "candidate_city_states": candidate_states,
     }
 
-
-def _build_goal(parsed: Dict[str, Any], args, kb: TravelKnowledgeBase, semantic: SemanticAgent) -> TripGoal:
-    return semantic.build_goal(parsed, args, kb)
-
     
 def _run_single(
-    goal: TripGoal,
     kb: TravelKnowledgeBase,
     policy: Optional[Any],
     args,
     *,
     raw_query: str = "",
-    semantic: SemanticAgent,
-    goal_parsed: Optional[Dict[str, Any]] = None,
+    goal_parsed: Dict[str, Any],
 ):
-    # Reuse the same LLM endpoint as NL parser for filter generation (no extra CLI needed).
-    plan_llm = None
-    model_for_plan = args.parser_model or args.local_model
-    base_for_plan = args.local_base
-    if args.use_llm_filters and model_for_plan and base_for_plan:
-        def _plan_call(prompt: str, base=base_for_plan, model=model_for_plan):
-            return call_local_llm(base, model, prompt, timeout=args.parser_timeout)
-        plan_llm = _plan_call
-
-    phase_planner = semantic.build_phase_planner(args, llm_call=plan_llm)
-
     env = EnvAgent(
         kb,
-        goal,
         max_steps=args.max_episode_len,
         top_k=args.top_k,
         debug=args.debug,
         candidate_cap=args.candidate_cap,
-        relax_max_tries=args.relax_max_tries,
         user_query=raw_query,
         log_filter_usage=args.log_filter_usage,
-        phase_planner=phase_planner,
         goal_parsed=goal_parsed,
     )
     planner = MCTSPlanningAgent(args, env, policy)
     result = planner.run(max_episode_len=args.max_episode_len)
-    result["goal"] = goal
     result["state"] = env.state
     return result
 
@@ -316,13 +387,13 @@ def parse_args():
         "--use-llm-filters",
         dest="use_llm_filters",
         action="store_true",
-        help="Enable LLM filter generation for candidate retrieval.",
+        help="Deprecated (no-op): LLM filter generation removed.",
     )
     parser.add_argument(
         "--no-llm-filters",
         dest="use_llm_filters",
         action="store_false",
-        help="Disable LLM filter generation (use defaults only).",
+        help="Deprecated (no-op): LLM filter generation removed.",
     )
     parser.add_argument(
         "--use-llm-prior",
@@ -334,12 +405,12 @@ def parse_args():
         "--relax-max-tries",
         type=int,
         default=6,
-        help="Max relaxation attempts when KB query returns empty candidates.",
+        help="Deprecated (no-op): relaxation removed.",
     )
     parser.add_argument(
         "--log-filter-usage",
         action="store_true",
-        help="Print filters and whether LLM/cache was used when building candidates.",
+        help="Print candidate retrieval details and cache usage.",
     )
     parser.add_argument("--uct-type", default="PUCT")
     parser.add_argument("--seed", type=int, default=0)
@@ -391,10 +462,7 @@ def main():
     kb = TravelKnowledgeBase(args.database_root)
     semantic = SemanticAgent()
     policy = semantic.build_policy(args)
-    # 如果开启 use_llm_filters，则输出到 save_dir/llm_filters 子文件夹
     output_dir = args.save_dir
-    if getattr(args, "use_llm_filters", False):
-        output_dir = os.path.join(args.save_dir, "llm_filters")
     os.makedirs(output_dir, exist_ok=True)
 
     submission_fp = None
@@ -431,32 +499,39 @@ def main():
             if not parsed.get("origin") or not parsed.get("destination"):
                 print(f"[{idx}] skip (parse failed): {q}")
                 continue
-        goal = _build_goal(parsed, args, kb, semantic)
-        # Debug: show candidate city list after state expansion
-        print(f"[DEBUG] Goal candidate_cities: {goal.candidate_cities}")
+        parsed = normalize_parsed_query(parsed)
+        parsed = _merge_args_into_parsed(parsed, args)
+        if not parsed.get("origin") or not parsed.get("destination"):
+            print(f"[{idx}] skip (parse missing origin/destination): {q}")
+            continue
         t0 = time.perf_counter()
-        result = _run_single(goal, kb, policy, args, raw_query=q, semantic=semantic, goal_parsed=parsed)
+        result = _run_single(kb, policy, args, raw_query=q, goal_parsed=parsed)
         elapsed = time.perf_counter() - t0
         structured = _structured_plan(result["env"])
-        diagnostics = _goal_diagnostics(kb, goal)
-        filename = f"{idx:03d}_{goal.origin}_to_{goal.destination}_{goal.start_date or 'na'}_{goal.duration_days or 'days'}d.json"
+        diagnostics = _goal_diagnostics(kb, result["env"].goal_parsed)
+        idx_out = idx  # 1-based index for submission
+        eval_plan = env_to_submission_record(idx=idx_out, query=q, env=result["env"])["plan"]
+        eval_success, eval_violations = _evaluate_plan(parsed, eval_plan)
+        origin = parsed.get("origin") or parsed.get("org") or "origin"
+        dest = parsed.get("destination") or parsed.get("dest") or "dest"
+        start_date = parsed.get("start_date") or "na"
+        duration = parsed.get("duration_days") or parsed.get("days") or "days"
+        filename = f"{idx:03d}_{origin}_to_{dest}_{start_date}_{duration}d.json"
         safe_name = filename.replace(" ", "_").replace("/", "-")
         out_path = os.path.join(output_dir, safe_name)
-        idx_out = idx  # 1-based index for submission
         wants_debug = args.output_format in ("debug", "both")
         if wants_debug:
             with open(out_path, "w", encoding="utf-8") as f:
                 json.dump(
                     {
+                        "success": eval_success,
+                        "cost": result["cost"],
+                        "violations": eval_violations,
                         "query": q,
                         "parsed": parsed,
-                        "goal": goal.as_text(),
                         "actions": result["actions"],
-                        "success": result["success"],
-                        "cost": result["cost"],
-                        "violations": result["violations"],
                         "structured_plan": structured,
-                        "submission_plan": env_to_submission_record(idx=idx_out, query=q, env=result["env"])["plan"],
+                        "submission_plan": eval_plan,
                         "filter_usage": result.get("filter_usage", []),
                         "prior_usage": result.get("prior_usage", []),
                         "elapsed_seconds": elapsed,
@@ -467,8 +542,8 @@ def main():
                 )
         print(f"\n=== Query {idx} ===")
         print(f"Raw: {q}")
-        print(f"Parsed goal: {goal.as_text()}")
-        print(f"Success: {result['success']} | Cost: {result['cost']:.2f} | Violations: {result['violations']}")
+        print(f"Parsed goal: {result['env'].get_goal()}")
+        print(f"Success: {eval_success} | Cost: {result['cost']:.2f} | Violations: {eval_violations}")
         print(f"Actions: {result['actions']}")
         print(f"Dest state hint: {diagnostics['destination_state']} | Candidate cities seeded: {diagnostics['candidate_cities']}")
         print(f"Elapsed: {elapsed:.2f}s")

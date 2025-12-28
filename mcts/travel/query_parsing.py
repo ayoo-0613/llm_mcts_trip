@@ -144,7 +144,7 @@ def parse_nl_query(nl_query: str, base_url: str, model: str, timeout: float = 60
 
 def normalize_parsed_query(parsed: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Normalize various parser schemas into the internal keys expected by SemanticAgent.build_goal().
+    Normalize various parser schemas into the internal keys used by the travel pipeline.
 
     Supports:
     - legacy schema: origin/destination/start_date/duration_days/.../preferences
@@ -236,11 +236,7 @@ def normalize_parsed_query(parsed: Dict[str, Any]) -> Dict[str, Any]:
     if forbid_clean:
         out["transport_forbid"] = forbid_clean
 
-    # Ensure arrays exist for downstream code.
-    out.setdefault("must_visit_cities", [])
-    out.setdefault("priority_cities", [])
-    out.setdefault("fixed_city_order", None)
-    out.setdefault("transport_allow", None)
+    # Do not inject defaults; keep original sparsity.
     return out
 
 

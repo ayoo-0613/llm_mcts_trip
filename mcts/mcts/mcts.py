@@ -228,12 +228,20 @@ class MCTSAgent:
                         people = 1
             if budget is None:
                 goal = getattr(env, "goal", None)
-                budget = getattr(goal, "budget", None)
-                if goal is not None and getattr(goal, "people_number", None) is not None:
-                    try:
-                        people = int(getattr(goal, "people_number") or 1)
-                    except Exception:
-                        people = 1
+                if isinstance(goal, dict):
+                    budget = goal.get("budget")
+                    if goal.get("people_number") is not None:
+                        try:
+                            people = int(goal.get("people_number") or 1)
+                        except Exception:
+                            people = 1
+                else:
+                    budget = getattr(goal, "budget", None)
+                    if goal is not None and getattr(goal, "people_number", None) is not None:
+                        try:
+                            people = int(getattr(goal, "people_number") or 1)
+                        except Exception:
+                            people = 1
         try:
             budget_f = float(budget)
         except Exception:

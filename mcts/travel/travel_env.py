@@ -6,10 +6,8 @@ from dataclasses import asdict, dataclass, field
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 
-from mcts.travel.filtering import FilterPolicy, PhasePlanFilterPolicy, PhasePlanGenerator
-from mcts.travel.knowledge_base import TravelKnowledgeBase, TripGoal
+from mcts.travel.knowledge_base import TravelKnowledgeBase
 from mcts.travel.retrieval_agent import RetrievalAgent
-from mcts.travel.relaxation import RelaxationController
 
 
 # ----------------------------
@@ -43,6 +41,8 @@ DEFAULT_REWARD_CFG = {
     "poi_bonus": 1.0,
     "finish_success_bonus": 6.0,
     "finish_fail_penalty": -6.0,
+    "feasibility_weight": 5.0,
+    "preference_weight": 1.0,
 }
 
 MEAL_SLOTS = ["breakfast", "lunch", "dinner"]
@@ -166,22 +166,19 @@ class TravelEnv:
     def __init__(
         self,
         knowledge_base: TravelKnowledgeBase,
-        goal: TripGoal,
-                 max_steps: int = 40, top_k: int = 5,
-                 reward_cfg: Optional[Dict] = None, debug: bool = False,
-                 candidate_cap: int = 80,
-                 filter_policy: Optional[FilterPolicy] = None,
-                 phase_planner: Optional[PhasePlanGenerator] = None,
-                 relaxer: Optional[RelaxationController] = None,
-                 relax_max_tries: int = 6,
-                 user_query: str = "",
-                 log_filter_usage: bool = False,
-                 enable_budget_caps: bool = False,
-                 retrieval_agent: Optional[RetrievalAgent] = None,
-                 goal_parsed: Optional[Dict[str, Any]] = None):
+        max_steps: int = 40,
+        top_k: int = 5,
+        reward_cfg: Optional[Dict] = None,
+        debug: bool = False,
+        candidate_cap: int = 80,
+        user_query: str = "",
+        log_filter_usage: bool = False,
+        retrieval_agent: Optional[RetrievalAgent] = None,
+        goal_parsed: Optional[Dict[str, Any]] = None,
+    ):
         self.kb = knowledge_base
-        self.goal = goal
         self.goal_parsed = goal_parsed or {}
+        self.goal = self.goal_parsed
         self.max_steps = max_steps
         self.top_k = top_k
         self.reward_cfg = reward_cfg.copy() if reward_cfg is not None else DEFAULT_REWARD_CFG.copy()
@@ -193,15 +190,6 @@ class TravelEnv:
         self.total_days = self._parsed_int("duration_days", "days", default=3)
         self.meal_slots = MEAL_SLOTS
         self.attraction_slots = ATTRACTION_SLOTS
-        self.phase_planner = phase_planner
-        self.filter_policy: FilterPolicy = filter_policy or PhasePlanFilterPolicy(
-            phase_planner=self.phase_planner,
-            cost_estimator=self._estimate_cost,
-            total_days=self.total_days,
-            meal_slots=self.meal_slots,
-            debug=self.debug,
-            enable_budget_caps=enable_budget_caps,
-        )
 
         self.base_state = self._empty_state()
         self.base_history: List[str] = []
@@ -219,11 +207,8 @@ class TravelEnv:
         self.last_slot: Optional[Slot] = None
         self._last_phase_plan = None
 
-        self.relaxer = relaxer or RelaxationController(max_tries=relax_max_tries, goal=goal)
         self.retrieval_agent = retrieval_agent or RetrievalAgent(
             kb=self.kb,
-            filter_policy=self.filter_policy,
-            relaxer=self.relaxer,
             top_k=self.top_k,
             candidate_cap=self.candidate_cap,
             debug=self.debug,
@@ -316,6 +301,159 @@ class TravelEnv:
         ]
         return "; ".join(parts)
 
+    def _parsed_transport_forbid(self) -> set:
+        return {
+            str(m).lower()
+            for m in self._parsed_list(
+                "transport_forbid", "transport_forbidden", "transport_forbidden_modes", default=[]
+            )
+            if m
+        }
+
+    def _require_flight(self) -> bool:
+        val = self._parsed_get("require_flight", default=None)
+        if val is not None:
+            return bool(val)
+        return "flight" not in self._parsed_transport_forbid()
+
+    def _return_required(self) -> bool:
+        val = self._parsed_get("return_required", default=None)
+        if val is not None:
+            return bool(val)
+        return True
+
+    def _budget_remaining(self, state: TravelState) -> Optional[float]:
+        budget = self._parsed_float("budget", default=None)
+        if budget is None:
+            return None
+        try:
+            budget_f = float(budget)
+        except Exception:
+            return None
+        return budget_f - self._estimate_cost(state)
+
+    def _planned_accommodation_days_for_city(self, state: TravelState, city: str) -> int:
+        if not city or self.total_days <= 1:
+            return 0
+        target = self.kb._normalize_city(city)
+        count = 0
+        for day in range(1, self.total_days):  # exclude last day
+            c = self._city_for_day(state, day)
+            if c and self.kb._normalize_city(c) == target:
+                count += 1
+        return count
+
+    def _estimate_action_cost(self, payload: Optional[Tuple], state: TravelState) -> Optional[float]:
+        if not payload:
+            return None
+        kind = payload[0]
+        people = self._parsed_int("people_number", default=1) or 1
+        if kind == "segment_mode":
+            mode = payload[2] if len(payload) > 2 else None
+            detail = payload[3] if len(payload) > 3 else None
+            if not isinstance(detail, dict):
+                return None
+            cost = detail.get("price")
+            if cost is None:
+                cost = detail.get("cost")
+            if cost is None:
+                return None
+            try:
+                base = float(cost)
+            except Exception:
+                return None
+            if mode == "flight":
+                return base * max(1, people)
+            if mode == "taxi":
+                return base * max(1, math.ceil(people / 4.0))
+            if mode == "self-driving":
+                return base * max(1, math.ceil(people / 5.0))
+            return base
+        if kind == "stay_city":
+            detail = payload[2] if len(payload) > 2 else None
+            if not isinstance(detail, dict):
+                return None
+            price = detail.get("price")
+            if price is None:
+                return None
+            try:
+                price_f = float(price)
+            except Exception:
+                return None
+            city = payload[1] if len(payload) > 1 else detail.get("city")
+            nights = self._planned_accommodation_days_for_city(state, str(city)) if city else 0
+            if nights <= 0:
+                return 0.0
+            occ = detail.get("occupancy")
+            try:
+                occ_i = int(occ) if occ is not None else None
+            except Exception:
+                occ_i = None
+            occ_i = max(1, occ_i) if occ_i else None
+            rooms = math.ceil(people / float(occ_i or people))
+            return price_f * rooms * nights
+        if kind == "meal":
+            detail = payload[3] if len(payload) > 3 else None
+            if not isinstance(detail, dict):
+                return None
+            cost = detail.get("cost")
+            if cost is None:
+                return None
+            try:
+                return float(cost) * max(1, people)
+            except Exception:
+                return None
+        if kind == "attraction":
+            return 0.0
+        return 0.0
+
+    def _action_feasible(self, payload: Optional[Tuple], state: TravelState) -> bool:
+        if not payload:
+            return True
+        kind = payload[0]
+        if kind == "meal":
+            detail = payload[3] if len(payload) > 3 else None
+            if isinstance(detail, dict):
+                rid = detail.get("id")
+                if rid is not None:
+                    if rid in self._restaurant_ids_all(state):
+                        return False
+        return True
+
+    def _filter_actions_by_constraints(
+        self,
+        actions: List[str],
+        payloads: Dict[str, Tuple],
+        state: TravelState,
+    ) -> Tuple[List[str], Dict[str, Tuple]]:
+        if not actions or not payloads:
+            return actions, payloads
+        kept_actions: List[str] = []
+        kept_payloads: Dict[str, Tuple] = {}
+        for action in actions:
+            payload = payloads.get(action)
+            if self._action_feasible(payload, state):
+                kept_actions.append(action)
+                kept_payloads[action] = payload
+        if not kept_actions:
+            return actions, payloads
+        return kept_actions, kept_payloads
+
+    def _feasibility_scores(self, state: TravelState) -> Tuple[float, float]:
+        budget_score = 0.0
+        remaining = self._budget_remaining(state)
+        budget = self._parsed_float("budget", default=None)
+        if remaining is not None and budget:
+            try:
+                budget_score = max(-1.0, min(1.0, float(remaining) / float(budget)))
+            except Exception:
+                budget_score = 0.0
+        total_meals = sum(1 for day_map in state.meals.values() for v in day_map.values() if v)
+        pref_score = 0.0
+        if total_meals > 0:
+            pref_score = float(state.preference_matches) / float(total_meals)
+        return budget_score, pref_score
+
     def _empty_state(self) -> TravelState:
         meals = {day: {slot: None for slot in self.meal_slots}
                  for day in range(1, self.total_days + 1)}
@@ -328,14 +466,19 @@ class TravelEnv:
         dest = self._parsed_get("destination", "dest", default=None)
         if not dest:
             return
+        days = self._parsed_int("duration_days", "days", default=None)
+        dest_norm = self.kb._normalize_city(dest)
+        dest_is_city = bool(dest_norm and dest_norm in getattr(self.kb, "city_set_norm", {}))
+        prefer_city = bool(dest_is_city and days == 3)
+        if prefer_city:
+            return
 
         # Destination is a state → seed candidate_cities from that state.
-        if self.kb.is_state(dest):
+        if self.kb.is_state(dest) and days and days > 3:
             dest_cities = self.kb.cities_in_state(dest)
             city_target = self._parsed_int("visiting_city_number", default=1) or 1
             cap = max(self.top_k * 3, city_target * 10)
             self.goal_parsed["candidate_cities"] = dest_cities[:cap]
-            self.goal.candidate_cities = dest_cities[:cap]
             return
 
         # Destination is a city: do not build candidate_cities. If multi-city requested, raise.
@@ -352,17 +495,23 @@ class TravelEnv:
         dest = self._parsed_get("destination", "dest", default=None)
         if not dest or not self.kb.is_state(dest):
             return
+        days = self._parsed_int("duration_days", "days", default=None)
+        dest_norm = self.kb._normalize_city(dest)
+        dest_is_city = bool(dest_norm and dest_norm in getattr(self.kb, "city_set_norm", {}))
+        if dest_is_city and days == 3:
+            return
+        if not days or days <= 3:
+            return
 
         cities = self.kb.cities_in_state(dest)
         city_target = self._parsed_int("visiting_city_number", default=1) or 1
         cap = max(self.top_k * 3, city_target * 10)
         self.goal_parsed["candidate_cities"] = cities[:cap]
-        self.goal.candidate_cities = cities[:cap]
 
 
     def _init_cities_and_phase(self, state: TravelState) -> None:
         """
-        根据 Goal 决定：
+        根据解析后的目标数据决定：
         - 是否需要 CITY 阶段（多城市/城市不确定）
         - 单城市场景直接设置 city_sequence 并从 SEGMENT 开始
         - fixed_city_order 场景直接用给定顺序并从 SEGMENT 开始
@@ -372,6 +521,9 @@ class TravelEnv:
         dest_norm = self.kb._normalize_city(destination) if destination else None
         dest_is_city = bool(dest_norm and dest_norm in getattr(self.kb, "city_set_norm", {}))
         dest_is_state = bool(dest_norm and dest_norm in getattr(self.kb, "state_norm_map", {}))
+        days = self._parsed_int("duration_days", "days", default=None)
+        if dest_is_city and days == 3:
+            dest_is_state = False
         fixed_order = self._parsed_list("fixed_city_order", default=[])
 
         # 1) fixed_city_order：已经完全给定城市顺序 → 不需要 CITY 搜索
@@ -389,14 +541,11 @@ class TravelEnv:
         # 3) 否则：需要 CITY 阶段由 MCTS+LLM 搜索城市集合
         state.phase = Phase.CITY
 
-    def reset(self, goal: Optional[TripGoal] = None) -> Tuple[str, List[str]]:
-        if goal is not None:
-            self.goal = goal
-            self.goal_parsed = {}
+    def reset(self, goal_parsed: Optional[Dict[str, Any]] = None) -> Tuple[str, List[str]]:
+        if goal_parsed is not None:
+            self.goal_parsed = goal_parsed or {}
+            self.goal = self.goal_parsed
             self.total_days = self._parsed_int("duration_days", "days", default=3)
-            if isinstance(self.filter_policy, PhasePlanFilterPolicy):
-                self.filter_policy.total_days = self.total_days
-                self.filter_policy.meal_slots = self.meal_slots
             self.base_state = self._empty_state()
             self.base_history = []
             self._last_phase_plan = None
@@ -409,8 +558,6 @@ class TravelEnv:
             self.executed_filter_events = []
             self.filter_event_keys = set()
             self.executed_filter_event_keys = set()
-            if hasattr(self.relaxer, "goal"):
-                self.relaxer.goal = goal
 
         self.state = self.base_state.clone()
         # 再次确保 fixed_city_order 下 city_sequence 正确
@@ -655,7 +802,7 @@ class TravelEnv:
         segments: List[Tuple[int, str, str]] = []
         origin = self._parsed_get("origin", "org", default=None)
         destination = self._parsed_get("destination", "dest", default=None)
-        return_required = self._parsed_bool("return_required", default=True)
+        return_required = self._return_required()
         if seq:
             if origin:
                 segments.append((0, origin, seq[0]))
@@ -882,7 +1029,7 @@ class TravelEnv:
                 self.filter_event_keys.add(key)
             return list(cached.get("actions", []))
 
-        result = self.retrieval_agent.compute(self.goal, self.state, slot, user_query=self.user_query)
+        result = self.retrieval_agent.compute(self.goal_parsed, self.state, slot, user_query=self.user_query)
         actions: List[str] = list(result.actions or [])
         self.action_payloads = copy.deepcopy(result.payloads or {})
         candidates: List[Dict[str, Any]] = list(result.candidates or [])
@@ -892,6 +1039,9 @@ class TravelEnv:
         self._last_phase_plan = getattr(result, "plan", None)
         if slot.type != "city":
             self.filter_cache[key] = filt
+        actions, self.action_payloads = self._filter_actions_by_constraints(
+            actions, self.action_payloads, self.state
+        )
 
         event = dict(policy_event or {})
         event.update(
@@ -976,8 +1126,8 @@ class TravelEnv:
             if idx not in state.segment_modes:
                 return False
 
-        require_flight = self._parsed_bool("require_flight", default=True)
-        return_required = self._parsed_bool("return_required", default=True)
+        require_flight = self._require_flight()
+        return_required = self._return_required()
         if require_flight:
             if segments:
                 first_seg = state.segment_modes.get(0)
@@ -1109,13 +1259,13 @@ class TravelEnv:
             if mode == "flight":
                 if seg_idx == 0:
                     self.state.outbound_flight = detail
-                return_required = self._parsed_bool("return_required", default=True)
+                return_required = self._return_required()
                 if return_required and last_idx is not None and seg_idx == last_idx:
                     self.state.return_flight = detail
             else:
                 # 非航班兜底：如果要求航班但使用了其他交通，记录违规
-                require_flight = self._parsed_bool("require_flight", default=True)
-                return_required = self._parsed_bool("return_required", default=True)
+                require_flight = self._require_flight()
+                return_required = self._return_required()
                 if require_flight and (seg_idx == 0 or (return_required and seg_idx == last_idx)):
                     self._ensure_violation(self.state, "missing_flight")
 
@@ -1209,6 +1359,10 @@ class TravelEnv:
             self._ensure_violation(self.state, "budget")
             reward += self.reward_cfg.get("budget_violation_penalty", 0.0)
 
+        budget_score, pref_score = self._feasibility_scores(self.state)
+        reward += self.reward_cfg.get("feasibility_weight", 0.0) * budget_score
+        reward += self.reward_cfg.get("preference_weight", 0.0) * pref_score
+
         self.history.append(action)
 
         # Phase 推进：在当前步骤之后，看看是否可以进入下一阶段
@@ -1254,8 +1408,8 @@ class TravelEnv:
                 self._ensure_violation(state, f"segment{idx}")
                 reward += self.reward_cfg.get("missing_segment_penalty", 0.0)
 
-        require_flight = self._parsed_bool("require_flight", default=True)
-        return_required = self._parsed_bool("return_required", default=True)
+        require_flight = self._require_flight()
+        return_required = self._return_required()
         if require_flight:
             if segments:
                 first_seg = state.segment_modes.get(0)
@@ -1311,6 +1465,10 @@ class TravelEnv:
         if budget is not None and state.cost > budget:
             self._ensure_violation(state, "budget")
             reward += self.reward_cfg.get("budget_violation_penalty", 0.0)
+
+        budget_score, pref_score = self._feasibility_scores(state)
+        reward += self.reward_cfg.get("feasibility_weight", 0.0) * budget_score
+        reward += self.reward_cfg.get("preference_weight", 0.0) * pref_score
 
         reward += state.preference_matches * self.reward_cfg.get("preference_bonus", 0.0)
 

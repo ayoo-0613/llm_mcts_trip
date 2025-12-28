@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import itertools
+import math
+import re
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
-
-from mcts.travel import filters
 
 
 @dataclass
@@ -24,9 +24,8 @@ class RetrievalAgent:
     Retrieval + filtering agent for TravelEnv.
 
     It is responsible for:
-    - building slot filters (via FilterPolicy)
-    - querying the KB
-    - applying relaxation when candidates are empty
+    - coarse filtering to build a per-query candidate pool (hard constraints)
+    - fine ranking per slot using local context and dynamic budget caps
     - converting candidates into action strings + payloads (for EnvAgent to execute)
     - generating CITY-phase actions (city bundles)
     """
@@ -34,8 +33,6 @@ class RetrievalAgent:
     def __init__(
         self,
         kb: Any,
-        filter_policy: Any,
-        relaxer: Any,
         *,
         top_k: int = 5,
         candidate_cap: int = 80,
@@ -43,30 +40,67 @@ class RetrievalAgent:
         log_filter_usage: bool = False,
     ):
         self.kb = kb
-        self.filter_policy = filter_policy
-        self.relaxer = relaxer
         self.top_k = top_k
         self.candidate_cap = candidate_cap
         self.debug = debug
         self.log_filter_usage = log_filter_usage
         self._transport_cache: Dict[Tuple[str, str, bool], bool] = {}
+        self._parsed_sig: Optional[str] = None
+        self._city_pool: Dict[str, Dict[str, List[Dict[str, Any]]]] = {}
+        self._city_cuisine_coverage: Dict[str, set] = {}
+        self._budget_scales = {"flight": 1.0, "stay": 1.0, "meal": 1.0, "attraction": 1.0}
 
     def reset(self) -> None:
         self._transport_cache = {}
+        self._parsed_sig = None
+        self._city_pool = {}
+        self._city_cuisine_coverage = {}
+        self._budget_scales = {"flight": 1.0, "stay": 1.0, "meal": 1.0, "attraction": 1.0}
 
     # ----------------------------
     # Shared helpers
     # ----------------------------
-    def _infer_dest_kind(self, goal: Any) -> str:
+    @staticmethod
+    def _parsed_get(parsed: Any, *keys: str, default: Any = None) -> Any:
+        if not isinstance(parsed, dict):
+            return default
+        for key in keys:
+            if key in parsed and parsed[key] is not None:
+                return parsed[key]
+        return default
+
+    @staticmethod
+    def _duration_days(parsed: Any) -> Optional[int]:
+        val = RetrievalAgent._parsed_get(parsed, "duration_days", "days", default=None)
+        if val is None:
+            return None
+        try:
+            return int(val)
+        except Exception:
+            return None
+
+    def _prefer_city_dest(self, parsed: Any) -> bool:
+        dest = self._parsed_get(parsed, "destination", "dest", default=None)
+        if not dest:
+            return False
+        days = self._duration_days(parsed)
+        if days != 3:
+            return False
+        dest_norm = self.kb._normalize_city(dest)
+        return dest_norm in getattr(self.kb, "city_set_norm", {})
+
+    def _infer_dest_kind(self, parsed: Any) -> str:
         """
-        Infer whether goal.destination is a state or a city using KB's background sets.
+        Infer whether parsed.destination is a state or a city using KB's background sets.
 
         Contract:
         - if destination is in KB state set -> "state"
         - else if destination exists -> "city"
         - else -> "unknown"
         """
-        dest = getattr(goal, "destination", None)
+        if self._prefer_city_dest(parsed):
+            return "city"
+        dest = self._parsed_get(parsed, "destination", "dest", default=None)
         if not dest:
             return "unknown"
         try:
@@ -77,14 +111,92 @@ class RetrievalAgent:
         return "city"
 
     @staticmethod
-    def _flight_allowed(goal: Any) -> bool:
+    def _select_valid_batch(
+        candidates: List[Dict[str, Any]],
+        k: int,
+        *,
+        predicate: Optional[Any] = None,
+    ) -> List[Dict[str, Any]]:
+        if not candidates or k <= 0:
+            return []
+        for start in range(0, len(candidates), k):
+            batch = candidates[start : start + k]
+            if predicate is None:
+                return batch
+            kept: List[Dict[str, Any]] = []
+            for cand in batch:
+                if predicate(cand):
+                    kept.append(cand)
+            if kept:
+                return kept
+        return []
+
+    @staticmethod
+    def _used_restaurant_ids(state: Any) -> set:
+        used = set()
+        for day_map in (getattr(state, "meals", None) or {}).values():
+            for meal in (day_map or {}).values():
+                if isinstance(meal, dict):
+                    rid = meal.get("id")
+                    if rid is not None:
+                        used.add(rid)
+        return used
+
+    @staticmethod
+    def _used_attraction_ids(state: Any) -> set:
+        used = set()
+        for day_map in (getattr(state, "attractions", None) or {}).values():
+            for att in (day_map or {}).values():
+                if isinstance(att, dict):
+                    aid = att.get("id")
+                    if aid is not None:
+                        used.add(aid)
+        return used
+
+    @staticmethod
+    def _select_valid_batch(
+        candidates: List[Dict[str, Any]],
+        k: int,
+        *,
+        predicate: Optional[Any] = None,
+    ) -> List[Dict[str, Any]]:
+        if not candidates or k <= 0:
+            return []
+        for start in range(0, len(candidates), k):
+            batch = candidates[start : start + k]
+            if predicate is None:
+                return batch
+            picked: List[Dict[str, Any]] = []
+            for cand in batch:
+                if predicate(cand):
+                    picked.append(cand)
+            if picked:
+                return picked
+        return []
+
+    @staticmethod
+    def _used_restaurant_ids(state: Any) -> set:
+        used = set()
+        for day_map in (getattr(state, "meals", None) or {}).values():
+            for meal in (day_map or {}).values():
+                if isinstance(meal, dict):
+                    rid = meal.get("id")
+                    if rid is not None:
+                        used.add(rid)
+        return used
+
+    @staticmethod
+    def _flight_allowed(parsed: Any) -> bool:
         """
-        Determine if flight is allowed by goal's allow/forbid signals.
+        Determine if flight is allowed by parsed allow/forbid signals.
 
         flight_allowed=True means: not explicitly forbidden and not excluded by allow-list.
         """
-        allow = getattr(goal, "transport_allowed_modes", None)
-        forbid = set(m.lower() for m in (getattr(goal, "transport_forbidden_modes", None) or []))
+        allow = RetrievalAgent._parsed_get(parsed, "transport_allowed_modes", "transport_allow", default=None)
+        forbid = set(
+            m.lower()
+            for m in (RetrievalAgent._parsed_get(parsed, "transport_forbidden_modes", "transport_forbid", "transport_forbidden", default=[]) or [])
+        )
         if allow is not None:
             try:
                 allow_set = {str(m).lower() for m in allow}
@@ -95,7 +207,7 @@ class RetrievalAgent:
         if "flight" in forbid:
             return False
 
-        cons = getattr(goal, "constraints", None) or {}
+        cons = RetrievalAgent._parsed_get(parsed, "constraints", default=None) or {}
         tcons = cons.get("transport", {}) if isinstance(cons, dict) else {}
         if isinstance(tcons, dict):
             if tcons.get("allow"):
@@ -108,6 +220,12 @@ class RetrievalAgent:
             if tcons.get("forbid"):
                 forbid2 = {str(m).lower() for m in (tcons.get("forbid") or [])}
                 if "flight" in forbid2:
+                    return False
+        transportation = RetrievalAgent._parsed_get(parsed, "transportation", default=None)
+        if transportation:
+            items = transportation if isinstance(transportation, list) else [transportation]
+            for raw in items:
+                if "no flight" in str(raw).lower():
                     return False
         return True
 
@@ -159,52 +277,481 @@ class RetrievalAgent:
         return has
 
     @staticmethod
-    def _allowed_transport_modes(goal: Any) -> List[str]:
-        allowed = getattr(goal, "transport_allowed_modes", None) or ["flight", "taxi", "self-driving"]
-        forbidden = set(m.lower() for m in (getattr(goal, "transport_forbidden_modes", None) or []))
+    def _room_type_matches(room_type: Optional[str], allowed: List[str]) -> bool:
+        if not allowed:
+            return True
+        rt = str(room_type or "").strip().lower()
+        if not rt:
+            return False
+        normalized: List[str] = []
+        for raw in allowed:
+            t = str(raw).strip().lower()
+            if not t:
+                continue
+            if t in ("entire room", "entire home", "entire home/apt"):
+                normalized.append("entire home/apt")
+            elif t == "not shared room":
+                normalized.extend(["private room", "entire home/apt"])
+            else:
+                normalized.append(t)
+        return rt in set(normalized)
 
-        cons = getattr(goal, "constraints", None) or {}
+    @staticmethod
+    def _violates_house_rule(rule: str, stay: Dict[str, Any]) -> bool:
+        if not rule:
+            return False
+        rule = rule.strip().lower()
+        token_map = {
+            "smoking": "no_smoking",
+            "parties": "no_parties",
+            "children under 10": "no_children_under_10",
+            "visitors": "no_visitors",
+            "pets": "no_pets",
+        }
+        token = token_map.get(rule)
+        tokens = stay.get("house_rules_tokens")
+        if token:
+            if isinstance(tokens, set) and token in tokens:
+                return True
+            if isinstance(tokens, (list, tuple)) and token in set(tokens):
+                return True
+        raw = stay.get("house_rules")
+        if isinstance(raw, str):
+            raw_lc = raw.lower()
+            if rule == "smoking" and "no smoking" in raw_lc:
+                return True
+            if rule == "parties" and "no parties" in raw_lc:
+                return True
+            if rule == "children under 10" and "no children under 10" in raw_lc:
+                return True
+            if rule == "visitors" and "no visitors" in raw_lc:
+                return True
+            if rule == "pets" and "no pets" in raw_lc:
+                return True
+        return False
+
+    @staticmethod
+    def _listify(val: Any) -> List[str]:
+        if val is None:
+            return []
+        if isinstance(val, list):
+            return [str(v) for v in val if v is not None]
+        if isinstance(val, (set, tuple)):
+            return [str(v) for v in val if v is not None]
+        return [str(val)]
+
+    def _constraints_from_parsed(self, parsed: Any) -> Dict[str, Any]:
+        cons = self._parsed_get(parsed, "constraints", default=None)
+        cons = cons if isinstance(cons, dict) else {}
+        meal = dict(cons.get("meal", {}) or {})
+        stay = dict(cons.get("stay", {}) or {})
+        transport = dict(cons.get("transport", {}) or {})
+
+        local_constraint = self._parsed_get(parsed, "local_constraint", default=None) or {}
+        house_rules = self._listify(stay.get("house_rules") or local_constraint.get("house rule") or self._parsed_get(parsed, "house_rule", default=None))
+        room_types = self._listify(stay.get("room_type") or local_constraint.get("room type") or self._parsed_get(parsed, "room_type", default=None))
+        cuisines = self._listify(meal.get("cuisines") or local_constraint.get("cuisine") or self._parsed_get(parsed, "cuisine", default=None))
+        min_occ = stay.get("min_occupancy")
+        if min_occ is None:
+            try:
+                min_occ = int(self._parsed_get(parsed, "people_number", default=None) or 1)
+            except Exception:
+                min_occ = None
+
+        allow_modes = self._listify(transport.get("allow") or self._parsed_get(parsed, "transport_allowed_modes", "transport_allow", default=None))
+        forbid_modes = self._listify(
+            transport.get("forbid")
+            or self._parsed_get(parsed, "transport_forbidden_modes", "transport_forbid", "transport_forbidden", default=None)
+        )
+        transportation = self._listify(self._parsed_get(parsed, "transportation", default=None) or local_constraint.get("transportation"))
+        for raw in transportation:
+            low = raw.strip().lower()
+            if "no flight" in low:
+                forbid_modes.append("flight")
+            if "no self-driving" in low:
+                forbid_modes.append("self-driving")
+            if "no taxi" in low:
+                forbid_modes.append("taxi")
+        return {
+            "cuisines": [c.strip() for c in cuisines if c and str(c).strip()],
+            "house_rules": [r.strip() for r in house_rules if r and str(r).strip()],
+            "room_types": [r.strip() for r in room_types if r and str(r).strip()],
+            "min_occupancy": min_occ,
+            "allow_modes": [m.strip().lower() for m in allow_modes if m],
+            "forbid_modes": [m.strip().lower() for m in forbid_modes if m],
+        }
+
+    def _parsed_signature(self, parsed: Any) -> str:
+        cons = self._constraints_from_parsed(parsed)
+        parts = [
+            self._parsed_get(parsed, "origin", "org", default="") or "",
+            self._parsed_get(parsed, "destination", "dest", default="") or "",
+            str(self._parsed_get(parsed, "start_date", default="") or ""),
+            str(self._parsed_get(parsed, "duration_days", "days", default="") or ""),
+            str(self._parsed_get(parsed, "budget", default="") or ""),
+            str(self._parsed_get(parsed, "visiting_city_number", default="") or ""),
+            "|".join(sorted(cons.get("cuisines") or [])),
+            "|".join(sorted(cons.get("house_rules") or [])),
+            "|".join(sorted(cons.get("room_types") or [])),
+            "|".join(sorted(cons.get("allow_modes") or [])),
+            "|".join(sorted(cons.get("forbid_modes") or [])),
+            "|".join(sorted(self._parsed_get(parsed, "candidate_cities", default=[]) or [])),
+            "|".join(sorted(self._parsed_get(parsed, "must_visit_cities", default=[]) or [])),
+            "|".join(sorted(self._parsed_get(parsed, "priority_cities", default=[]) or [])),
+        ]
+        return "|".join(parts)
+
+    def _candidate_cities(self, parsed: Any) -> List[str]:
+        candidate_cities = list(self._parsed_get(parsed, "candidate_cities", default=[]) or [])
+        if candidate_cities:
+            return candidate_cities
+        dest = self._parsed_get(parsed, "destination", "dest", default=None)
+        if dest and self._prefer_city_dest(parsed):
+            return [str(dest)]
+        if dest and hasattr(self.kb, "cities_in_state") and self.kb.is_state(dest):
+            return list(self.kb.cities_in_state(dest) or [])
+        if dest:
+            return [str(dest)]
+        return []
+
+    def _coarse_stays(self, city: str, cons: Dict[str, Any]) -> List[Dict[str, Any]]:
+        city_norm = self.kb._normalize_city(city)
+        stays = list(getattr(self.kb, "_accommodation_buckets", {}).get(city_norm, []))
+        room_types = cons.get("room_types") or []
+        house_rules = cons.get("house_rules") or []
+        min_occ = cons.get("min_occupancy")
+        out: List[Dict[str, Any]] = []
+        for stay in stays:
+            if min_occ is not None:
+                occ = stay.get("occupancy")
+                try:
+                    if occ is not None and float(occ) < float(min_occ):
+                        continue
+                except Exception:
+                    pass
+            if room_types and not self._room_type_matches(stay.get("room_type"), room_types):
+                continue
+            if house_rules and any(self._violates_house_rule(rule, stay) for rule in house_rules):
+                continue
+            out.append(stay)
+            if len(out) >= self.candidate_cap:
+                break
+        return out
+
+    def _coarse_restaurants(self, city: str, cons: Dict[str, Any]) -> List[Dict[str, Any]]:
+        city_norm = self.kb._normalize_city(city)
+        restaurants = list(getattr(self.kb, "_restaurant_buckets", {}).get(city_norm, []))
+        cuisines = [c.lower() for c in (cons.get("cuisines") or []) if c]
+        out: List[Dict[str, Any]] = []
+        for rest in restaurants:
+            if cuisines:
+                text = str(rest.get("cuisines_lc") or rest.get("cuisines") or "").lower()
+                if not any(c in text for c in cuisines):
+                    continue
+            out.append(rest)
+            if len(out) >= self.candidate_cap:
+                break
+        return out
+
+    def _coarse_attractions(self, city: str) -> List[Dict[str, Any]]:
+        city_norm = self.kb._normalize_city(city)
+        attractions = list(getattr(self.kb, "_attraction_buckets", {}).get(city_norm, []))
+        return attractions[: self.candidate_cap]
+
+    def _ensure_city_pools(self, parsed: Any) -> None:
+        sig = self._parsed_signature(parsed)
+        if sig == self._parsed_sig:
+            return
+        self._parsed_sig = sig
+        self._city_pool = {}
+        self._city_cuisine_coverage = {}
+        self._budget_scales = {"flight": 1.0, "stay": 1.0, "meal": 1.0, "attraction": 1.0}
+
+        cons = self._constraints_from_parsed(parsed)
+        cuisines = [c.lower() for c in (cons.get("cuisines") or []) if c]
+        for city in self._candidate_cities(parsed):
+            city_norm = self.kb._normalize_city(city)
+            stays = self._coarse_stays(city, cons)
+            rests = self._coarse_restaurants(city, cons)
+            atts = self._coarse_attractions(city)
+            self._city_pool[city_norm] = {
+                "hotel": stays,
+                "meal": rests,
+                "attraction": atts,
+            }
+            if cuisines:
+                covered = set()
+                for rest in rests:
+                    text = str(rest.get("cuisines_lc") or rest.get("cuisines") or "").lower()
+                    for c in cuisines:
+                        if c in text:
+                            covered.add(c)
+                self._city_cuisine_coverage[city_norm] = covered
+            else:
+                self._city_cuisine_coverage[city_norm] = set()
+
+    def _rank_candidate_cities(self, parsed: Any, cities: List[str], origin: str) -> List[str]:
+        cons = self._constraints_from_parsed(parsed)
+        required_cuisines = [c.lower() for c in (cons.get("cuisines") or []) if c]
+        require_accommodation = bool(self._parsed_get(parsed, "require_accommodation", default=True))
+        must = set(self._parsed_get(parsed, "must_visit_cities", default=[]) or [])
+        priority = set(self._parsed_get(parsed, "priority_cities", default=[]) or [])
+
+        scored: List[Tuple[str, float]] = []
+        for city in cities:
+            city_norm = self.kb._normalize_city(city)
+            pool = self._city_pool.get(city_norm, {})
+            has_stay = bool(pool.get("hotel"))
+            if require_accommodation and not has_stay and city not in must:
+                continue
+            has_rest = bool(pool.get("meal"))
+            has_att = bool(pool.get("attraction"))
+            coverage = self._city_cuisine_coverage.get(city_norm, set())
+
+            score = 0.0
+            if has_stay:
+                score += 1.0
+            if has_rest:
+                score += 0.6
+            if has_att:
+                score += 0.2
+            if required_cuisines:
+                score += 0.8 * (len(coverage) / float(max(1, len(set(required_cuisines)))))
+
+            if self._flight_allowed(parsed):
+                if self._flight_exists(origin, city):
+                    score += 0.8
+                elif self.kb.has_any_transport(origin, city, require_flight=False):
+                    score += 0.2
+                else:
+                    score -= 0.5
+            else:
+                if self.kb.has_any_transport(origin, city, require_flight=False):
+                    score += 0.2
+
+            if city in priority:
+                score += 0.5
+            if city in must:
+                score += 1.0
+            scored.append((city, score))
+
+        scored.sort(key=lambda x: x[1], reverse=True)
+        return [c for c, _ in scored]
+
+    def _apply_constraints_to_candidates(self, stype: str, candidates: List[Dict[str, Any]], parsed: Any) -> List[Dict[str, Any]]:
+        cons = self._constraints_from_parsed(parsed)
+        if not candidates:
+            return candidates
+        if stype == "hotel":
+            room_type = list(cons.get("room_types") or [])
+            house_rules = list(cons.get("house_rules") or [])
+            filtered: List[Dict[str, Any]] = []
+            for stay in candidates:
+                if room_type and not self._room_type_matches(stay.get("room_type"), room_type):
+                    continue
+                if house_rules and any(self._violates_house_rule(rule, stay) for rule in house_rules):
+                    continue
+                filtered.append(stay)
+            return filtered
+        if stype in ("meal", "restaurant"):
+            cuisines = [str(c).strip().lower() for c in (cons.get("cuisines") or []) if c]
+            if not cuisines:
+                return candidates
+            filtered = []
+            for rest in candidates:
+                text = str(rest.get("cuisines_lc") or rest.get("cuisines") or "").lower()
+                if any(c in text for c in cuisines):
+                    filtered.append(rest)
+            return filtered
+        return candidates
+
+    @staticmethod
+    def _allowed_transport_modes(parsed: Any) -> List[str]:
+        allowed = RetrievalAgent._parsed_get(parsed, "transport_allowed_modes", "transport_allow", default=None) or ["flight", "taxi", "self-driving"]
+        forbidden = set(
+            m.lower()
+            for m in (RetrievalAgent._parsed_get(parsed, "transport_forbidden_modes", "transport_forbid", "transport_forbidden", default=[]) or [])
+        )
+        cons = RetrievalAgent._parsed_get(parsed, "constraints", default=None) or {}
         tcons = cons.get("transport", {}) if isinstance(cons, dict) else {}
         if isinstance(tcons, dict) and tcons.get("allow"):
             allowed = list(tcons["allow"])
         if isinstance(tcons, dict) and tcons.get("forbid"):
             forbidden |= set(m.lower() for m in (tcons.get("forbid") or []))
 
-        return [m for m in allowed if m not in forbidden]
+        transportation = RetrievalAgent._parsed_get(parsed, "transportation", default=None)
+        if transportation:
+            items = transportation if isinstance(transportation, list) else [transportation]
+            for raw in items:
+                low = str(raw).strip().lower()
+                if "no flight" in low:
+                    forbidden.add("flight")
+                if "no self-driving" in low:
+                    forbidden.add("self-driving")
+                if "no taxi" in low:
+                    forbidden.add("taxi")
 
-    def _planned_city_for_day(self, goal: Any, state: Any, day: int) -> Optional[str]:
+        return [m for m in allowed if m and m not in forbidden]
+
+    def _planned_city_for_day(self, parsed: Any, state: Any, day: int) -> Optional[str]:
         mapping = getattr(state, "day_to_city", None) or {}
         if isinstance(mapping, dict) and mapping and day in mapping:
             try:
                 return str(mapping.get(day))
             except Exception:
                 return mapping.get(day)
-        seq = getattr(state, "city_sequence", None) or getattr(goal, "fixed_city_order", None) or getattr(goal, "must_visit_cities", None)
+        seq = (
+            getattr(state, "city_sequence", None)
+            or RetrievalAgent._parsed_get(parsed, "fixed_city_order", default=None)
+            or RetrievalAgent._parsed_get(parsed, "must_visit_cities", default=None)
+        )
         seq = list(seq or [])
         if not seq:
-            return getattr(goal, "destination", None)
-        total_days = int(getattr(goal, "duration_days", 0) or 0)
+            return RetrievalAgent._parsed_get(parsed, "destination", "dest", default=None)
+        total_days = int(RetrievalAgent._parsed_get(parsed, "duration_days", "days", default=0) or 0)
         total_days = max(1, total_days)
         idx = min(len(seq) - 1, int((day - 1) * len(seq) / max(1, total_days)))
         return seq[idx]
 
-    def _planned_accommodation_days_for_city(self, goal: Any, state: Any, city: str) -> int:
+    def _planned_accommodation_days_for_city(self, parsed: Any, state: Any, city: str) -> int:
         """
         Number of days we expect to emit accommodation for this city in submission output.
 
         We follow the evaluation convention that accommodation may be absent on the last day,
         so we count days 1..(D-1) and map each day to its assigned city.
         """
-        total_days = int(getattr(goal, "duration_days", 0) or 0)
+        total_days = int(self._parsed_get(parsed, "duration_days", "days", default=0) or 0)
         if total_days <= 1:
             return 0
         target = self.kb._normalize_city(city)
         count = 0
         for d in range(1, total_days):  # exclude last day
-            c = self._planned_city_for_day(goal, state, d)
+            c = self._planned_city_for_day(parsed, state, d)
             if c and self.kb._normalize_city(c) == target:
                 count += 1
         return count
+
+    def _segments_for_state(self, parsed: Any, state: Any) -> List[Tuple[int, str, str]]:
+        seq = list(getattr(state, "city_sequence", []) or [])
+        origin = self._parsed_get(parsed, "origin", "org", default=None)
+        destination = self._parsed_get(parsed, "destination", "dest", default=None)
+        return_required = bool(self._parsed_get(parsed, "return_required", default=True))
+        segments: List[Tuple[int, str, str]] = []
+        if seq:
+            if origin:
+                segments.append((0, origin, seq[0]))
+            for i in range(1, len(seq)):
+                segments.append((i, seq[i - 1], seq[i]))
+            if return_required and origin:
+                segments.append((len(seq), seq[-1], origin))
+        elif destination and origin:
+            segments.append((0, origin, destination))
+            if return_required:
+                segments.append((1, destination, origin))
+        return segments
+
+    def _remaining_counts(self, parsed: Any, state: Any) -> Dict[str, int]:
+        segments = self._segments_for_state(parsed, state)
+        remaining_flights = sum(1 for idx, _, _ in segments if idx not in (getattr(state, "segment_modes", None) or {}))
+
+        remaining_stays = 0
+        remaining_nights = 0
+        require_accommodation = bool(self._parsed_get(parsed, "require_accommodation", default=True))
+        if require_accommodation:
+            for city in (getattr(state, "city_sequence", None) or []):
+                if (getattr(state, "city_stays", None) or {}).get(city) is None:
+                    remaining_stays += 1
+                    remaining_nights += self._planned_accommodation_days_for_city(parsed, state, city)
+
+        remaining_meals = 0
+        meals = getattr(state, "meals", None) or {}
+        for day_map in meals.values():
+            for meal in (day_map or {}).values():
+                if meal is None:
+                    remaining_meals += 1
+
+        remaining_attractions = 0
+        attractions = getattr(state, "attractions", None) or {}
+        for day_map in attractions.values():
+            for att in (day_map or {}).values():
+                if att is None:
+                    remaining_attractions += 1
+
+        return {
+            "flight": remaining_flights,
+            "stay": remaining_stays,
+            "stay_nights": remaining_nights,
+            "meal": remaining_meals,
+            "attraction": remaining_attractions,
+        }
+
+    def _budget_caps(self, parsed: Any, state: Any, phase: str) -> Tuple[Optional[float], Dict[str, Any]]:
+        budget = self._parsed_get(parsed, "budget", default=None)
+        try:
+            budget_f = float(budget)
+        except Exception:
+            return None, {}
+        if budget_f <= 0:
+            return None, {}
+
+        remaining = budget_f - float(getattr(state, "cost", 0.0) or 0.0)
+        if remaining <= 0:
+            return None, {"budget_remaining": remaining}
+
+        counts = self._remaining_counts(parsed, state)
+        weights = {
+            "flight": 0.35 * self._budget_scales.get("flight", 1.0) * max(1, counts["flight"]),
+            "stay": 0.45 * self._budget_scales.get("stay", 1.0) * max(1, counts["stay_nights"] or counts["stay"]),
+            "meal": 0.15 * self._budget_scales.get("meal", 1.0) * max(1, counts["meal"]),
+        }
+        weights = {k: v for k, v in weights.items() if counts.get(k, 0) > 0}
+        total_weight = sum(weights.values()) if weights else 0.0
+        if total_weight <= 0:
+            return None, {"budget_remaining": remaining}
+
+        phase_budget = remaining * (weights.get(phase, 0.0) / total_weight)
+        info = {
+            "budget_remaining": remaining,
+            "phase_budget": phase_budget,
+            "phase": phase,
+            "counts": counts,
+            "weights": weights,
+        }
+
+        if phase == "flight":
+            per_slot = phase_budget / max(1, counts["flight"])
+            people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
+            return per_slot / float(people), info
+        if phase == "stay":
+            nights = max(1, counts["stay_nights"] or counts["stay"])
+            return phase_budget / float(nights), info
+        if phase == "meal":
+            per_slot = phase_budget / max(1, counts["meal"])
+            people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
+            return per_slot / float(people), info
+        if phase == "attraction":
+            return None, info
+        return None, info
+
+    def _bump_budget_scale(self, phase: str) -> None:
+        current = float(self._budget_scales.get(phase, 1.0) or 1.0)
+        new = min(3.0, current * 1.25)
+        if new <= current:
+            return
+        delta = new - current
+        self._budget_scales[phase] = new
+
+        others = [p for p in self._budget_scales if p != phase]
+        if not others:
+            return
+        total_other = sum(float(self._budget_scales[p] or 0.0) for p in others)
+        if total_other <= 0:
+            return
+        min_scale = 0.4
+        for p in others:
+            val = float(self._budget_scales[p] or 0.0)
+            reduction = delta * (val / total_other)
+            self._budget_scales[p] = max(min_scale, val - reduction)
 
     # ----------------------------
     # Action builders (slot -> actions/payloads)
@@ -292,7 +839,7 @@ class RetrievalAgent:
                     pass
 
     def _ground_fallback_actions(
-        self, goal: Any, slot: Any, *, force_mode: Optional[str] = None
+        self, parsed: Any, slot: Any, *, force_mode: Optional[str] = None
     ) -> Tuple[List[str], Dict[str, Tuple]]:
         """
         Non-flight transport fallback for segments when flight candidates are empty.
@@ -314,7 +861,7 @@ class RetrievalAgent:
             return actions, payloads
         seg_idx = getattr(slot, "seg", None)
         seg_val = seg_idx if seg_idx is not None else -1
-        nonflight_modes = [m for m in self._allowed_transport_modes(goal) if m != "flight"]
+        nonflight_modes = [m for m in self._allowed_transport_modes(parsed) if m != "flight"]
         if not nonflight_modes:
             return actions, payloads
 
@@ -339,12 +886,264 @@ class RetrievalAgent:
         actions.append(action)
         return actions, payloads
 
+    @staticmethod
+    def _duration_minutes(value: Any) -> Optional[float]:
+        if value is None:
+            return None
+        if isinstance(value, (int, float)):
+            return float(value)
+        s = str(value).strip().lower()
+        if not s:
+            return None
+        try:
+            return float(s)
+        except Exception:
+            pass
+        hours = 0
+        minutes = 0
+        m = re.search(r"(\d+)\s*hour", s)
+        if m:
+            hours = int(m.group(1))
+        m = re.search(r"(\d+)\s*min", s)
+        if m:
+            minutes = int(m.group(1))
+        m = re.search(r"(\d+)\s*h", s)
+        if m:
+            hours = max(hours, int(m.group(1)))
+        m = re.search(r"(\d+)\s*m", s)
+        if m:
+            minutes = max(minutes, int(m.group(1)))
+        if hours or minutes:
+            return float(hours * 60 + minutes)
+        return None
+
+    @staticmethod
+    def _cuisine_hits(text: str, cuisines: List[str]) -> List[str]:
+        hits = []
+        for c in cuisines:
+            if c and c in text:
+                hits.append(c)
+        return hits
+
+    def _missing_cuisines(self, parsed: Any, state: Any) -> List[str]:
+        cons = self._constraints_from_parsed(parsed)
+        required = {c.lower() for c in (cons.get("cuisines") or []) if c}
+        if not required:
+            return []
+        used = set()
+        origin = self._parsed_get(parsed, "origin", "org", default=None)
+        origin_norm = self.kb._normalize_city(origin) if origin else None
+        for day_map in (getattr(state, "meals", None) or {}).values():
+            for meal in (day_map or {}).values():
+                if not meal:
+                    continue
+                city = meal.get("city")
+                if origin_norm and city and self.kb._normalize_city(city) == origin_norm:
+                    continue
+                text = str(meal.get("cuisines") or "").lower()
+                for c in required:
+                    if c in text:
+                        used.add(c)
+        missing = sorted(required - used)
+        return missing
+
+    def _flight_candidates(self, parsed: Any, state: Any, slot: Any) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+        origin = getattr(slot, "origin", None)
+        destination = getattr(slot, "destination", None)
+        if not origin or not destination:
+            return [], {}
+        orig_norm = self.kb._normalize_city(origin)
+        dest_norm = self.kb._normalize_city(destination)
+        all_flights = list(getattr(self.kb, "_flight_buckets", {}).get((orig_norm, dest_norm), []))
+        flights = list(all_flights)
+
+        cap, info = self._budget_caps(parsed, state, "flight")
+        relaxed = False
+        if cap is not None:
+            flights = [f for f in all_flights if f.get("price") is not None and float(f["price"]) <= cap]
+            if not flights:
+                relaxed = True
+                prev_scale = float(self._budget_scales.get("flight", 1.0) or 1.0)
+                for _ in range(3):
+                    self._bump_budget_scale("flight")
+                    new_scale = float(self._budget_scales.get("flight", 1.0) or 1.0)
+                    if new_scale <= prev_scale + 1e-9:
+                        break
+                    cap, info = self._budget_caps(parsed, state, "flight")
+                    if cap is None:
+                        break
+                    flights = [
+                        f for f in all_flights
+                        if f.get("price") is not None and float(f["price"]) <= cap
+                    ]
+                    if flights:
+                        break
+                    prev_scale = new_scale
+
+        flights.sort(
+            key=lambda f: (
+                float(f.get("price") or 0.0),
+                self._duration_minutes(f.get("duration")) or float("inf"),
+            )
+        )
+        event = dict(info or {})
+        event.update({"budget_cap": cap, "budget_relaxed": relaxed})
+        return flights, event
+
+    def _hotel_candidates(self, parsed: Any, state: Any, slot: Any) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+        city = getattr(slot, "city", None)
+        if not city:
+            return [], {}
+        city_norm = self.kb._normalize_city(city)
+        all_stays = list(self._city_pool.get(city_norm, {}).get("hotel", []) or [])
+        all_stays = self._apply_constraints_to_candidates("hotel", all_stays, parsed)
+
+        cap, info = self._budget_caps(parsed, state, "stay")
+        relaxed = False
+        people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
+        nights = self._planned_accommodation_days_for_city(parsed, state, str(city))
+        nights = max(1, nights)
+
+        def _meets_min_nights(stay: Dict[str, Any]) -> bool:
+            min_nights = stay.get("minimum_nights")
+            if min_nights is None:
+                return True
+            try:
+                return int(min_nights) <= nights
+            except Exception:
+                return True
+        all_stays = [s for s in all_stays if _meets_min_nights(s)]
+        stays = list(all_stays)
+
+        def _within_cap(stay: Dict[str, Any], limit: Optional[float]) -> bool:
+            if limit is None:
+                return True
+            price = stay.get("price")
+            if price is None:
+                return True
+            occ = stay.get("occupancy")
+            try:
+                occ_i = int(occ) if occ is not None else None
+            except Exception:
+                occ_i = None
+            occ_i = max(1, occ_i) if occ_i else None
+            rooms = math.ceil(people / float(occ_i or people))
+            try:
+                total_per_night = float(price) * rooms
+            except Exception:
+                return True
+            return total_per_night <= limit
+
+        if cap is not None:
+            stays = [s for s in all_stays if _within_cap(s, cap)]
+            if not stays:
+                relaxed = True
+                prev_scale = float(self._budget_scales.get("stay", 1.0) or 1.0)
+                for _ in range(3):
+                    self._bump_budget_scale("stay")
+                    new_scale = float(self._budget_scales.get("stay", 1.0) or 1.0)
+                    if new_scale <= prev_scale + 1e-9:
+                        break
+                    cap, info = self._budget_caps(parsed, state, "stay")
+                    stays = [s for s in all_stays if _within_cap(s, cap)]
+                    if stays:
+                        break
+                    prev_scale = new_scale
+
+        stays.sort(
+            key=lambda s: (
+                float(s.get("price") or 0.0),
+                -(float(s.get("review") or 0.0)),
+            )
+        )
+        event = dict(info or {})
+        event.update({"budget_cap": cap, "budget_relaxed": relaxed, "planned_nights": nights})
+        return stays, event
+
+    def _meal_candidates(self, parsed: Any, state: Any, slot: Any) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+        city = getattr(slot, "city", None)
+        if not city:
+            return [], {}
+        city_norm = self.kb._normalize_city(city)
+        pool = list(self._city_pool.get(city_norm, {}).get("meal", []) or [])
+
+        cons = self._constraints_from_parsed(parsed)
+        cuisines = [c.lower() for c in (cons.get("cuisines") or []) if c]
+        missing = self._missing_cuisines(parsed, state)
+        counts = self._remaining_counts(parsed, state)
+        focus_missing = bool(missing and counts.get("meal", 0) <= len(missing))
+
+        def _matches_missing(rest: Dict[str, Any]) -> bool:
+            if not missing:
+                return True
+            text = str(rest.get("cuisines_lc") or rest.get("cuisines") or "").lower()
+            return any(c in text for c in missing)
+
+        base_candidates = [r for r in pool if _matches_missing(r)] if focus_missing else list(pool)
+        base_candidates = self._apply_constraints_to_candidates("meal", base_candidates, parsed)
+        candidates = list(base_candidates)
+        candidates = self._apply_constraints_to_candidates("meal", candidates, parsed)
+
+        cap, info = self._budget_caps(parsed, state, "meal")
+        relaxed = False
+        if cap is not None:
+            candidates = [
+                r for r in base_candidates
+                if r.get("cost") is None or float(r.get("cost") or 0.0) <= cap
+            ]
+            if not candidates:
+                relaxed = True
+                prev_scale = float(self._budget_scales.get("meal", 1.0) or 1.0)
+                for _ in range(3):
+                    self._bump_budget_scale("meal")
+                    new_scale = float(self._budget_scales.get("meal", 1.0) or 1.0)
+                    if new_scale <= prev_scale + 1e-9:
+                        break
+                    cap, info = self._budget_caps(parsed, state, "meal")
+                    candidates = [
+                        r for r in base_candidates
+                        if r.get("cost") is None or float(r.get("cost") or 0.0) <= cap
+                    ]
+                    if candidates:
+                        break
+                    prev_scale = new_scale
+
+        def _rank_key(rest: Dict[str, Any]):
+            text = str(rest.get("cuisines_lc") or rest.get("cuisines") or "").lower()
+            match_missing = bool(missing and any(c in text for c in missing))
+            return (
+                0 if match_missing else 1,
+                -(float(rest.get("rating") or 0.0)),
+                float(rest.get("cost") or 0.0),
+            )
+
+        candidates.sort(key=_rank_key)
+        event = dict(info or {})
+        event.update(
+            {
+                "budget_cap": cap,
+                "budget_relaxed": relaxed,
+                "missing_cuisines": list(missing),
+                "focus_missing": focus_missing,
+                "cuisine_constraints": cuisines,
+            }
+        )
+        return candidates, event
+
+    def _attraction_candidates(self, parsed: Any, state: Any, slot: Any) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+        city = getattr(slot, "city", None)
+        if not city:
+            return [], {}
+        city_norm = self.kb._normalize_city(city)
+        candidates = list(self._city_pool.get(city_norm, {}).get("attraction", []) or [])
+        return candidates, {}
+
     # ----------------------------
     # CITY phase (bundle selection)
     # ----------------------------
     def _score_city_bundle(
         self,
-        goal: Any,
+        parsed: Any,
         seq: List[str],
         origin: str,
         *,
@@ -358,9 +1157,10 @@ class RetrievalAgent:
             return None
 
         score = 0.0
-        require_flight = bool(getattr(goal, "require_flight", False))
-        return_required = bool(getattr(goal, "return_required", True))
-        preferences = getattr(goal, "preferences", []) or []
+        require_flight = bool(self._parsed_get(parsed, "require_flight", default=False))
+        return_required = bool(self._parsed_get(parsed, "return_required", default=True))
+        constraints = self._constraints_from_parsed(parsed)
+        required_cuisines = [c.lower() for c in (constraints.get("cuisines") or []) if c]
 
         def _edge_ok(src: str, dst: str) -> Tuple[bool, float]:
             if flight_only:
@@ -399,21 +1199,33 @@ class RetrievalAgent:
             score += 0.2 + (0.1 * bonus)
 
         for city in seq:
-            has_stay = bool(self.kb.get_accommodations(city, top_k=1))
-            has_rest = bool(self.kb.get_restaurants(city, preferences=preferences, top_k=1))
-            has_att = bool(self.kb.get_attractions(city, top_k=1))
+            city_norm = self.kb._normalize_city(city)
+            pool = self._city_pool.get(city_norm, {})
+            has_stay = bool(pool.get("hotel"))
+            has_rest = bool(pool.get("meal"))
+            has_att = bool(pool.get("attraction"))
             score += 0.1 * has_stay + 0.1 * has_rest + 0.1 * has_att
+
+        if required_cuisines:
+            coverage = set()
+            for city in seq:
+                city_norm = self.kb._normalize_city(city)
+                coverage |= self._city_cuisine_coverage.get(city_norm, set())
+            if coverage:
+                score += 0.2 * (len(coverage) / float(max(1, len(set(required_cuisines)))))
+            else:
+                score -= 0.2
 
         return score
 
-    def build_city_actions(self, goal: Any, state: Any) -> Tuple[List[str], Dict[str, Tuple], Dict[str, Any]]:
+    def build_city_actions(self, parsed: Any, state: Any) -> Tuple[List[str], Dict[str, Tuple], Dict[str, Any]]:
         actions: List[str] = []
         payloads: Dict[str, Tuple] = {}
         event: Dict[str, Any] = {}
 
-        dest_kind = self._infer_dest_kind(goal)
-        total_days = int(getattr(goal, "duration_days", 0) or 0)
-        flight_allowed = self._flight_allowed(goal)
+        dest_kind = self._infer_dest_kind(parsed)
+        total_days = int(self._parsed_get(parsed, "duration_days", "days", default=0) or 0)
+        flight_allowed = self._flight_allowed(parsed)
         event.update(
             {
                 "dest_kind": dest_kind,
@@ -422,10 +1234,11 @@ class RetrievalAgent:
             }
         )
 
-        dest = getattr(goal, "destination", None)
-        origin = getattr(goal, "origin", None)
+        dest = self._parsed_get(parsed, "destination", "dest", default=None)
+        origin = self._parsed_get(parsed, "origin", "org", default=None)
         if not origin:
             return actions, payloads, event
+        self._ensure_city_pools(parsed)
 
         existing_prefix = list(getattr(state, "city_sequence", []) or [])
 
@@ -443,7 +1256,7 @@ class RetrievalAgent:
             return actions, payloads, event
 
         # Branch B: destination is a state -> choose n cities from state city pool.
-        city_target = getattr(goal, "visiting_city_number", None) or self._default_city_target_from_days(total_days)
+        city_target = self._parsed_get(parsed, "visiting_city_number", default=None) or self._default_city_target_from_days(total_days)
         if city_target <= 0:
             city_target = self._default_city_target_from_days(total_days)
 
@@ -453,27 +1266,32 @@ class RetrievalAgent:
             event.update({"strategy": "state_bundle", "city_target": city_target, "remaining_needed": 0, "actions": 0})
             return actions, payloads, event
 
-        state_cities = []
-        try:
-            if hasattr(self.kb, "cities_in_state") and dest:
-                state_cities = list(self.kb.cities_in_state(dest) or [])
-        except Exception:
-            state_cities = []
+        state_cities = list(self._parsed_get(parsed, "candidate_cities", default=[]) or [])
+        if not state_cities:
+            try:
+                if hasattr(self.kb, "cities_in_state") and dest:
+                    state_cities = list(self.kb.cities_in_state(dest) or [])
+            except Exception:
+                state_cities = []
 
         candidates = list(state_cities)
         injected_out_of_state: List[str] = []
-        for must in (getattr(goal, "must_visit_cities", None) or []):
+        for must in (self._parsed_get(parsed, "must_visit_cities", default=[]) or []):
             if must not in candidates:
                 injected_out_of_state.append(must)
                 candidates.insert(0, must)
-        for pri in (getattr(goal, "priority_cities", None) or []):
+        for pri in (self._parsed_get(parsed, "priority_cities", default=[]) or []):
             if pri not in candidates:
                 injected_out_of_state.append(pri)
                 candidates.append(pri)
 
         pool = [c for c in candidates if c not in prefix]
         pool_before = len(pool)
-        pool = pool[: max(self.top_k * 3, remaining_needed)]
+        pool = self._rank_candidate_cities(parsed, pool, origin)
+        pool_limit = max(self.top_k * 4, remaining_needed * 4)
+        if total_days in (5, 7) and remaining_needed > 1:
+            pool_limit = max(pool_limit, remaining_needed * 6)
+        pool = pool[:pool_limit]
         pool_after = len(pool)
 
         flight_only = flight_allowed
@@ -504,7 +1322,7 @@ class RetrievalAgent:
                 combos_generated += 1
                 seq = prefix + list(combo)
                 score = self._score_city_bundle(
-                    goal,
+                    parsed,
                     seq,
                     origin,
                     allow_repeat=allow_repeat,
@@ -574,11 +1392,11 @@ class RetrievalAgent:
     # ----------------------------
     # Main slot entrypoint
     # ----------------------------
-    def compute(self, goal: Any, state: Any, slot: Any, *, user_query: str = "") -> SlotActionResult:
+    def compute(self, parsed: Any, state: Any, slot: Any, *, user_query: str = "") -> SlotActionResult:
         stype = getattr(slot, "type", None)
 
         if stype == "city":
-            actions, payloads, event = self.build_city_actions(goal, state)
+            actions, payloads, event = self.build_city_actions(parsed, state)
             return SlotActionResult(
                 actions=actions,
                 payloads=payloads,
@@ -589,6 +1407,8 @@ class RetrievalAgent:
                 plan=None,
                 uncapped_filter=None,
             )
+
+        self._ensure_city_pools(parsed)
 
         # Transport consistency guardrail (for evaluation compatibility):
         # - If any segment already used self-driving, force all remaining segments to self-driving.
@@ -602,7 +1422,7 @@ class RetrievalAgent:
             has_flight = "flight" in modes
             has_taxi = "taxi" in modes
             if has_self:
-                actions, payloads = self._ground_fallback_actions(goal, slot, force_mode="self-driving")
+                actions, payloads = self._ground_fallback_actions(parsed, slot, force_mode="self-driving")
                 return SlotActionResult(
                     actions=actions,
                     payloads=payloads,
@@ -613,14 +1433,9 @@ class RetrievalAgent:
                     plan=None,
                     uncapped_filter=None,
                 )
-            if has_flight or has_taxi:
-                # self-driving is disallowed once flight/taxi appears in the itinerary
-                pass
-            if not self._flight_allowed(goal):
-                # If flight is forbidden by constraints, never emit flight candidates.
-                # Keep the itinerary in a single non-flight mode to satisfy evaluator constraints.
-                force = "taxi" if "taxi" in self._allowed_transport_modes(goal) else "self-driving"
-                actions, payloads = self._ground_fallback_actions(goal, slot, force_mode=force)
+            if not self._flight_allowed(parsed):
+                force = "taxi" if "taxi" in self._allowed_transport_modes(parsed) else "self-driving"
+                actions, payloads = self._ground_fallback_actions(parsed, slot, force_mode=force)
                 return SlotActionResult(
                     actions=actions,
                     payloads=payloads,
@@ -632,112 +1447,119 @@ class RetrievalAgent:
                     uncapped_filter=None,
                 )
 
-        res = None
-        if self.filter_policy is not None:
-            res = self.filter_policy.build_slot_filter(goal, state, slot, user_query=user_query)
-        filt = res.filt if res is not None else filters.default_filter(stype, goal, state, slot)
-        policy_event = getattr(res, "event", {}) if res else {}
-        plan = getattr(res, "plan", None) if res else None
-        uncapped_filt = getattr(res, "uncapped_filter", None) if res else None
+            flights, event = self._flight_candidates(parsed, state, slot)
+            candidates = self._select_valid_batch(flights, self.top_k)
+            actions, payloads = self._actions_from_candidates(slot, candidates)
+            if actions and len(actions) < self.top_k and "taxi" in self._allowed_transport_modes(parsed):
+                extra_actions, extra_payloads = self._ground_fallback_actions(parsed, slot, force_mode="taxi")
+                actions += extra_actions
+                payloads.update(extra_payloads)
+            if not actions:
+                forced_mode = None
+                if has_flight or has_taxi:
+                    forced_mode = "taxi"
+                    actions, payloads = self._ground_fallback_actions(parsed, slot, force_mode="taxi")
+                elif has_self:
+                    forced_mode = "self-driving"
+                    actions, payloads = self._ground_fallback_actions(parsed, slot, force_mode="self-driving")
+                else:
+                    forced_mode = "taxi" if "taxi" in self._allowed_transport_modes(parsed) else "self-driving"
+                    actions, payloads = self._ground_fallback_actions(parsed, slot, force_mode=forced_mode)
+                return SlotActionResult(
+                    actions=actions,
+                    payloads=payloads,
+                    candidates=[],
+                    relaxed=False,
+                    filt={},
+                    policy_event={"forced_transport_mode": forced_mode, "flight_candidates_empty": True},
+                    plan=None,
+                    uncapped_filter=None,
+                )
+            return SlotActionResult(
+                actions=actions,
+                payloads=payloads,
+                candidates=candidates,
+                relaxed=bool(event.get("budget_relaxed")),
+                filt={"budget_cap": event.get("budget_cap")},
+                policy_event=event,
+                plan=None,
+                uncapped_filter=None,
+            )
 
-        # Enforce evaluation-compatible minimum nights for hotels:
-        # the selected accommodation must satisfy its "minimum nights" requirement
-        # given the planned number of (non-last) days in that city.
         if stype == "hotel":
-            city = getattr(slot, "city", None) or filt.get("city")
-            if city:
-                stay_days = self._planned_accommodation_days_for_city(goal, state, str(city))
-                if stay_days > 0:
-                    filt = dict(filt or {})
-                    filt["max_minimum_nights"] = int(stay_days)
+            candidates, event = self._hotel_candidates(parsed, state, slot)
+            candidates = self._select_valid_batch(candidates, self.top_k)
+            actions, payloads = self._actions_from_candidates(slot, candidates)
+            return SlotActionResult(
+                actions=actions,
+                payloads=payloads,
+                candidates=candidates,
+                relaxed=bool(event.get("budget_relaxed")),
+                filt={"budget_cap": event.get("budget_cap")},
+                policy_event=event,
+                plan=None,
+                uncapped_filter=None,
+            )
 
-        candidates: List[Dict[str, Any]] = []
-        relaxed = False
-        try:
-            if self.log_filter_usage:
-                phase_name = getattr(getattr(state, "phase", None), "name", getattr(state, "phase", None))
-                print(f"[FILTER] slot={stype} phase={phase_name} event={policy_event} filter={filt}")
-            candidates = self.kb.query(slot, filt, state, cap=self.candidate_cap)
-            try:
-                self._assert_candidates_respect_caps(slot, filt, candidates)
-            except Exception as e:
-                if self.debug:
-                    raise
-                print(f"[WARN] {e}")
-        except Exception:
-            if self.debug:
-                raise
-            candidates = []
+        if stype in ("meal", "restaurant"):
+            candidates, event = self._meal_candidates(parsed, state, slot)
+            used_ids = self._used_restaurant_ids(state)
+            candidates = self._select_valid_batch(
+                candidates,
+                self.top_k,
+                predicate=lambda r: r.get("id") not in used_ids,
+            )
+            actions, payloads = self._actions_from_candidates(slot, candidates)
+            return SlotActionResult(
+                actions=actions,
+                payloads=payloads,
+                candidates=candidates,
+                relaxed=bool(event.get("budget_relaxed")),
+                filt={"budget_cap": event.get("budget_cap")},
+                policy_event=event,
+                plan=None,
+                uncapped_filter=None,
+            )
 
-        if not candidates:
-            if uncapped_filt and uncapped_filt != filt:
-                filt = uncapped_filt
-                candidates = self.kb.query(slot, filt, state, cap=self.candidate_cap)
-                policy_event = dict(policy_event or {})
-                policy_event["soft_cap_relaxed"] = True
-                if self.log_filter_usage:
-                    print(f"[FILTER] slot={stype} soft-cap relaxed -> {len(candidates)} candidates")
+        if stype == "attraction":
+            candidates, event = self._attraction_candidates(parsed, state, slot)
+            used_ids = self._used_attraction_ids(state)
+            candidates = self._select_valid_batch(
+                candidates,
+                self.top_k,
+                predicate=lambda a: a.get("id") not in used_ids,
+            )
+            actions, payloads = self._actions_from_candidates(slot, candidates)
+            return SlotActionResult(
+                actions=actions,
+                payloads=payloads,
+                candidates=candidates,
+                relaxed=False,
+                filt={},
+                policy_event=event or {},
+                plan=None,
+                uncapped_filter=None,
+            )
 
-            if not candidates and hasattr(self.filter_policy, "relax_budget_for_slot"):
-                relaxed_budget_filt = self.filter_policy.relax_budget_for_slot(filt, slot)
-                if relaxed_budget_filt:
-                    filt = relaxed_budget_filt
-                    candidates = self.kb.query(slot, filt, state, cap=self.candidate_cap)
-                    policy_event = dict(policy_event or {})
-                    policy_event["budget_relaxed"] = True
-                    if self.log_filter_usage:
-                        print(f"[FILTER] slot={stype} budget-relaxed -> {len(candidates)} candidates")
-
-            if not candidates:
-                candidates = self.relaxer.relax_and_query(self.kb, slot, filt, state, cap=self.candidate_cap)
-                relaxed = True
-                if self.log_filter_usage:
-                    print(f"[FILTER] slot={stype} relaxed -> {len(candidates)} candidates")
-
-        # Re-apply hard constraints even if the relaxer fell back to "unfiltered" candidates.
-        if stype == "hotel":
-            cap_n = filt.get("max_minimum_nights")
-            if cap_n is not None:
-                try:
-                    cap_i = int(cap_n)
-                    candidates = [
-                        s
-                        for s in (candidates or [])
-                        if s.get("minimum_nights") is None or int(s.get("minimum_nights") or 0) <= cap_i
-                    ]
-                except Exception:
-                    pass
-
-        actions, payloads = self._actions_from_candidates(slot, candidates)
-        if not actions and stype == "flight":
-            # If flight already exists in other segments, prefer taxi fallback to avoid (Flight + Self-driving).
-            modes = []
-            for seg in (getattr(state, "segment_modes", None) or {}).values():
-                if isinstance(seg, dict) and seg.get("mode"):
-                    modes.append(str(seg["mode"]).lower())
-            has_flight = "flight" in modes
-            has_taxi = "taxi" in modes
-            has_self = "self-driving" in modes
-            if has_flight or has_taxi:
-                actions, payloads = self._ground_fallback_actions(goal, slot, force_mode="taxi")
-            elif has_self:
-                actions, payloads = self._ground_fallback_actions(goal, slot, force_mode="self-driving")
-            else:
-                actions, payloads = self._ground_fallback_actions(goal, slot)
-            if has_flight or has_taxi:
-                actions = [a for a in actions if ":taxi:" in a]
-                payloads = {a: payloads[a] for a in actions} if actions else {}
-            elif has_self:
-                actions = [a for a in actions if ":self-driving:" in a]
-                payloads = {a: payloads[a] for a in actions} if actions else {}
+        if stype == "finish":
+            return SlotActionResult(
+                actions=["finish"],
+                payloads={"finish": ("finish",)},
+                candidates=[],
+                relaxed=False,
+                filt={},
+                policy_event={},
+                plan=None,
+                uncapped_filter=None,
+            )
 
         return SlotActionResult(
-            actions=actions,
-            payloads=payloads,
-            candidates=candidates,
-            relaxed=relaxed,
-            filt=filt,
-            policy_event=policy_event or {},
-            plan=plan,
-            uncapped_filter=uncapped_filt,
+            actions=[],
+            payloads={},
+            candidates=[],
+            relaxed=False,
+            filt={},
+            policy_event={},
+            plan=None,
+            uncapped_filter=None,
         )

@@ -137,7 +137,8 @@ class TravelLLMPolicy:
         if self.embedder is None or st_utils is None:
             return np.zeros(len(valid_actions))
 
-        context = goal + " " + observation + " " + " ".join(history)
+        goal_txt = goal if isinstance(goal, str) else str(goal)
+        context = goal_txt + " " + observation + " " + " ".join(history)
         context_embedding = self.embedder.encode(
             context, convert_to_tensor=True, device=self.device, show_progress_bar=False
         )
@@ -149,7 +150,8 @@ class TravelLLMPolicy:
 
     def _score_with_generator(self, history: List[str], observation: str,
                               valid_actions: Sequence[str], goal: str) -> np.ndarray:
-        prompt = self._build_prompt(history, observation, valid_actions, goal)
+        goal_txt = goal if isinstance(goal, str) else str(goal)
+        prompt = self._build_prompt(history, observation, valid_actions, goal_txt)
         try:
             outputs = self.generator(
                 prompt,
@@ -400,11 +402,17 @@ class TravelLLMPolicy:
         pref_bonus = 0.0
         prefs: List[str] = []
         if goal is not None:
-            if hasattr(goal, "constraints"):
-                meal_cons = (getattr(goal, "constraints", {}) or {}).get("meal", {}) or {}
+            if isinstance(goal, dict):
+                meal_cons = (goal.get("constraints", {}) or {}).get("meal", {}) if isinstance(goal.get("constraints"), dict) else {}
                 prefs = meal_cons.get("cuisines", []) or []
-            if not prefs and hasattr(goal, "preferences"):
-                prefs = getattr(goal, "preferences", []) or []
+                if not prefs:
+                    prefs = goal.get("preferences", []) or []
+            else:
+                if hasattr(goal, "constraints"):
+                    meal_cons = (getattr(goal, "constraints", {}) or {}).get("meal", {}) or {}
+                    prefs = meal_cons.get("cuisines", []) or []
+                if not prefs and hasattr(goal, "preferences"):
+                    prefs = getattr(goal, "preferences", []) or []
         for pref in prefs:
             if pref and str(pref).lower() in cuisines_text:
                 pref_bonus = 0.3

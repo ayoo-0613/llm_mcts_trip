@@ -86,14 +86,22 @@ def _tp_transport_str(seg: Optional[Dict[str, Any]], src: str, dst: str) -> str:
     return str(seg)
 
 
+def _env_parsed_get(env, *keys: str, default: Any = None) -> Any:
+    parsed = getattr(env, "goal_parsed", None) or {}
+    if isinstance(parsed, dict):
+        for key in keys:
+            if key in parsed and parsed[key] is not None:
+                return parsed[key]
+    return default
+
+
 def _segments_with_days(env) -> List[Tuple[int, str, str, Optional[int]]]:
     """
     Map env segments to the day they occur on (1-based), consistent with env._city_for_day.
     Returns list of (seg_idx, src, dst, transport_day).
     """
     state = env.state
-    goal = env.goal
-    total_days = getattr(goal, "duration_days", None) or getattr(env, "total_days", 0) or 0
+    total_days = _env_parsed_get(env, "duration_days", "days", default=None) or getattr(env, "total_days", 0) or 0
     segments = env._segments(state)
 
     def _find_day_for_dst(dst_city: str) -> Optional[int]:
@@ -105,14 +113,14 @@ def _segments_with_days(env) -> List[Tuple[int, str, str, Optional[int]]]:
     out: List[Tuple[int, str, str, Optional[int]]] = []
     for idx, src, dst in segments:
         transport_day: Optional[int] = None
-        if dst == getattr(goal, "origin", None) and total_days:
+        if dst == _env_parsed_get(env, "origin", "org", default=None) and total_days:
             transport_day = total_days
         else:
             transport_day = _find_day_for_dst(dst)
         if transport_day is None:
-            if src == getattr(goal, "origin", None):
+            if src == _env_parsed_get(env, "origin", "org", default=None):
                 transport_day = 1
-            elif dst == getattr(goal, "origin", None) and total_days:
+            elif dst == _env_parsed_get(env, "origin", "org", default=None) and total_days:
                 transport_day = total_days
             else:
                 transport_day = min(idx + 1, total_days) if total_days else (idx + 1)
@@ -122,8 +130,7 @@ def _segments_with_days(env) -> List[Tuple[int, str, str, Optional[int]]]:
 
 def env_to_travelplanner_daily_plan(env) -> List[Dict[str, Any]]:
     state = env.state
-    goal = env.goal
-    total_days = int(getattr(goal, "duration_days", None) or getattr(env, "total_days", 0) or 0)
+    total_days = int(_env_parsed_get(env, "duration_days", "days", default=None) or getattr(env, "total_days", 0) or 0)
     total_days = max(1, total_days)
 
     seg_by_day: Dict[int, Tuple[str, str, Dict[str, Any]]] = {}
@@ -136,7 +143,7 @@ def env_to_travelplanner_daily_plan(env) -> List[Dict[str, Any]]:
 
     daily: List[Dict[str, Any]] = []
     for day in range(1, total_days + 1):
-        city = env._city_for_day(state, day) or getattr(goal, "destination", None) or "-"
+        city = env._city_for_day(state, day) or _env_parsed_get(env, "destination", "dest", default=None) or "-"
 
         transport_str = "-"
         current_city = str(city)

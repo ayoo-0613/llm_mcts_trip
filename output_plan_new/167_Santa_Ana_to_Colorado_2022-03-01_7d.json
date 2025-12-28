@@ -1,0 +1,276 @@
+{
+  "success": false,
+  "cost": 1162.0,
+  "violations": [
+    "hard:valid_cuisine",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you devise a 7-day travel itinerary for two people, departing from Santa Ana and visiting three cities in Colorado from March 1st to March 7th, 2022? Our budget is set at $7,700. We require accommodations in the form of private rooms, and we will not be self-driving. For dining, we hold a preference for Italian, French, Chinese, and American cuisines.",
+  "parsed": {
+    "org": "Santa Ana",
+    "dest": "Colorado",
+    "days": 7,
+    "visiting_city_number": 3,
+    "date": [
+      "2022-03-01",
+      "2022-03-02",
+      "2022-03-03",
+      "2022-03-04",
+      "2022-03-05",
+      "2022-03-06",
+      "2022-03-07"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": [
+        "Italian",
+        "French",
+        "Chinese",
+        "American"
+      ],
+      "room type": "private room",
+      "transportation": "no self-driving"
+    },
+    "budget": 7700,
+    "origin": "Santa Ana",
+    "destination": "Colorado",
+    "duration_days": 7,
+    "start_date": "2022-03-01",
+    "preferences": [
+      "Italian",
+      "French",
+      "Chinese",
+      "American",
+      "private room"
+    ],
+    "transport_forbid": [
+      "self-driving"
+    ],
+    "candidate_cities": [
+      "Alamosa",
+      "Grand Junction",
+      "Durango",
+      "Colorado Springs",
+      "Gunnison",
+      "Denver"
+    ]
+  },
+  "actions": [
+    "choose_city_bundle:[Denver,Alamosa,Grand Junction]",
+    "move:seg0:flight:F0072936 Santa Ana->Denver $169 12:56-15:49",
+    "move:seg1:flight:F0586942 Denver->Alamosa $36 16:18-17:05",
+    "move:seg2:taxi:Alamosa->Grand Junction 396km cost 396",
+    "move:seg3:flight:F3002968 Grand Junction->Santa Ana $178 09:45-10:34"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Denver",
+      "Alamosa",
+      "Grand Junction"
+    ],
+    "transportation_dates": [
+      "2022-03-01",
+      "2022-03-03",
+      "2022-03-05",
+      "2022-03-07"
+    ],
+    "transportation_methods": [
+      "Flight F0072936, from Santa Ana to Denver, Departure Time: 12:56, Arrival Time: 15:49, cost: 169.0",
+      "Flight F0586942, from Denver to Alamosa, Departure Time: 16:18, Arrival Time: 17:05, cost: 36.0",
+      "taxi, from Alamosa to Grand Junction, cost: 396.0",
+      "Flight F3002968, from Grand Junction to Santa Ana, Departure Time: 09:45, Arrival Time: 10:34, cost: 178.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Denver",
+      "missing, Alamosa",
+      "missing, Grand Junction"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Santa Ana to Denver",
+      "transportation": "Flight Number: F0072936, from Santa Ana to Denver, Departure Time: 12:56, Arrival Time: 15:49",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Denver",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Denver to Alamosa",
+      "transportation": "Flight Number: F0586942, from Denver to Alamosa, Departure Time: 16:18, Arrival Time: 17:05",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Alamosa",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Alamosa to Grand Junction",
+      "transportation": "Taxi, from Alamosa to Grand Junction, Cost: 396",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "Grand Junction",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 7,
+      "current_city": "from Grand Junction to Santa Ana",
+      "transportation": "Flight Number: F3002968, from Grand Junction to Santa Ana, Departure Time: 09:45, Arrival Time: 10:34",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "budget_remaining": 6894.0,
+      "phase_budget": 1008.0631684491977,
+      "phase": "flight",
+      "counts": {
+        "flight": 1,
+        "stay": 3,
+        "stay_nights": 6,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "flight": 0.68359375,
+        "stay": 1.8421875,
+        "meal": 2.14921875
+      },
+      "budget_cap": 504.0315842245989,
+      "budget_relaxed": false,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 3,
+        "city": null,
+        "date": "2022-03-01",
+        "origin": "Grand Junction",
+        "destination": "Santa Ana"
+      },
+      "relaxed": false,
+      "filter": {
+        "budget_cap": 504.0315842245989
+      },
+      "candidates": 5,
+      "actions": 5,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 6498.0,
+      "phase_budget": 4616.514051152511,
+      "phase": "stay",
+      "counts": {
+        "flight": 0,
+        "stay": 3,
+        "stay_nights": 6,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "stay": 5.2734375,
+        "meal": 2.14921875
+      },
+      "budget_cap": 769.4190085254185,
+      "budget_relaxed": true,
+      "planned_nights": 2,
+      "slot": {
+        "type": "hotel",
+        "day": null,
+        "meal_type": null,
+        "seg": null,
+        "city": "Denver",
+        "date": null,
+        "origin": null,
+        "destination": null
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 769.4190085254185
+      },
+      "candidates": 0,
+      "actions": 0,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 6538.0,
+      "phase_budget": 4644.93211240922,
+      "phase": "stay",
+      "counts": {
+        "flight": 0,
+        "stay": 3,
+        "stay_nights": 6,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "stay": 5.2734375,
+        "meal": 2.14921875
+      },
+      "budget_cap": 774.1553520682033,
+      "budget_relaxed": true,
+      "planned_nights": 2,
+      "slot": {
+        "type": "hotel",
+        "day": null,
+        "meal_type": null,
+        "seg": null,
+        "city": "Denver",
+        "date": null,
+        "origin": null,
+        "destination": null
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 774.1553520682033
+      },
+      "candidates": 0,
+      "actions": 0,
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "elapsed_seconds": 0.21662641699992946
+}
