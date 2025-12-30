@@ -1,7 +1,9 @@
 {
   "success": false,
-  "cost": 2290.6,
+  "cost": 0.0,
   "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_valid_transportation",
     "commonsense:is_not_absent"
   ],
   "query": "Could you devise a 7-day travel plan for two people, starting in Las Vegas and touring 3 cities in Idaho from March 4th to March 10th, 2022? Our budget is set at $5,100. We require accommodations that allow smoking and should ideally be entire rooms. We would prefer to avoid any flights for our transportation.",
@@ -48,18 +50,13 @@
     ]
   },
   "actions": [
-    "choose_city_bundle:[Twin Falls,Pocatello,Idaho Falls]",
-    "move:seg0:taxi:Las Vegas->Twin Falls 796km cost 796",
-    "move:seg1:taxi:Twin Falls->Pocatello 183km cost 183",
-    "move:seg2:taxi:Pocatello->Idaho Falls 84km cost 84",
-    "move:seg3:taxi:Idaho Falls->Las Vegas 1018km cost 1018",
-    "stay:Twin Falls:929 Charming and bright place with a good vibe! Entire home/apt $105"
+    "choose_city_bundle:[Twin Falls,Pocatello,Boise]"
   ],
   "structured_plan": {
     "destination_cities": [
       "Twin Falls",
       "Pocatello",
-      "Idaho Falls"
+      "Boise"
     ],
     "transportation_dates": [
       "2022-03-04",
@@ -68,29 +65,29 @@
       "2022-03-10"
     ],
     "transportation_methods": [
-      "taxi, from Las Vegas to Twin Falls, cost: 796.0",
-      "taxi, from Twin Falls to Pocatello, cost: 183.0",
-      "taxi, from Pocatello to Idaho Falls, cost: 83.6",
-      "taxi, from Idaho Falls to Las Vegas, cost: 1018.0"
+      "Las Vegas->Twin Falls missing mode",
+      "Twin Falls->Pocatello missing mode",
+      "Pocatello->Boise missing mode",
+      "Boise->Las Vegas missing mode"
     ],
     "restaurants": [],
     "attractions": [],
     "accommodations": [
-      "Charming and bright place with a good vibe!, Twin Falls",
+      "missing, Twin Falls",
       "missing, Pocatello",
-      "missing, Idaho Falls"
+      "missing, Boise"
     ]
   },
   "submission_plan": [
     {
       "days": 1,
-      "current_city": "from Las Vegas to Twin Falls",
-      "transportation": "Taxi, from Las Vegas to Twin Falls, Cost: 796",
+      "current_city": "Twin Falls",
+      "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
       "dinner": "-",
-      "accommodation": "Charming and bright place with a good vibe!, Twin Falls"
+      "accommodation": "-"
     },
     {
       "days": 2,
@@ -100,12 +97,12 @@
       "attraction": "-",
       "lunch": "-",
       "dinner": "-",
-      "accommodation": "Charming and bright place with a good vibe!, Twin Falls"
+      "accommodation": "-"
     },
     {
       "days": 3,
-      "current_city": "from Twin Falls to Pocatello",
-      "transportation": "Taxi, from Twin Falls to Pocatello, Cost: 183",
+      "current_city": "Pocatello",
+      "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -124,8 +121,8 @@
     },
     {
       "days": 5,
-      "current_city": "from Pocatello to Idaho Falls",
-      "transportation": "Taxi, from Pocatello to Idaho Falls, Cost: 84",
+      "current_city": "Boise",
+      "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -134,7 +131,7 @@
     },
     {
       "days": 6,
-      "current_city": "Idaho Falls",
+      "current_city": "Boise",
       "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
@@ -144,8 +141,8 @@
     },
     {
       "days": 7,
-      "current_city": "from Idaho Falls to Las Vegas",
-      "transportation": "Taxi, from Idaho Falls to Las Vegas, Cost: 1018",
+      "current_city": "Boise",
+      "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -155,78 +152,288 @@
   ],
   "filter_usage": [
     {
-      "budget_remaining": 3019.4,
-      "phase_budget": 1393.5692307692311,
-      "phase": "stay",
+      "dest_kind": "state",
+      "flight_allowed": false,
+      "duration_days": 7,
+      "strategy": "state_bundle",
+      "city_target": 3,
+      "remaining_needed": 3,
+      "connectivity_mode": "any_transport",
+      "flight_only": false,
+      "fallback_mode": null,
+      "pool_size_before_prefilter": 6,
+      "pool_size_after_prefilter": 6,
+      "combos_generated": 120,
+      "combos_kept_topk": 5,
+      "budget_pruned": 66,
+      "budget_relaxed": false,
+      "relaxed_used": false,
+      "fallback_used": false,
+      "injected_out_of_state": [],
+      "slot": {
+        "type": "city",
+        "day": null,
+        "meal_type": null,
+        "seg": null,
+        "city": null,
+        "date": null,
+        "origin": null,
+        "destination": null
+      },
+      "relaxed": false,
+      "filter": {},
+      "candidates": 5,
+      "actions": 5,
+      "batch_idx": 0,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 5100.0,
+      "phase_budget": 2073.4115460564526,
+      "phase": "flight",
       "counts": {
-        "flight": 0,
+        "flight": 4,
         "stay": 3,
         "stay_nights": 6,
         "meal": 21,
         "attraction": 7
       },
       "weights": {
-        "stay": 2.7,
-        "meal": 3.15
+        "flight": 2.734375,
+        "stay": 1.8421875,
+        "meal": 2.14921875
       },
-      "budget_cap": 232.26153846153852,
-      "budget_relaxed": false,
-      "planned_nights": 2,
+      "budget_cap": 259.1764432570566,
+      "budget_relaxed": true,
+      "feasible_cap": 479.25,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
       "slot": {
-        "type": "hotel",
+        "type": "flight",
         "day": null,
         "meal_type": null,
-        "seg": null,
-        "city": "Twin Falls",
-        "date": null,
-        "origin": null,
-        "destination": null
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-04",
+        "origin": "Las Vegas",
+        "destination": "Twin Falls"
       },
-      "relaxed": false,
+      "relaxed": true,
       "filter": {
-        "budget_cap": 232.26153846153852
+        "budget_cap": 259.1764432570566
       },
-      "candidates": 1,
-      "actions": 1,
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 0,
       "cache_hit": true
     },
     {
-      "budget_remaining": 2809.4,
-      "phase_budget": 1743.5250310302029,
-      "phase": "stay",
+      "budget_remaining": 5100.0,
+      "phase_budget": 3275.2293577981645,
+      "phase": "flight",
       "counts": {
-        "flight": 0,
-        "stay": 2,
-        "stay_nights": 4,
+        "flight": 4,
+        "stay": 3,
+        "stay_nights": 6,
         "meal": 21,
         "attraction": 7
       },
       "weights": {
-        "stay": 3.515625,
-        "meal": 2.14921875
+        "flight": 4.199999999999999,
+        "stay": 1.08,
+        "meal": 1.26
       },
-      "budget_cap": 435.8812577575507,
+      "budget_cap": 409.40366972477057,
       "budget_relaxed": true,
-      "planned_nights": 2,
+      "feasible_cap": 479.25,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
       "slot": {
-        "type": "hotel",
+        "type": "flight",
         "day": null,
         "meal_type": null,
-        "seg": null,
-        "city": "Pocatello",
-        "date": null,
-        "origin": null,
-        "destination": null
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-04",
+        "origin": "Las Vegas",
+        "destination": "Twin Falls"
       },
       "relaxed": true,
       "filter": {
-        "budget_cap": 435.8812577575507
+        "budget_cap": 409.40366972477057
       },
       "candidates": 0,
       "actions": 0,
+      "batch_idx": 1,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 5100.0,
+      "phase_budget": 3275.2293577981645,
+      "phase": "flight",
+      "counts": {
+        "flight": 4,
+        "stay": 3,
+        "stay_nights": 6,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "flight": 4.199999999999999,
+        "stay": 1.08,
+        "meal": 1.26
+      },
+      "budget_cap": 409.40366972477057,
+      "budget_relaxed": true,
+      "feasible_cap": 479.25,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-04",
+        "origin": "Las Vegas",
+        "destination": "Twin Falls"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 409.40366972477057
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 2,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 5100.0,
+      "phase_budget": 2073.4115460564526,
+      "phase": "flight",
+      "counts": {
+        "flight": 4,
+        "stay": 3,
+        "stay_nights": 6,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "flight": 2.734375,
+        "stay": 1.8421875,
+        "meal": 2.14921875
+      },
+      "budget_cap": 259.1764432570566,
+      "budget_relaxed": true,
+      "feasible_cap": 485.5,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-04",
+        "origin": "Las Vegas",
+        "destination": "Twin Falls"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 259.1764432570566
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 0,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 5100.0,
+      "phase_budget": 3275.2293577981645,
+      "phase": "flight",
+      "counts": {
+        "flight": 4,
+        "stay": 3,
+        "stay_nights": 6,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "flight": 4.199999999999999,
+        "stay": 1.08,
+        "meal": 1.26
+      },
+      "budget_cap": 409.40366972477057,
+      "budget_relaxed": true,
+      "feasible_cap": 485.5,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-04",
+        "origin": "Las Vegas",
+        "destination": "Twin Falls"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 409.40366972477057
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 1,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 5100.0,
+      "phase_budget": 3275.2293577981645,
+      "phase": "flight",
+      "counts": {
+        "flight": 4,
+        "stay": 3,
+        "stay_nights": 6,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "flight": 4.199999999999999,
+        "stay": 1.08,
+        "meal": 1.26
+      },
+      "budget_cap": 409.40366972477057,
+      "budget_relaxed": true,
+      "feasible_cap": 485.5,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-04",
+        "origin": "Las Vegas",
+        "destination": "Twin Falls"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 409.40366972477057
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 2,
       "cache_hit": true
     }
   ],
   "prior_usage": [],
-  "elapsed_seconds": 0.25861812499999814
+  "elapsed_seconds": 0.0618047090000573
 }

@@ -1,9 +1,7 @@
 {
   "success": false,
-  "cost": 9892.0,
+  "cost": 5548.0,
   "violations": [
-    "hard:valid_cuisine",
-    "hard:valid_cost",
     "commonsense:is_not_absent"
   ],
   "query": "Could you help plan a 5-day trip for a group of 5 people, starting from Missoula and covering 2 cities in Texas from March 26th to March 30th, 2022? Our travel budget is $7,200. We'd particularly enjoy having access to both authentic Italian and French cuisines during our trip.",
@@ -62,15 +60,15 @@
     ]
   },
   "actions": [
-    "choose_city_bundle:[Dallas,Amarillo]",
-    "move:seg0:taxi:Missoula->Dallas 2689km cost 2689",
-    "move:seg1:flight:F2286569 Dallas->Amarillo $62 10:31-11:30",
-    "move:seg2:taxi:Amarillo->Missoula 2102km cost 2102"
+    "choose_city_bundle:[Dallas,Abilene]",
+    "move:seg0:self-driving:Missoula->Dallas 2689km cost 2689",
+    "move:seg1:self-driving:Dallas->Abilene 291km cost 291",
+    "move:seg2:self-driving:Abilene->Missoula 2568km cost 2568"
   ],
   "structured_plan": {
     "destination_cities": [
       "Dallas",
-      "Amarillo"
+      "Abilene"
     ],
     "transportation_dates": [
       "2022-03-26",
@@ -78,22 +76,22 @@
       "2022-03-30"
     ],
     "transportation_methods": [
-      "taxi, from Missoula to Dallas, cost: 2689.0",
-      "Flight F2286569, from Dallas to Amarillo, Departure Time: 10:31, Arrival Time: 11:30, cost: 62.0",
-      "taxi, from Amarillo to Missoula, cost: 2102.0"
+      "self-driving, from Missoula to Dallas, cost: 2689.0",
+      "self-driving, from Dallas to Abilene, cost: 291.0",
+      "self-driving, from Abilene to Missoula, cost: 2568.0"
     ],
     "restaurants": [],
     "attractions": [],
     "accommodations": [
       "missing, Dallas",
-      "missing, Amarillo"
+      "missing, Abilene"
     ]
   },
   "submission_plan": [
     {
       "days": 1,
       "current_city": "from Missoula to Dallas",
-      "transportation": "Taxi, from Missoula to Dallas, Cost: 2689",
+      "transportation": "Self-driving, from Missoula to Dallas, Cost: 2689",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -112,8 +110,8 @@
     },
     {
       "days": 3,
-      "current_city": "from Dallas to Amarillo",
-      "transportation": "Flight Number: F2286569, from Dallas to Amarillo, Departure Time: 10:31, Arrival Time: 11:30",
+      "current_city": "from Dallas to Abilene",
+      "transportation": "Self-driving, from Dallas to Abilene, Cost: 291",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -122,7 +120,7 @@
     },
     {
       "days": 4,
-      "current_city": "Amarillo",
+      "current_city": "Abilene",
       "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
@@ -132,8 +130,8 @@
     },
     {
       "days": 5,
-      "current_city": "from Amarillo to Missoula",
-      "transportation": "Taxi, from Amarillo to Missoula, Cost: 2102",
+      "current_city": "from Abilene to Missoula",
+      "transportation": "Self-driving, from Abilene to Missoula, Cost: 2568",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -143,8 +141,7 @@
   ],
   "filter_usage": [
     {
-      "forced_transport_mode": "taxi",
-      "flight_candidates_empty": true,
+      "forced_transport_mode": "self-driving",
       "slot": {
         "type": "flight",
         "day": null,
@@ -152,19 +149,33 @@
         "seg": 2,
         "city": null,
         "date": "2022-03-26",
-        "origin": "Amarillo",
+        "origin": "Abilene",
         "destination": "Missoula"
       },
       "relaxed": false,
       "filter": {},
       "candidates": 0,
       "actions": 1,
+      "batch_idx": 0,
       "cache_hit": true
     },
     {
-      "budget_remaining": -2692.0,
-      "budget_cap": null,
-      "budget_relaxed": false,
+      "budget_remaining": 1652.0,
+      "phase_budget": 1090.7511634897437,
+      "phase": "stay",
+      "counts": {
+        "flight": 0,
+        "stay": 2,
+        "stay_nights": 4,
+        "meal": 15,
+        "attraction": 5
+      },
+      "weights": {
+        "stay": 2.398681640625001,
+        "meal": 1.2342478514091932
+      },
+      "budget_cap": 272.6877908724359,
+      "budget_relaxed": true,
       "planned_nights": 2,
       "slot": {
         "type": "hotel",
@@ -176,15 +187,90 @@
         "origin": null,
         "destination": null
       },
-      "relaxed": false,
+      "relaxed": true,
       "filter": {
-        "budget_cap": null
+        "budget_cap": 272.6877908724359
       },
       "candidates": 0,
       "actions": 0,
+      "batch_idx": 0,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 1652.0,
+      "phase_budget": 1385.783358079678,
+      "phase": "stay",
+      "counts": {
+        "flight": 0,
+        "stay": 2,
+        "stay_nights": 4,
+        "meal": 15,
+        "attraction": 5
+      },
+      "weights": {
+        "stay": 4.684925079345705,
+        "meal": 0.8999999999999999
+      },
+      "budget_cap": 346.4458395199195,
+      "budget_relaxed": true,
+      "planned_nights": 2,
+      "slot": {
+        "type": "hotel",
+        "day": null,
+        "meal_type": null,
+        "seg": null,
+        "city": "Dallas",
+        "date": null,
+        "origin": null,
+        "destination": null
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 346.4458395199195
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 1,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 1652.0,
+      "phase_budget": 1416.0,
+      "phase": "stay",
+      "counts": {
+        "flight": 0,
+        "stay": 2,
+        "stay_nights": 4,
+        "meal": 15,
+        "attraction": 5
+      },
+      "weights": {
+        "stay": 5.4,
+        "meal": 0.8999999999999999
+      },
+      "budget_cap": 354.0,
+      "budget_relaxed": true,
+      "planned_nights": 2,
+      "slot": {
+        "type": "hotel",
+        "day": null,
+        "meal_type": null,
+        "seg": null,
+        "city": "Dallas",
+        "date": null,
+        "origin": null,
+        "destination": null
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 354.0
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 2,
       "cache_hit": true
     }
   ],
   "prior_usage": [],
-  "elapsed_seconds": 0.14412008300001844
+  "elapsed_seconds": 0.3769744580000065
 }

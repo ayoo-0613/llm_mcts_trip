@@ -1,8 +1,9 @@
 {
   "success": false,
-  "cost": 3924.9,
+  "cost": 0.0,
   "violations": [
-    "hard:valid_cuisine",
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_valid_transportation",
     "commonsense:is_not_absent"
   ],
   "query": "We're planning a week-long trip for two from Pittsburgh to New York with a budget of $5,300. We're set to travel from March 13th to March 19th, 2022, and plan to visit three different cities in New York. Please keep in mind that our lodgings must allow visitors. As for meals, we'd love to sample French, Italian, Chinese, and American cuisines. Also, note that we're planning to travel without taking any flights.",
@@ -67,25 +68,13 @@
     ]
   },
   "actions": [
-    "choose_city_bundle:[Buffalo,Niagara Falls,Islip]",
-    "move:seg0:taxi:Pittsburgh->Buffalo 352km cost 352",
-    "move:seg1:taxi:Buffalo->Niagara Falls 32km cost 32",
-    "move:seg2:taxi:Niagara Falls->Islip 741km cost 741",
-    "move:seg3:taxi:Islip->Pittsburgh 700km cost 700",
-    "stay:Buffalo:582 Ideal 3 Bedroom Apartment by Times Square Entire home/apt $297",
-    "stay:Niagara Falls:951 Sunny Spacious South Slope Studio Entire home/apt $337",
-    "stay:Islip:2989 Fort Greene bungalow Private room $304",
-    "eat:d1:breakfast:9549 A侓侓k Kahve Chinese, Pizza, Bakery, Seafood $14 rating 4.0",
-    "eat:d1:lunch:7548 Chopsticks Cafe, Seafood, Italian $14 rating 3.6",
-    "eat:d1:dinner:1238 Red Mango Mexican, Bakery, BBQ, Fast Food, Cafe, American $18 rating 3.6",
-    "eat:d2:breakfast:2080 Shama Chicken Corner Tea, Chinese, Desserts $25 rating 3.6",
-    "eat:d2:lunch:116 Shokitini Tea, Cafe, Pizza, Mexican, Chinese, Seafood $41 rating 4.2"
+    "choose_city_bundle:[Buffalo,Niagara Falls,New York]"
   ],
   "structured_plan": {
     "destination_cities": [
       "Buffalo",
       "Niagara Falls",
-      "Islip"
+      "New York"
     ],
     "transportation_dates": [
       "2022-03-13",
@@ -94,55 +83,49 @@
       "2022-03-19"
     ],
     "transportation_methods": [
-      "taxi, from Pittsburgh to Buffalo, cost: 352.0",
-      "taxi, from Buffalo to Niagara Falls, cost: 31.9",
-      "taxi, from Niagara Falls to Islip, cost: 741.0",
-      "taxi, from Islip to Pittsburgh, cost: 700.0"
+      "Pittsburgh->Buffalo missing mode",
+      "Buffalo->Niagara Falls missing mode",
+      "Niagara Falls->New York missing mode",
+      "New York->Pittsburgh missing mode"
     ],
-    "restaurants": [
-      "A侓侓k Kahve, Buffalo",
-      "Chopsticks, Buffalo",
-      "Red Mango, Buffalo",
-      "Shama Chicken Corner, Buffalo",
-      "Shokitini, Buffalo"
-    ],
+    "restaurants": [],
     "attractions": [],
     "accommodations": [
-      "Ideal 3 Bedroom Apartment by Times Square, Buffalo",
-      "Sunny Spacious South Slope Studio, Niagara Falls",
-      "Fort Greene bungalow, Islip"
+      "missing, Buffalo",
+      "missing, Niagara Falls",
+      "missing, New York"
     ]
   },
   "submission_plan": [
     {
       "days": 1,
-      "current_city": "from Pittsburgh to Buffalo",
-      "transportation": "Taxi, from Pittsburgh to Buffalo, Cost: 352",
-      "breakfast": "A侓侓k Kahve, Buffalo",
+      "current_city": "Buffalo",
+      "transportation": "-",
+      "breakfast": "-",
       "attraction": "-",
-      "lunch": "Chopsticks, Buffalo",
-      "dinner": "Red Mango, Buffalo",
-      "accommodation": "Ideal 3 Bedroom Apartment by Times Square, Buffalo"
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
     },
     {
       "days": 2,
       "current_city": "Buffalo",
       "transportation": "-",
-      "breakfast": "Shama Chicken Corner, Buffalo",
-      "attraction": "-",
-      "lunch": "Shokitini, Buffalo",
-      "dinner": "-",
-      "accommodation": "Ideal 3 Bedroom Apartment by Times Square, Buffalo"
-    },
-    {
-      "days": 3,
-      "current_city": "from Buffalo to Niagara Falls",
-      "transportation": "Taxi, from Buffalo to Niagara Falls, Cost: 32",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
       "dinner": "-",
-      "accommodation": "Sunny Spacious South Slope Studio, Niagara Falls"
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "Niagara Falls",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
     },
     {
       "days": 4,
@@ -152,32 +135,32 @@
       "attraction": "-",
       "lunch": "-",
       "dinner": "-",
-      "accommodation": "Sunny Spacious South Slope Studio, Niagara Falls"
+      "accommodation": "-"
     },
     {
       "days": 5,
-      "current_city": "from Niagara Falls to Islip",
-      "transportation": "Taxi, from Niagara Falls to Islip, Cost: 741",
-      "breakfast": "-",
-      "attraction": "-",
-      "lunch": "-",
-      "dinner": "-",
-      "accommodation": "Fort Greene bungalow, Islip"
-    },
-    {
-      "days": 6,
-      "current_city": "Islip",
+      "current_city": "New York",
       "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
       "dinner": "-",
-      "accommodation": "Fort Greene bungalow, Islip"
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "New York",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
     },
     {
       "days": 7,
-      "current_city": "from Islip to Pittsburgh",
-      "transportation": "Taxi, from Islip to Pittsburgh, Cost: 700",
+      "current_city": "New York",
+      "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -187,94 +170,288 @@
   ],
   "filter_usage": [
     {
-      "budget_remaining": 1457.1,
-      "phase_budget": 1457.1,
-      "phase": "meal",
-      "counts": {
-        "flight": 0,
-        "stay": 0,
-        "stay_nights": 0,
-        "meal": 17,
-        "attraction": 7
-      },
-      "weights": {
-        "meal": 2.55
-      },
-      "budget_cap": 42.85588235294117,
+      "dest_kind": "state",
+      "flight_allowed": false,
+      "duration_days": 7,
+      "strategy": "state_bundle",
+      "city_target": 3,
+      "remaining_needed": 3,
+      "connectivity_mode": "any_transport",
+      "flight_only": false,
+      "fallback_mode": null,
+      "pool_size_before_prefilter": 16,
+      "pool_size_after_prefilter": 16,
+      "combos_generated": 592,
+      "combos_kept_topk": 5,
+      "budget_pruned": 91,
       "budget_relaxed": false,
-      "missing_cuisines": [
-        "french"
-      ],
-      "focus_missing": false,
-      "cuisine_constraints": [
-        "french",
-        "italian",
-        "chinese",
-        "american"
-      ],
+      "relaxed_used": false,
+      "fallback_used": false,
+      "injected_out_of_state": [],
       "slot": {
-        "type": "meal",
-        "day": 2,
-        "meal_type": "lunch",
+        "type": "city",
+        "day": null,
+        "meal_type": null,
         "seg": null,
-        "city": "Buffalo",
+        "city": null,
         "date": null,
         "origin": null,
         "destination": null
       },
       "relaxed": false,
-      "filter": {
-        "budget_cap": 42.85588235294117
-      },
-      "candidates": 1,
-      "actions": 1,
+      "filter": {},
+      "candidates": 5,
+      "actions": 5,
+      "batch_idx": 0,
       "cache_hit": true
     },
     {
-      "budget_remaining": 1375.1,
-      "phase_budget": 1375.1,
-      "phase": "meal",
+      "budget_remaining": 5300.0,
+      "phase_budget": 2154.721802764549,
+      "phase": "flight",
       "counts": {
-        "flight": 0,
-        "stay": 0,
-        "stay_nights": 0,
-        "meal": 16,
+        "flight": 4,
+        "stay": 3,
+        "stay_nights": 6,
+        "meal": 21,
         "attraction": 7
       },
       "weights": {
-        "meal": 2.4
+        "flight": 2.734375,
+        "stay": 1.8421875,
+        "meal": 2.14921875
       },
-      "budget_cap": 42.971875,
-      "budget_relaxed": false,
-      "missing_cuisines": [
-        "french"
-      ],
-      "focus_missing": false,
-      "cuisine_constraints": [
-        "french",
-        "italian",
-        "chinese",
-        "american"
-      ],
+      "budget_cap": 269.3402253455686,
+      "budget_relaxed": true,
+      "feasible_cap": 448.0,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
       "slot": {
-        "type": "meal",
-        "day": 2,
-        "meal_type": "dinner",
-        "seg": null,
-        "city": "Buffalo",
-        "date": null,
-        "origin": null,
-        "destination": null
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-13",
+        "origin": "Pittsburgh",
+        "destination": "Buffalo"
       },
-      "relaxed": false,
+      "relaxed": true,
       "filter": {
-        "budget_cap": 42.971875
+        "budget_cap": 269.3402253455686
       },
       "candidates": 0,
       "actions": 0,
+      "batch_idx": 0,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 5300.0,
+      "phase_budget": 3403.669724770642,
+      "phase": "flight",
+      "counts": {
+        "flight": 4,
+        "stay": 3,
+        "stay_nights": 6,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "flight": 4.199999999999999,
+        "stay": 1.08,
+        "meal": 1.26
+      },
+      "budget_cap": 425.45871559633025,
+      "budget_relaxed": true,
+      "feasible_cap": 448.0,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-13",
+        "origin": "Pittsburgh",
+        "destination": "Buffalo"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 425.45871559633025
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 1,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 5300.0,
+      "phase_budget": 3403.669724770642,
+      "phase": "flight",
+      "counts": {
+        "flight": 4,
+        "stay": 3,
+        "stay_nights": 6,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "flight": 4.199999999999999,
+        "stay": 1.08,
+        "meal": 1.26
+      },
+      "budget_cap": 425.45871559633025,
+      "budget_relaxed": true,
+      "feasible_cap": 448.0,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-13",
+        "origin": "Pittsburgh",
+        "destination": "Buffalo"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 425.45871559633025
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 2,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 5300.0,
+      "phase_budget": 2154.721802764549,
+      "phase": "flight",
+      "counts": {
+        "flight": 4,
+        "stay": 3,
+        "stay_nights": 6,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "flight": 2.734375,
+        "stay": 1.8421875,
+        "meal": 2.14921875
+      },
+      "budget_cap": 269.3402253455686,
+      "budget_relaxed": true,
+      "feasible_cap": 385.0,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-13",
+        "origin": "Pittsburgh",
+        "destination": "Buffalo"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 269.3402253455686
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 0,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 5300.0,
+      "phase_budget": 3403.669724770642,
+      "phase": "flight",
+      "counts": {
+        "flight": 4,
+        "stay": 3,
+        "stay_nights": 6,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "flight": 4.199999999999999,
+        "stay": 1.08,
+        "meal": 1.26
+      },
+      "budget_cap": 425.45871559633025,
+      "budget_relaxed": true,
+      "feasible_cap": 385.0,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-13",
+        "origin": "Pittsburgh",
+        "destination": "Buffalo"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 425.45871559633025
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 1,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 5300.0,
+      "phase_budget": 3403.669724770642,
+      "phase": "flight",
+      "counts": {
+        "flight": 4,
+        "stay": 3,
+        "stay_nights": 6,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "flight": 4.199999999999999,
+        "stay": 1.08,
+        "meal": 1.26
+      },
+      "budget_cap": 425.45871559633025,
+      "budget_relaxed": true,
+      "feasible_cap": 385.0,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-13",
+        "origin": "Pittsburgh",
+        "destination": "Buffalo"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 425.45871559633025
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 2,
       "cache_hit": true
     }
   ],
   "prior_usage": [],
-  "elapsed_seconds": 1.5717238330000782
+  "elapsed_seconds": 0.22298637499989127
 }

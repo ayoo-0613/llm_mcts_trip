@@ -1,8 +1,9 @@
 {
   "success": false,
-  "cost": 6404.0,
+  "cost": 0.0,
   "violations": [
-    "hard:valid_cuisine",
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_valid_transportation",
     "commonsense:is_not_absent"
   ],
   "query": "Could you plan a 5-day travel itinerary for a group of 7? We're set to depart from Sun Valley and aim to visit 2 cities in California from March 14th to March 18th, 2022. Our budget is now set at $11,400. In terms of accommodations, it is crucial that they allow parties. We also prefer to not fly between locations. On our trip, we look forward to enjoying a variety of cuisines, including Mediterranean, American, French, and Indian.",
@@ -69,15 +70,12 @@
     ]
   },
   "actions": [
-    "choose_city_bundle:[San Luis Obispo,Santa Barbara]",
-    "move:seg0:taxi:Sun Valley->San Luis Obispo 1545km cost 1545",
-    "move:seg1:taxi:San Luis Obispo->Santa Barbara 152km cost 152",
-    "move:seg2:taxi:Santa Barbara->Sun Valley 1505km cost 1505"
+    "choose_city_bundle:[Santa Rosa,San Jose]"
   ],
   "structured_plan": {
     "destination_cities": [
-      "San Luis Obispo",
-      "Santa Barbara"
+      "Santa Rosa",
+      "San Jose"
     ],
     "transportation_dates": [
       "2022-03-14",
@@ -85,22 +83,22 @@
       "2022-03-18"
     ],
     "transportation_methods": [
-      "taxi, from Sun Valley to San Luis Obispo, cost: 1545.0",
-      "taxi, from San Luis Obispo to Santa Barbara, cost: 152.0",
-      "taxi, from Santa Barbara to Sun Valley, cost: 1505.0"
+      "Sun Valley->Santa Rosa missing mode",
+      "Santa Rosa->San Jose missing mode",
+      "San Jose->Sun Valley missing mode"
     ],
     "restaurants": [],
     "attractions": [],
     "accommodations": [
-      "missing, San Luis Obispo",
-      "missing, Santa Barbara"
+      "missing, Santa Rosa",
+      "missing, San Jose"
     ]
   },
   "submission_plan": [
     {
       "days": 1,
-      "current_city": "from Sun Valley to San Luis Obispo",
-      "transportation": "Taxi, from Sun Valley to San Luis Obispo, Cost: 1545",
+      "current_city": "Santa Rosa",
+      "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -109,7 +107,7 @@
     },
     {
       "days": 2,
-      "current_city": "San Luis Obispo",
+      "current_city": "Santa Rosa",
       "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
@@ -119,8 +117,8 @@
     },
     {
       "days": 3,
-      "current_city": "from San Luis Obispo to Santa Barbara",
-      "transportation": "Taxi, from San Luis Obispo to Santa Barbara, Cost: 152",
+      "current_city": "San Jose",
+      "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -129,7 +127,7 @@
     },
     {
       "days": 4,
-      "current_city": "Santa Barbara",
+      "current_city": "San Jose",
       "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
@@ -139,8 +137,8 @@
     },
     {
       "days": 5,
-      "current_city": "from Santa Barbara to Sun Valley",
-      "transportation": "Taxi, from Santa Barbara to Sun Valley, Cost: 1505",
+      "current_city": "San Jose",
+      "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -150,61 +148,288 @@
   ],
   "filter_usage": [
     {
-      "forced_transport_mode": "taxi",
-      "flight_forbidden": true,
+      "dest_kind": "state",
+      "flight_allowed": false,
+      "duration_days": 5,
+      "strategy": "state_bundle",
+      "city_target": 2,
+      "remaining_needed": 2,
+      "connectivity_mode": "any_transport",
+      "flight_only": false,
+      "fallback_mode": null,
+      "pool_size_before_prefilter": 20,
+      "pool_size_after_prefilter": 9,
+      "combos_generated": 72,
+      "combos_kept_topk": 5,
+      "budget_pruned": 53,
+      "budget_relaxed": false,
+      "relaxed_used": false,
+      "fallback_used": false,
+      "injected_out_of_state": [],
       "slot": {
-        "type": "flight",
+        "type": "city",
         "day": null,
         "meal_type": null,
-        "seg": 2,
+        "seg": null,
         "city": null,
-        "date": "2022-03-14",
-        "origin": "Santa Barbara",
-        "destination": "Sun Valley"
+        "date": null,
+        "origin": null,
+        "destination": null
       },
       "relaxed": false,
       "filter": {},
-      "candidates": 0,
-      "actions": 1,
+      "candidates": 5,
+      "actions": 5,
+      "batch_idx": 0,
       "cache_hit": true
     },
     {
-      "budget_remaining": 4996.0,
-      "phase_budget": 3477.494199535963,
-      "phase": "stay",
+      "budget_remaining": 11400.0,
+      "phase_budget": 4856.377799415774,
+      "phase": "flight",
       "counts": {
-        "flight": 0,
+        "flight": 3,
         "stay": 2,
         "stay_nights": 4,
         "meal": 15,
         "attraction": 5
       },
       "weights": {
-        "stay": 3.515625,
+        "flight": 2.05078125,
+        "stay": 1.2281250000000001,
         "meal": 1.5351562500000002
       },
-      "budget_cap": 869.3735498839908,
+      "budget_cap": 231.2560856864654,
       "budget_relaxed": true,
-      "planned_nights": 2,
+      "feasible_cap": 285.95238095238096,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
       "slot": {
-        "type": "hotel",
+        "type": "flight",
         "day": null,
         "meal_type": null,
-        "seg": null,
-        "city": "San Luis Obispo",
-        "date": null,
-        "origin": null,
-        "destination": null
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-14",
+        "origin": "Sun Valley",
+        "destination": "Santa Rosa"
       },
       "relaxed": true,
       "filter": {
-        "budget_cap": 869.3735498839908
+        "budget_cap": 231.2560856864654
       },
       "candidates": 0,
       "actions": 0,
+      "batch_idx": 0,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 11400.0,
+      "phase_budget": 7528.301886792452,
+      "phase": "flight",
+      "counts": {
+        "flight": 3,
+        "stay": 2,
+        "stay_nights": 4,
+        "meal": 15,
+        "attraction": 5
+      },
+      "weights": {
+        "flight": 3.1499999999999995,
+        "stay": 0.7200000000000001,
+        "meal": 0.8999999999999999
+      },
+      "budget_cap": 358.4905660377358,
+      "budget_relaxed": true,
+      "feasible_cap": 285.95238095238096,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-14",
+        "origin": "Sun Valley",
+        "destination": "Santa Rosa"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 358.4905660377358
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 1,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 11400.0,
+      "phase_budget": 7528.301886792452,
+      "phase": "flight",
+      "counts": {
+        "flight": 3,
+        "stay": 2,
+        "stay_nights": 4,
+        "meal": 15,
+        "attraction": 5
+      },
+      "weights": {
+        "flight": 3.1499999999999995,
+        "stay": 0.7200000000000001,
+        "meal": 0.8999999999999999
+      },
+      "budget_cap": 358.4905660377358,
+      "budget_relaxed": true,
+      "feasible_cap": 285.95238095238096,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-14",
+        "origin": "Sun Valley",
+        "destination": "Santa Rosa"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 358.4905660377358
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 2,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 11400.0,
+      "phase_budget": 4856.377799415774,
+      "phase": "flight",
+      "counts": {
+        "flight": 3,
+        "stay": 2,
+        "stay_nights": 4,
+        "meal": 15,
+        "attraction": 5
+      },
+      "weights": {
+        "flight": 2.05078125,
+        "stay": 1.2281250000000001,
+        "meal": 1.5351562500000002
+      },
+      "budget_cap": 231.2560856864654,
+      "budget_relaxed": true,
+      "feasible_cap": 292.14285714285717,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-14",
+        "origin": "Sun Valley",
+        "destination": "Santa Rosa"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 231.2560856864654
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 0,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 11400.0,
+      "phase_budget": 7528.301886792452,
+      "phase": "flight",
+      "counts": {
+        "flight": 3,
+        "stay": 2,
+        "stay_nights": 4,
+        "meal": 15,
+        "attraction": 5
+      },
+      "weights": {
+        "flight": 3.1499999999999995,
+        "stay": 0.7200000000000001,
+        "meal": 0.8999999999999999
+      },
+      "budget_cap": 358.4905660377358,
+      "budget_relaxed": true,
+      "feasible_cap": 292.14285714285717,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-14",
+        "origin": "Sun Valley",
+        "destination": "Santa Rosa"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 358.4905660377358
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 1,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 11400.0,
+      "phase_budget": 7528.301886792452,
+      "phase": "flight",
+      "counts": {
+        "flight": 3,
+        "stay": 2,
+        "stay_nights": 4,
+        "meal": 15,
+        "attraction": 5
+      },
+      "weights": {
+        "flight": 3.1499999999999995,
+        "stay": 0.7200000000000001,
+        "meal": 0.8999999999999999
+      },
+      "budget_cap": 358.4905660377358,
+      "budget_relaxed": true,
+      "feasible_cap": 292.14285714285717,
+      "min_price": null,
+      "total_flights": 0,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-14",
+        "origin": "Sun Valley",
+        "destination": "Santa Rosa"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 358.4905660377358
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 2,
       "cache_hit": true
     }
   ],
   "prior_usage": [],
-  "elapsed_seconds": 0.13258908299997074
+  "elapsed_seconds": 0.09531708399993022
 }
