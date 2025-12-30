@@ -13,10 +13,10 @@ import sys  # noqa: E402
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-from mcts.travel.knowledge_base import TravelKnowledgeBase  # noqa: E402
-from mcts.travel.agents import EnvAgent, MCTSPlanningAgent, SemanticAgent  # noqa: E402
-from mcts.travel.submission import env_to_submission_record  # noqa: E402
-from mcts.travel.query_parsing import (
+from mcts.travel import EnvAgent, SearchAgent, SemanticAgent  # noqa: E402
+from mcts.travel.env.knowledge_base import TravelKnowledgeBase  # noqa: E402
+from mcts.travel.env.submission import env_to_submission_record  # noqa: E402
+from mcts.travel.semantic.query_parsing import (
     call_local_llm,
     fallback_parse,
     load_queries,
@@ -152,18 +152,43 @@ def _query_data_for_eval(parsed: Dict[str, Any]) -> Dict[str, Any]:
 
 def _evaluate_plan(parsed: Dict[str, Any], plan: List[Dict[str, Any]]) -> Tuple[bool, List[str]]:
     query_data = _query_data_for_eval(parsed)
-    hard = hard_eval(query_data, plan)
+
+    def _constraint_pass(info_box: Optional[Dict[str, Tuple[Any, Any]]]) -> bool:
+        if not info_box:
+            return False
+        for _, pair in info_box.items():
+            if not pair:
+                continue
+            ok = pair[0]
+            if ok is not None and ok is False:
+                return False
+        return True
+
+    # Match evaluation/eval.py gating for efficiency:
+    # - Always run commonsense first (if plan exists)
+    # - Only run hard constraints when key commonsense gates pass
+    has_plan = bool(plan)
+    if not has_plan:
+        return False, ["delivery:empty_plan"]
+
     commonsense = commonsense_eval(query_data, plan)
+    hard = None
+    if commonsense and commonsense.get("is_not_absent", (False,))[0] and commonsense.get(
+        "is_valid_information_in_sandbox", (False,)
+    )[0]:
+        hard = hard_eval(query_data, plan)
+
     violations: List[str] = []
-    for name, info in (hard or {}).items():
-        passed = info[0] if isinstance(info, (tuple, list)) and info else info
-        if passed is False:
-            violations.append(f"hard:{name}")
     for name, info in (commonsense or {}).items():
         passed = info[0] if isinstance(info, (tuple, list)) and info else info
         if passed is False:
             violations.append(f"commonsense:{name}")
-    success = not violations
+    for name, info in (hard or {}).items():
+        passed = info[0] if isinstance(info, (tuple, list)) and info else info
+        if passed is False:
+            violations.append(f"hard:{name}")
+
+    success = _constraint_pass(commonsense) and _constraint_pass(hard)
     return success, violations
 
 
@@ -336,7 +361,7 @@ def _run_single(
         log_filter_usage=args.log_filter_usage,
         goal_parsed=goal_parsed,
     )
-    planner = MCTSPlanningAgent(args, env, policy)
+    planner = SearchAgent(args, env, policy)
     result = planner.run(max_episode_len=args.max_episode_len)
     result["state"] = env.state
     return result

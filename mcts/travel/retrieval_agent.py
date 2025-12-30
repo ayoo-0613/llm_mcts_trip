@@ -6,6 +6,14 @@ import re
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple
 
+from mcts.travel.retrieval import (
+    ActionFactory,
+    BudgetAllocator,
+    ConstraintNormalizer,
+    DedupFilter,
+    RelaxationController,
+    filter_with_budget_relax,
+)
 
 @dataclass
 class SlotActionResult:
@@ -49,13 +57,18 @@ class RetrievalAgent:
         self._city_pool: Dict[str, Dict[str, List[Dict[str, Any]]]] = {}
         self._city_cuisine_coverage: Dict[str, set] = {}
         self._budget_scales = {"flight": 1.0, "stay": 1.0, "meal": 1.0, "attraction": 1.0}
+        self._constraint_normalizer = ConstraintNormalizer()
+        self._budget_allocator = BudgetAllocator(self._parsed_get, self._remaining_counts, self._budget_scales)
+        self._relaxer = RelaxationController(self._budget_scales)
+        self._action_factory = ActionFactory()
 
     def reset(self) -> None:
         self._transport_cache = {}
         self._parsed_sig = None
         self._city_pool = {}
         self._city_cuisine_coverage = {}
-        self._budget_scales = {"flight": 1.0, "stay": 1.0, "meal": 1.0, "attraction": 1.0}
+        self._budget_scales.clear()
+        self._budget_scales.update({"flight": 1.0, "stay": 1.0, "meal": 1.0, "attraction": 1.0})
 
     # ----------------------------
     # Shared helpers
@@ -151,38 +164,6 @@ class RetrievalAgent:
                     aid = att.get("id")
                     if aid is not None:
                         used.add(aid)
-        return used
-
-    @staticmethod
-    def _select_valid_batch(
-        candidates: List[Dict[str, Any]],
-        k: int,
-        *,
-        predicate: Optional[Any] = None,
-    ) -> List[Dict[str, Any]]:
-        if not candidates or k <= 0:
-            return []
-        for start in range(0, len(candidates), k):
-            batch = candidates[start : start + k]
-            if predicate is None:
-                return batch
-            picked: List[Dict[str, Any]] = []
-            for cand in batch:
-                if predicate(cand):
-                    picked.append(cand)
-            if picked:
-                return picked
-        return []
-
-    @staticmethod
-    def _used_restaurant_ids(state: Any) -> set:
-        used = set()
-        for day_map in (getattr(state, "meals", None) or {}).values():
-            for meal in (day_map or {}).values():
-                if isinstance(meal, dict):
-                    rid = meal.get("id")
-                    if rid is not None:
-                        used.add(rid)
         return used
 
     @staticmethod
@@ -330,76 +311,12 @@ class RetrievalAgent:
                 return True
         return False
 
-    @staticmethod
-    def _listify(val: Any) -> List[str]:
-        if val is None:
-            return []
-        if isinstance(val, list):
-            return [str(v) for v in val if v is not None]
-        if isinstance(val, (set, tuple)):
-            return [str(v) for v in val if v is not None]
-        return [str(val)]
-
     def _constraints_from_parsed(self, parsed: Any) -> Dict[str, Any]:
-        cons = self._parsed_get(parsed, "constraints", default=None)
-        cons = cons if isinstance(cons, dict) else {}
-        meal = dict(cons.get("meal", {}) or {})
-        stay = dict(cons.get("stay", {}) or {})
-        transport = dict(cons.get("transport", {}) or {})
-
-        local_constraint = self._parsed_get(parsed, "local_constraint", default=None) or {}
-        house_rules = self._listify(stay.get("house_rules") or local_constraint.get("house rule") or self._parsed_get(parsed, "house_rule", default=None))
-        room_types = self._listify(stay.get("room_type") or local_constraint.get("room type") or self._parsed_get(parsed, "room_type", default=None))
-        cuisines = self._listify(meal.get("cuisines") or local_constraint.get("cuisine") or self._parsed_get(parsed, "cuisine", default=None))
-        min_occ = stay.get("min_occupancy")
-        if min_occ is None:
-            try:
-                min_occ = int(self._parsed_get(parsed, "people_number", default=None) or 1)
-            except Exception:
-                min_occ = None
-
-        allow_modes = self._listify(transport.get("allow") or self._parsed_get(parsed, "transport_allowed_modes", "transport_allow", default=None))
-        forbid_modes = self._listify(
-            transport.get("forbid")
-            or self._parsed_get(parsed, "transport_forbidden_modes", "transport_forbid", "transport_forbidden", default=None)
-        )
-        transportation = self._listify(self._parsed_get(parsed, "transportation", default=None) or local_constraint.get("transportation"))
-        for raw in transportation:
-            low = raw.strip().lower()
-            if "no flight" in low:
-                forbid_modes.append("flight")
-            if "no self-driving" in low:
-                forbid_modes.append("self-driving")
-            if "no taxi" in low:
-                forbid_modes.append("taxi")
-        return {
-            "cuisines": [c.strip() for c in cuisines if c and str(c).strip()],
-            "house_rules": [r.strip() for r in house_rules if r and str(r).strip()],
-            "room_types": [r.strip() for r in room_types if r and str(r).strip()],
-            "min_occupancy": min_occ,
-            "allow_modes": [m.strip().lower() for m in allow_modes if m],
-            "forbid_modes": [m.strip().lower() for m in forbid_modes if m],
-        }
+        return self._constraint_normalizer.to_constraints(parsed).as_dict()
 
     def _parsed_signature(self, parsed: Any) -> str:
-        cons = self._constraints_from_parsed(parsed)
-        parts = [
-            self._parsed_get(parsed, "origin", "org", default="") or "",
-            self._parsed_get(parsed, "destination", "dest", default="") or "",
-            str(self._parsed_get(parsed, "start_date", default="") or ""),
-            str(self._parsed_get(parsed, "duration_days", "days", default="") or ""),
-            str(self._parsed_get(parsed, "budget", default="") or ""),
-            str(self._parsed_get(parsed, "visiting_city_number", default="") or ""),
-            "|".join(sorted(cons.get("cuisines") or [])),
-            "|".join(sorted(cons.get("house_rules") or [])),
-            "|".join(sorted(cons.get("room_types") or [])),
-            "|".join(sorted(cons.get("allow_modes") or [])),
-            "|".join(sorted(cons.get("forbid_modes") or [])),
-            "|".join(sorted(self._parsed_get(parsed, "candidate_cities", default=[]) or [])),
-            "|".join(sorted(self._parsed_get(parsed, "must_visit_cities", default=[]) or [])),
-            "|".join(sorted(self._parsed_get(parsed, "priority_cities", default=[]) or [])),
-        ]
-        return "|".join(parts)
+        spec = self._constraint_normalizer.to_spec(parsed)
+        return spec.signature()
 
     def _candidate_cities(self, parsed: Any) -> List[str]:
         candidate_cities = list(self._parsed_get(parsed, "candidate_cities", default=[]) or [])
@@ -465,7 +382,8 @@ class RetrievalAgent:
         self._parsed_sig = sig
         self._city_pool = {}
         self._city_cuisine_coverage = {}
-        self._budget_scales = {"flight": 1.0, "stay": 1.0, "meal": 1.0, "attraction": 1.0}
+        self._budget_scales.clear()
+        self._budget_scales.update({"flight": 1.0, "stay": 1.0, "meal": 1.0, "attraction": 1.0})
 
         cons = self._constraints_from_parsed(parsed)
         cuisines = [c.lower() for c in (cons.get("cuisines") or []) if c]
@@ -685,131 +603,9 @@ class RetrievalAgent:
             "attraction": remaining_attractions,
         }
 
-    def _budget_caps(self, parsed: Any, state: Any, phase: str) -> Tuple[Optional[float], Dict[str, Any]]:
-        budget = self._parsed_get(parsed, "budget", default=None)
-        try:
-            budget_f = float(budget)
-        except Exception:
-            return None, {}
-        if budget_f <= 0:
-            return None, {}
-
-        remaining = budget_f - float(getattr(state, "cost", 0.0) or 0.0)
-        if remaining <= 0:
-            return None, {"budget_remaining": remaining}
-
-        counts = self._remaining_counts(parsed, state)
-        weights = {
-            "flight": 0.35 * self._budget_scales.get("flight", 1.0) * max(1, counts["flight"]),
-            "stay": 0.45 * self._budget_scales.get("stay", 1.0) * max(1, counts["stay_nights"] or counts["stay"]),
-            "meal": 0.15 * self._budget_scales.get("meal", 1.0) * max(1, counts["meal"]),
-        }
-        weights = {k: v for k, v in weights.items() if counts.get(k, 0) > 0}
-        total_weight = sum(weights.values()) if weights else 0.0
-        if total_weight <= 0:
-            return None, {"budget_remaining": remaining}
-
-        phase_budget = remaining * (weights.get(phase, 0.0) / total_weight)
-        info = {
-            "budget_remaining": remaining,
-            "phase_budget": phase_budget,
-            "phase": phase,
-            "counts": counts,
-            "weights": weights,
-        }
-
-        if phase == "flight":
-            per_slot = phase_budget / max(1, counts["flight"])
-            people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
-            return per_slot / float(people), info
-        if phase == "stay":
-            nights = max(1, counts["stay_nights"] or counts["stay"])
-            return phase_budget / float(nights), info
-        if phase == "meal":
-            per_slot = phase_budget / max(1, counts["meal"])
-            people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
-            return per_slot / float(people), info
-        if phase == "attraction":
-            return None, info
-        return None, info
-
-    def _bump_budget_scale(self, phase: str) -> None:
-        current = float(self._budget_scales.get(phase, 1.0) or 1.0)
-        new = min(3.0, current * 1.25)
-        if new <= current:
-            return
-        delta = new - current
-        self._budget_scales[phase] = new
-
-        others = [p for p in self._budget_scales if p != phase]
-        if not others:
-            return
-        total_other = sum(float(self._budget_scales[p] or 0.0) for p in others)
-        if total_other <= 0:
-            return
-        min_scale = 0.4
-        for p in others:
-            val = float(self._budget_scales[p] or 0.0)
-            reduction = delta * (val / total_other)
-            self._budget_scales[p] = max(min_scale, val - reduction)
-
     # ----------------------------
     # Action builders (slot -> actions/payloads)
     # ----------------------------
-    @staticmethod
-    def _actions_from_candidates(slot: Any, candidates: List[Dict[str, Any]]) -> Tuple[List[str], Dict[str, Tuple]]:
-        actions: List[str] = []
-        payloads: Dict[str, Tuple] = {}
-        if not candidates:
-            return actions, payloads
-
-        stype = getattr(slot, "type", None)
-        if stype == "flight":
-            seg_idx = getattr(slot, "seg", None)
-            for f in candidates:
-                seg_val = seg_idx if seg_idx is not None else -1
-                price_val = float(f.get("price", 0) or 0.0)
-                action = (
-                    f"move:seg{seg_val}:flight:{f.get('id')} {f.get('origin')}->{f.get('destination')} "
-                    f"${price_val:.0f} {f.get('depart', '?')}-{f.get('arrive', '?')}"
-                )
-                payloads[action] = ("segment_mode", seg_val, "flight", f)
-                actions.append(action)
-        elif stype == "hotel":
-            slot_city = getattr(slot, "city", None)
-            for stay in candidates:
-                city = slot_city or stay.get("city")
-                price_val = float(stay.get("price", 0) or 0.0)
-                action = (
-                    f"stay:{city}:{stay.get('id')} {stay.get('name')} "
-                    f"{stay.get('room_type')} ${price_val:.0f}"
-                )
-                payloads[action] = ("stay_city", city, stay)
-                actions.append(action)
-        elif stype == "meal":
-            day = getattr(slot, "day", None)
-            meal_type = getattr(slot, "meal_type", None)
-            for rest in candidates:
-                cost_val = float(rest.get("cost", 0) or 0.0)
-                action = (
-                    f"eat:d{day}:{meal_type}:{rest.get('id')} "
-                    f"{rest.get('name')} {rest.get('cuisines')} ${cost_val:.0f} rating {rest.get('rating', 0)}"
-                )
-                payloads[action] = ("meal", day, meal_type, rest)
-                actions.append(action)
-        elif stype == "attraction":
-            day = getattr(slot, "day", None)
-            slot_name = getattr(slot, "meal_type", None) or "spot"
-            slot_city = getattr(slot, "city", None)
-            for att in candidates:
-                city = att.get("city") or slot_city
-                action = f"visit:d{day}:{slot_name}:{att.get('id')} {att.get('name')} @ {city}"
-                payloads[action] = ("attraction", day, slot_name, att)
-                actions.append(action)
-        elif stype == "finish":
-            actions.append("finish")
-        return actions, payloads
-
     @staticmethod
     def _assert_candidates_respect_caps(slot: Any, filt: Dict[str, Any], candidates: List[Dict[str, Any]]) -> None:
         stype = getattr(slot, "type", None)
@@ -955,30 +751,28 @@ class RetrievalAgent:
         orig_norm = self.kb._normalize_city(origin)
         dest_norm = self.kb._normalize_city(destination)
         all_flights = list(getattr(self.kb, "_flight_buckets", {}).get((orig_norm, dest_norm), []))
-        flights = list(all_flights)
 
-        cap, info = self._budget_caps(parsed, state, "flight")
-        relaxed = False
-        if cap is not None:
-            flights = [f for f in all_flights if f.get("price") is not None and float(f["price"]) <= cap]
-            if not flights:
-                relaxed = True
-                prev_scale = float(self._budget_scales.get("flight", 1.0) or 1.0)
-                for _ in range(3):
-                    self._bump_budget_scale("flight")
-                    new_scale = float(self._budget_scales.get("flight", 1.0) or 1.0)
-                    if new_scale <= prev_scale + 1e-9:
-                        break
-                    cap, info = self._budget_caps(parsed, state, "flight")
-                    if cap is None:
-                        break
-                    flights = [
-                        f for f in all_flights
-                        if f.get("price") is not None and float(f["price"]) <= cap
-                    ]
-                    if flights:
-                        break
-                    prev_scale = new_scale
+        def _within_cap(flight: Dict[str, Any], limit: Optional[float]) -> bool:
+            if limit is None:
+                return True
+            price = flight.get("price")
+            if price is None:
+                return False
+            return float(price) <= limit
+
+        budget_result = filter_with_budget_relax(
+            parsed,
+            state,
+            "flight",
+            all_flights,
+            allocator=self._budget_allocator,
+            relaxer=self._relaxer,
+            filter_fn=_within_cap,
+        )
+        flights = list(budget_result.candidates)
+        cap = budget_result.cap
+        info = budget_result.info
+        relaxed = budget_result.relaxed
 
         flights.sort(
             key=lambda f: (
@@ -998,8 +792,6 @@ class RetrievalAgent:
         all_stays = list(self._city_pool.get(city_norm, {}).get("hotel", []) or [])
         all_stays = self._apply_constraints_to_candidates("hotel", all_stays, parsed)
 
-        cap, info = self._budget_caps(parsed, state, "stay")
-        relaxed = False
         people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
         nights = self._planned_accommodation_days_for_city(parsed, state, str(city))
         nights = max(1, nights)
@@ -1034,21 +826,19 @@ class RetrievalAgent:
                 return True
             return total_per_night <= limit
 
-        if cap is not None:
-            stays = [s for s in all_stays if _within_cap(s, cap)]
-            if not stays:
-                relaxed = True
-                prev_scale = float(self._budget_scales.get("stay", 1.0) or 1.0)
-                for _ in range(3):
-                    self._bump_budget_scale("stay")
-                    new_scale = float(self._budget_scales.get("stay", 1.0) or 1.0)
-                    if new_scale <= prev_scale + 1e-9:
-                        break
-                    cap, info = self._budget_caps(parsed, state, "stay")
-                    stays = [s for s in all_stays if _within_cap(s, cap)]
-                    if stays:
-                        break
-                    prev_scale = new_scale
+        budget_result = filter_with_budget_relax(
+            parsed,
+            state,
+            "stay",
+            all_stays,
+            allocator=self._budget_allocator,
+            relaxer=self._relaxer,
+            filter_fn=_within_cap,
+        )
+        stays = list(budget_result.candidates)
+        cap = budget_result.cap
+        info = budget_result.info
+        relaxed = budget_result.relaxed
 
         stays.sort(
             key=lambda s: (
@@ -1084,29 +874,27 @@ class RetrievalAgent:
         candidates = list(base_candidates)
         candidates = self._apply_constraints_to_candidates("meal", candidates, parsed)
 
-        cap, info = self._budget_caps(parsed, state, "meal")
-        relaxed = False
-        if cap is not None:
-            candidates = [
-                r for r in base_candidates
-                if r.get("cost") is None or float(r.get("cost") or 0.0) <= cap
-            ]
-            if not candidates:
-                relaxed = True
-                prev_scale = float(self._budget_scales.get("meal", 1.0) or 1.0)
-                for _ in range(3):
-                    self._bump_budget_scale("meal")
-                    new_scale = float(self._budget_scales.get("meal", 1.0) or 1.0)
-                    if new_scale <= prev_scale + 1e-9:
-                        break
-                    cap, info = self._budget_caps(parsed, state, "meal")
-                    candidates = [
-                        r for r in base_candidates
-                        if r.get("cost") is None or float(r.get("cost") or 0.0) <= cap
-                    ]
-                    if candidates:
-                        break
-                    prev_scale = new_scale
+        def _within_cap(rest: Dict[str, Any], limit: Optional[float]) -> bool:
+            if limit is None:
+                return True
+            cost = rest.get("cost")
+            if cost is None:
+                return True
+            return float(cost or 0.0) <= limit
+
+        budget_result = filter_with_budget_relax(
+            parsed,
+            state,
+            "meal",
+            base_candidates,
+            allocator=self._budget_allocator,
+            relaxer=self._relaxer,
+            filter_fn=_within_cap,
+        )
+        candidates = list(budget_result.candidates)
+        cap = budget_result.cap
+        info = budget_result.info
+        relaxed = budget_result.relaxed
 
         def _rank_key(rest: Dict[str, Any]):
             text = str(rest.get("cuisines_lc") or rest.get("cuisines") or "").lower()
@@ -1449,7 +1237,8 @@ class RetrievalAgent:
 
             flights, event = self._flight_candidates(parsed, state, slot)
             candidates = self._select_valid_batch(flights, self.top_k)
-            actions, payloads = self._actions_from_candidates(slot, candidates)
+            action_objs = self._action_factory.build(slot, candidates)
+            actions, payloads = self._action_factory.to_actions_payloads(action_objs)
             if actions and len(actions) < self.top_k and "taxi" in self._allowed_transport_modes(parsed):
                 extra_actions, extra_payloads = self._ground_fallback_actions(parsed, slot, force_mode="taxi")
                 actions += extra_actions
@@ -1489,7 +1278,8 @@ class RetrievalAgent:
         if stype == "hotel":
             candidates, event = self._hotel_candidates(parsed, state, slot)
             candidates = self._select_valid_batch(candidates, self.top_k)
-            actions, payloads = self._actions_from_candidates(slot, candidates)
+            action_objs = self._action_factory.build(slot, candidates)
+            actions, payloads = self._action_factory.to_actions_payloads(action_objs)
             return SlotActionResult(
                 actions=actions,
                 payloads=payloads,
@@ -1507,9 +1297,10 @@ class RetrievalAgent:
             candidates = self._select_valid_batch(
                 candidates,
                 self.top_k,
-                predicate=lambda r: r.get("id") not in used_ids,
+                predicate=DedupFilter("id", used_ids),
             )
-            actions, payloads = self._actions_from_candidates(slot, candidates)
+            action_objs = self._action_factory.build(slot, candidates)
+            actions, payloads = self._action_factory.to_actions_payloads(action_objs)
             return SlotActionResult(
                 actions=actions,
                 payloads=payloads,
@@ -1527,9 +1318,10 @@ class RetrievalAgent:
             candidates = self._select_valid_batch(
                 candidates,
                 self.top_k,
-                predicate=lambda a: a.get("id") not in used_ids,
+                predicate=DedupFilter("id", used_ids),
             )
-            actions, payloads = self._actions_from_candidates(slot, candidates)
+            action_objs = self._action_factory.build(slot, candidates)
+            actions, payloads = self._action_factory.to_actions_payloads(action_objs)
             return SlotActionResult(
                 actions=actions,
                 payloads=payloads,
@@ -1542,9 +1334,11 @@ class RetrievalAgent:
             )
 
         if stype == "finish":
+            action_objs = self._action_factory.build(slot, [])
+            actions, payloads = self._action_factory.to_actions_payloads(action_objs)
             return SlotActionResult(
-                actions=["finish"],
-                payloads={"finish": ("finish",)},
+                actions=actions,
+                payloads=payloads,
                 candidates=[],
                 relaxed=False,
                 filt={},

@@ -15,10 +15,10 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-from mcts.travel.knowledge_base import TravelKnowledgeBase  # noqa: E402
-from mcts.travel.submission import env_to_submission_record  # noqa: E402
-from mcts.travel.travel_env import TravelEnv  # noqa: E402
-from mcts.travel.query_parsing import normalize_parsed_query  # noqa: E402
+from mcts.travel.env.knowledge_base import TravelKnowledgeBase  # noqa: E402
+from mcts.travel.env.submission import env_to_submission_record  # noqa: E402
+from mcts.travel.env_agent import TravelEnv  # noqa: E402
+from mcts.travel.semantic.query_parsing import normalize_parsed_query  # noqa: E402
 
 
 def _infer_idx_from_filename(path: str) -> Optional[int]:
