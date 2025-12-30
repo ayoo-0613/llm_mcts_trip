@@ -214,12 +214,18 @@ class TravelEnv:
             debug=self.debug,
             log_filter_usage=self.log_filter_usage,
         )
-        self.candidate_cache: Dict[Tuple[str, Slot], Dict[str, Any]] = {}
-        self.filter_cache: Dict[Tuple[str, Slot], Dict[str, Any]] = {}
+        self.candidate_cache: Dict[Tuple[Any, ...], Dict[str, Any]] = {}
+        self.filter_cache: Dict[Tuple[Any, ...], Dict[str, Any]] = {}
         self.filter_events: List[Dict[str, Any]] = []
         self.executed_filter_events: List[Dict[str, Any]] = []
         self.filter_event_keys: set = set()
         self.executed_filter_event_keys: set = set()
+        self.batch_retry_cfg = {
+            Phase.CITY: 2,
+            Phase.SEGMENT: 3,
+            Phase.STAY: 3,
+            Phase.DAILY: 2,
+        }
 
     # ----------------------------
     # 初始化 & helper
@@ -1001,6 +1007,19 @@ class TravelEnv:
                 "destination": getattr(slot, "destination", None),
             }
 
+    def _batch_retry_limit(self, slot: Optional[Slot]) -> int:
+        phase = self.state.phase
+        if slot is not None:
+            if slot.type == "city":
+                phase = Phase.CITY
+            elif slot.type == "flight":
+                phase = Phase.SEGMENT
+            elif slot.type == "hotel":
+                phase = Phase.STAY
+            elif slot.type in ("meal", "attraction"):
+                phase = Phase.DAILY
+        return max(1, int(self.batch_retry_cfg.get(phase, 1)))
+
     def _compute_actions_for_slot(self, slot: Optional[Slot]) -> List[str]:
         """Core action builder that also tracks the current slot for callers."""
         self.last_slot = slot
@@ -1012,58 +1031,87 @@ class TravelEnv:
         if slot is None:
             self.action_payloads = {}
             return []
-        key = (self.state.signature(), slot)
+        budget_rev = 0
+        try:
+            budget_rev = int(self.retrieval_agent.get_budget_revision())
+        except Exception:
+            budget_rev = 0
 
-        if key in self.candidate_cache:
-            cached = self.candidate_cache[key]
-            self.action_payloads = copy.deepcopy(cached.get("payloads", {}))
-            if self.log_filter_usage:
-                filt = self.filter_cache.get(key)
-                event = cached.get("event", {})
-                print(
-                    f"[FILTER] slot={slot.type} cache_hit=True plan_used_llm={event.get('plan_used_llm', False)} "
-                    f"filter={filt} event={event}"
-                )
-            if cached.get("event") and key not in self.filter_event_keys:
-                self.filter_events.append(dict(cached["event"], cache_hit=True))
+        max_batches = self._batch_retry_limit(slot)
+        last_actions: List[str] = []
+        last_payloads: Dict[str, Tuple] = {}
+
+        for batch_idx in range(max_batches):
+            key = (self.state.signature(), slot, batch_idx, budget_rev)
+
+            if key in self.candidate_cache:
+                cached = self.candidate_cache[key]
+                self.action_payloads = copy.deepcopy(cached.get("payloads", {}))
+                actions = list(cached.get("actions", []))
+                if self.log_filter_usage:
+                    filt = self.filter_cache.get(key)
+                    event = cached.get("event", {})
+                    print(
+                        f"[FILTER] slot={slot.type} cache_hit=True batch={batch_idx} "
+                        f"plan_used_llm={event.get('plan_used_llm', False)} filter={filt} event={event}"
+                    )
+                if cached.get("event") and key not in self.filter_event_keys:
+                    self.filter_events.append(dict(cached["event"], cache_hit=True))
+                    self.filter_event_keys.add(key)
+                if actions:
+                    return actions
+                last_actions = actions
+                last_payloads = copy.deepcopy(self.action_payloads)
+                continue
+
+            result = self.retrieval_agent.compute(
+                self.goal_parsed,
+                self.state,
+                slot,
+                user_query=self.user_query,
+                batch_idx=batch_idx,
+            )
+            actions = list(result.actions or [])
+            self.action_payloads = copy.deepcopy(result.payloads or {})
+            candidates = list(result.candidates or [])
+            relaxed = bool(result.relaxed)
+            filt = dict(result.filt or {})
+            policy_event = dict(result.policy_event or {})
+            self._last_phase_plan = getattr(result, "plan", None)
+            if slot.type != "city":
+                self.filter_cache[key] = filt
+            actions, self.action_payloads = self._filter_actions_by_constraints(
+                actions, self.action_payloads, self.state
+            )
+
+            event = dict(policy_event or {})
+            event.update(
+                {
+                    "slot": self._slot_to_dict(slot),
+                    "relaxed": relaxed if slot.type != "city" else False,
+                    "filter": filt if slot.type != "city" else {},
+                    "candidates": len(candidates) if slot.type != "city" else len(actions),
+                    "actions": len(actions),
+                    "batch_idx": batch_idx,
+                }
+            )
+            if key not in self.filter_event_keys:
+                self.filter_events.append(event)
                 self.filter_event_keys.add(key)
-            return list(cached.get("actions", []))
-
-        result = self.retrieval_agent.compute(self.goal_parsed, self.state, slot, user_query=self.user_query)
-        actions: List[str] = list(result.actions or [])
-        self.action_payloads = copy.deepcopy(result.payloads or {})
-        candidates: List[Dict[str, Any]] = list(result.candidates or [])
-        relaxed = bool(result.relaxed)
-        filt: Dict[str, Any] = dict(result.filt or {})
-        policy_event: Dict[str, Any] = dict(result.policy_event or {})
-        self._last_phase_plan = getattr(result, "plan", None)
-        if slot.type != "city":
-            self.filter_cache[key] = filt
-        actions, self.action_payloads = self._filter_actions_by_constraints(
-            actions, self.action_payloads, self.state
-        )
-
-        event = dict(policy_event or {})
-        event.update(
-            {
-                "slot": self._slot_to_dict(slot),
-                "relaxed": relaxed if slot.type != "city" else False,
-                "filter": filt if slot.type != "city" else {},
-                "candidates": len(candidates) if slot.type != "city" else len(actions),
-                "actions": len(actions),
+            self.candidate_cache[key] = {
+                "actions": actions,
+                "payloads": copy.deepcopy(self.action_payloads),
+                "event": event,
             }
-        )
-        if key not in self.filter_event_keys:
-            self.filter_events.append(event)
-            self.filter_event_keys.add(key)
-        self.candidate_cache[key] = {
-            "actions": actions,
-            "payloads": copy.deepcopy(self.action_payloads),
-            "event": event,
-        }
-        if self.debug:
-            print(f"[DEBUG] Slot {slot.type} produced {len(actions)} actions (cache miss)")
-        return actions
+            if self.debug:
+                print(f"[DEBUG] Slot {slot.type} produced {len(actions)} actions (batch {batch_idx})")
+            if actions:
+                return actions
+            last_actions = actions
+            last_payloads = copy.deepcopy(self.action_payloads)
+
+        self.action_payloads = last_payloads
+        return last_actions
 
     def get_valid_actions_with_slot(self) -> Tuple[Optional[Slot], List[str], Dict[str, Tuple]]:
         """

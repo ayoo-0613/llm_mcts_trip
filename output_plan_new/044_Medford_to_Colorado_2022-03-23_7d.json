@@ -1,7 +1,9 @@
 {
   "success": false,
-  "cost": 2259.0,
+  "cost": 0.0,
   "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_valid_transportation",
     "commonsense:is_not_absent"
   ],
   "query": "Can you assist in devising a 7-day trip for one person, commencing in Medford and involving visits to 3 distinct cities in Colorado from March 23rd to March 29th, 2022? The budget for this trip is set at $2,400.",
@@ -42,43 +44,70 @@
     ]
   },
   "actions": [
-    "choose_city_bundle:[Denver,Alamosa,Grand Junction]",
-    "move:seg0:flight:F1837851 Medford->Denver $193 05:10-08:16",
-    "move:seg1:flight:F0586942 Denver->Alamosa $36 16:18-17:05",
-    "move:seg2:taxi:Alamosa->Grand Junction 396km cost 396",
-    "move:seg3:taxi:Grand Junction->Medford 1634km cost 1634"
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle",
+    "choose_city_bundle:[Denver,Alamosa,Denver]",
+    "replan:city_bundle"
   ],
   "structured_plan": {
     "destination_cities": [
-      "Denver",
-      "Alamosa",
-      "Grand Junction"
+      "Colorado"
     ],
     "transportation_dates": [
       "2022-03-23",
-      "2022-03-25",
-      "2022-03-27",
       "2022-03-29"
     ],
     "transportation_methods": [
-      "Flight F1837851, from Medford to Denver, Departure Time: 05:10, Arrival Time: 08:16, cost: 193.0",
-      "Flight F0586942, from Denver to Alamosa, Departure Time: 16:18, Arrival Time: 17:05, cost: 36.0",
-      "taxi, from Alamosa to Grand Junction, cost: 396.0",
-      "taxi, from Grand Junction to Medford, cost: 1634.0"
+      "Medford->Colorado missing mode",
+      "Colorado->Medford missing mode"
     ],
     "restaurants": [],
     "attractions": [],
     "accommodations": [
-      "missing, Denver",
-      "missing, Alamosa",
-      "missing, Grand Junction"
+      "missing, Colorado"
     ]
   },
   "submission_plan": [
     {
       "days": 1,
-      "current_city": "from Medford to Denver",
-      "transportation": "Flight Number: F1837851, from Medford to Denver, Departure Time: 05:10, Arrival Time: 08:16",
+      "current_city": "Colorado",
+      "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -87,7 +116,7 @@
     },
     {
       "days": 2,
-      "current_city": "Denver",
+      "current_city": "Colorado",
       "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
@@ -97,8 +126,8 @@
     },
     {
       "days": 3,
-      "current_city": "from Denver to Alamosa",
-      "transportation": "Flight Number: F0586942, from Denver to Alamosa, Departure Time: 16:18, Arrival Time: 17:05",
+      "current_city": "Colorado",
+      "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -107,7 +136,7 @@
     },
     {
       "days": 4,
-      "current_city": "Alamosa",
+      "current_city": "Colorado",
       "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
@@ -117,8 +146,8 @@
     },
     {
       "days": 5,
-      "current_city": "from Alamosa to Grand Junction",
-      "transportation": "Taxi, from Alamosa to Grand Junction, Cost: 396",
+      "current_city": "Colorado",
+      "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -127,7 +156,7 @@
     },
     {
       "days": 6,
-      "current_city": "Grand Junction",
+      "current_city": "Colorado",
       "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
@@ -137,8 +166,8 @@
     },
     {
       "days": 7,
-      "current_city": "from Grand Junction to Medford",
-      "transportation": "Taxi, from Grand Junction to Medford, Cost: 1634",
+      "current_city": "Colorado",
+      "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -148,61 +177,183 @@
   ],
   "filter_usage": [
     {
-      "forced_transport_mode": "taxi",
+      "budget_remaining": 2400.0,
+      "phase_budget": 1388.4297520661155,
+      "phase": "flight",
+      "counts": {
+        "flight": 4,
+        "stay": 3,
+        "stay_nights": 10,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "flight": 4.199999999999999,
+        "stay": 1.8000000000000003,
+        "meal": 1.26
+      },
+      "budget_cap": 347.1074380165289,
+      "budget_relaxed": true,
+      "feasible_cap": -273.5,
+      "min_price": 193.0,
+      "total_flights": 411,
       "flight_candidates_empty": true,
       "slot": {
         "type": "flight",
         "day": null,
         "meal_type": null,
-        "seg": 3,
+        "seg": 0,
         "city": null,
         "date": "2022-03-23",
-        "origin": "Grand Junction",
-        "destination": "Medford"
+        "origin": "Medford",
+        "destination": "Denver"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 347.1074380165289
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 0,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 2400.0,
+      "phase_budget": 1388.4297520661155,
+      "phase": "flight",
+      "counts": {
+        "flight": 4,
+        "stay": 3,
+        "stay_nights": 10,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "flight": 4.199999999999999,
+        "stay": 1.8000000000000003,
+        "meal": 1.26
+      },
+      "budget_cap": 347.1074380165289,
+      "budget_relaxed": true,
+      "feasible_cap": -273.5,
+      "min_price": 193.0,
+      "total_flights": 411,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-23",
+        "origin": "Medford",
+        "destination": "Denver"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 347.1074380165289
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 1,
+      "cache_hit": true
+    },
+    {
+      "budget_remaining": 2400.0,
+      "phase_budget": 1388.4297520661155,
+      "phase": "flight",
+      "counts": {
+        "flight": 4,
+        "stay": 3,
+        "stay_nights": 10,
+        "meal": 21,
+        "attraction": 7
+      },
+      "weights": {
+        "flight": 4.199999999999999,
+        "stay": 1.8000000000000003,
+        "meal": 1.26
+      },
+      "budget_cap": 347.1074380165289,
+      "budget_relaxed": true,
+      "feasible_cap": -273.5,
+      "min_price": 193.0,
+      "total_flights": 411,
+      "flight_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-23",
+        "origin": "Medford",
+        "destination": "Denver"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 347.1074380165289
+      },
+      "candidates": 0,
+      "actions": 0,
+      "batch_idx": 2,
+      "cache_hit": true
+    },
+    {
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 0,
+        "city": null,
+        "date": "2022-03-23",
+        "origin": "Medford",
+        "destination": "Denver"
       },
       "relaxed": false,
       "filter": {},
       "candidates": 0,
       "actions": 1,
-      "cache_hit": true
+      "batch_idx": 3,
+      "replan": true
     },
     {
-      "budget_remaining": 141.0,
-      "phase_budget": 88.2721202003339,
-      "phase": "stay",
-      "counts": {
-        "flight": 0,
-        "stay": 3,
-        "stay_nights": 6,
-        "meal": 21,
-        "attraction": 7
-      },
-      "weights": {
-        "stay": 2.109375,
-        "meal": 1.26
-      },
-      "budget_cap": 14.712020033388983,
-      "budget_relaxed": true,
-      "planned_nights": 2,
+      "dest_kind": "state",
+      "flight_allowed": true,
+      "duration_days": 7,
+      "strategy": "state_bundle",
+      "city_target": 3,
+      "remaining_needed": 3,
+      "connectivity_mode": "flight_when_available",
+      "flight_only": true,
+      "fallback_mode": "flight_when_available",
+      "pool_size_before_prefilter": 6,
+      "pool_size_after_prefilter": 6,
+      "combos_generated": 456,
+      "combos_kept_topk": 2,
+      "budget_pruned": 268,
+      "budget_relaxed": false,
+      "relaxed_used": true,
+      "fallback_used": true,
+      "injected_out_of_state": [],
       "slot": {
-        "type": "hotel",
+        "type": "city",
         "day": null,
         "meal_type": null,
         "seg": null,
-        "city": "Denver",
+        "city": null,
         "date": null,
         "origin": null,
         "destination": null
       },
-      "relaxed": true,
-      "filter": {
-        "budget_cap": 14.712020033388983
-      },
-      "candidates": 0,
-      "actions": 0,
+      "relaxed": false,
+      "filter": {},
+      "candidates": 2,
+      "actions": 2,
+      "batch_idx": 0,
       "cache_hit": true
     }
   ],
   "prior_usage": [],
-  "elapsed_seconds": 0.25214095800001246
+  "elapsed_seconds": 8.156914999999998
 }
