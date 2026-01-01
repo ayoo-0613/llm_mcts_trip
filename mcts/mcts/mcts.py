@@ -1,5 +1,6 @@
 # adapted from https://github.com/jys5609/MC-LAVE-RL.git
 
+import math
 import numpy as np
 from tqdm import tqdm
 import mcts.mcts.utils as utils
@@ -111,6 +112,7 @@ class MCTSAgent:
         if self.llm_prior_mode not in ("all", "root", "none"):
             self.llm_prior_mode = "all"
         self.prior_logs = []
+        self.soft_penalty_tau = float(getattr(args, "soft_penalty_tau", 0.7) or 0.7)
 
     # ----------------------------
     # Utility
@@ -253,6 +255,7 @@ class MCTSAgent:
         scores = []
         for action in actions:
             cost = None
+            penalty = None
             if payloads and action in payloads:
                 payload = payloads.get(action)
                 kind = payload[0] if payload else None
@@ -263,6 +266,7 @@ class MCTSAgent:
                         cost = detail.get("price")
                         if cost is None:
                             cost = detail.get("cost")
+                        penalty = detail.get("soft_penalty")
                     if cost is not None:
                         try:
                             base = float(cost)
@@ -281,10 +285,12 @@ class MCTSAgent:
                     detail = payload[2] if len(payload) > 2 else None
                     if isinstance(detail, dict):
                         cost = detail.get("price")
+                        penalty = detail.get("soft_penalty")
                 elif kind == "meal":
                     detail = payload[3] if len(payload) > 3 else None
                     if isinstance(detail, dict):
                         cost = detail.get("cost")
+                        penalty = detail.get("soft_penalty")
                     if cost is not None:
                         try:
                             cost = float(cost) * max(1, people)
@@ -298,6 +304,11 @@ class MCTSAgent:
                 except Exception:
                     ratio = 0.0
             score = 1.0 / (1.0 + max(0.0, ratio))
+            if penalty is not None:
+                try:
+                    score *= math.exp(-self.soft_penalty_tau * float(penalty))
+                except Exception:
+                    pass
             scores.append(score)
 
         score_sum = float(sum(scores))

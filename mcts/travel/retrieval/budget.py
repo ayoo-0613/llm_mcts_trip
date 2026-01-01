@@ -18,10 +18,12 @@ class BudgetAllocator:
         parsed_get: Callable[..., Any],
         remaining_counts: Callable[[Any, Any], Dict[str, int]],
         budget_scales: Dict[str, float],
+        cap_multipliers: Optional[Dict[str, float]] = None,
     ) -> None:
         self._parsed_get = parsed_get
         self._remaining_counts = remaining_counts
         self._budget_scales = budget_scales
+        self._cap_multipliers = cap_multipliers or {}
 
     def caps(self, parsed: Any, state: Any, phase: str) -> Tuple[Optional[float], Dict[str, Any]]:
         budget = self._parsed_get(parsed, "budget", default=None)
@@ -36,66 +38,117 @@ class BudgetAllocator:
         if remaining <= 0:
             return None, {"budget_remaining": remaining}
 
+        phase = str(phase or "").lower().strip()
+        if phase in ("flight", "segment"):
+            phase_key = "segment"
+        elif phase in ("meal", "daily"):
+            phase_key = "daily"
+        elif phase in ("stay", "hotel"):
+            phase_key = "stay"
+        else:
+            phase_key = phase
+
         counts = self._remaining_counts(parsed, state)
-        weights = {
-            "flight": 0.35 * self._budget_scales.get("flight", 1.0) * max(1, counts["flight"]),
-            "stay": 0.45 * self._budget_scales.get("stay", 1.0) * max(1, counts["stay_nights"] or counts["stay"]),
-            "meal": 0.15 * self._budget_scales.get("meal", 1.0) * max(1, counts["meal"]),
+        segment_count = int(counts.get("flight", 0) or 0)
+        stay_count = int(counts.get("stay_nights") or counts.get("stay", 0) or 0)
+        daily_count = int(counts.get("meal", 0) or 0)
+        segment_slots = max(1, segment_count)
+        stay_slots = max(1, stay_count)
+        daily_slots = max(1, daily_count)
+        segment_scale = self._budget_scales.get("segment", self._budget_scales.get("flight", 1.0))
+        daily_scale = self._budget_scales.get("daily", self._budget_scales.get("meal", 1.0))
+        phase_counts = {
+            "segment": segment_count,
+            "stay": stay_count,
+            "daily": daily_count,
         }
-        weights = {k: v for k, v in weights.items() if counts.get(k, 0) > 0}
+        weights = {
+            "segment": 0.35 * segment_scale if segment_count > 0 else 0.0,
+            "stay": 0.45 * self._budget_scales.get("stay", 1.0) if stay_count > 0 else 0.0,
+            "daily": 0.15 * daily_scale if daily_count > 0 else 0.0,
+        }
+        weights = {k: v for k, v in weights.items() if v > 0}
         total_weight = sum(weights.values()) if weights else 0.0
         if total_weight <= 0:
             return None, {"budget_remaining": remaining}
 
-        phase_budget = remaining * (weights.get(phase, 0.0) / total_weight)
+        phase_budget = remaining * (weights.get(phase_key, 0.0) / total_weight)
         info = {
             "budget_remaining": remaining,
             "phase_budget": phase_budget,
             "phase": phase,
+            "phase_key": phase_key,
             "counts": counts,
+            "phase_counts": phase_counts,
             "weights": weights,
+            "inactive_phases": [k for k, v in phase_counts.items() if v <= 0],
         }
 
-        if phase == "flight":
-            per_slot = phase_budget / max(1, counts["flight"])
+        base_cap: Optional[float] = None
+        if phase_key == "segment":
+            per_slot = phase_budget / segment_slots
             people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
-            return per_slot / float(people), info
-        if phase == "stay":
-            nights = max(1, counts["stay_nights"] or counts["stay"])
-            return phase_budget / float(nights), info
-        if phase == "meal":
-            per_slot = phase_budget / max(1, counts["meal"])
+            base_cap = per_slot / float(people)
+        elif phase_key == "stay":
+            base_cap = phase_budget / float(stay_slots)
+        elif phase_key == "daily":
+            per_slot = phase_budget / daily_slots
             people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
-            return per_slot / float(people), info
-        if phase == "attraction":
-            return None, info
-        return None, info
+            base_cap = per_slot / float(people)
+        elif phase == "attraction":
+            base_cap = None
+
+        cap_multiplier = float(self._cap_multipliers.get(phase_key, 1.0) or 1.0)
+        cap = base_cap * cap_multiplier if base_cap is not None else None
+        info.update({"base_cap": base_cap, "cap_multiplier": cap_multiplier, "slot_cap": cap})
+        return cap, info
 
 
 class RelaxationController:
-    def __init__(self, budget_scales: Dict[str, float]) -> None:
-        self._budget_scales = budget_scales
+    def __init__(
+        self, reserve_scales: Dict[str, float], cap_multipliers: Optional[Dict[str, float]] = None
+    ) -> None:
+        self._reserve_scales = reserve_scales
+        self._cap_multipliers = cap_multipliers or {}
+        self._min_reserve_scale = 0.4
+        self._max_cap_multiplier = 3.0
+        self._reserve_step = 0.85
+        self._cap_step = 1.25
+
+    @staticmethod
+    def _phase_key(phase: str) -> str:
+        p = str(phase or "").lower().strip()
+        if p in ("flight", "segment"):
+            return "segment"
+        if p in ("hotel", "stay"):
+            return "stay"
+        if p in ("meal", "daily"):
+            return "daily"
+        return p
+
+    def reserve_scale(self, phase: str) -> float:
+        phase_key = self._phase_key(phase)
+        return float(self._reserve_scales.get(phase_key, 1.0) or 1.0)
+
+    def cap_multiplier(self, phase: str) -> float:
+        phase_key = self._phase_key(phase)
+        return float(self._cap_multipliers.get(phase_key, 1.0) or 1.0)
 
     def bump(self, phase: str) -> bool:
-        current = float(self._budget_scales.get(phase, 1.0) or 1.0)
-        new = min(3.0, current * 1.25)
-        if new <= current:
-            return False
-        delta = new - current
-        self._budget_scales[phase] = new
+        phase_key = self._phase_key(phase)
+        changed = False
+        reserve_scale = float(self._reserve_scales.get(phase_key, 1.0) or 1.0)
+        new_reserve = max(self._min_reserve_scale, reserve_scale * self._reserve_step)
+        if new_reserve < reserve_scale:
+            self._reserve_scales[phase_key] = new_reserve
+            changed = True
 
-        others = [p for p in self._budget_scales if p != phase]
-        if not others:
-            return True
-        total_other = sum(float(self._budget_scales[p] or 0.0) for p in others)
-        if total_other <= 0:
-            return True
-        min_scale = 0.4
-        for p in others:
-            val = float(self._budget_scales[p] or 0.0)
-            reduction = delta * (val / total_other)
-            self._budget_scales[p] = max(min_scale, val - reduction)
-        return True
+        cap_multiplier = float(self._cap_multipliers.get(phase_key, 1.0) or 1.0)
+        new_cap = min(self._max_cap_multiplier, cap_multiplier * self._cap_step)
+        if new_cap > cap_multiplier:
+            self._cap_multipliers[phase_key] = new_cap
+            changed = True
+        return changed
 
 
 def filter_with_budget_relax(

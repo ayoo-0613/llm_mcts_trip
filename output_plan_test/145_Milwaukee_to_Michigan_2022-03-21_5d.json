@@ -1,0 +1,312 @@
+{
+  "success": false,
+  "cost": 1147.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you assist in crafting a travel itinerary for a pair of travelers originating from Milwaukee and visiting 2 cities in Michigan? The trip is 5 days long, spanning from March 21st to March 25th, 2022. Our budget is now set at $1,700, and we require accommodations that allow parties and provide private rooms. Moreover, we'd prefer if our transportation did not involve any flights.",
+  "parsed": {
+    "org": "Milwaukee",
+    "dest": "Michigan",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-21",
+      "2022-03-22",
+      "2022-03-23",
+      "2022-03-24",
+      "2022-03-25"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "parties",
+      "cuisine": null,
+      "room type": "private room",
+      "transportation": "no flight"
+    },
+    "budget": 1700,
+    "origin": "Milwaukee",
+    "destination": "Michigan",
+    "duration_days": 5,
+    "start_date": "2022-03-21",
+    "preferences": [
+      "parties",
+      "private room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Pellston",
+      "Traverse City",
+      "Alpena",
+      "Iron Mountain",
+      "Kalamazoo",
+      "Saginaw",
+      "Grand Rapids",
+      "Lansing",
+      "Muskegon",
+      "Hancock",
+      "Detroit",
+      "Escanaba"
+    ]
+  },
+  "actions": [
+    "choose_city_bundle:[Alpena,Detroit]",
+    "move:seg0:taxi:Milwaukee->Alpena 749km cost 749",
+    "move:seg1:taxi:Alpena->Detroit 398km cost 398"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Alpena",
+      "Detroit"
+    ],
+    "transportation_dates": [
+      "2022-03-21",
+      "2022-03-23",
+      "2022-03-25"
+    ],
+    "transportation_methods": [
+      "taxi, from Milwaukee to Alpena, cost: 749.0",
+      "taxi, from Alpena to Detroit, cost: 398.0",
+      "Detroit->Milwaukee missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Alpena",
+      "missing, Detroit"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Milwaukee to Alpena",
+      "transportation": "Taxi, from Milwaukee to Alpena, Cost: 749",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Alpena",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Alpena to Detroit",
+      "transportation": "Taxi, from Alpena to Detroit, Cost: 398",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Detroit",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Detroit",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "budget_cap": 109.49013157894734,
+      "budget_relaxed": true,
+      "filter_usage": {
+        "phase_key": "segment",
+        "base_count": 1,
+        "hard_kept": 1,
+        "hard_reject": {
+          "over_budget": 0,
+          "violate_reserve": 0,
+          "missing_cost": 0
+        },
+        "budget_remaining": 951.0,
+        "reserve_raw": 644.0,
+        "reserve_exempt": 0.0,
+        "reserve_scale": 0.85,
+        "reserve": 547.4,
+        "slot_cap": 109.49013157894734,
+        "slot_cap_base": 87.59210526315788,
+        "cap_multiplier": 1.25,
+        "soft_penalty": {
+          "count": 1,
+          "min": 0.2508160169977757,
+          "max": 0.2508160169977757,
+          "avg": 0.2508160169977757,
+          "over_zero": 1,
+          "ratio_min": 1.8175153807263134,
+          "ratio_max": 1.8175153807263134,
+          "ratio_avg": 1.8175153807263134
+        },
+        "relax_steps": [
+          {
+            "attempt": 1,
+            "reserve_scale": 0.85,
+            "cap_multiplier": 1.25,
+            "reserve": 547.4,
+            "kept": 1
+          }
+        ],
+        "failure_code": null,
+        "phase_ledger": {
+          "segment": 749.0,
+          "stay": 0.0,
+          "daily": 0.0,
+          "total": 749.0
+        }
+      },
+      "stay_total": 314.0,
+      "meal_total": 330.0,
+      "missing_stay_nights": 0,
+      "missing_meals": 0,
+      "global_min_stay": 69.0,
+      "global_min_meal": 10.0,
+      "guardrail_modes": [
+        "flight",
+        "taxi"
+      ],
+      "allowed_modes": [
+        "taxi"
+      ],
+      "segment_pool": 1,
+      "segment_pool_flights": 0,
+      "segment_pool_ground": 1,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 1,
+        "city": null,
+        "date": "2022-03-21",
+        "origin": "Alpena",
+        "destination": "Detroit"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 109.49013157894734
+      },
+      "candidates": 1,
+      "actions": 1,
+      "cache_hit": true
+    },
+    {
+      "budget_cap": 198.961759868421,
+      "budget_relaxed": true,
+      "filter_usage": {
+        "phase_key": "segment",
+        "base_count": 1,
+        "hard_kept": 0,
+        "hard_reject": {
+          "over_budget": 1,
+          "violate_reserve": 0,
+          "missing_cost": 0
+        },
+        "budget_remaining": 553.0,
+        "reserve_raw": 644.0,
+        "reserve_exempt": 0.0,
+        "reserve_scale": 0.6141249999999999,
+        "reserve": 395.49649999999997,
+        "slot_cap": 198.961759868421,
+        "slot_cap_base": 101.86842105263156,
+        "cap_multiplier": 1.953125,
+        "soft_penalty": {
+          "count": 0,
+          "min": 0.0,
+          "max": 0.0,
+          "avg": 0.0,
+          "over_zero": 0
+        },
+        "relax_steps": [
+          {
+            "attempt": 1,
+            "reserve_scale": 0.85,
+            "cap_multiplier": 1.25,
+            "reserve": 547.4,
+            "kept": 0
+          },
+          {
+            "attempt": 2,
+            "reserve_scale": 0.7224999999999999,
+            "cap_multiplier": 1.5625,
+            "reserve": 465.28999999999996,
+            "kept": 0
+          },
+          {
+            "attempt": 3,
+            "reserve_scale": 0.6141249999999999,
+            "cap_multiplier": 1.953125,
+            "reserve": 395.49649999999997,
+            "kept": 0
+          }
+        ],
+        "failure_code": "hard_pruned_empty",
+        "phase_ledger": {
+          "segment": 1147.0,
+          "stay": 0.0,
+          "daily": 0.0,
+          "total": 1147.0
+        }
+      },
+      "stay_total": 314.0,
+      "meal_total": 330.0,
+      "missing_stay_nights": 0,
+      "missing_meals": 0,
+      "global_min_stay": 69.0,
+      "global_min_meal": 10.0,
+      "guardrail_modes": [
+        "flight",
+        "taxi"
+      ],
+      "allowed_modes": [
+        "taxi"
+      ],
+      "segment_pool": 1,
+      "segment_pool_flights": 0,
+      "segment_pool_ground": 1,
+      "segment_candidates_empty": true,
+      "slot": {
+        "type": "flight",
+        "day": null,
+        "meal_type": null,
+        "seg": 2,
+        "city": null,
+        "date": "2022-03-21",
+        "origin": "Detroit",
+        "destination": "Milwaukee"
+      },
+      "relaxed": true,
+      "filter": {
+        "budget_cap": 198.961759868421
+      },
+      "candidates": 0,
+      "actions": 0,
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "elapsed_seconds": 0.09778625000001284
+}
