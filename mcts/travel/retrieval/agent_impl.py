@@ -4,8 +4,8 @@ import math
 import re
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from mcts.travel.city_bundle_v2 import CityBundleBuilderV2
-from mcts.travel.city_profile import CityProfileBuilder
+from mcts.travel.retrieval.city_bundle_v2 import CityBundleBuilderV2
+from mcts.travel.retrieval.city_profile import CityProfileBuilder
 from mcts.travel.retrieval import (
     ActionFactory,
     BudgetAllocator,
@@ -1893,6 +1893,7 @@ class RetrievalAgent:
         combos_generated = int(build_event.get("combos_generated", 0) or 0)
         hotel_pruned = int(build_event.get("hotel_pruned", 0) or 0)
         attraction_pruned = int(build_event.get("attraction_pruned", 0) or 0)
+        meal_pruned = int(build_event.get("meal_pruned", 0) or 0)
         return_pruned = int(build_event.get("return_pruned", 0) or 0)
         excluded_bundles = int(build_event.get("excluded_bundles", 0) or 0)
 
@@ -2012,6 +2013,7 @@ class RetrievalAgent:
                 "fallback_used": fallback_used,
                 "hotel_pruned": hotel_pruned,
                 "attraction_pruned": attraction_pruned,
+                "meal_pruned": meal_pruned,
                 "return_pruned": return_pruned,
                 "excluded_bundles": excluded_bundles,
                 "reranked_used": True,

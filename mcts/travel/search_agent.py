@@ -36,7 +36,7 @@ class SearchAgent:
             use_llm=getattr(args, "use_llm_prior", "all") != "none",
         )
 
-    def run(self, *, max_episode_len: int, max_attempts: int = 1) -> Dict[str, Any]:
+    def run(self, *, max_episode_len: int, max_attempts: int = 3) -> Dict[str, Any]:
         env = self.agent.env
         failure_memory = FailureMemory()
         last_result: Optional[Dict[str, Any]] = None

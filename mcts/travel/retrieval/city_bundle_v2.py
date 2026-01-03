@@ -3,7 +3,7 @@ from __future__ import annotations
 import itertools
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-from mcts.travel.city_profile import CityProfileBuilder
+from mcts.travel.retrieval.city_profile import CityProfileBuilder
 
 
 class CityBundleBuilderV2:
@@ -56,6 +56,7 @@ class CityBundleBuilderV2:
         excluded_bundles = 0
         hotel_pruned = 0
         attraction_pruned = 0
+        meal_pruned = 0
         return_pruned = 0
         bundles: List[Dict[str, Any]] = []
 
@@ -66,6 +67,7 @@ class CityBundleBuilderV2:
         except Exception:
             att_min = 1
         att_min = max(0, int(att_min))
+        meals_per_day = 3
 
         for combo in iterator:
             combos_generated += 1
@@ -95,6 +97,7 @@ class CityBundleBuilderV2:
             profiles: Dict[str, Dict[str, Any]] = {}
             hotel_feasible_all = True
             attraction_feasible_all = True
+            meal_feasible_all = True
             min_nights_min = None
             for city in seq:
                 profile = self.profile_builder.build(
@@ -124,11 +127,21 @@ class CityBundleBuilderV2:
                         attraction_feasible_all = False
                         break
 
+                required_meals = days_by_city.get(city, 0) * meals_per_day
+                if required_meals > 0:
+                    available_meals = int(profile.get("daily", {}).get("meal_count") or 0)
+                    if available_meals < int(required_meals):
+                        meal_feasible_all = False
+                        break
+
             if not hotel_feasible_all:
                 hotel_pruned += 1
                 continue
             if not attraction_feasible_all:
                 attraction_pruned += 1
+                continue
+            if not meal_feasible_all:
+                meal_pruned += 1
                 continue
 
             min_return_cost = 0.0
@@ -180,6 +193,7 @@ class CityBundleBuilderV2:
             "excluded_bundles": excluded_bundles,
             "hotel_pruned": hotel_pruned,
             "attraction_pruned": attraction_pruned,
+            "meal_pruned": meal_pruned,
             "return_pruned": return_pruned,
         }
         return bundles, event

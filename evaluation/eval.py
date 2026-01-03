@@ -4,6 +4,7 @@ import json
 import os
 import sys
 from typing import Any, Dict, Iterable, List, Optional, Tuple
+from tqdm import tqdm
 
 # Make local evaluation modules importable regardless of CWD.
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
