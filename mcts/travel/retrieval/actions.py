@@ -19,7 +19,7 @@ class ActionFactory:
             return actions
         if not candidates:
             return actions
-        if stype == "flight":
+        if stype in ("segment", "flight"):
             seg_idx = getattr(slot, "seg", None)
             for flight in candidates:
                 seg_val = seg_idx if seg_idx is not None else -1

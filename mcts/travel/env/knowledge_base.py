@@ -521,7 +521,7 @@ class TravelKnowledgeBase:
         if not stype:
             return []
         stype = str(stype).lower()
-        if stype == "flight":
+        if stype in ("segment", "flight"):
             return self.query_flights(slot, filt, state, cap=cap)
         if stype == "hotel":
             return self.query_hotels(slot, filt, state, cap=cap)
@@ -811,7 +811,7 @@ class TravelKnowledgeBase:
     def fallback_candidates(self, slot, state: Any, cap: int = 20) -> List[Any]:
         stype = self._slot_attr(slot, "type")
         stype = str(stype or "").lower()
-        if stype == "flight":
+        if stype in ("segment", "flight"):
             origin = self._slot_attr(slot, "origin") or self._slot_attr(slot, "from")
             destination = self._slot_attr(slot, "destination") or self._slot_attr(slot, "to")
             if not origin or not destination:

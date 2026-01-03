@@ -428,7 +428,16 @@ class TravelLLMPolicy:
     @staticmethod
     def _score_city_bundle(payload: Tuple) -> float:
         seq = payload[1] if len(payload) > 1 else []
-        return float(len(seq) or 0)
+        base = float(len(seq) or 0)
+        meta = payload[3] if len(payload) > 3 else {}
+        if isinstance(meta, dict):
+            tlb = meta.get("transport_lb_per_person")
+            if tlb is not None:
+                try:
+                    base -= float(tlb) / 300.0
+                except Exception:
+                    pass
+        return base
 
     # -------- Plan-level scoring for terminal rollouts --------
     def score_plan(self, goal: str, history: List[str], observation: str) -> float:

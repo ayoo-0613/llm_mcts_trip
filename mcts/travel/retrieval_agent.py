@@ -37,10 +37,10 @@ class RetrievalAgent(_RetrievalAgentImpl):
 
         self._ensure_city_pools(parsed)
 
-        # Transport consistency guardrail (for evaluation compatibility):
+        # Transport consistency guardrail for segment slots (evaluation compatibility):
         # - If any segment already used self-driving, only allow self-driving.
         # - If any segment already used flight or taxi, disallow self-driving.
-        if stype == "flight":
+        if stype in ("segment", "flight"):
             modes = []
             for seg in (getattr(state, "segment_modes", None) or {}).values():
                 if isinstance(seg, dict) and seg.get("mode"):
@@ -57,6 +57,9 @@ class RetrievalAgent(_RetrievalAgentImpl):
             require_flight = bool(self._parsed_get(parsed, "require_flight", default=False))
             if require_flight:
                 allowed_modes &= {"flight"}
+            dominant_nonbudget = None
+            if not allowed_modes:
+                dominant_nonbudget = "transport_mode_forbidden"
 
             origin = getattr(slot, "origin", None)
             destination = getattr(slot, "destination", None)
@@ -196,6 +199,9 @@ class RetrievalAgent(_RetrievalAgentImpl):
                     "segment_pool": len(segment_pool),
                     "segment_pool_flights": len(flight_pool),
                     "segment_pool_ground": len(ground_pool),
+                    "kb_count": len(segment_pool),
+                    "after_nonbudget_count": len(segment_pool),
+                    "dominant_nonbudget_filter": dominant_nonbudget,
                 }
             )
             if not actions:

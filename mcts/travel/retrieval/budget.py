@@ -49,7 +49,7 @@ class BudgetAllocator:
             phase_key = phase
 
         counts = self._remaining_counts(parsed, state)
-        segment_count = int(counts.get("flight", 0) or 0)
+        segment_count = int(counts.get("segment", counts.get("flight", 0)) or 0)
         stay_count = int(counts.get("stay_nights") or counts.get("stay", 0) or 0)
         daily_count = int(counts.get("meal", 0) or 0)
         segment_slots = max(1, segment_count)

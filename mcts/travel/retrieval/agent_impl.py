@@ -48,7 +48,14 @@ class RetrievalAgent:
         self._global_min_stay_price: Optional[float] = None
         self._global_min_meal_cost: Optional[float] = None
         self._budget_revision: int = 0
-        self._budget_scales = {"flight": 1.0, "stay": 1.0, "meal": 1.0, "attraction": 1.0}
+        self._budget_scales = {
+            "segment": 1.0,
+            "flight": 1.0,
+            "stay": 1.0,
+            "daily": 1.0,
+            "meal": 1.0,
+            "attraction": 1.0,
+        }
         self._reserve_scales = {"segment": 1.0, "stay": 1.0, "daily": 1.0}
         self._cap_multipliers = {"segment": 1.0, "stay": 1.0, "daily": 1.0}
         self._constraint_normalizer = ConstraintNormalizer()
@@ -73,7 +80,16 @@ class RetrievalAgent:
         self._global_min_meal_cost = None
         self._budget_revision = 0
         self._budget_scales.clear()
-        self._budget_scales.update({"flight": 1.0, "stay": 1.0, "meal": 1.0, "attraction": 1.0})
+        self._budget_scales.update(
+            {
+                "segment": 1.0,
+                "flight": 1.0,
+                "stay": 1.0,
+                "daily": 1.0,
+                "meal": 1.0,
+                "attraction": 1.0,
+            }
+        )
         self._reserve_scales.clear()
         self._reserve_scales.update({"segment": 1.0, "stay": 1.0, "daily": 1.0})
         self._cap_multipliers.clear()
@@ -86,8 +102,17 @@ class RetrievalAgent:
         if not isinstance(scales, dict):
             return
         self._budget_scales.clear()
-        for key in ("flight", "stay", "meal", "attraction"):
-            val = scales.get(key, 1.0)
+        segment_val = scales.get("segment", scales.get("flight", 1.0))
+        daily_val = scales.get("daily", scales.get("meal", 1.0))
+        base = {
+            "segment": segment_val,
+            "flight": segment_val,
+            "stay": scales.get("stay", 1.0),
+            "daily": daily_val,
+            "meal": daily_val,
+            "attraction": scales.get("attraction", 1.0),
+        }
+        for key, val in base.items():
             try:
                 self._budget_scales[key] = float(val)
             except Exception:
@@ -472,7 +497,16 @@ class RetrievalAgent:
         self._global_min_stay_price = None
         self._global_min_meal_cost = None
         self._budget_scales.clear()
-        self._budget_scales.update({"flight": 1.0, "stay": 1.0, "meal": 1.0, "attraction": 1.0})
+        self._budget_scales.update(
+            {
+                "segment": 1.0,
+                "flight": 1.0,
+                "stay": 1.0,
+                "daily": 1.0,
+                "meal": 1.0,
+                "attraction": 1.0,
+            }
+        )
         self._reserve_scales.clear()
         self._reserve_scales.update({"segment": 1.0, "stay": 1.0, "daily": 1.0})
         self._cap_multipliers.clear()
@@ -735,10 +769,10 @@ class RetrievalAgent:
         temp_state = self._clone_state_for_bundle(state, seq, day_splits, total_days)
         people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
 
-        flight_cap, _ = self._budget_allocator.caps(parsed, temp_state, "flight")
+        segment_cap, _ = self._budget_allocator.caps(parsed, temp_state, "segment")
         stay_cap, _ = self._budget_allocator.caps(parsed, temp_state, "stay")
         # Segment cap check (use min transport cost vs per-person cap).
-        if flight_cap is not None:
+        if segment_cap is not None:
             return_required = bool(self._parsed_get(parsed, "return_required", default=True))
             legs: List[Tuple[str, str]] = []
             if seq:
@@ -752,7 +786,7 @@ class RetrievalAgent:
                 cost_total = self._min_transport_cost(parsed, src, dst, people)
                 if cost_total is None:
                     return False
-                if cost_total > float(flight_cap) * float(people):
+                if cost_total > float(segment_cap) * float(people):
                     return False
 
         # Stay cap check (per-night total for the party).
@@ -874,6 +908,65 @@ class RetrievalAgent:
         idx = min(len(seq) - 1, int((day - 1) * len(seq) / max(1, total_days)))
         return seq[idx]
 
+    def _meal_allowed_cities(
+        self,
+        parsed: Any,
+        state: Any,
+        day: Optional[int],
+        meal_type: Optional[str],
+        city: Optional[str],
+    ) -> Tuple[List[str], Dict[str, Any]]:
+        allowed: List[str] = []
+        event: Dict[str, Any] = {"day": day, "meal_type": meal_type}
+
+        mapped_city = None
+        mapping = getattr(state, "day_to_city", None)
+        if isinstance(mapping, dict) and day is not None and day in mapping:
+            try:
+                mapped_city = str(mapping.get(day))
+            except Exception:
+                mapped_city = mapping.get(day)
+        if mapped_city:
+            allowed.append(mapped_city)
+            event["source"] = "day_to_city"
+
+        planned_city = None
+        if not allowed and day is not None:
+            planned_city = self._planned_city_for_day(parsed, state, int(day))
+            if planned_city:
+                allowed.append(planned_city)
+                event["source"] = "planned_day_city"
+
+        if city:
+            allowed.append(str(city))
+            event.setdefault("source", "slot_city")
+
+        if not allowed:
+            seq = list(getattr(state, "city_sequence", None) or [])
+            if seq:
+                allowed.extend(seq)
+                event["source"] = "city_sequence"
+            else:
+                dest = self._parsed_get(parsed, "destination", "dest", default=None)
+                if dest:
+                    allowed.append(str(dest))
+                    event["source"] = "destination"
+
+        deduped: List[str] = []
+        seen: set = set()
+        for item in allowed:
+            if not item:
+                continue
+            key = self.kb._normalize_city(item)
+            if key in seen:
+                continue
+            seen.add(key)
+            deduped.append(item)
+
+        if "source" not in event:
+            event["source"] = "none"
+        return deduped, event
+
     def _planned_accommodation_days_for_city(self, parsed: Any, state: Any, city: str) -> int:
         """
         Number of days we expect to emit accommodation for this city in submission output.
@@ -913,7 +1006,7 @@ class RetrievalAgent:
 
     def _remaining_counts(self, parsed: Any, state: Any) -> Dict[str, int]:
         segments = self._segments_for_state(parsed, state)
-        remaining_flights = sum(1 for idx, _, _ in segments if idx not in (getattr(state, "segment_modes", None) or {}))
+        remaining_segments = sum(1 for idx, _, _ in segments if idx not in (getattr(state, "segment_modes", None) or {}))
 
         remaining_stays = 0
         remaining_nights = 0
@@ -939,7 +1032,8 @@ class RetrievalAgent:
                     remaining_attractions += 1
 
         return {
-            "flight": remaining_flights,
+            "segment": remaining_segments,
+            "flight": remaining_segments,
             "stay": remaining_stays,
             "stay_nights": remaining_nights,
             "meal": remaining_meals,
@@ -1054,7 +1148,7 @@ class RetrievalAgent:
     @staticmethod
     def _assert_candidates_respect_caps(slot: Any, filt: Dict[str, Any], candidates: List[Dict[str, Any]]) -> None:
         stype = getattr(slot, "type", None)
-        if stype in ("flight", "hotel"):
+        if stype in ("segment", "flight", "hotel"):
             mp = filt.get("max_price")
             if mp is not None:
                 try:
@@ -1212,6 +1306,7 @@ class RetrievalAgent:
         all_flights, pool_event = self._flight_pool(slot)
         if not all_flights and not pool_event:
             return [], {}
+        kb_count = len(all_flights)
         people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
 
         def _hard_cost(flight: Dict[str, Any]) -> Optional[float]:
@@ -1244,6 +1339,7 @@ class RetrievalAgent:
         )
         event = dict(budget_event or {})
         event.update(pool_event or {})
+        event.update({"kb_count": kb_count, "after_nonbudget_count": kb_count})
         return flights, event
 
     def _hotel_candidates(self, parsed: Any, state: Any, slot: Any) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
@@ -1251,8 +1347,10 @@ class RetrievalAgent:
         if not city:
             return [], {}
         city_norm = self.kb._normalize_city(city)
-        all_stays = list(self._city_pool.get(city_norm, {}).get("hotel", []) or [])
-        all_stays = self._apply_constraints_to_candidates("hotel", all_stays, parsed)
+        all_stays_raw = list(self._city_pool.get(city_norm, {}).get("hotel", []) or [])
+        kb_count = len(all_stays_raw)
+        all_stays = self._apply_constraints_to_candidates("hotel", all_stays_raw, parsed)
+        after_constraint = len(all_stays)
 
         people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
         nights = self._planned_accommodation_days_for_city(parsed, state, str(city))
@@ -1267,6 +1365,7 @@ class RetrievalAgent:
             except Exception:
                 return True
         all_stays = [s for s in all_stays if _meets_min_nights(s)]
+        after_nonbudget = len(all_stays)
         stays = list(all_stays)
 
         def _total_per_night(stay: Dict[str, Any]) -> Optional[float]:
@@ -1317,15 +1416,50 @@ class RetrievalAgent:
             )
         )
         event = dict(budget_event or {})
-        event.update({"planned_nights": nights})
+        dominant = None
+        if kb_count > 0 and after_nonbudget == 0:
+            if after_constraint == 0:
+                cons = self._constraints_from_parsed(parsed)
+                room_type = list(cons.get("room_types") or [])
+                house_rules = list(cons.get("house_rules") or [])
+                if room_type or house_rules:
+                    dominant = "stay_constraints"
+                else:
+                    dominant = "stay_unavailable"
+            else:
+                dominant = "min_nights"
+        event.update(
+            {
+                "planned_nights": nights,
+                "kb_count": kb_count,
+                "after_nonbudget_count": after_nonbudget,
+                "dominant_nonbudget_filter": dominant,
+            }
+        )
         return stays, event
 
     def _meal_candidates(self, parsed: Any, state: Any, slot: Any) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
         city = getattr(slot, "city", None)
-        if not city:
-            return [], {}
-        city_norm = self.kb._normalize_city(city)
-        pool = list(self._city_pool.get(city_norm, {}).get("meal", []) or [])
+        day = getattr(slot, "day", None)
+        meal_type = getattr(slot, "meal_type", None)
+        allowed_cities, city_event = self._meal_allowed_cities(parsed, state, day, meal_type, city)
+        pool: List[Dict[str, Any]] = []
+        if allowed_cities:
+            seen_norms = set()
+            for c in allowed_cities:
+                if not c:
+                    continue
+                city_norm = self.kb._normalize_city(c)
+                if not city_norm or city_norm in seen_norms:
+                    continue
+                seen_norms.add(city_norm)
+                pool.extend(self._city_pool.get(city_norm, {}).get("meal", []) or [])
+        else:
+            if not city:
+                return [], {}
+            city_norm = self.kb._normalize_city(city)
+            pool = list(self._city_pool.get(city_norm, {}).get("meal", []) or [])
+        kb_count = len(pool)
 
         cons = self._constraints_from_parsed(parsed)
         cuisines = [c.lower() for c in (cons.get("cuisines") or []) if c]
@@ -1341,6 +1475,7 @@ class RetrievalAgent:
 
         base_candidates = [r for r in pool if _matches_missing(r)] if focus_missing else list(pool)
         base_candidates = self._apply_constraints_to_candidates("meal", base_candidates, parsed)
+        after_nonbudget = len(base_candidates)
 
         people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
         day = getattr(slot, "day", None)
@@ -1388,11 +1523,20 @@ class RetrievalAgent:
 
         candidates.sort(key=_rank_key)
         event = dict(budget_event or {})
+        dominant = None
+        if kb_count > 0 and after_nonbudget == 0:
+            if focus_missing and missing:
+                dominant = "missing_cuisine"
+            else:
+                dominant = "meal_constraints"
         event.update(
             {
                 "missing_cuisines": list(missing),
                 "focus_missing": focus_missing,
                 "cuisine_constraints": cuisines,
+                "kb_count": kb_count,
+                "after_nonbudget_count": after_nonbudget,
+                "dominant_nonbudget_filter": dominant,
             }
         )
         return candidates, event
@@ -1403,6 +1547,7 @@ class RetrievalAgent:
             return [], {}
         city_norm = self.kb._normalize_city(city)
         candidates = list(self._city_pool.get(city_norm, {}).get("attraction", []) or [])
+        kb_count = len(candidates)
 
         def _hard_cost(_: Dict[str, Any]) -> Optional[float]:
             return 0.0
@@ -1419,7 +1564,9 @@ class RetrievalAgent:
             soft_cost_fn=_soft_cost,
             apply_hard_gate=False,
         )
-        return candidates, budget_event
+        event = dict(budget_event or {})
+        event.update({"kb_count": kb_count, "after_nonbudget_count": kb_count})
+        return candidates, event
 
     # ----------------------------
     # CITY phase (bundle selection)
@@ -1437,8 +1584,8 @@ class RetrievalAgent:
         City-bundle scoring v2:
         - 不做 transport 可达性检查（不调用 kb.has_any_transport / _flight_exists）
         - 不做 flight/ground 权重
-        - 只用 “stay cap” 与 “daily(=meal) cap” 的可行性作为主要排序依据
-        - 次级依据：基于 city-level min stay / min meal 的 lower-bound 总成本（越低越好）
+        - 以 “segment/stay/daily cap 可行性” 作为主要排序依据
+        - 次级依据：基于 transport + city-level min stay / min meal 的 lower-bound 总成本（越低越好）
 
         返回：score（越大越好），或 None（无效，如重复城市且不允许）
         """
@@ -1464,8 +1611,33 @@ class RetrievalAgent:
         # ---- 1) 取 stay / daily caps（复用 BudgetAllocator 的口径）----
         # 你当前 stay/meal 候选阶段都是走 _filter_candidates_with_budget(phase="stay"/"daily")
         # 这里我们直接取 caps 来做 city-bundle feasibility ranking
+        segment_cap, _ = self._budget_allocator.caps(parsed, temp_state, "segment")
         stay_cap, _ = self._budget_allocator.caps(parsed, temp_state, "stay")
         daily_cap, _ = self._budget_allocator.caps(parsed, temp_state, "daily")
+
+        # ---- 1.5) segment(transport) cap + lower-bound cost ----
+        # cap 判定口径与 _bundle_meets_caps 对齐：
+        # - segment_cap 是“人均每段 cap”
+        # - 对比 cost_total(整段 party 总成本) <= segment_cap * people
+        seg_viol = 0
+        transport_lb_cost = 0.0  # lower bound transport cost (party-level)
+        return_required = bool(self._parsed_get(parsed, "return_required", default=True))
+        legs: List[Tuple[str, str]] = []
+        if seq:
+            if origin:
+                legs.append((origin, seq[0]))
+            for i in range(1, len(seq)):
+                legs.append((seq[i - 1], seq[i]))
+            if return_required and origin:
+                legs.append((seq[-1], origin))
+        for src, dst in legs:
+            cost_total = self._min_transport_cost(parsed, src, dst, people)
+            if cost_total is None:
+                seg_viol += 1
+                continue
+            transport_lb_cost += float(cost_total)
+            if segment_cap is not None and float(cost_total) > float(segment_cap) * float(people):
+                seg_viol += 1
 
         # ---- 2) stay cap 可行性检查（与你 _bundle_meets_caps 的 stay 部分同口径）----
         require_accommodation = bool(self._parsed_get(parsed, "require_accommodation", default=True))
@@ -1546,8 +1718,8 @@ class RetrievalAgent:
 
         # ---- 4) 组装 score：优先满足 cap，其次更便宜 ----
         # cap 优先：viol 越少越好；再按 lower-bound total cost 越低越好
-        total_viol = stay_viol + meal_viol
-        lb_total = stay_lb_cost + meal_lb_cost
+        total_viol = stay_viol + meal_viol + seg_viol
+        lb_total = stay_lb_cost + meal_lb_cost + transport_lb_cost
 
         # 常数仅用于把“cap 可行性”放到首要排序
         CAP_OK_BONUS = 1e6
@@ -1808,7 +1980,31 @@ class RetrievalAgent:
             seen_seq.add(seq_key)
             day_splits = self._compute_day_splits(total_days or len(seq), seq)
             action = f"choose_city_bundle:[{','.join(seq)}]"
-            payloads[action] = ("choose_city_bundle", seq, day_splits)
+            # Add lightweight meta for downstream priors (safe: env only reads [1]/[2]).
+            people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
+            transport_lb = 0.0
+            return_required = bool(self._parsed_get(parsed, "return_required", default=True))
+            legs: List[Tuple[str, str]] = []
+            if seq:
+                if origin:
+                    legs.append((origin, seq[0]))
+                for i in range(1, len(seq)):
+                    legs.append((seq[i - 1], seq[i]))
+                if return_required and origin:
+                    legs.append((seq[-1], origin))
+            for src, dst in legs:
+                c = self._min_transport_cost(parsed, src, dst, people)
+                if c is None:
+                    transport_lb = float("inf")
+                    break
+                transport_lb += float(c)
+
+            payloads[action] = (
+                "choose_city_bundle",
+                seq,
+                day_splits,
+                {"transport_lb": transport_lb, "transport_lb_per_person": (transport_lb / float(people)) if people else transport_lb},
+            )
             actions.append(action)
 
         event.update(
@@ -1879,8 +2075,6 @@ class RetrievalAgent:
                 city_norm = self.kb._normalize_city(city)
                 min_stay = self._city_min_stay_price.get(city_norm)
                 if min_stay is None:
-                    min_stay = stay_global
-                if min_stay is None:
                     missing_stay_nights += nights
                     continue
                 stay_total += float(min_stay) * float(nights)
@@ -1895,12 +2089,11 @@ class RetrievalAgent:
                 city_norm = self.kb._normalize_city(city) if city else None
                 min_meal = self._city_min_meal_cost.get(city_norm) if city_norm else None
                 if min_meal is None:
-                    min_meal = meal_global
-                if min_meal is None:
                     missing_meals += 1
                     continue
                 meal_total += float(min_meal) * float(people)
 
+        bundle_infeasible = bool(missing_stay_nights > 0 or missing_meals > 0)
         reserve = stay_total + meal_total
         detail = {
             "stay_total": stay_total,
@@ -1909,6 +2102,7 @@ class RetrievalAgent:
             "missing_meals": missing_meals,
             "global_min_stay": stay_global,
             "global_min_meal": meal_global,
+            "bundle_infeasible": bundle_infeasible,
         }
         return reserve, detail
 
@@ -1928,8 +2122,22 @@ class RetrievalAgent:
         base_count = len(candidates)
         budget_remaining = self._budget_remaining(parsed, state)
         phase_key = self._phase_key(phase_key)
+        min_cost_nonbudget: Optional[float] = None
+        for cand in candidates:
+            soft_cost = soft_cost_fn(cand)
+            if soft_cost is None or self._is_nan_value(soft_cost):
+                continue
+            try:
+                cost_f = float(soft_cost)
+            except Exception:
+                continue
+            if min_cost_nonbudget is None or cost_f < min_cost_nonbudget:
+                min_cost_nonbudget = cost_f
 
         reserve_raw, reserve_detail = self._estimate_min_future_cost(parsed, state)
+        bundle_infeasible = bool(reserve_detail.get("bundle_infeasible")) if isinstance(reserve_detail, dict) else False
+        if bundle_infeasible and budget_remaining is not None:
+            reserve_raw = float(budget_remaining) + float(reserve_exempt or 0.0) + 1.0
         reserve_raw = max(0.0, float(reserve_raw) - float(reserve_exempt or 0.0))
         reserve_scale = float(self._relaxer.reserve_scale(phase_key))
         reserve = reserve_raw * reserve_scale
@@ -2045,6 +2253,8 @@ class RetrievalAgent:
             "slot_cap": slot_cap,
             "slot_cap_base": cap_info.get("base_cap") if isinstance(cap_info, dict) else None,
             "cap_multiplier": cap_multiplier,
+            "min_cost_nonbudget": min_cost_nonbudget,
+            "bundle_infeasible": bundle_infeasible,
             "soft_penalty": soft_stats,
             "relax_steps": relax_steps,
             "failure_code": failure_code,
