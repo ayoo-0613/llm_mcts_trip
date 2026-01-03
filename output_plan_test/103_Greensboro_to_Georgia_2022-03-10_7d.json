@@ -1,6 +1,6 @@
 {
   "success": false,
-  "cost": 1660.0,
+  "cost": 3530.0,
   "violations": [
     "commonsense:is_not_absent"
   ],
@@ -43,17 +43,20 @@
     ]
   },
   "actions": [
-    "choose_city_bundle:[Augusta,Valdosta,Decatur]",
-    "move:seg0:taxi:Greensboro->Augusta 409km cost 409",
-    "move:seg1:taxi:Augusta->Valdosta 350km cost 350",
-    "move:seg2:taxi:Valdosta->Decatur 375km cost 375",
-    "move:seg3:taxi:Decatur->Greensboro 526km cost 526"
+    "choose_city_bundle:[Decatur,Valdosta,Atlanta]",
+    "move:seg0:taxi:Greensboro->Decatur 525km cost 525",
+    "move:seg1:taxi:Decatur->Valdosta 369km cost 369",
+    "move:seg2:flight:F0157516 Valdosta->Atlanta $41 13:36-14:36",
+    "move:seg3:flight:F3516020 Atlanta->Greensboro $61 13:19-14:15",
+    "stay:Decatur:4249 TIGER’S REST Entire home/apt $375",
+    "stay:Valdosta:3098 Airy Inwood Apartment Entire home/apt $396",
+    "stay:Atlanta:3481 Unique 2BR Apartment Entire home/apt $394"
   ],
   "structured_plan": {
     "destination_cities": [
-      "Augusta",
+      "Decatur",
       "Valdosta",
-      "Decatur"
+      "Atlanta"
     ],
     "transportation_dates": [
       "2022-03-10",
@@ -62,49 +65,49 @@
       "2022-03-16"
     ],
     "transportation_methods": [
-      "taxi, from Greensboro to Augusta, cost: 409.0",
-      "taxi, from Augusta to Valdosta, cost: 350.0",
-      "taxi, from Valdosta to Decatur, cost: 375.0",
-      "taxi, from Decatur to Greensboro, cost: 526.0"
+      "taxi, from Greensboro to Decatur, cost: 525.0",
+      "taxi, from Decatur to Valdosta, cost: 369.0",
+      "Flight F0157516, from Valdosta to Atlanta, Departure Time: 13:36, Arrival Time: 14:36, cost: 41.0",
+      "Flight F3516020, from Atlanta to Greensboro, Departure Time: 13:19, Arrival Time: 14:15, cost: 61.0"
     ],
     "restaurants": [],
     "attractions": [],
     "accommodations": [
-      "missing, Augusta",
-      "missing, Valdosta",
-      "missing, Decatur"
+      "TIGER’S REST, Decatur",
+      "Airy Inwood Apartment, Valdosta",
+      "Unique 2BR Apartment, Atlanta"
     ]
   },
   "submission_plan": [
     {
       "days": 1,
-      "current_city": "from Greensboro to Augusta",
-      "transportation": "Taxi, from Greensboro to Augusta, Cost: 409",
+      "current_city": "from Greensboro to Decatur",
+      "transportation": "Taxi, from Greensboro to Decatur, Cost: 525",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
       "dinner": "-",
-      "accommodation": "-"
+      "accommodation": "TIGER’S REST, Decatur"
     },
     {
       "days": 2,
-      "current_city": "Augusta",
+      "current_city": "Decatur",
       "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
       "dinner": "-",
-      "accommodation": "-"
+      "accommodation": "TIGER’S REST, Decatur"
     },
     {
       "days": 3,
-      "current_city": "from Augusta to Valdosta",
-      "transportation": "Taxi, from Augusta to Valdosta, Cost: 350",
+      "current_city": "from Decatur to Valdosta",
+      "transportation": "Taxi, from Decatur to Valdosta, Cost: 369",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
       "dinner": "-",
-      "accommodation": "-"
+      "accommodation": "Airy Inwood Apartment, Valdosta"
     },
     {
       "days": 4,
@@ -114,32 +117,32 @@
       "attraction": "-",
       "lunch": "-",
       "dinner": "-",
-      "accommodation": "-"
+      "accommodation": "Airy Inwood Apartment, Valdosta"
     },
     {
       "days": 5,
-      "current_city": "from Valdosta to Decatur",
-      "transportation": "Taxi, from Valdosta to Decatur, Cost: 375",
+      "current_city": "from Valdosta to Atlanta",
+      "transportation": "Flight Number: F0157516, from Valdosta to Atlanta, Departure Time: 13:36, Arrival Time: 14:36",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
       "dinner": "-",
-      "accommodation": "-"
+      "accommodation": "Unique 2BR Apartment, Atlanta"
     },
     {
       "days": 6,
-      "current_city": "Decatur",
+      "current_city": "Atlanta",
       "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
       "dinner": "-",
-      "accommodation": "-"
+      "accommodation": "Unique 2BR Apartment, Atlanta"
     },
     {
       "days": 7,
-      "current_city": "from Decatur to Greensboro",
-      "transportation": "Taxi, from Decatur to Greensboro, Cost: 526",
+      "current_city": "from Atlanta to Greensboro",
+      "transportation": "Flight Number: F3516020, from Atlanta to Greensboro, Departure Time: 13:19, Arrival Time: 14:15",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -149,151 +152,124 @@
   ],
   "filter_usage": [
     {
-      "budget_cap": 439.95614035087704,
-      "budget_relaxed": true,
-      "filter_usage": {
-        "phase_key": "segment",
-        "base_count": 1,
-        "hard_kept": 1,
-        "hard_reject": {
-          "over_budget": 0,
-          "violate_reserve": 0,
-          "missing_cost": 0
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Atlanta|None|None->None",
+      "counts": {
+        "kb": 5,
+        "after_nonbudget": 3,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1258.0,
+        "slot_cap": 921.38671875,
+        "reserve": 458.75137499999994
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 634.9499999999999,
+          "kept": 0
         },
-        "budget_remaining": 2866.0,
-        "reserve_raw": 2572.0,
-        "reserve_exempt": 0.0,
-        "reserve_scale": 0.85,
-        "reserve": 2186.2,
-        "slot_cap": 439.95614035087704,
-        "slot_cap_base": 351.96491228070164,
-        "cap_multiplier": 1.25,
-        "soft_penalty": {
-          "count": 1,
-          "min": 0.0,
-          "max": 0.0,
-          "avg": 0.0,
-          "over_zero": 0,
-          "ratio_min": 0.3985245729153266,
-          "ratio_max": 0.3985245729153266,
-          "ratio_avg": 0.3985245729153266
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 539.7075,
+          "kept": 0
         },
-        "relax_steps": [
-          {
-            "attempt": 1,
-            "reserve_scale": 0.85,
-            "cap_multiplier": 1.25,
-            "reserve": 2186.2,
-            "kept": 1
-          }
-        ],
-        "failure_code": null,
-        "phase_ledger": {
-          "segment": 1134.0,
-          "stay": 0.0,
-          "daily": 0.0,
-          "total": 1134.0
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 458.75137499999994,
+          "kept": 1
         }
-      },
-      "stay_total": 1852.0,
-      "meal_total": 720.0,
-      "missing_stay_nights": 0,
-      "missing_meals": 0,
-      "global_min_stay": 155.0,
-      "global_min_meal": 10.0,
-      "min_price": null,
-      "total_flights": 0,
-      "guardrail_modes": [
-        "flight",
-        "taxi"
       ],
-      "allowed_modes": [
-        "flight",
-        "taxi"
-      ],
-      "segment_pool": 1,
-      "segment_pool_flights": 0,
-      "segment_pool_ground": 1,
-      "slot": {
-        "type": "segment",
-        "day": null,
-        "meal_type": null,
-        "seg": 3,
-        "city": null,
-        "date": "2022-03-10",
-        "origin": "Decatur",
-        "destination": "Greensboro"
-      },
-      "relaxed": true,
-      "filter": {
-        "budget_cap": 439.95614035087704
-      },
-      "candidates": 1,
-      "actions": 1,
       "cache_hit": true
     },
     {
-      "budget_cap": 292.5,
-      "budget_relaxed": false,
-      "filter_usage": {
-        "phase_key": "stay",
-        "base_count": 0,
-        "hard_kept": 0,
-        "hard_reject": {
-          "over_budget": 0,
-          "violate_reserve": 0,
-          "missing_cost": 0
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:breakfast|seg:None|Decatur|None|None->None",
+      "counts": {
+        "kb": 34,
+        "after_nonbudget": 34,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 34,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 470.0,
+        "slot_cap": 14.570932539682538,
+        "reserve": 440.32762499999995
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 609.4499999999999,
+          "kept": 0
         },
-        "budget_remaining": 2340.0,
-        "reserve_raw": 2262.0,
-        "reserve_exempt": 310.0,
-        "reserve_scale": 1.0,
-        "reserve": 2262.0,
-        "slot_cap": 292.5,
-        "slot_cap_base": 292.5,
-        "cap_multiplier": 1.0,
-        "soft_penalty": {
-          "count": 0,
-          "min": 0.0,
-          "max": 0.0,
-          "avg": 0.0,
-          "over_zero": 0
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 518.0324999999999,
+          "kept": 0
         },
-        "relax_steps": [],
-        "failure_code": "kb_empty",
-        "phase_ledger": {
-          "segment": 1660.0,
-          "stay": 0.0,
-          "daily": 0.0,
-          "total": 1660.0
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 440.32762499999995,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d1|slot:breakfast|seg:None|Decatur|None|None->None",
+        "city": "Decatur",
+        "city_bundle": [
+          "Decatur",
+          "Valdosta",
+          "Atlanta"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 34,
+          "after_nonbudget": 34,
+          "after_budget": 0,
+          "budget_removed": 34,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 470.0,
+          "slot_cap": 14.570932539682538,
+          "reserve": 440.32762499999995,
+          "min_cost_nonbudget": 10.0
         }
       },
-      "stay_total": 1852.0,
-      "meal_total": 720.0,
-      "missing_stay_nights": 0,
-      "missing_meals": 0,
-      "global_min_stay": 155.0,
-      "global_min_meal": 10.0,
-      "planned_nights": 2,
-      "slot": {
-        "type": "hotel",
-        "day": null,
-        "meal_type": null,
-        "seg": null,
-        "city": "Augusta",
-        "date": null,
-        "origin": null,
-        "destination": null
-      },
-      "relaxed": false,
-      "filter": {
-        "budget_cap": 292.5
-      },
-      "candidates": 0,
-      "actions": 0,
       "cache_hit": true
     }
   ],
   "prior_usage": [],
-  "elapsed_seconds": 0.1953907500000014
+  "elapsed_seconds": 0.4854416249999076
 }

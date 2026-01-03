@@ -1,4 +1,5 @@
 from .llm_policy import TravelLLMPolicy
+from .bundle_reranker import SemanticBundleReranker
 from .query_parsing import (
     call_local_llm,
     extract_query_text,
@@ -9,6 +10,7 @@ from .query_parsing import (
 )
 
 __all__ = [
+    "SemanticBundleReranker",
     "TravelLLMPolicy",
     "call_local_llm",
     "extract_query_text",

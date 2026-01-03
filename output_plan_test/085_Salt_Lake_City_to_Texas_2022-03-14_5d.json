@@ -1,8 +1,7 @@
 {
   "success": false,
-  "cost": 4940.0,
+  "cost": 10492.0,
   "violations": [
-    "commonsense:is_reasonable_visiting_city",
     "commonsense:is_not_absent"
   ],
   "query": "Can you create a 5-day travel itinerary for me? We are a group of 8 starting from Salt Lake City and intend to visit 2 cities in Texas from March 14th to March 18th, 2022. Our budget has been updated to $12,000. We require our accommodations to have a visitors-friendly house rule.",
@@ -57,14 +56,19 @@
     ]
   },
   "actions": [
-    "choose_city_bundle:[Amarillo,Corpus Christi]",
-    "move:seg0:taxi:Salt Lake City->Amarillo 1420km cost 1420",
-    "move:seg1:taxi:Amarillo->Corpus Christi 1050km cost 1050"
+    "choose_city_bundle:[Lubbock,San Antonio]",
+    "move:seg0:taxi:Salt Lake City->Lubbock 1473km cost 1473",
+    "move:seg1:taxi:Lubbock->San Antonio 621km cost 621",
+    "move:seg2:flight:F3383530 San Antonio->Salt Lake City $217 18:40-20:31",
+    "stay:Lubbock:3468 The Perfect Queens Getaway! Entire home/apt $1029",
+    "stay:San Antonio:2390 Large apt in prime carol gardens Entire home/apt $1155",
+    "eat:d1:breakfast:8959 Handi Desserts, Tea, Pizza, French, Cafe $10 rating 2.9",
+    "eat:d1:lunch:4480 Punjabi Chaap Corner Pizza, Italian, BBQ, Fast Food, Chinese, Seafood $15 rating 2.9"
   ],
   "structured_plan": {
     "destination_cities": [
-      "Amarillo",
-      "Corpus Christi"
+      "Lubbock",
+      "San Antonio"
     ],
     "transportation_dates": [
       "2022-03-14",
@@ -72,62 +76,65 @@
       "2022-03-18"
     ],
     "transportation_methods": [
-      "taxi, from Salt Lake City to Amarillo, cost: 1420.0",
-      "taxi, from Amarillo to Corpus Christi, cost: 1050.0",
-      "Corpus Christi->Salt Lake City missing mode"
+      "taxi, from Salt Lake City to Lubbock, cost: 1473.0",
+      "taxi, from Lubbock to San Antonio, cost: 621.0",
+      "Flight F3383530, from San Antonio to Salt Lake City, Departure Time: 18:40, Arrival Time: 20:31, cost: 217.0"
     ],
-    "restaurants": [],
+    "restaurants": [
+      "Handi, Lubbock",
+      "Punjabi Chaap Corner, Lubbock"
+    ],
     "attractions": [],
     "accommodations": [
-      "missing, Amarillo",
-      "missing, Corpus Christi"
+      "The Perfect Queens Getaway!, Lubbock",
+      "Large apt in prime carol gardens, San Antonio"
     ]
   },
   "submission_plan": [
     {
       "days": 1,
-      "current_city": "from Salt Lake City to Amarillo",
-      "transportation": "Taxi, from Salt Lake City to Amarillo, Cost: 1420",
-      "breakfast": "-",
+      "current_city": "from Salt Lake City to Lubbock",
+      "transportation": "Taxi, from Salt Lake City to Lubbock, Cost: 1473",
+      "breakfast": "Handi, Lubbock",
       "attraction": "-",
-      "lunch": "-",
+      "lunch": "Punjabi Chaap Corner, Lubbock",
       "dinner": "-",
-      "accommodation": "-"
+      "accommodation": "The Perfect Queens Getaway!, Lubbock"
     },
     {
       "days": 2,
-      "current_city": "Amarillo",
+      "current_city": "Lubbock",
       "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
       "dinner": "-",
-      "accommodation": "-"
+      "accommodation": "The Perfect Queens Getaway!, Lubbock"
     },
     {
       "days": 3,
-      "current_city": "from Amarillo to Corpus Christi",
-      "transportation": "Taxi, from Amarillo to Corpus Christi, Cost: 1050",
+      "current_city": "from Lubbock to San Antonio",
+      "transportation": "Taxi, from Lubbock to San Antonio, Cost: 621",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
       "dinner": "-",
-      "accommodation": "-"
+      "accommodation": "Large apt in prime carol gardens, San Antonio"
     },
     {
       "days": 4,
-      "current_city": "Corpus Christi",
+      "current_city": "San Antonio",
       "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
       "dinner": "-",
-      "accommodation": "-"
+      "accommodation": "Large apt in prime carol gardens, San Antonio"
     },
     {
       "days": 5,
-      "current_city": "Corpus Christi",
-      "transportation": "-",
+      "current_city": "from San Antonio to Salt Lake City",
+      "transportation": "Flight Number: F3383530, from San Antonio to Salt Lake City, Departure Time: 18:40, Arrival Time: 20:31",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -137,178 +144,77 @@
   ],
   "filter_usage": [
     {
-      "budget_cap": 210.9210526315789,
-      "budget_relaxed": false,
-      "filter_usage": {
-        "phase_key": "segment",
-        "base_count": 1,
-        "hard_kept": 1,
-        "hard_reject": {
-          "over_budget": 0,
-          "violate_reserve": 0,
-          "missing_cost": 0
-        },
-        "budget_remaining": 9160.0,
-        "reserve_raw": 4776.0,
-        "reserve_exempt": 0.0,
-        "reserve_scale": 1.0,
-        "reserve": 4776.0,
-        "slot_cap": 210.9210526315789,
-        "slot_cap_base": 210.9210526315789,
-        "cap_multiplier": 1.0,
-        "soft_penalty": {
-          "count": 1,
-          "min": 0.07336244364469464,
-          "max": 0.07336244364469464,
-          "avg": 0.07336244364469464,
-          "over_zero": 1,
-          "ratio_min": 1.2445414788156488,
-          "ratio_max": 1.2445414788156488,
-          "ratio_avg": 1.2445414788156488
-        },
-        "relax_steps": [],
-        "failure_code": null,
-        "phase_ledger": {
-          "segment": 2840.0,
-          "stay": 0.0,
-          "daily": 0.0,
-          "total": 2840.0
-        }
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:lunch|seg:None|Lubbock|None|None->None",
+      "counts": {
+        "kb": 21,
+        "after_nonbudget": 21,
+        "after_budget": 2,
+        "returned": 1,
+        "topk": 5
       },
-      "stay_total": 3528.0,
-      "meal_total": 1248.0,
-      "missing_stay_nights": 0,
-      "missing_meals": 0,
-      "global_min_stay": 864.0,
-      "global_min_meal": 10.0,
-      "min_price": null,
-      "total_flights": 0,
-      "guardrail_modes": [
-        "flight",
-        "taxi"
-      ],
-      "allowed_modes": [
-        "flight",
-        "taxi"
-      ],
-      "segment_pool": 1,
-      "segment_pool_flights": 0,
-      "segment_pool_ground": 1,
-      "slot": {
-        "type": "segment",
-        "day": null,
-        "meal_type": null,
-        "seg": 1,
-        "city": null,
-        "date": "2022-03-14",
-        "origin": "Amarillo",
-        "destination": "Corpus Christi"
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 19,
+        "missing_cost": 0
       },
-      "relaxed": false,
-      "filter": {
-        "budget_cap": 210.9210526315789
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1628.0,
+        "slot_cap": 14.535714285714286,
+        "reserve": 1472.0
       },
-      "candidates": 1,
-      "actions": 1,
       "cache_hit": true
     },
     {
-      "budget_cap": 635.0226151315788,
-      "budget_relaxed": true,
-      "filter_usage": {
-        "phase_key": "segment",
-        "base_count": 1,
-        "hard_kept": 0,
-        "hard_reject": {
-          "over_budget": 0,
-          "violate_reserve": 1,
-          "missing_cost": 0
-        },
-        "budget_remaining": 7060.0,
-        "reserve_raw": 4776.0,
-        "reserve_exempt": 0.0,
-        "reserve_scale": 0.6141249999999999,
-        "reserve": 2933.0609999999997,
-        "slot_cap": 635.0226151315788,
-        "slot_cap_base": 325.1315789473684,
-        "cap_multiplier": 1.953125,
-        "soft_penalty": {
-          "count": 0,
-          "min": 0.0,
-          "max": 0.0,
-          "avg": 0.0,
-          "over_zero": 0
-        },
-        "relax_steps": [
-          {
-            "attempt": 1,
-            "reserve_scale": 0.85,
-            "cap_multiplier": 1.25,
-            "reserve": 4059.6,
-            "kept": 0
-          },
-          {
-            "attempt": 2,
-            "reserve_scale": 0.7224999999999999,
-            "cap_multiplier": 1.5625,
-            "reserve": 3450.6599999999994,
-            "kept": 0
-          },
-          {
-            "attempt": 3,
-            "reserve_scale": 0.6141249999999999,
-            "cap_multiplier": 1.953125,
-            "reserve": 2933.0609999999997,
-            "kept": 0
-          }
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:dinner|seg:None|Lubbock|None|None->None",
+      "counts": {
+        "kb": 21,
+        "after_nonbudget": 21,
+        "after_budget": 1,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 20,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1508.0,
+        "slot_cap": 14.5,
+        "reserve": 1392.0
+      },
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d1|slot:dinner|seg:None|Lubbock|None|None->None",
+        "city": "Lubbock",
+        "city_bundle": [
+          "Lubbock",
+          "San Antonio"
         ],
-        "failure_code": "hard_pruned_empty",
-        "phase_ledger": {
-          "segment": 4940.0,
-          "stay": 0.0,
-          "daily": 0.0,
-          "total": 4940.0
+        "reason": "duplication",
+        "counts": {
+          "kb": 21,
+          "after_nonbudget": 21,
+          "after_budget": 1,
+          "budget_removed": 20,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1508.0,
+          "slot_cap": 14.5,
+          "reserve": 1392.0,
+          "min_cost_nonbudget": 10.0
         }
       },
-      "stay_total": 3528.0,
-      "meal_total": 1248.0,
-      "missing_stay_nights": 0,
-      "missing_meals": 0,
-      "global_min_stay": 864.0,
-      "global_min_meal": 10.0,
-      "min_price": null,
-      "total_flights": 0,
-      "guardrail_modes": [
-        "flight",
-        "taxi"
-      ],
-      "allowed_modes": [
-        "flight",
-        "taxi"
-      ],
-      "segment_pool": 1,
-      "segment_pool_flights": 0,
-      "segment_pool_ground": 1,
-      "segment_candidates_empty": true,
-      "slot": {
-        "type": "segment",
-        "day": null,
-        "meal_type": null,
-        "seg": 2,
-        "city": null,
-        "date": "2022-03-14",
-        "origin": "Corpus Christi",
-        "destination": "Salt Lake City"
-      },
-      "relaxed": true,
-      "filter": {
-        "budget_cap": 635.0226151315788
-      },
-      "candidates": 0,
-      "actions": 0,
       "cache_hit": true
     }
   ],
   "prior_usage": [],
-  "elapsed_seconds": 0.07702616599999601
+  "elapsed_seconds": 0.34415725000008024
 }

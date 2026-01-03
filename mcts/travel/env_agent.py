@@ -175,6 +175,7 @@ class TravelEnv:
         log_filter_usage: bool = False,
         retrieval_agent: Optional[RetrievalAgent] = None,
         goal_parsed: Optional[Dict[str, Any]] = None,
+        failure_memory: Optional[Any] = None,
     ):
         self.kb = knowledge_base
         self.goal_parsed = goal_parsed or {}
@@ -214,6 +215,9 @@ class TravelEnv:
             debug=self.debug,
             log_filter_usage=self.log_filter_usage,
         )
+        self.failure_memory = None
+        if failure_memory is not None:
+            self.set_failure_memory(failure_memory)
         self.candidate_cache: Dict[Tuple[Any, ...], Dict[str, Any]] = {}
         self.filter_cache: Dict[Tuple[Any, ...], Dict[str, Any]] = {}
         self.filter_events: List[Dict[str, Any]] = []
@@ -584,6 +588,16 @@ class TravelEnv:
         obs = self._observation(self.state)
         valid_actions = self.get_valid_actions()
         return obs, valid_actions
+
+    def set_failure_memory(self, failure_memory: Any) -> None:
+        self.failure_memory = failure_memory
+        if hasattr(self.retrieval_agent, "set_failure_memory"):
+            self.retrieval_agent.set_failure_memory(failure_memory)
+        else:
+            try:
+                self.retrieval_agent.failure_memory = failure_memory
+            except Exception:
+                pass
 
     def apply_action(self, action: str):
         """Apply action to the anchor state after planning."""
@@ -1025,7 +1039,7 @@ class TravelEnv:
         if after_nonbudget is None:
             after_nonbudget = filter_usage.get("base_count")
         after_budget = filter_usage.get("hard_kept")
-        bundle_infeasible = bool(event.get("bundle_infeasible"))
+        bundle_infeasible = bool(filter_usage.get("bundle_infeasible")) if isinstance(filter_usage, dict) else False
 
         kb_v = self._safe_int(kb_count, 0)
         nonbudget_v = self._safe_int(after_nonbudget, 0)
@@ -1061,7 +1075,6 @@ class TravelEnv:
             "slot_cap": filter_usage.get("slot_cap") or event.get("budget_cap"),
             "reserve": filter_usage.get("reserve"),
             "min_cost_nonbudget": filter_usage.get("min_cost_nonbudget"),
-            "bundle_infeasible": bundle_infeasible,
         }
 
         dominant = event.get("dominant_nonbudget_filter")
@@ -1085,6 +1098,123 @@ class TravelEnv:
             "dominant_nonbudget_filter": dominant,
             "budget_context": budget_context,
         }
+
+    def _compact_filter_event(
+        self,
+        slot: Optional[Slot],
+        actions: List[str],
+        event: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        filter_usage = event.get("filter_usage", {}) if isinstance(event, dict) else {}
+        slot_id = slot.signature() if slot is not None and hasattr(slot, "signature") else None
+        phase = getattr(slot, "type", None)
+
+        kb_count = event.get("kb_count")
+        if kb_count is None:
+            kb_count = filter_usage.get("base_count")
+        if kb_count is None:
+            kb_count = event.get("candidates")
+        if kb_count is None:
+            kb_count = len(actions)
+
+        after_nonbudget = event.get("after_nonbudget_count")
+        if after_nonbudget is None:
+            after_nonbudget = filter_usage.get("base_count")
+        if after_nonbudget is None:
+            after_nonbudget = kb_count
+
+        after_budget = filter_usage.get("hard_kept")
+        if after_budget is None:
+            after_budget = event.get("candidates")
+        if after_budget is None:
+            after_budget = len(actions)
+
+        counts = {
+            "kb": self._safe_int(kb_count, 0),
+            "after_nonbudget": self._safe_int(after_nonbudget, 0),
+            "after_budget": self._safe_int(after_budget, 0),
+            "returned": len(actions),
+            "topk": self._safe_int(getattr(self, "top_k", 0), 0),
+        }
+
+        hard_reject = filter_usage.get("hard_reject")
+        budget_subtype = None
+        if isinstance(hard_reject, dict) and hard_reject:
+            priority = ["violate_reserve", "over_budget", "missing_cost"]
+            max_val = max((hard_reject.get(k, 0) or 0) for k in priority)
+            if max_val > 0:
+                for key in priority:
+                    if (hard_reject.get(key, 0) or 0) == max_val:
+                        budget_subtype = key
+                        break
+
+        segment_role = None
+        if phase in ("segment", "flight") and slot is not None:
+            try:
+                seg_idx = getattr(slot, "seg", None)
+                if seg_idx is not None:
+                    segments = self._segments(self.state)
+                    last_idx = segments[-1][0] if segments else None
+                    if seg_idx == 0:
+                        segment_role = "outbound"
+                    elif last_idx is not None and seg_idx == last_idx and seg_idx != 0:
+                        segment_role = "return"
+                    else:
+                        segment_role = "intercity"
+            except Exception:
+                segment_role = None
+
+        compact = {
+            "phase": phase,
+            "slot_id": slot_id,
+            "counts": counts,
+            "hard_reject": hard_reject,
+            "budget_subtype": budget_subtype,
+            "budget_context": {
+                "remaining": filter_usage.get("budget_remaining"),
+                "slot_cap": filter_usage.get("slot_cap") or event.get("budget_cap"),
+                "reserve": filter_usage.get("reserve"),
+            },
+        }
+        # Preserve CITY-phase diagnostics (bundle generation is not represented in hard_reject).
+        if phase == "city":
+            for key in (
+                "strategy",
+                "dest_kind",
+                "flight_allowed",
+                "duration_days",
+                "city_target",
+                "remaining_needed",
+                "connectivity_mode",
+                "fallback_mode",
+                "pool_size_before_prefilter",
+                "pool_size_after_prefilter",
+                "combos_generated",
+                "combos_kept_topk",
+                "hotel_pruned",
+                "attraction_pruned",
+                "return_pruned",
+                "excluded_bundles",
+                "budget_pruned",
+                "cap_pruned",
+                "cap_relaxed",
+                "budget_relaxed",
+                "relaxed_used",
+                "fallback_used",
+                "injected_out_of_state",
+                "origin_filtered",
+            ):
+                if key in event:
+                    compact[key] = event.get(key)
+        if segment_role:
+            compact["segment_role"] = segment_role
+
+        relax_steps = filter_usage.get("relax_steps")
+        if relax_steps:
+            compact["relax_steps"] = relax_steps
+        if event.get("dead_end_meta") is not None:
+            compact["dead_end_meta"] = event["dead_end_meta"]
+        return compact
 
     def _compute_actions_for_slot(self, slot: Optional[Slot]) -> List[str]:
         """Core action builder that also tracks the current slot for callers."""
@@ -1153,6 +1283,7 @@ class TravelEnv:
         dead_end = self._build_dead_end_meta(slot, actions, event)
         if dead_end is not None:
             event["dead_end_meta"] = dead_end
+        event = self._compact_filter_event(slot, actions, event)
         if key not in self.filter_event_keys:
             self.filter_events.append(event)
             self.filter_event_keys.add(key)

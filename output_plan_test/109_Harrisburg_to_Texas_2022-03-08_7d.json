@@ -1,8 +1,7 @@
 {
   "success": false,
-  "cost": 1000.0,
+  "cost": 3246.0,
   "violations": [
-    "commonsense:is_reasonable_visiting_city",
     "commonsense:is_not_absent"
   ],
   "query": "I am looking for a 7-day travel plan for two people from Harrisburg to Texas, visiting 3 cities between March 8th and March 14th, 2022. The budget for this trip is $4,100. We have a preference for Italian and French cuisines throughout the trip.",
@@ -66,16 +65,17 @@
     ]
   },
   "actions": [
-    "choose_city_bundle:[Dallas,Abilene,Amarillo]",
-    "move:seg0:flight:F3016039 Harrisburg->Dallas $246 06:33-08:44",
-    "move:seg1:flight:F1362664 Dallas->Abilene $31 20:37-21:18",
-    "move:seg2:taxi:Abilene->Amarillo 446km cost 446"
+    "choose_city_bundle:[Abilene,San Angelo,Dallas]",
+    "move:seg0:taxi:Harrisburg->Abilene 2515km cost 2515",
+    "move:seg1:taxi:Abilene->San Angelo 145km cost 145",
+    "move:seg2:flight:F2126482 San Angelo->Dallas $45 19:04-20:06",
+    "move:seg3:flight:F1897842 Dallas->Harrisburg $248 18:51-22:49"
   ],
   "structured_plan": {
     "destination_cities": [
-      "Dallas",
       "Abilene",
-      "Amarillo"
+      "San Angelo",
+      "Dallas"
     ],
     "transportation_dates": [
       "2022-03-08",
@@ -84,24 +84,24 @@
       "2022-03-14"
     ],
     "transportation_methods": [
-      "Flight F3016039, from Harrisburg to Dallas, Departure Time: 06:33, Arrival Time: 08:44, cost: 246.0",
-      "Flight F1362664, from Dallas to Abilene, Departure Time: 20:37, Arrival Time: 21:18, cost: 31.0",
-      "taxi, from Abilene to Amarillo, cost: 446.0",
-      "Amarillo->Harrisburg missing mode"
+      "taxi, from Harrisburg to Abilene, cost: 2515.0",
+      "taxi, from Abilene to San Angelo, cost: 145.0",
+      "Flight F2126482, from San Angelo to Dallas, Departure Time: 19:04, Arrival Time: 20:06, cost: 45.0",
+      "Flight F1897842, from Dallas to Harrisburg, Departure Time: 18:51, Arrival Time: 22:49, cost: 248.0"
     ],
     "restaurants": [],
     "attractions": [],
     "accommodations": [
-      "missing, Dallas",
       "missing, Abilene",
-      "missing, Amarillo"
+      "missing, San Angelo",
+      "missing, Dallas"
     ]
   },
   "submission_plan": [
     {
       "days": 1,
-      "current_city": "from Harrisburg to Dallas",
-      "transportation": "Flight Number: F3016039, from Harrisburg to Dallas, Departure Time: 06:33, Arrival Time: 08:44",
+      "current_city": "from Harrisburg to Abilene",
+      "transportation": "Taxi, from Harrisburg to Abilene, Cost: 2515",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -110,26 +110,6 @@
     },
     {
       "days": 2,
-      "current_city": "Dallas",
-      "transportation": "-",
-      "breakfast": "-",
-      "attraction": "-",
-      "lunch": "-",
-      "dinner": "-",
-      "accommodation": "-"
-    },
-    {
-      "days": 3,
-      "current_city": "from Dallas to Abilene",
-      "transportation": "Flight Number: F1362664, from Dallas to Abilene, Departure Time: 20:37, Arrival Time: 21:18",
-      "breakfast": "-",
-      "attraction": "-",
-      "lunch": "-",
-      "dinner": "-",
-      "accommodation": "-"
-    },
-    {
-      "days": 4,
       "current_city": "Abilene",
       "transportation": "-",
       "breakfast": "-",
@@ -139,9 +119,29 @@
       "accommodation": "-"
     },
     {
+      "days": 3,
+      "current_city": "from Abilene to San Angelo",
+      "transportation": "Taxi, from Abilene to San Angelo, Cost: 145",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "San Angelo",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
       "days": 5,
-      "current_city": "from Abilene to Amarillo",
-      "transportation": "Taxi, from Abilene to Amarillo, Cost: 446",
+      "current_city": "from San Angelo to Dallas",
+      "transportation": "Flight Number: F2126482, from San Angelo to Dallas, Departure Time: 19:04, Arrival Time: 20:06",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -150,7 +150,7 @@
     },
     {
       "days": 6,
-      "current_city": "Amarillo",
+      "current_city": "Dallas",
       "transportation": "-",
       "breakfast": "-",
       "attraction": "-",
@@ -160,8 +160,8 @@
     },
     {
       "days": 7,
-      "current_city": "Amarillo",
-      "transportation": "-",
+      "current_city": "from Dallas to Harrisburg",
+      "transportation": "Flight Number: F1897842, from Dallas to Harrisburg, Departure Time: 18:51, Arrival Time: 22:49",
       "breakfast": "-",
       "attraction": "-",
       "lunch": "-",
@@ -171,178 +171,190 @@
   ],
   "filter_usage": [
     {
-      "budget_cap": 326.6052631578947,
-      "budget_relaxed": false,
-      "filter_usage": {
-        "phase_key": "segment",
-        "base_count": 1,
-        "hard_kept": 1,
-        "hard_reject": {
-          "over_budget": 0,
-          "violate_reserve": 0,
-          "missing_cost": 0
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-08|Dallas->Harrisburg",
+      "counts": {
+        "kb": 196,
+        "after_nonbudget": 196,
+        "after_budget": 24,
+        "returned": 5,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 171,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1350.0,
+        "slot_cap": 388.5690789473684,
+        "reserve": 754.29
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 887.4,
+          "kept": 0
         },
-        "budget_remaining": 3546.0,
-        "reserve_raw": 1308.0,
-        "reserve_exempt": 0.0,
-        "reserve_scale": 1.0,
-        "reserve": 1308.0,
-        "slot_cap": 326.6052631578947,
-        "slot_cap_base": 326.6052631578947,
-        "cap_multiplier": 1.0,
-        "soft_penalty": {
-          "count": 1,
-          "min": 0.0,
-          "max": 0.0,
-          "avg": 0.0,
-          "over_zero": 0,
-          "ratio_min": 0.6827814015030463,
-          "ratio_max": 0.6827814015030463,
-          "ratio_avg": 0.6827814015030463
-        },
-        "relax_steps": [],
-        "failure_code": null,
-        "phase_ledger": {
-          "segment": 554.0,
-          "stay": 0.0,
-          "daily": 0.0,
-          "total": 554.0
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 754.29,
+          "kept": 24
         }
-      },
-      "stay_total": 846.0,
-      "meal_total": 462.0,
-      "missing_stay_nights": 0,
-      "missing_meals": 0,
-      "global_min_stay": 55.0,
-      "global_min_meal": 10.0,
-      "min_price": null,
-      "total_flights": 0,
-      "guardrail_modes": [
-        "flight",
-        "taxi"
       ],
-      "allowed_modes": [
-        "flight",
-        "taxi"
-      ],
-      "segment_pool": 1,
-      "segment_pool_flights": 0,
-      "segment_pool_ground": 1,
-      "slot": {
-        "type": "segment",
-        "day": null,
-        "meal_type": null,
-        "seg": 2,
-        "city": null,
-        "date": "2022-03-08",
-        "origin": "Abilene",
-        "destination": "Amarillo"
-      },
-      "relaxed": false,
-      "filter": {
-        "budget_cap": 326.6052631578947
-      },
-      "candidates": 1,
-      "actions": 1,
       "cache_hit": true
     },
     {
-      "budget_cap": 1115.3371710526314,
-      "budget_relaxed": true,
-      "filter_usage": {
-        "phase_key": "segment",
-        "base_count": 1,
-        "hard_kept": 0,
-        "hard_reject": {
-          "over_budget": 0,
-          "violate_reserve": 1,
-          "missing_cost": 0
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+      "counts": {
+        "kb": 11,
+        "after_nonbudget": 6,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 3,
+        "violate_reserve": 3,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 842.0,
+        "slot_cap": 205.56640625,
+        "reserve": 539.20175
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 746.3,
+          "kept": 0
         },
-        "budget_remaining": 3100.0,
-        "reserve_raw": 1308.0,
-        "reserve_exempt": 0.0,
-        "reserve_scale": 0.6141249999999999,
-        "reserve": 803.2754999999999,
-        "slot_cap": 1115.3371710526314,
-        "slot_cap_base": 571.0526315789473,
-        "cap_multiplier": 1.953125,
-        "soft_penalty": {
-          "count": 0,
-          "min": 0.0,
-          "max": 0.0,
-          "avg": 0.0,
-          "over_zero": 0
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 634.3549999999999,
+          "kept": 0
         },
-        "relax_steps": [
-          {
-            "attempt": 1,
-            "reserve_scale": 0.85,
-            "cap_multiplier": 1.25,
-            "reserve": 1111.8,
-            "kept": 0
-          },
-          {
-            "attempt": 2,
-            "reserve_scale": 0.7224999999999999,
-            "cap_multiplier": 1.5625,
-            "reserve": 945.0299999999999,
-            "kept": 0
-          },
-          {
-            "attempt": 3,
-            "reserve_scale": 0.6141249999999999,
-            "cap_multiplier": 1.953125,
-            "reserve": 803.2754999999999,
-            "kept": 0
-          }
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 539.20175,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "city": "Abilene",
+        "city_bundle": [
+          "Abilene",
+          "San Angelo",
+          "Dallas"
         ],
-        "failure_code": "hard_pruned_empty",
-        "phase_ledger": {
-          "segment": 1000.0,
-          "stay": 0.0,
-          "daily": 0.0,
-          "total": 1000.0
+        "reason": "budget",
+        "counts": {
+          "kb": 11,
+          "after_nonbudget": 6,
+          "after_budget": 0,
+          "budget_removed": 6,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 842.0,
+          "slot_cap": 205.56640625,
+          "reserve": 539.20175,
+          "min_cost_nonbudget": 295.0
         }
       },
-      "stay_total": 846.0,
-      "meal_total": 462.0,
-      "missing_stay_nights": 0,
-      "missing_meals": 0,
-      "global_min_stay": 55.0,
-      "global_min_meal": 10.0,
-      "min_price": null,
-      "total_flights": 0,
-      "guardrail_modes": [
-        "flight",
-        "taxi"
-      ],
-      "allowed_modes": [
-        "flight",
-        "taxi"
-      ],
-      "segment_pool": 1,
-      "segment_pool_flights": 0,
-      "segment_pool_ground": 1,
-      "segment_candidates_empty": true,
-      "slot": {
-        "type": "segment",
-        "day": null,
-        "meal_type": null,
-        "seg": 3,
-        "city": null,
-        "date": "2022-03-08",
-        "origin": "Amarillo",
-        "destination": "Harrisburg"
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+      "counts": {
+        "kb": 11,
+        "after_nonbudget": 6,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
       },
-      "relaxed": true,
-      "filter": {
-        "budget_cap": 1115.3371710526314
+      "hard_reject": {
+        "over_budget": 3,
+        "violate_reserve": 3,
+        "missing_cost": 0
       },
-      "candidates": 0,
-      "actions": 0,
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 854.0,
+        "slot_cap": 208.49609375,
+        "reserve": 539.20175
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 746.3,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 634.3549999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 539.20175,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "city": "Abilene",
+        "city_bundle": [
+          "Abilene",
+          "San Angelo",
+          "Dallas"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 11,
+          "after_nonbudget": 6,
+          "after_budget": 0,
+          "budget_removed": 6,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 854.0,
+          "slot_cap": 208.49609375,
+          "reserve": 539.20175,
+          "min_cost_nonbudget": 295.0
+        }
+      },
       "cache_hit": true
     }
   ],
   "prior_usage": [],
-  "elapsed_seconds": 2.336477875000014
+  "elapsed_seconds": 0.47482529199999135
 }

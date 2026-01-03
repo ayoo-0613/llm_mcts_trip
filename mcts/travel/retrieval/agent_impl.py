@@ -1,16 +1,18 @@
 from __future__ import annotations
 
-import itertools
 import math
 import re
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
+from mcts.travel.city_bundle_v2 import CityBundleBuilderV2
+from mcts.travel.city_profile import CityProfileBuilder
 from mcts.travel.retrieval import (
     ActionFactory,
     BudgetAllocator,
     ConstraintNormalizer,
     RelaxationController,
 )
+from mcts.travel.semantic.bundle_reranker import SemanticBundleReranker
 
 
 class RetrievalAgent:
@@ -67,6 +69,10 @@ class RetrievalAgent:
         )
         self._relaxer = RelaxationController(self._reserve_scales, self._cap_multipliers)
         self._action_factory = ActionFactory()
+        self.failure_memory = None
+        self._city_profile_builder = CityProfileBuilder(self.kb)
+        self._bundle_builder = CityBundleBuilderV2(self.kb, profile_builder=self._city_profile_builder)
+        self._bundle_reranker = SemanticBundleReranker(max_keep=self.top_k)
 
     def reset(self) -> None:
         self._transport_cache = {}
@@ -94,6 +100,9 @@ class RetrievalAgent:
         self._reserve_scales.update({"segment": 1.0, "stay": 1.0, "daily": 1.0})
         self._cap_multipliers.clear()
         self._cap_multipliers.update({"segment": 1.0, "stay": 1.0, "daily": 1.0})
+
+    def set_failure_memory(self, failure_memory: Any) -> None:
+        self.failure_memory = failure_memory
 
     def get_budget_scales(self) -> Dict[str, float]:
         return dict(self._budget_scales)
@@ -1799,12 +1808,15 @@ class RetrievalAgent:
             return out
 
         state_cities = list(self._parsed_get(parsed, "candidate_cities", default=[]) or [])
-        if not state_cities:
-            try:
-                if hasattr(self.kb, "cities_in_state") and dest:
-                    state_cities = list(self.kb.cities_in_state(dest) or [])
-            except Exception:
-                state_cities = []
+        # Even if candidate_cities is provided, augment with KB state cities to avoid
+        # hard-feasibility over-pruning on a narrow candidate list.
+        try:
+            if hasattr(self.kb, "cities_in_state") and dest:
+                kb_state_cities = list(self.kb.cities_in_state(dest) or [])
+                if kb_state_cities:
+                    state_cities.extend(kb_state_cities)
+        except Exception:
+            pass
         state_cities = _dedupe_city_list(state_cities)
 
         candidates = list(state_cities)
@@ -1834,170 +1846,144 @@ class RetrievalAgent:
         pool = pool[:pool_limit]
         pool_after = len(pool)
 
-        flight_only = flight_allowed
         combos_generated = 0
         budget_pruned = 0
         cap_pruned = 0
+        budget_relaxed = False
+        fallback_used = False
+        relaxed_used = False
+        flight_only = flight_allowed
+        fallback_mode = None
+
+        people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
+        constraints = self._constraints_from_parsed(parsed)
+        return_required = bool(self._parsed_get(parsed, "return_required", default=True))
+        require_accommodation = bool(self._parsed_get(parsed, "require_accommodation", default=True))
+
+        self._bundle_reranker.max_keep = self.top_k
+
+        def _build_bundles(allow_repeat: bool) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+            return self._bundle_builder.build(
+                parsed=parsed,
+                origin=origin,
+                candidates=pool,
+                city_target=city_target,
+                total_days=total_days,
+                people=people,
+                constraints=constraints,
+                prefix=prefix,
+                allow_repeat=allow_repeat,
+                failure_memory=self.failure_memory,
+                return_required=return_required,
+                require_accommodation=require_accommodation,
+                min_transport_cost_fn=lambda src, dst: self._min_transport_cost(parsed, src, dst, people),
+                day_splits_fn=self._compute_day_splits,
+            )
+
+        bundles, build_event = _build_bundles(False)
+        if not bundles:
+            fallback_used = True
+            relaxed_used = True
+            bundles, fallback_event = _build_bundles(True)
+            if fallback_event:
+                for key, val in fallback_event.items():
+                    if isinstance(val, int):
+                        build_event[key] = int(build_event.get(key, 0) or 0) + int(val)
+
+        combos_generated = int(build_event.get("combos_generated", 0) or 0)
+        hotel_pruned = int(build_event.get("hotel_pruned", 0) or 0)
+        attraction_pruned = int(build_event.get("attraction_pruned", 0) or 0)
+        return_pruned = int(build_event.get("return_pruned", 0) or 0)
+        excluded_bundles = int(build_event.get("excluded_bundles", 0) or 0)
+
         budget_val = self._parsed_get(parsed, "budget", default=None)
         try:
             budget_f = float(budget_val)
         except Exception:
             budget_f = None
-        cost_weight = 0.6
-        combos: List[Tuple[List[str], float]] = []
 
-        def _gen_combos(
-            pool_list: List[str],
-            *,
-            allow_repeat: bool,
-            flight_only_flag: bool,
-            flight_when_available_flag: bool,
-            enforce_budget: bool = True,
-        ) -> List[Tuple[List[str], float]]:
-            out: List[Tuple[List[str], float]] = []
-            nonlocal combos_generated
-            nonlocal budget_pruned
-            nonlocal cap_pruned
-            if remaining_needed <= 0:
-                return out
+        cap_ok: List[Dict[str, Any]] = []
+        filtered: List[Dict[str, Any]] = []
+        cap_relaxed = False
+        for entry in bundles:
+            seq = entry.get("bundle") or []
+            day_splits = entry.get("day_splits") or self._compute_day_splits(total_days or len(seq), seq)
+            if not self._bundle_meets_caps(parsed, state, seq, day_splits, origin):
+                cap_pruned += 1
+                continue
+            cap_ok.append(entry)
+            min_cost = self._min_bundle_cost(parsed, seq, day_splits, origin)
+            if min_cost is None:
+                budget_pruned += 1
+                continue
+            entry.setdefault("features", {})["min_bundle_cost"] = min_cost
+            if budget_f is not None and min_cost > budget_f:
+                budget_pruned += 1
+                continue
+            filtered.append(entry)
 
-            # NOTE: permutations() never repeats elements. For relaxed mode we want to allow
-            # repeats so that we can construct sequences like [Denver, X, Denver] when only
-            # a subset of state cities are flight-connected to origin for outbound/return.
-            if allow_repeat:
-                iterator = itertools.product(pool_list, repeat=remaining_needed)
-            else:
-                iterator = itertools.permutations(pool_list, remaining_needed)
-
-            for combo in iterator:
-                combos_generated += 1
-                seq = prefix + list(combo)
-                seq_norms = [self.kb._normalize_city(c) if c else "" for c in seq]
-                if len(seq_norms) != len(set(seq_norms)):
+        # If caps prune everything, fall back to hard-feasible bundles so MCTS can
+        # attempt downstream relaxation/search instead of returning zero CITY actions.
+        if not cap_ok and bundles:
+            cap_relaxed = True
+            cap_ok = list(bundles)
+            filtered = []
+            for entry in cap_ok:
+                seq = entry.get("bundle") or []
+                day_splits = entry.get("day_splits") or self._compute_day_splits(total_days or len(seq), seq)
+                min_cost = self._min_bundle_cost(parsed, seq, day_splits, origin)
+                if min_cost is None:
+                    budget_pruned += 1
                     continue
-                if block_origin_mid and origin_norm in seq_norms:
+                entry.setdefault("features", {})["min_bundle_cost"] = min_cost
+                if budget_f is not None and min_cost > budget_f:
+                    budget_pruned += 1
                     continue
+                filtered.append(entry)
 
-                score = self._score_city_bundle(
-                    parsed,
-                    state,
-                    seq,
-                    origin,
-                    allow_repeat=False,
-                )
-                if score is None:
-                    continue
-                if enforce_budget:
-                    day_splits = self._compute_day_splits(total_days or len(seq), seq)
-                    if not self._bundle_meets_caps(parsed, state, seq, day_splits, origin):
-                        cap_pruned += 1
-                        continue
-                    min_cost = self._min_bundle_cost(parsed, seq, day_splits, origin)
-                    if min_cost is None:
-                        budget_pruned += 1
-                        continue
-                    if budget_f:
-                        ratio = max(0.0, min(1.0, float(min_cost) / float(budget_f)))
-                        score += cost_weight * (1.0 - ratio)
-                out.append((seq, score))
-                if len(out) > 500:
-                    break
-                # Hard cap generation to avoid huge cartesian products.
-                if combos_generated > 5000:
-                    break
-            return out
-
-        combos = _gen_combos(
-            pool,
-            allow_repeat=False,
-            flight_only_flag=flight_only,
-            flight_when_available_flag=False,
-        )
-
-        fallback_used = False
-        fallback_mode = None
-        relaxed_used = False
-        # If strict flight-only yields nothing, fall back to "flight when available" (only use any_transport when no direct flight exists).
-        if flight_only and not combos:
-            fallback_used = True
-            fallback_mode = "flight_when_available"
-            combos = _gen_combos(pool, allow_repeat=False, flight_only_flag=False, flight_when_available_flag=True)
-
-        if not combos:
-            relaxed_used = True
-            combos = _gen_combos(
-                pool + prefix,
-                allow_repeat=False,
-                flight_only_flag=flight_only and not fallback_used,
-                flight_when_available_flag=fallback_used,
-            )
-            if (flight_only and not fallback_used) and not combos:
-                fallback_used = True
-                fallback_mode = "flight_when_available"
-                combos = _gen_combos(pool + prefix, allow_repeat=True, flight_only_flag=False, flight_when_available_flag=True)
-
-        budget_relaxed = False
-        if not combos:
+        if not filtered and cap_ok:
             budget_relaxed = True
-            combos = _gen_combos(
-                pool,
-                allow_repeat=False,
-                flight_only_flag=flight_only,
-                flight_when_available_flag=False,
-                enforce_budget=False,
-            )
-            if flight_only and not combos:
-                combos = _gen_combos(
-                    pool,
-                    allow_repeat=False,
-                    flight_only_flag=False,
-                    flight_when_available_flag=True,
-                    enforce_budget=False,
-                )
-            if not combos:
-                combos = _gen_combos(
-                    pool + prefix,
-                    allow_repeat=False,
-                    flight_only_flag=flight_only and not fallback_used,
-                    flight_when_available_flag=fallback_used,
-                    enforce_budget=False,
-                )
-            if (flight_only and not fallback_used) and not combos:
-                combos = _gen_combos(
-                    pool + prefix,
-                    allow_repeat=False,
-                    flight_only_flag=False,
-                    flight_when_available_flag=True,
-                    enforce_budget=False,
-                )
+            filtered = cap_ok
 
-        combos = sorted(combos, key=lambda x: x[1], reverse=True)[: self.top_k]
+        reranked = self._bundle_reranker.rerank(
+            constraints=constraints,
+            failure_memory=self.failure_memory,
+            bundles=filtered,
+        )
+        bundle_lookup = {tuple(entry.get("bundle") or []): entry for entry in filtered}
+        selected: List[Dict[str, Any]] = []
+        for item in reranked:
+            seq = item.get("bundle") or []
+            entry = bundle_lookup.get(tuple(seq))
+            if entry:
+                selected.append(entry)
+
         seen_seq: set = set()
-        for seq, _score in combos:
+        for entry in selected:
+            seq = entry.get("bundle") or []
             seq_key = tuple(self.kb._normalize_city(c) if c else "" for c in seq)
             if seq_key in seen_seq:
                 continue
             seen_seq.add(seq_key)
-            day_splits = self._compute_day_splits(total_days or len(seq), seq)
+            day_splits = entry.get("day_splits") or self._compute_day_splits(total_days or len(seq), seq)
             action = f"choose_city_bundle:[{','.join(seq)}]"
-            # Add lightweight meta for downstream priors (safe: env only reads [1]/[2]).
-            people = max(1, int(self._parsed_get(parsed, "people_number", default=None) or 1))
-            transport_lb = 0.0
-            return_required = bool(self._parsed_get(parsed, "return_required", default=True))
-            legs: List[Tuple[str, str]] = []
-            if seq:
-                if origin:
-                    legs.append((origin, seq[0]))
-                for i in range(1, len(seq)):
-                    legs.append((seq[i - 1], seq[i]))
-                if return_required and origin:
-                    legs.append((seq[-1], origin))
-            for src, dst in legs:
-                c = self._min_transport_cost(parsed, src, dst, people)
-                if c is None:
-                    transport_lb = float("inf")
-                    break
-                transport_lb += float(c)
+            transport_lb = entry.get("features", {}).get("transport_lb_cost")
+            if transport_lb is None:
+                transport_lb = 0.0
+                legs: List[Tuple[str, str]] = []
+                if seq:
+                    if origin:
+                        legs.append((origin, seq[0]))
+                    for i in range(1, len(seq)):
+                        legs.append((seq[i - 1], seq[i]))
+                    if return_required and origin:
+                        legs.append((seq[-1], origin))
+                for src, dst in legs:
+                    c = self._min_transport_cost(parsed, src, dst, people)
+                    if c is None:
+                        transport_lb = float("inf")
+                        break
+                    transport_lb += float(c)
 
             payloads[action] = (
                 "choose_city_bundle",
@@ -2009,7 +1995,7 @@ class RetrievalAgent:
 
         event.update(
             {
-                "strategy": "state_bundle",
+                "strategy": "state_bundle_v2",
                 "city_target": city_target,
                 "remaining_needed": remaining_needed,
                 "connectivity_mode": "flight_only" if (flight_only and not fallback_used) else (fallback_mode or "any_transport"),
@@ -2024,6 +2010,12 @@ class RetrievalAgent:
                 "budget_relaxed": budget_relaxed,
                 "relaxed_used": relaxed_used,
                 "fallback_used": fallback_used,
+                "hotel_pruned": hotel_pruned,
+                "attraction_pruned": attraction_pruned,
+                "return_pruned": return_pruned,
+                "excluded_bundles": excluded_bundles,
+                "reranked_used": True,
+                "cap_relaxed": cap_relaxed,
                 "injected_out_of_state": injected_out_of_state,
                 "origin_filtered": block_origin_mid,
             }
