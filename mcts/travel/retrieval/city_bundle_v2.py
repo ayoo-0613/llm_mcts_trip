@@ -45,8 +45,6 @@ class CityBundleBuilderV2:
         if remaining_needed <= 0:
             return [], {"combos_generated": 0, "bundles_kept": 0}
 
-        origin_norm = self.kb._normalize_city(origin) if origin else None
-
         if allow_repeat:
             iterator = itertools.product(candidates, repeat=remaining_needed)
         else:
@@ -69,16 +67,17 @@ class CityBundleBuilderV2:
         att_min = max(0, int(att_min))
         meals_per_day = 3
 
-        for combo in iterator:
-            combos_generated += 1
-            seq = prefix + list(combo)
+        def _build_entry(seq: List[str], *, count_prune: bool, check_exclusion: bool) -> Optional[Dict[str, Any]]:
+            nonlocal excluded_bundles, hotel_pruned, attraction_pruned, meal_pruned, return_pruned
             if not allow_repeat and len({self.kb._normalize_city(c) for c in seq if c}) != len(seq):
-                continue
-            bundle_key = self._bundle_key(seq)
-            if failure_memory is not None and getattr(failure_memory, "is_excluded", None):
-                if failure_memory.is_excluded(bundle_key):
-                    excluded_bundles += 1
-                    continue
+                return None
+            bundle_key_set = self._bundle_key_set(seq)
+            bundle_key_seq = self._bundle_key_seq(seq)
+            if check_exclusion and failure_memory is not None and getattr(failure_memory, "is_excluded", None):
+                if failure_memory.is_excluded(bundle_key_seq):
+                    if count_prune:
+                        excluded_bundles += 1
+                    return None
 
             day_splits = (
                 day_splits_fn(total_days, seq)
@@ -135,14 +134,17 @@ class CityBundleBuilderV2:
                         break
 
             if not hotel_feasible_all:
-                hotel_pruned += 1
-                continue
+                if count_prune:
+                    hotel_pruned += 1
+                return None
             if not attraction_feasible_all:
-                attraction_pruned += 1
-                continue
+                if count_prune:
+                    attraction_pruned += 1
+                return None
             if not meal_feasible_all:
-                meal_pruned += 1
-                continue
+                if count_prune:
+                    meal_pruned += 1
+                return None
 
             min_return_cost = 0.0
             return_leg_exists = True
@@ -153,10 +155,11 @@ class CityBundleBuilderV2:
                     min_return_cost = min_transport_cost_fn(seq[-1], origin)
                     return_leg_exists = min_return_cost is not None
             if not return_leg_exists:
-                return_pruned += 1
-                continue
+                if count_prune:
+                    return_pruned += 1
+                return None
 
-            transport_cost, edges = self._transport_lower_bound(seq, origin, return_required, min_transport_cost_fn)
+            transport_cost, edges, edge_costs = self._transport_lower_bound(seq, origin, return_required, min_transport_cost_fn)
             stay_cost = self._stay_lower_bound(seq, nights_by_city, profiles)
             meal_cost = self._meal_lower_bound(day_to_city, profiles, people)
 
@@ -164,28 +167,132 @@ class CityBundleBuilderV2:
             if transport_cost is not None and stay_cost is not None and meal_cost is not None:
                 bundle_lb_cost = transport_cost + stay_cost + meal_cost
 
-            bundles.append(
-                {
-                    "bundle": seq,
-                    "day_splits": day_splits,
-                    "features": {
-                        "hotel_feasible_all": hotel_feasible_all,
-                        "return_leg_exists": return_leg_exists,
-                        "min_return_cost": min_return_cost,
-                        "bundle_lb_cost": bundle_lb_cost,
-                        "stay_lb_cost": stay_cost,
-                        "meal_lb_cost": meal_cost,
-                        "transport_lb_cost": transport_cost,
-                        "hotel_min_nights_min": min_nights_min,
-                        "edges": edges,
-                        "bundle_key": bundle_key,
-                    },
+            city_features: Dict[str, Dict[str, Any]] = {}
+            for city in seq:
+                profile = profiles.get(city) or {}
+                hotel = profile.get("hotel", {}) or {}
+                daily = profile.get("daily", {}) or {}
+                days = int(days_by_city.get(city, 0) or 0)
+                nights = int(nights_by_city.get(city, 0) or 0)
+                hotel_min_nights = hotel.get("min_nights_min")
+                hotel_min_price = hotel.get("min_price")
+                attraction_count = int(daily.get("attraction_count") or 0)
+                meal_count = int(daily.get("meal_count") or 0)
+                attr_required = days * int(att_min)
+                meal_required = days * int(meals_per_day)
+                attr_slack = attraction_count - attr_required
+                meal_slack = meal_count - meal_required
+                hotel_slack = None
+                if hotel_min_nights is not None:
+                    try:
+                        hotel_slack = int(nights) - int(hotel_min_nights)
+                    except Exception:
+                        hotel_slack = None
+                city_features[city] = {
+                    "days": days,
+                    "nights": nights,
+                    "hotel_exists": bool(hotel.get("exists")),
+                    "hotel_min_price": hotel_min_price,
+                    "hotel_min_nights": hotel_min_nights,
+                    "attraction_count": attraction_count,
+                    "meal_count": meal_count,
+                    "min_meal_cost": daily.get("min_meal_cost"),
+                    "attr_required": attr_required,
+                    "meal_required": meal_required,
+                    "attr_slack": attr_slack,
+                    "meal_slack": meal_slack,
+                    "hotel_slack": hotel_slack,
                 }
-            )
+
+            meal_slacks = {c: f.get("meal_slack") for c, f in city_features.items() if f.get("meal_slack") is not None}
+            attr_slacks = {c: f.get("attr_slack") for c, f in city_features.items() if f.get("attr_slack") is not None}
+            hotel_prices = {c: f.get("hotel_min_price") for c, f in city_features.items() if f.get("hotel_min_price") is not None}
+            bottleneck_meal_slack = min(meal_slacks.values()) if meal_slacks else None
+            bottleneck_attr_slack = min(attr_slacks.values()) if attr_slacks else None
+            bottleneck_hotel_price = max(hotel_prices.values()) if hotel_prices else None
+            bottleneck_city_meal = min(meal_slacks, key=meal_slacks.get) if meal_slacks else None
+            bottleneck_city_hotel = max(hotel_prices, key=hotel_prices.get) if hotel_prices else None
+
+            bottleneck_edge = None
+            if edge_costs:
+                blocked_edges = [edge for edge, info in edge_costs.items() if info.get("blocked")]
+                if blocked_edges:
+                    bottleneck_edge = blocked_edges[0]
+                else:
+                    max_edge = None
+                    max_cost = None
+                    for edge, info in edge_costs.items():
+                        cost_val = info.get("min_cost")
+                        if cost_val is None:
+                            continue
+                        if max_cost is None or float(cost_val) > float(max_cost):
+                            max_cost = cost_val
+                            max_edge = edge
+                    bottleneck_edge = max_edge
+
+            bundle_risk = {
+                "bottleneck_meal_slack": bottleneck_meal_slack,
+                "bottleneck_attr_slack": bottleneck_attr_slack,
+                "bottleneck_hotel_price": bottleneck_hotel_price,
+                "bottleneck_city_meal": bottleneck_city_meal,
+                "bottleneck_city_hotel": bottleneck_city_hotel,
+                "bottleneck_edge": bottleneck_edge,
+            }
+
+            return {
+                "bundle": seq,
+                "day_splits": day_splits,
+                "features": {
+                    "hotel_feasible_all": hotel_feasible_all,
+                    "return_leg_exists": return_leg_exists,
+                    "min_return_cost": min_return_cost,
+                    "bundle_lb_cost": bundle_lb_cost,
+                    "stay_lb_cost": stay_cost,
+                    "meal_lb_cost": meal_cost,
+                    "transport_lb_cost": transport_cost,
+                    "hotel_min_nights_min": min_nights_min,
+                    "edges": edges,
+                    "bundle_key": bundle_key_set,
+                    "bundle_key_set": bundle_key_set,
+                    "bundle_key_seq": bundle_key_seq,
+                    "city_features": city_features,
+                    "edge_costs": edge_costs,
+                    "bundle_risk": bundle_risk,
+                },
+            }
+
+        for combo in iterator:
+            combos_generated += 1
+            seq = prefix + list(combo)
+            entry = _build_entry(seq, count_prune=True, check_exclusion=True)
+            if entry is None:
+                continue
+            bundles.append(entry)
             if len(bundles) >= self.max_kept:
                 break
             if combos_generated >= self.max_combos:
                 break
+
+        permutation_injected = 0
+        if not allow_repeat and total_days in (5, 7) and len(bundles) < self.max_kept:
+            top_m = min(10, len(bundles))
+            existing_keys = {self._bundle_key_seq(entry.get("bundle") or []) for entry in bundles}
+            for entry in bundles[:top_m]:
+                seq = entry.get("bundle") or []
+                if len(seq) != 2:
+                    continue
+                seq_rev = [seq[1], seq[0]]
+                key_seq = self._bundle_key_seq(seq_rev)
+                if key_seq in existing_keys:
+                    continue
+                rev_entry = _build_entry(seq_rev, count_prune=False, check_exclusion=True)
+                if rev_entry is None:
+                    continue
+                bundles.append(rev_entry)
+                existing_keys.add(key_seq)
+                permutation_injected += 1
+                if len(bundles) >= self.max_kept:
+                    break
 
         event = {
             "combos_generated": combos_generated,
@@ -195,11 +302,18 @@ class CityBundleBuilderV2:
             "attraction_pruned": attraction_pruned,
             "meal_pruned": meal_pruned,
             "return_pruned": return_pruned,
+            "permutation_injected": permutation_injected,
         }
         return bundles, event
 
     def _bundle_key(self, seq: List[str]) -> Tuple[str, ...]:
+        return self._bundle_key_set(seq)
+
+    def _bundle_key_set(self, seq: List[str]) -> Tuple[str, ...]:
         return tuple(sorted(self.kb._normalize_city(c) for c in seq if c))
+
+    def _bundle_key_seq(self, seq: List[str]) -> Tuple[str, ...]:
+        return tuple(self.kb._normalize_city(c) for c in seq if c)
 
     @staticmethod
     def _compute_day_splits(total_days: int, seq: List[str]) -> List[Dict[str, Any]]:
@@ -261,24 +375,42 @@ class CityBundleBuilderV2:
         origin: str,
         return_required: bool,
         min_transport_cost_fn: Optional[Callable[[str, str], Optional[float]]],
-    ) -> Tuple[Optional[float], List[Tuple[str, str]]]:
+    ) -> Tuple[Optional[float], List[Tuple[str, str]], Dict[str, Dict[str, Any]]]:
         if min_transport_cost_fn is None:
-            return None, []
-        edges: List[Tuple[str, str]] = []
+            return None, [], {}
+        edges_norm: List[Tuple[str, str]] = []
+        edge_costs: Dict[str, Dict[str, Any]] = {}
         total = 0.0
+        edges_raw: List[Tuple[str, str]] = []
         if origin and seq:
-            edges.append((self.kb._normalize_city(origin), self.kb._normalize_city(seq[0])))
+            edges_raw.append((origin, seq[0]))
+            edges_norm.append((self.kb._normalize_city(origin), self.kb._normalize_city(seq[0])))
         for i in range(1, len(seq)):
-            edges.append((self.kb._normalize_city(seq[i - 1]), self.kb._normalize_city(seq[i])))
+            edges_raw.append((seq[i - 1], seq[i]))
+            edges_norm.append((self.kb._normalize_city(seq[i - 1]), self.kb._normalize_city(seq[i])))
         if return_required and origin and seq:
-            edges.append((self.kb._normalize_city(seq[-1]), self.kb._normalize_city(origin)))
+            edges_raw.append((seq[-1], origin))
+            edges_norm.append((self.kb._normalize_city(seq[-1]), self.kb._normalize_city(origin)))
 
-        for src_norm, dst_norm in edges:
-            cost = min_transport_cost_fn(src_norm, dst_norm)
+        for (src_raw, dst_raw), (src_norm, dst_norm) in zip(edges_raw, edges_norm):
+            cost = min_transport_cost_fn(src_raw, dst_raw)
+            blocked = cost is None
             if cost is None:
-                return None, edges
-            total += float(cost)
-        return total, edges
+                edge_costs[f"{src_raw}->{dst_raw}"] = {"min_cost": None, "blocked": True}
+                continue
+            try:
+                cost_val = float(cost)
+            except Exception:
+                cost_val = float("inf")
+            if cost_val == float("inf"):
+                blocked = True
+            edge_costs[f"{src_raw}->{dst_raw}"] = {"min_cost": (None if blocked else cost_val), "blocked": blocked}
+            if blocked:
+                continue
+            total += cost_val
+        if any(info.get("blocked") for info in edge_costs.values()):
+            return None, edges_norm, edge_costs
+        return total, edges_norm, edge_costs
 
     @staticmethod
     def _stay_lower_bound(

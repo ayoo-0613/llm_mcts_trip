@@ -213,6 +213,174 @@ class MCTSAgent:
         uniform = np.ones((len(valid_actions),)) / len(valid_actions)
         return uniform, 0
 
+    def _apply_failure_gradient_prior(self, slot, actions, probs_full, payloads):
+        """
+        Apply FailureGradientStore soft penalties as an extra multiplicative bias on priors.
+        This does not change constraints; it only reweights search.
+        """
+        if probs_full is None or len(actions) == 0:
+            return probs_full
+        env = getattr(self, "env", None)
+        if env is None:
+            return probs_full
+        store = getattr(env, "failure_gradient_store", None)
+        if store is None:
+            return probs_full
+        try:
+            from mcts.travel.failure_gradient import fingerprint_goal, phase_key
+        except Exception:
+            return probs_full
+
+        try:
+            goal_fp = fingerprint_goal(getattr(env, "goal_parsed", None) or {})
+        except Exception:
+            return probs_full
+
+        slot_fp = None
+        try:
+            slot_fp = slot.signature() if slot is not None and hasattr(slot, "signature") else None
+        except Exception:
+            slot_fp = None
+        ph = None
+        try:
+            ph = phase_key(getattr(slot, "type", None))
+        except Exception:
+            ph = None
+        if not ph:
+            return probs_full
+
+        try:
+            grad = store.query(goal_fp=goal_fp, phase=ph, slot_fp=slot_fp)
+        except Exception:
+            return probs_full
+        penalties = (grad or {}).get("soft_penalties") or []
+        if not isinstance(penalties, list) or not penalties:
+            return probs_full
+
+        budget = None
+        people = 1
+        parsed = getattr(env, "goal_parsed", None)
+        if isinstance(parsed, dict):
+            budget = parsed.get("budget")
+            if parsed.get("people_number") is not None:
+                try:
+                    people = int(parsed.get("people_number") or 1)
+                except Exception:
+                    people = 1
+        try:
+            budget_f = float(budget)
+        except Exception:
+            budget_f = None
+
+        try:
+            import numpy as np
+        except Exception:
+            return probs_full
+
+        arr = np.array(probs_full, dtype=np.float32)
+        if len(arr) != len(actions):
+            return probs_full
+
+        tau = float(getattr(self, "soft_penalty_tau", 0.7) or 0.7)
+
+        for i, action in enumerate(actions):
+            payload = payloads.get(action) if payloads else None
+            risk = 0.0
+            for p in penalties:
+                if not isinstance(p, dict):
+                    continue
+                if phase_key(p.get("phase")) != ph:
+                    continue
+                feature = p.get("feature")
+                try:
+                    delta = float(p.get("delta") or 0.0)
+                except Exception:
+                    continue
+                value = self._gradient_feature_value(feature, action, payload, budget_f, people)
+                if value is None:
+                    continue
+                risk += float(delta) * float(value)
+            if risk > 0:
+                try:
+                    arr[i] *= math.exp(-tau * risk)
+                except Exception:
+                    pass
+
+        s = float(np.sum(arr))
+        if s <= 0:
+            return probs_full
+        return (arr / s).astype(np.float32)
+
+    @staticmethod
+    def _gradient_feature_value(feature, action, payload, budget_f, people):
+        if not feature:
+            return None
+        f = str(feature).strip()
+        kind = payload[0] if payload else None
+
+        if f == "soft_penalty":
+            if kind in ("segment_mode", "stay_city", "meal"):
+                detail = payload[3] if kind == "segment_mode" and len(payload) > 3 else (payload[2] if kind == "stay_city" and len(payload) > 2 else (payload[3] if kind == "meal" and len(payload) > 3 else {}))
+                if isinstance(detail, dict) and detail.get("soft_penalty") is not None:
+                    try:
+                        return float(detail.get("soft_penalty"))
+                    except Exception:
+                        return None
+            return None
+
+        # Cost extraction (party-level when possible)
+        cost = None
+        if kind == "segment_mode":
+            mode = str(payload[2] if len(payload) > 2 else "").lower()
+            detail = payload[3] if len(payload) > 3 else {}
+            if isinstance(detail, dict):
+                base = detail.get("price")
+                if base is None:
+                    base = detail.get("cost")
+                try:
+                    base_f = float(base) if base is not None else None
+                except Exception:
+                    base_f = None
+                if base_f is not None:
+                    if mode == "flight":
+                        cost = base_f * max(1, people)
+                    elif mode == "taxi":
+                        cost = base_f * max(1, math.ceil(people / 4.0))
+                    elif mode == "self-driving":
+                        cost = base_f * max(1, math.ceil(people / 5.0))
+                    else:
+                        cost = base_f
+        elif kind == "stay_city":
+            detail = payload[2] if len(payload) > 2 else {}
+            if isinstance(detail, dict) and detail.get("price") is not None:
+                try:
+                    cost = float(detail.get("price"))
+                except Exception:
+                    cost = None
+        elif kind == "meal":
+            detail = payload[3] if len(payload) > 3 else {}
+            if isinstance(detail, dict) and detail.get("cost") is not None:
+                try:
+                    cost = float(detail.get("cost")) * max(1, people)
+                except Exception:
+                    cost = None
+
+        if f in ("budget_risk", "cost_ratio"):
+            if cost is None or budget_f is None or budget_f <= 0:
+                return None
+            try:
+                return float(cost) / float(budget_f)
+            except Exception:
+                return None
+
+        if f == "hotel_price":
+            return float(cost) if cost is not None else None
+
+        if f == "edge_cost":
+            return float(cost) if cost is not None else None
+
+        return None
+
     def _score_actions_with_budget(self, actions, payloads):
         if not actions:
             return np.array([])
@@ -361,6 +529,9 @@ class MCTSAgent:
                 payloads=payloads,
                 state_signature=state_signature,
             )
+            probs_full = self._apply_failure_gradient_prior(slot, state.valid_actions, probs_full, payloads)
+        if not use_llm:
+            probs_full = self._apply_failure_gradient_prior(slot, state.valid_actions, probs_full, payloads)
 
         self.state_dict[state.id] = state
         state.children = []

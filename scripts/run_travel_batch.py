@@ -446,6 +446,8 @@ def parse_args():
     parser.add_argument("--device", default="mps", help="cpu/mps/cuda:0 etc.")
     parser.add_argument("--parser-model", default=None, help="Parser model (defaults to --local-model).")
     parser.add_argument("--parser-timeout", type=float, default=180.0)
+    parser.add_argument("--llm-timeout", type=float, default=180.0,
+                        help="Timeout (s) for LLM-based city-bundle refinement calls.")
     parser.add_argument("--database-root", default="database")
     parser.add_argument("--save-dir", default="plans_out", help="Directory to save generated plans as JSON.")
     parser.add_argument(
@@ -559,6 +561,10 @@ def main():
                         "submission_plan": eval_plan,
                         "filter_usage": result.get("filter_usage", []),
                         "prior_usage": result.get("prior_usage", []),
+                        "llm_refinement": result.get("llm_refinement"),
+                        "llm_refinements": result.get("llm_refinements", []),
+                        "failure_gradient": result.get("failure_gradient"),
+                        "failure_gradients": result.get("failure_gradients", []),
                         "elapsed_seconds": elapsed,
                     },
                     f,

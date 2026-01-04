@@ -1959,6 +1959,24 @@ class RetrievalAgent:
             if entry:
                 selected.append(entry)
 
+        if total_days in (5, 7):
+            try:
+                llm_candidates = (filtered or cap_ok or selected or [])[:40]
+                bundle_candidates = [
+                    {
+                        "bundle": entry.get("bundle") or [],
+                        "day_splits": entry.get("day_splits") or self._compute_day_splits(total_days or len(entry.get("bundle") or []), entry.get("bundle") or []),
+                        "features": entry.get("features") or {},
+                    }
+                    for entry in llm_candidates
+                ]
+                self.city_bundle_candidates = bundle_candidates
+                env = getattr(self, "env", None)
+                if env is not None:
+                    env.city_bundle_candidates = bundle_candidates
+            except Exception:
+                pass
+
         seen_seq: set = set()
         for entry in selected:
             seq = entry.get("bundle") or []

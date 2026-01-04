@@ -215,6 +215,7 @@ class TravelEnv:
             debug=self.debug,
             log_filter_usage=self.log_filter_usage,
         )
+        self.retrieval_agent.env = self
         self.failure_memory = None
         if failure_memory is not None:
             self.set_failure_memory(failure_memory)
@@ -224,6 +225,9 @@ class TravelEnv:
         self.executed_filter_events: List[Dict[str, Any]] = []
         self.filter_event_keys: set = set()
         self.executed_filter_event_keys: set = set()
+        self.city_bundle_candidates: List[Dict[str, Any]] = []
+        self._forced_city_bundle: Optional[List[str]] = None
+        self.failure_gradient_store = None
 
     # ----------------------------
     # 初始化 & helper
@@ -562,6 +566,14 @@ class TravelEnv:
             self.executed_filter_events = []
             self.filter_event_keys = set()
             self.executed_filter_event_keys = set()
+            self.city_bundle_candidates = []
+
+        forced_bundle = self.consume_forced_city_bundle()
+        if forced_bundle:
+            self.base_state.phase = Phase.CITY
+            self._apply_city_bundle(self.base_state, forced_bundle)
+            self.base_history = []
+            self._last_phase_plan = None
 
         self.state = self.base_state.clone()
         # 再次确保 fixed_city_order 下 city_sequence 正确
@@ -598,6 +610,66 @@ class TravelEnv:
                 self.retrieval_agent.failure_memory = failure_memory
             except Exception:
                 pass
+
+    def set_failure_gradient_store(self, store: Any) -> None:
+        self.failure_gradient_store = store
+        try:
+            self.retrieval_agent.failure_gradient_store = store
+        except Exception:
+            pass
+
+    def set_forced_city_bundle(self, bundle: List[str]) -> None:
+        self._forced_city_bundle = list(bundle or [])
+
+    def consume_forced_city_bundle(self) -> Optional[List[str]]:
+        bundle = self._forced_city_bundle
+        self._forced_city_bundle = None
+        return list(bundle) if bundle else None
+
+    def _apply_city_bundle(self, state: TravelState, bundle: List[str]) -> None:
+        state.city_sequence = list(bundle or [])
+        state.day_to_city = {}
+
+        mapping: Dict[int, str] = {}
+        day_splits = []
+        if state.city_sequence:
+            try:
+                day_splits = self.retrieval_agent._compute_day_splits(self.total_days, state.city_sequence)
+            except Exception:
+                day_splits = []
+        if day_splits:
+            try:
+                mapping = self.retrieval_agent._day_to_city_from_splits(day_splits, self.total_days)
+            except Exception:
+                mapping = {}
+        if not mapping and state.city_sequence and self.total_days > 0:
+            n = len(state.city_sequence)
+            base = self.total_days // n
+            rem = self.total_days % n
+            spans = [base] * n
+            if rem:
+                spans[-1] += rem
+            day = 1
+            for city, span in zip(state.city_sequence, spans):
+                for _ in range(max(0, int(span))):
+                    mapping[day] = city
+                    day += 1
+        state.day_to_city = mapping
+
+        state.segment_modes = {}
+        state.outbound_flight = None
+        state.return_flight = None
+        state.city_stays = {}
+        state.accommodation = None
+        state.meals = {day: {slot: None for slot in self.meal_slots}
+                       for day in range(1, self.total_days + 1)}
+        state.attractions = {day: {slot: None for slot in self.attraction_slots}
+                             for day in range(1, self.total_days + 1)}
+        state.preference_matches = 0
+        state.violations = []
+        state.is_terminal = False
+        state.cost = 0.0
+        self._advance_phase_if_ready(state)
 
     def apply_action(self, action: str):
         """Apply action to the anchor state after planning."""
@@ -1232,8 +1304,25 @@ class TravelEnv:
             budget_rev = int(self.retrieval_agent.get_budget_revision())
         except Exception:
             budget_rev = 0
+        patch_sig = None
+        try:
+            from mcts.travel.failure_gradient import fingerprint_goal, phase_key
+        except Exception:
+            fingerprint_goal = None
+            phase_key = None
+        if self.failure_gradient_store is not None and fingerprint_goal is not None and phase_key is not None:
+            try:
+                goal_fp = fingerprint_goal(self.goal_parsed)
+                slot_fp = slot.signature() if hasattr(slot, "signature") else str(slot)
+                ph = phase_key(getattr(slot, "type", None))
+                grad = self.failure_gradient_store.query(goal_fp=goal_fp, phase=ph, slot_fp=slot_fp)
+                patch = (grad or {}).get("retrieval_patch") or {}
+                if isinstance(patch, dict) and patch:
+                    patch_sig = tuple(sorted((str(k), str(v)) for k, v in patch.items()))
+            except Exception:
+                patch_sig = None
 
-        key = (self.state.signature(), slot, budget_rev)
+        key = (self.state.signature(), slot, budget_rev, patch_sig)
 
         if key in self.candidate_cache:
             cached = self.candidate_cache[key]
@@ -1251,12 +1340,46 @@ class TravelEnv:
                 self.filter_event_keys.add(key)
             return actions
 
-        result = self.retrieval_agent.compute(
-            self.goal_parsed,
-            self.state,
-            slot,
-            user_query=self.user_query,
-        )
+        prev_topk = None
+        prev_env_topk = None
+        if patch_sig is not None and self.failure_gradient_store is not None and fingerprint_goal is not None and phase_key is not None:
+            try:
+                goal_fp = fingerprint_goal(self.goal_parsed)
+                slot_fp = slot.signature() if hasattr(slot, "signature") else str(slot)
+                ph = phase_key(getattr(slot, "type", None))
+                grad = self.failure_gradient_store.query(goal_fp=goal_fp, phase=ph, slot_fp=slot_fp)
+                patch = (grad or {}).get("retrieval_patch") or {}
+                if isinstance(patch, dict) and patch.get("topk") is not None:
+                    prev_topk = getattr(self.retrieval_agent, "top_k", None)
+                    prev_env_topk = getattr(self, "top_k", None)
+                    try:
+                        topk_val = int(patch.get("topk"))
+                    except Exception:
+                        topk_val = None
+                    if topk_val is not None and topk_val > 0:
+                        self.retrieval_agent.top_k = topk_val
+                        self.top_k = topk_val
+            except Exception:
+                prev_topk = None
+
+        try:
+            result = self.retrieval_agent.compute(
+                self.goal_parsed,
+                self.state,
+                slot,
+                user_query=self.user_query,
+            )
+        finally:
+            if prev_topk is not None:
+                try:
+                    self.retrieval_agent.top_k = prev_topk
+                except Exception:
+                    pass
+            if prev_env_topk is not None:
+                try:
+                    self.top_k = prev_env_topk
+                except Exception:
+                    pass
         actions = list(result.actions or [])
         self.action_payloads = copy.deepcopy(result.payloads or {})
         candidates = list(result.candidates or [])
@@ -1269,6 +1392,24 @@ class TravelEnv:
         actions, self.action_payloads = self._filter_actions_by_constraints(
             actions, self.action_payloads, self.state
         )
+        if self.failure_gradient_store is not None and fingerprint_goal is not None and phase_key is not None and actions:
+            try:
+                goal_fp = fingerprint_goal(self.goal_parsed)
+                slot_fp = slot.signature() if hasattr(slot, "signature") else str(slot)
+                ph = phase_key(getattr(slot, "type", None))
+                grad = self.failure_gradient_store.query(goal_fp=goal_fp, phase=ph, slot_fp=slot_fp)
+                hard = (grad or {}).get("hard_exclusions") or []
+                if isinstance(hard, list) and hard:
+                    kept = []
+                    for act in actions:
+                        payload = self.action_payloads.get(act)
+                        if not self._violates_hard_exclusion(ph, act, payload, hard):
+                            kept.append(act)
+                        else:
+                            self.action_payloads.pop(act, None)
+                    actions = kept
+            except Exception:
+                pass
 
         event = dict(policy_event or {})
         event.update(
@@ -1295,6 +1436,55 @@ class TravelEnv:
         if self.debug:
             print(f"[DEBUG] Slot {slot.type} produced {len(actions)} actions")
         return actions
+
+    @staticmethod
+    def _violates_hard_exclusion(phase: str, action: str, payload: Any, rules: List[Dict[str, Any]]) -> bool:
+        phase = str(phase or "").lower()
+        for rule in rules:
+            if not isinstance(rule, dict):
+                continue
+            rphase = str(rule.get("phase") or "").lower()
+            if rphase and rphase != phase:
+                continue
+            r = str(rule.get("rule") or "").upper()
+            if r == "NO_FLIGHT" and payload and payload[0] == "segment_mode":
+                mode = str(payload[2] if len(payload) > 2 else "").lower()
+                if mode == "flight":
+                    return True
+            if r == "NO_SELF_DRIVING" and payload and payload[0] == "segment_mode":
+                mode = str(payload[2] if len(payload) > 2 else "").lower()
+                if mode == "self-driving":
+                    return True
+            if r == "NO_TAXI" and payload and payload[0] == "segment_mode":
+                mode = str(payload[2] if len(payload) > 2 else "").lower()
+                if mode == "taxi":
+                    return True
+            if r == "AVOID_CITY":
+                city = rule.get("city")
+                if city:
+                    city_lc = str(city).strip().lower()
+                    if payload and payload[0] == "stay_city":
+                        pcity = str(payload[1] if len(payload) > 1 else "").strip().lower()
+                        if pcity == city_lc:
+                            return True
+                    if payload and payload[0] in ("meal", "attraction"):
+                        # payload: ("meal", day, slot, rest) where rest contains city or action contains city
+                        rest = payload[3] if len(payload) > 3 else {}
+                        rcity = str((rest or {}).get("city") or "").strip().lower()
+                        if rcity and rcity == city_lc:
+                            return True
+                    if payload and payload[0] == "choose_city_bundle":
+                        seq = payload[1] if len(payload) > 1 else []
+                        if any(str(c).strip().lower() == city_lc for c in (seq or [])):
+                            return True
+            if r == "BLOCK_EDGE" and payload and payload[0] == "segment_mode":
+                detail = payload[3] if len(payload) > 3 else {}
+                src = str((detail or {}).get("origin") or "").strip().lower()
+                dst = str((detail or {}).get("destination") or "").strip().lower()
+                key = str(rule.get("edge") or "").strip().lower()
+                if key and src and dst and key in (f"{src}->{dst}", f"{src}-{dst}"):
+                    return True
+        return False
 
     def get_valid_actions_with_slot(self) -> Tuple[Optional[Slot], List[str], Dict[str, Tuple]]:
         """

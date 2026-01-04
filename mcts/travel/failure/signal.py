@@ -32,6 +32,7 @@ class FailureSignalExtractor:
         budget_subtype = event.get("budget_subtype")
         segment_role = event.get("segment_role")
         dominant = dead_end.get("dominant_nonbudget_filter")
+        reason = dead_end.get("reason")
 
         subtype = None
         if phase in ("segment", "flight"):
@@ -53,6 +54,8 @@ class FailureSignalExtractor:
             "counts": dead_end.get("counts") or event.get("counts"),
             "budget_context": dead_end.get("budget_context") or event.get("budget_context"),
         }
+        if reason:
+            signal["reason"] = reason
         if segment_role:
             signal["segment_role"] = segment_role
         if goal_parsed:
