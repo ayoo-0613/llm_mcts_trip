@@ -1217,7 +1217,8 @@ class RetrievalAgent:
         else:
             # Default preference: taxi first, then self-driving (stable across segments).
             mode = "taxi" if "taxi" in nonflight_modes else nonflight_modes[0]
-        cost = distance
+        cost_per_km = getattr(self.kb, "ground_cost_per_km", {}) or {}
+        cost = float(distance) * float(cost_per_km.get(mode, 1.0))
         action = f"move:seg{seg_val}:{mode}:{origin}->{destination} {distance:.0f}km cost {cost:.0f}"
         payload_detail = {
             "origin": origin,

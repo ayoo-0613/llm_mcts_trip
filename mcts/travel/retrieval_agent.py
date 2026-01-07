@@ -81,28 +81,31 @@ class RetrievalAgent(_RetrievalAgentImpl):
                 distance = self.kb.distance_km(origin, destination)
             if distance is not None:
                 base_cost = float(distance)
+                cost_per_km = getattr(self.kb, "ground_cost_per_km", {}) or {}
                 if "taxi" in allowed_modes:
+                    taxi_cost = base_cost * float(cost_per_km.get("taxi", 1.0))
                     cand = {
                         "id": f"taxi:{origin}->{destination}",
                         "mode": "taxi",
                         "origin": origin,
                         "destination": destination,
                         "distance": distance,
-                        "cost": base_cost,
-                        "price": base_cost,
+                        "cost": taxi_cost,
+                        "price": taxi_cost,
                         "fallback_nonflight": True,
                     }
                     segment_pool.append(cand)
                     ground_pool.append(cand)
                 if "self-driving" in allowed_modes:
+                    sd_cost = base_cost * float(cost_per_km.get("self-driving", 1.0))
                     cand = {
                         "id": f"self-driving:{origin}->{destination}",
                         "mode": "self-driving",
                         "origin": origin,
                         "destination": destination,
                         "distance": distance,
-                        "cost": base_cost,
-                        "price": base_cost,
+                        "cost": sd_cost,
+                        "price": sd_cost,
                         "fallback_nonflight": True,
                     }
                     segment_pool.append(cand)

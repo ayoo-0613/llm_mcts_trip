@@ -1,21 +1,36 @@
 """
 Travel planning agents.
 
-Public API: four agents
-- `SemanticAgent`: NL -> parsed JSON + optional MCTS prior policy
-- `EnvAgent`: environment + phase/slot planning
-- `RetrievalAgent`: slot-conditioned candidate/action generation
-- `SearchAgent`: MCTS search over slots using candidates
+This package previously imported all agent modules at import time. Some optional
+dependencies (e.g., embedding/transformer stacks) can crash in constrained
+environments when imported eagerly.
+
+To keep `import mcts.travel` lightweight and robust, we expose the public API
+via lazy attribute access.
 """
 
-from mcts.travel.env_agent import TravelEnv as EnvAgent
-from mcts.travel.retrieval_agent import RetrievalAgent
-from mcts.travel.search_agent import SearchAgent
-from mcts.travel.semantic_agent import SemanticAgent
+from __future__ import annotations
 
-__all__ = [
-    "EnvAgent",
-    "RetrievalAgent",
-    "SearchAgent",
-    "SemanticAgent",
-]
+from typing import Any
+
+__all__ = ["EnvAgent", "RetrievalAgent", "SearchAgent", "SemanticAgent"]
+
+
+def __getattr__(name: str) -> Any:  # PEP 562
+    if name == "EnvAgent":
+        from mcts.travel.env_agent import TravelEnv as EnvAgent
+
+        return EnvAgent
+    if name == "RetrievalAgent":
+        from mcts.travel.retrieval_agent import RetrievalAgent
+
+        return RetrievalAgent
+    if name == "SearchAgent":
+        from mcts.travel.search_agent import SearchAgent
+
+        return SearchAgent
+    if name == "SemanticAgent":
+        from mcts.travel.semantic_agent import SemanticAgent
+
+        return SemanticAgent
+    raise AttributeError(name)

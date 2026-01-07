@@ -42,7 +42,7 @@ class SearchAgent:
         self.llm_model = getattr(args, "local_model", None)
         self.llm_timeout = getattr(args, "llm_timeout", 60.0)
 
-    def run(self, *, max_episode_len: int, max_attempts: int = 3) -> Dict[str, Any]:
+    def run(self, *, max_episode_len: int, max_attempts: int = 1) -> Dict[str, Any]:
         env = self.agent.env
         failure_memory = FailureMemory()
         gradient_store = FailureGradientStore()
@@ -78,7 +78,14 @@ class SearchAgent:
                 plan_actions: List[str] = []
 
                 for step in range(max_episode_len):
+                    print("\n[MCTS INPUT]")
+                    print(" obs:", obs)
+                    print(" history:", history)
+                    print(" valid_actions:", valid_actions)
+                    print(" step:", step)
+                    print(" done:", done)
                     action = self.agent.search(obs, history, step, valid_actions, done)
+                    
                     if action is None:
                         break
                     obs, reward, done, history, valid_actions = env.apply_action(action)

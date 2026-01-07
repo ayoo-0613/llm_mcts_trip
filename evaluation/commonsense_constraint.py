@@ -131,11 +131,22 @@ def is_valid_city_sequence(city_list):
 
 def is_reasonable_visiting_city(question, tested_data):
 
+    for required_key in ("days", "org", "dest"):
+        if required_key not in question:
+            return False, f"Missing `{required_key}` in query data."
+
+    if not tested_data:
+        return False, "Empty plan: no daily entries."
+
     city_list = []
     
     # print(tested_data)
     for i in range(min(question['days'],len(tested_data))):
-        city_value = tested_data[i]['current_city']
+        unit = tested_data[i]
+        if 'current_city' not in unit or not unit['current_city']:
+            return False, f"No `current_city` information in day {i+1}."
+
+        city_value = unit['current_city']
 
         if 'from' in city_value:
             city1, city2 = extract_from_to(city_value)
@@ -149,6 +160,9 @@ def is_reasonable_visiting_city(question, tested_data):
         else:
             city_list.append(extract_before_parenthesis(city_value))
     
+    if not city_list:
+        return False, "No city information found in plan."
+
     if city_list[0] != city_list[-1]:
         return False, "The trip should be a closed circle."
 

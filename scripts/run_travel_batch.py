@@ -6,6 +6,8 @@ import os
 import time
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple
+import pprint
+
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 import sys  # noqa: E402
@@ -361,6 +363,8 @@ def _run_single(
         log_filter_usage=args.log_filter_usage,
         goal_parsed=goal_parsed,
     )
+    pprint.pprint(vars(env))  # 打印 env 的全部参数
+
     planner = SearchAgent(args, env, policy)
     result = planner.run(max_episode_len=args.max_episode_len)
     result["state"] = env.state
