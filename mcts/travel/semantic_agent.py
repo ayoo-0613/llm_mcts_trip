@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional
 
-from mcts.travel.semantic.llm_policy import TravelLLMPolicy
 from mcts.travel.semantic.query_parsing import normalize_parsed_query, parse_nl_query
 
 __all__ = ["SemanticAgent"]
@@ -24,7 +23,10 @@ class SemanticAgent:
     def normalize(self, parsed: Dict[str, Any]) -> Dict[str, Any]:
         return normalize_parsed_query(parsed)
 
-    def build_policy(self, args) -> Optional[TravelLLMPolicy]:
+    def build_policy(self, args) -> Optional[Any]:
+        # Lazy import: torch/transformers are optional, and may be unavailable in some sandboxes.
+        from mcts.travel.semantic.llm_policy import TravelLLMPolicy
+
         return TravelLLMPolicy(
             device=getattr(args, "device", "cpu"),
             model_path=getattr(args, "local_model", None),
@@ -32,4 +34,3 @@ class SemanticAgent:
             local_base=getattr(args, "local_base", None),
             model_name=getattr(args, "local_model", None),
         )
-

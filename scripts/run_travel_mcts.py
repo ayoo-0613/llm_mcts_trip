@@ -16,6 +16,7 @@ if ROOT not in sys.path:
 from mcts.mcts.mcts import MCTSAgent
 from mcts.travel.env.knowledge_base import TravelKnowledgeBase
 from mcts.travel.env_agent import TravelEnv
+from mcts.travel.envspec.factory import build_env_from_query
 from mcts.travel.semantic_agent import SemanticAgent
 from mcts.travel.semantic.query_parsing import normalize_parsed_query
 
@@ -320,6 +321,7 @@ def _save_plan(
                 "parsed": {k: v for k, v in parsed.items() if k != "__query_text"},
                 "actions": actions,
                 "success": success,
+                "parser_mode": getattr(env, "parser_mode", "legacy"),
                 "cost": env.state.cost,
                 "violations": env.state.violations,
                 "structured_plan": structured,
@@ -360,6 +362,12 @@ def parse_args():
                         help="Cuisine or style preference. Can be passed multiple times.")
     parser.add_argument("--notes", default=None, help="Free-form notes passed to the policy.")
     parser.add_argument("--nl-query", default=None, help="Natural language trip request to be parsed by local LLM.")
+    parser.add_argument(
+        "--parser-mode",
+        default="legacy",
+        choices=["legacy", "envspec"],
+        help="Parsing route for --nl-query: legacy (goal JSON) or envspec (EnvSpec contract).",
+    )
     parser.add_argument("--local-base", default=os.getenv("LOCAL_LLM_BASE", "http://localhost:11434"),
                         help="Local LLM base URL for NL parsing (Ollama style).")
     parser.add_argument("--database-root", default="database", help="Path to the tabular dataset.")
@@ -427,8 +435,12 @@ def parse_args():
 
 def main():
     args = parse_args()
+    kb = TravelKnowledgeBase(args.database_root)
+    semantic = SemanticAgent(embedding_model=args.embedding_model)
+
     parsed: Dict[str, Any] = {}
     query_text: Optional[str] = None
+    env: Optional[TravelEnv] = None
     if args.parsed_json:
         parsed = _load_goal_json_inline(args.parsed_json)
         query_text = parsed.pop("__query_text", None)
@@ -436,6 +448,24 @@ def main():
     elif args.goal_json:
         parsed = _load_goal_json(args.goal_json)
         query_text = parsed.pop("__query_text", None)
+    elif args.nl_query and args.parser_mode == "envspec":
+        parser_model = args.parser_model or args.local_model or "deepseek-r1:14b"
+        env = build_env_from_query(
+            args.nl_query,
+            kb,
+            use_envspec=True,
+            llm_cfg={"base_url": args.local_base, "model": parser_model, "timeout": args.parser_timeout},
+            env_defaults={
+                "max_steps": args.max_episode_len,
+                "top_k": args.top_k,
+                "debug": args.debug,
+                "candidate_cap": args.candidate_cap,
+                "log_filter_usage": args.log_filter_usage,
+            },
+            goal_transform=lambda p: _merge_args_into_parsed(p, args),
+        )
+        parsed = dict(env.goal_parsed or {})
+        query_text = args.nl_query
     elif args.nl_query:
         parser_model = args.parser_model or args.local_model or "deepseek-r1:14b"
         parsed = _parse_nl_query(args.nl_query, args.local_base, parser_model, timeout=args.parser_timeout)
@@ -445,25 +475,25 @@ def main():
         # no parsing source; rely on CLI args
         parsed = {}
 
-    parsed = normalize_parsed_query(parsed)
-    parsed = _merge_args_into_parsed(parsed, args)
-    if not parsed.get("origin") or not parsed.get("destination"):
-        raise ValueError("Origin and destination must be provided via JSON, arguments, or NL query.")
-
-    kb = TravelKnowledgeBase(args.database_root)
-    semantic = SemanticAgent(embedding_model=args.embedding_model)
-
-    env = TravelEnv(
-        kb,
-        max_steps=args.max_episode_len,
-        top_k=args.top_k,
-        debug=args.debug,
-        candidate_cap=args.candidate_cap,
-        user_query=query_text or args.nl_query or "",
-        log_filter_usage=args.log_filter_usage,
-        goal_parsed=parsed,
-    )
-    policy = semantic.build_policy(args)
+    if env is None:
+        parsed = normalize_parsed_query(parsed)
+        parsed = _merge_args_into_parsed(parsed, args)
+        if not parsed.get("origin") or not parsed.get("destination"):
+            raise ValueError("Origin and destination must be provided via JSON, arguments, or NL query.")
+        env = TravelEnv(
+            kb,
+            max_steps=args.max_episode_len,
+            top_k=args.top_k,
+            debug=args.debug,
+            candidate_cap=args.candidate_cap,
+            user_query=query_text or args.nl_query or "",
+            log_filter_usage=args.log_filter_usage,
+            goal_parsed=parsed,
+        )
+    else:
+        if not parsed.get("origin") or not parsed.get("destination"):
+            raise ValueError("Origin and destination must be provided via JSON, arguments, or NL query.")
+    policy = semantic.build_policy(args) if args.use_llm_prior != "none" else None
 
     mcts_args = SimpleNamespace(
         exploration_constant=args.exploration_constant,
@@ -494,6 +524,7 @@ def main():
     plan_actions = []
 
     print("Goal:", env.get_goal())
+    print("Parser mode:", getattr(env, "parser_mode", "legacy"))
     for step in range(args.max_episode_len):
         action = agent.search(obs, history, step, valid_actions, done)
         obs, reward, done, history, valid_actions = env.apply_action(action)

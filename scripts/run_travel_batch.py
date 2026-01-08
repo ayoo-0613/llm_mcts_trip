@@ -16,6 +16,7 @@ if ROOT not in sys.path:
 from mcts.travel import EnvAgent, SearchAgent, SemanticAgent  # noqa: E402
 from mcts.travel.env.knowledge_base import TravelKnowledgeBase  # noqa: E402
 from mcts.travel.env.submission import env_to_submission_record  # noqa: E402
+from mcts.travel.envspec.factory import build_env_from_query  # noqa: E402
 from mcts.travel.semantic.query_parsing import (
     call_local_llm,
     fallback_parse,
@@ -349,18 +350,20 @@ def _run_single(
     args,
     *,
     raw_query: str = "",
-    goal_parsed: Dict[str, Any],
+    goal_parsed: Optional[Dict[str, Any]] = None,
+    env: Optional[EnvAgent] = None,
 ):
-    env = EnvAgent(
-        kb,
-        max_steps=args.max_episode_len,
-        top_k=args.top_k,
-        debug=args.debug,
-        candidate_cap=args.candidate_cap,
-        user_query=raw_query,
-        log_filter_usage=args.log_filter_usage,
-        goal_parsed=goal_parsed,
-    )
+    if env is None:
+        env = EnvAgent(
+            kb,
+            max_steps=args.max_episode_len,
+            top_k=args.top_k,
+            debug=args.debug,
+            candidate_cap=args.candidate_cap,
+            user_query=raw_query,
+            log_filter_usage=args.log_filter_usage,
+            goal_parsed=goal_parsed or {},
+        )
     planner = SearchAgent(args, env, policy)
     result = planner.run(max_episode_len=args.max_episode_len)
     result["state"] = env.state
@@ -444,6 +447,12 @@ def parse_args():
     parser.add_argument("--local-model", default=None, help="Local LLM for action priors and NL parsing.")
     parser.add_argument("--local-base", default=os.getenv("LOCAL_LLM_BASE", "http://localhost:11434"))
     parser.add_argument("--device", default="mps", help="cpu/mps/cuda:0 etc.")
+    parser.add_argument(
+        "--parser-mode",
+        default="legacy",
+        choices=["legacy", "envspec"],
+        help="Parsing route for NL queries: legacy (goal JSON) or envspec (EnvSpec contract).",
+    )
     parser.add_argument("--parser-model", default=None, help="Parser model (defaults to --local-model).")
     parser.add_argument("--parser-timeout", type=float, default=180.0)
     parser.add_argument("--llm-timeout", type=float, default=180.0,
@@ -488,7 +497,7 @@ def main():
     parser_model = args.parser_model or args.local_model or "deepseek-r1:14b"
     kb = TravelKnowledgeBase(args.database_root)
     semantic = SemanticAgent()
-    policy = semantic.build_policy(args)
+    policy = semantic.build_policy(args) if args.use_llm_prior != "none" else None
     output_dir = args.save_dir
     os.makedirs(output_dir, exist_ok=True)
 
@@ -517,22 +526,50 @@ def main():
         if isinstance(entry, dict) and entry.get("parsed"):
             parsed = entry.get("parsed") or {}
             print(f"Parsed JSON (CSV): {json.dumps(parsed, ensure_ascii=False)}")
+            env = None
         else:
-            parsed = parse_nl_query(q, args.local_base, parser_model, timeout=args.parser_timeout)
-            print(f"LLM parsed JSON: {json.dumps(parsed, ensure_ascii=False)}")
-            if not parsed.get("origin") or not parsed.get("destination"):
-                fallback = fallback_parse(q)
-                parsed = {**fallback, **parsed}
-            if not parsed.get("origin") or not parsed.get("destination"):
-                print(f"[{idx}] skip (parse failed): {q}")
-                continue
+            env = None
+            if args.parser_mode == "envspec":
+                def _fallback_parser(nl: str, base_url: str, model: str, timeout: float) -> Dict[str, Any]:
+                    p = parse_nl_query(nl, base_url, model, timeout=timeout)
+                    if not p.get("origin") or not p.get("destination"):
+                        fb = fallback_parse(nl)
+                        p = {**fb, **(p or {})}
+                    return p
+
+                env = build_env_from_query(
+                    q,
+                    kb,
+                    use_envspec=True,
+                    llm_cfg={"base_url": args.local_base, "model": parser_model, "timeout": args.parser_timeout},
+                    env_defaults={
+                        "max_steps": args.max_episode_len,
+                        "top_k": args.top_k,
+                        "debug": args.debug,
+                        "candidate_cap": args.candidate_cap,
+                        "log_filter_usage": args.log_filter_usage,
+                    },
+                    goal_transform=lambda p: _merge_args_into_parsed(p, args),
+                    fallback_parser=_fallback_parser,
+                )
+                parsed = dict(env.goal_parsed or {})
+                print(f"EnvSpec compiled goal: {json.dumps(parsed, ensure_ascii=False)}")
+            else:
+                parsed = parse_nl_query(q, args.local_base, parser_model, timeout=args.parser_timeout)
+                print(f"LLM parsed JSON: {json.dumps(parsed, ensure_ascii=False)}")
+                if not parsed.get("origin") or not parsed.get("destination"):
+                    fallback = fallback_parse(q)
+                    parsed = {**fallback, **parsed}
+                if not parsed.get("origin") or not parsed.get("destination"):
+                    print(f"[{idx}] skip (parse failed): {q}")
+                    continue
         parsed = normalize_parsed_query(parsed)
         parsed = _merge_args_into_parsed(parsed, args)
         if not parsed.get("origin") or not parsed.get("destination"):
             print(f"[{idx}] skip (parse missing origin/destination): {q}")
             continue
         t0 = time.perf_counter()
-        result = _run_single(kb, policy, args, raw_query=q, goal_parsed=parsed)
+        result = _run_single(kb, policy, args, raw_query=q, goal_parsed=parsed, env=env)
         elapsed = time.perf_counter() - t0
         structured = _structured_plan(result["env"])
         diagnostics = _goal_diagnostics(kb, result["env"].goal_parsed)
@@ -551,6 +588,7 @@ def main():
             with open(out_path, "w", encoding="utf-8") as f:
                 json.dump(
                     {
+                        "parser_mode": getattr(result["env"], "parser_mode", "legacy"),
                         "success": eval_success,
                         "cost": result["cost"],
                         "violations": eval_violations,
