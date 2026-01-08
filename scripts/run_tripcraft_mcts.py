@@ -52,7 +52,7 @@ def _row_to_query_json(row: Dict[str, Any]) -> Dict[str, Any]:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--tripcraft-db", default="Tripcraft/Tripcraft/TripCraft_database")
+    ap.add_argument("--tripcraft-db", default="Tripcraft/TripCraft_database")
     ap.add_argument("--queries-csv", required=True, help="TripCraft query CSV (3/5/7 day)")
     ap.add_argument("--out", required=True, help="Output JSONL in TripCraft eval format")
     ap.add_argument("--limit", type=int, default=None)
