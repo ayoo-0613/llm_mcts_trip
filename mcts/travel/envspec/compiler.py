@@ -48,8 +48,12 @@ def validate_envspec(spec: dict) -> Tuple[bool, List[str]]:
 
     if not str(goal.get("origin") or "").strip():
         errors.append("goal.origin required")
+    if goal.get("origin") is not None and not isinstance(goal.get("origin"), str):
+        errors.append("goal.origin must be a string or null")
     if not str(goal.get("destination") or "").strip():
         errors.append("goal.destination required")
+    if goal.get("destination") is not None and not isinstance(goal.get("destination"), str):
+        errors.append("goal.destination must be a string or null")
 
     days = goal.get("duration_days")
     if days is None:
@@ -64,8 +68,11 @@ def validate_envspec(spec: dict) -> Tuple[bool, List[str]]:
 
     start_date = goal.get("start_date")
     if start_date is not None and str(start_date).strip():
-        if not _DATE_RE.match(str(start_date).strip()):
+        if not isinstance(start_date, str):
             errors.append("goal.start_date must be 'YYYY-MM-DD' or null")
+        else:
+            if not _DATE_RE.match(str(start_date).strip()):
+                errors.append("goal.start_date must be 'YYYY-MM-DD' or null")
 
     people = goal.get("people_number")
     if people is not None:
@@ -250,7 +257,10 @@ def normalize_envspec(spec: dict) -> dict:
 
     for k in ("origin", "destination", "start_date"):
         v = goal_norm.get(k)
-        goal_norm[k] = str(v).strip() if v is not None and str(v).strip() else None
+        if isinstance(v, str) and v.strip():
+            goal_norm[k] = v.strip()
+        else:
+            goal_norm[k] = None
 
     for k, default in (("duration_days", None), ("people_number", 1), ("visiting_city_number", 1)):
         v = goal_norm.get(k)
@@ -326,7 +336,10 @@ def normalize_envspec(spec: dict) -> dict:
     stay = cons_norm.get("stay") or {}
     for k in ("room_type", "house_rule"):
         v = stay.get(k)
-        stay[k] = str(v).strip() if v is not None and str(v).strip() else None
+        if isinstance(v, str) and v.strip():
+            stay[k] = v.strip()
+        else:
+            stay[k] = None
     cons_norm["stay"] = stay
 
     daily = cons_norm.get("daily") or {}

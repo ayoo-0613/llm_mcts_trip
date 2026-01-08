@@ -5,6 +5,7 @@ import unittest
 from mcts.travel.env.knowledge_base import TravelKnowledgeBase
 from mcts.travel.env_agent import TravelEnv
 from mcts.travel.envspec.compiler import compile_envspec
+from mcts.travel.envspec.compiler import validate_envspec
 from mcts.travel.envspec.factory import build_env_from_query
 from mcts.travel.envspec.schema import envspec_skeleton
 
@@ -89,6 +90,23 @@ class TestEnvSpec(unittest.TestCase):
         )
         self.assertEqual(env.goal_parsed.get("origin"), "Atlanta")
         self.assertEqual(env.goal_parsed.get("destination"), "Milwaukee")
+
+    def test_envspec_rejects_non_string_destination(self):
+        spec = envspec_skeleton()
+        spec["goal"].update(
+            {
+                "origin": "Durango",
+                "destination": ["Texas City A", "Texas City B"],
+                "start_date": "2022-03-27",
+                "duration_days": 5,
+                "budget": 2300,
+                "people_number": 2,
+                "visiting_city_number": 2,
+            }
+        )
+        ok, errors = validate_envspec(spec)
+        self.assertFalse(ok)
+        self.assertTrue(any("goal.destination" in e for e in errors))
 
 
 if __name__ == "__main__":

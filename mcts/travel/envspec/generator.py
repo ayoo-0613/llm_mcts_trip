@@ -51,6 +51,11 @@ def generate_envspec_from_nl(
         "Output ONLY a single JSON object. Do not output any extra text.\n"
         "You MUST keep the JSON structure exactly the same as the provided skeleton: do not add/remove/rename fields.\n"
         f'The field `version` MUST be exactly "{ENV_SPEC_VERSION}".\n'
+        "All `goal.*` string fields MUST be single strings (never arrays/objects).\n"
+        "If the user requests visiting N cities in a state (e.g., '2 cities in Texas'), set:\n"
+        "- goal.destination = the state name (e.g., 'Texas')\n"
+        "- goal.visiting_city_number = N\n"
+        "- constraints.city.candidate_cities = null (unless explicitly provided)\n"
         "Fill the values based on the user query.\n"
         "If a value is unknown, use null (do not omit fields).\n"
         "Allowed enums:\n"
@@ -66,4 +71,3 @@ def generate_envspec_from_nl(
     raw = call_local_llm(base_url, model, prompt, timeout=timeout)
     obj = _extract_json_object(raw or "")
     return obj or {}
-
