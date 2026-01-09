@@ -1,0 +1,289 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 893.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you formulate a 3-day trip for a group of 4 from Fort Smith to Dallas which spans March 6th to March 8th, 2022? We have a budget of $3,200 for the trip. Regarding accommodations, entire rooms are preferable, and places that allow pets are essential as we intend to bring our pets along. Importantly, we would prefer that our travel method exclude taking a flight.",
+  "parsed": {
+    "org": "Fort Smith",
+    "dest": "Dallas",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-06",
+      "2022-03-07",
+      "2022-03-08"
+    ],
+    "people_number": 4,
+    "local_constraint": {
+      "house rule": "pets",
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": "no flight"
+    },
+    "budget": 3200,
+    "origin": "Fort Smith",
+    "destination": "Dallas",
+    "duration_days": 3,
+    "start_date": "2022-03-06",
+    "preferences": [
+      "pets",
+      "entire room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Dallas"
+    ],
+    "transportation_dates": [
+      "2022-03-06",
+      "2022-03-08"
+    ],
+    "transportation_methods": [
+      "taxi, from Fort Smith to Dallas, cost: 447.0",
+      "taxi, from Dallas to Fort Smith, cost: 446.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Dallas"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Fort Smith to Dallas",
+      "transportation": "Taxi, from Fort Smith to Dallas, Cost: 447",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Dallas",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Dallas to Fort Smith",
+      "transportation": "Taxi, from Dallas to Fort Smith, Cost: 446",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+      "counts": {
+        "kb": 3,
+        "after_nonbudget": 0,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 2307.0,
+        "slot_cap": 865.125,
+        "reserve": 396.0
+      },
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "city": "Dallas",
+        "city_bundle": [
+          "Dallas"
+        ],
+        "reason": "scarcity",
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 0,
+          "after_budget": 0,
+          "budget_removed": 0,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": "min_nights",
+        "budget_context": {
+          "remaining": 2307.0,
+          "slot_cap": 865.125,
+          "reserve": 396.0,
+          "min_cost_nonbudget": null
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "22dbbf5c88fb",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+      "bundle_fp": "594ad9a63bb7"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [
+      {
+        "phase": "stay",
+        "rule": "AVOID_CITY",
+        "city": "Dallas",
+        "ttl": 1
+      }
+    ],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "22dbbf5c88fb",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "594ad9a63bb7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Dallas",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "22dbbf5c88fb",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "594ad9a63bb7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Dallas",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "22dbbf5c88fb",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "594ad9a63bb7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Dallas",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.09968059929087758
+}

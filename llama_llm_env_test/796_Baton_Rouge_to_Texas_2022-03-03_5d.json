@@ -1,0 +1,333 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 2276.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you arrange a 5-day travel plan for 2 people, departing from Baton Rouge and visiting 2 cities in Texas from March 3rd to March 7th, 2022? We're working with a budget of $3,000 and prefer to stay in accommodations that allow parties and provide access to entire rooms. Please note that we do not want any flights included in our transportation plan.",
+  "parsed": {
+    "org": "Baton Rouge",
+    "dest": "Texas",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-03",
+      "2022-03-04",
+      "2022-03-05",
+      "2022-03-06",
+      "2022-03-07"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "parties",
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": "no flight"
+    },
+    "budget": 3000,
+    "origin": "Baton Rouge",
+    "destination": "Texas",
+    "duration_days": 5,
+    "start_date": "2022-03-03",
+    "preferences": [
+      "parties",
+      "entire room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "San Antonio",
+      "Dallas"
+    ],
+    "transportation_dates": [
+      "2022-03-03",
+      "2022-03-05",
+      "2022-03-07"
+    ],
+    "transportation_methods": [
+      "taxi, from Baton Rouge to San Antonio, cost: 745.0",
+      "taxi, from San Antonio to Dallas, cost: 440.0",
+      "taxi, from Dallas to Baton Rouge, cost: 687.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Stay in Solar Powered Apartment in NYC!!!, San Antonio",
+      "missing, Dallas"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Baton Rouge to San Antonio",
+      "transportation": "Taxi, from Baton Rouge to San Antonio, Cost: 745",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Stay in Solar Powered Apartment in NYC!!!, San Antonio"
+    },
+    {
+      "days": 2,
+      "current_city": "San Antonio",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Stay in Solar Powered Apartment in NYC!!!, San Antonio"
+    },
+    {
+      "days": 3,
+      "current_city": "from San Antonio to Dallas",
+      "transportation": "Taxi, from San Antonio to Dallas, Cost: 440",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Dallas",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Dallas to Baton Rouge",
+      "transportation": "Taxi, from Dallas to Baton Rouge, Cost: 687",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+      "counts": {
+        "kb": 10,
+        "after_nonbudget": 5,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 4,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 724.0,
+        "slot_cap": 530.2734375,
+        "reserve": 239.50874999999996
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 331.5,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 281.775,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 239.50874999999996,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "city": "Dallas",
+        "city_bundle": [
+          "San Antonio",
+          "Dallas"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 10,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 724.0,
+          "slot_cap": 530.2734375,
+          "reserve": 239.50874999999996,
+          "min_cost_nonbudget": 314.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "90653f160419",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+      "bundle_fp": "0263fc47108d"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "90653f160419",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "0263fc47108d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "90653f160419",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "0263fc47108d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "90653f160419",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "0263fc47108d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.9152047149837017
+}

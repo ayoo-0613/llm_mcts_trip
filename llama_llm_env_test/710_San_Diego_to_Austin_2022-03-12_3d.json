@@ -1,0 +1,161 @@
+{
+  "parser_mode": "envspec",
+  "success": true,
+  "cost": 2698.0,
+  "violations": [],
+  "query": "Please create a travel plan for 2 people starting in San Diego and heading to Austin for 3 days from March 12th to March 14th, 2022. Our budget is $2,700. For our accommodations, we require a smoking-allowed place, and we are open about the types of rooms. We will not be self-driving, so kindly arrange for the necessary transportation. Regarding meals, we're interested in Italian, Mediterranean, American, and Mexican cuisines.",
+  "parsed": {
+    "origin": "San Diego",
+    "destination": "Austin",
+    "start_date": "2022-03-12",
+    "duration_days": 3,
+    "budget": 2700.0,
+    "people_number": 2,
+    "visiting_city_number": 1,
+    "preferences": [
+      "Italian",
+      "Mediterranean",
+      "American",
+      "Mexican"
+    ],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight",
+          "taxi"
+        ]
+      },
+      "meal": {
+        "cuisines": null
+      },
+      "stay": {
+        "room_type": null,
+        "house_rule": "smoking"
+      },
+      "daily": {
+        "attractions_per_day_min": 1,
+        "attractions_per_day_max": 3
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    },
+    "attractions_per_day_min": 1,
+    "attractions_per_day_max": 3
+  },
+  "actions": [
+    "move:seg0:flight:F3746166 San Diego->Austin $232 13:53-18:30",
+    "move:seg1:flight:F2189403 Austin->San Diego $233 21:43-22:20",
+    "stay:Austin:2265 Spacious Williamsburg 1 bedroom! Entire home/apt $455",
+    "eat:d1:breakfast:9279 Talaga Sampireun Fast Food, Cafe, Bakery, Seafood $37 rating 4.9",
+    "eat:d1:lunch:2302 Chili's Cafe, American, Seafood $48 rating 4.7",
+    "eat:d1:dinner:2996 Moksha Cafe, Bakery, BBQ, Fast Food $12 rating 3.7",
+    "eat:d2:breakfast:19 Wildflour Cafe + Bakery Desserts, French, Bakery, BBQ, Seafood $55 rating 4.4",
+    "eat:d2:lunch:8009 Karnataka Fast Food, Desserts, Italian $43 rating 3.7",
+    "eat:d2:dinner:3730 Subway Tea, Mexican, Seafood $55 rating 3.3",
+    "eat:d3:breakfast:5251 Green Chick Chop Cafe, Mediterranean, Fast Food $43 rating 3.2",
+    "eat:d3:lunch:5988 Costa Coffee Fast Food, Cafe, BBQ, Seafood $65 rating 3.6",
+    "eat:d3:dinner:2743 Cake o' Cuisine Seafood, Indian, Cafe, Fast Food $71 rating 3.3",
+    "visit:d1:spot:4085 Texas Capitol @ Austin",
+    "visit:d2:spot:4086 Zilker Metropolitan Park @ Austin",
+    "visit:d3:spot:4087 Museum of the Weird @ Austin"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Austin"
+    ],
+    "transportation_dates": [
+      "2022-03-12",
+      "2022-03-14"
+    ],
+    "transportation_methods": [
+      "Flight F3746166, from San Diego to Austin, Departure Time: 13:53, Arrival Time: 18:30, cost: 232.0",
+      "Flight F2189403, from Austin to San Diego, Departure Time: 21:43, Arrival Time: 22:20, cost: 233.0"
+    ],
+    "restaurants": [
+      "Talaga Sampireun, Austin",
+      "Chili's, Austin",
+      "Moksha, Austin",
+      "Wildflour Cafe + Bakery, Austin",
+      "Karnataka, Austin",
+      "Subway, Austin",
+      "Green Chick Chop, Austin",
+      "Costa Coffee, Austin",
+      "Cake o' Cuisine, Austin"
+    ],
+    "attractions": [
+      "Texas Capitol, Austin",
+      "Zilker Metropolitan Park, Austin",
+      "Museum of the Weird, Austin"
+    ],
+    "accommodations": [
+      "Spacious Williamsburg 1 bedroom!, Austin"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from San Diego to Austin",
+      "transportation": "Flight Number: F3746166, from San Diego to Austin, Departure Time: 13:53, Arrival Time: 18:30",
+      "breakfast": "Talaga Sampireun, Austin",
+      "attraction": "Texas Capitol, Austin;",
+      "lunch": "Chili's, Austin",
+      "dinner": "Moksha, Austin",
+      "accommodation": "Spacious Williamsburg 1 bedroom!, Austin"
+    },
+    {
+      "days": 2,
+      "current_city": "Austin",
+      "transportation": "-",
+      "breakfast": "Wildflour Cafe + Bakery, Austin",
+      "attraction": "Zilker Metropolitan Park, Austin;",
+      "lunch": "Karnataka, Austin",
+      "dinner": "Subway, Austin",
+      "accommodation": "Spacious Williamsburg 1 bedroom!, Austin"
+    },
+    {
+      "days": 3,
+      "current_city": "from Austin to San Diego",
+      "transportation": "Flight Number: F2189403, from Austin to San Diego, Departure Time: 21:43, Arrival Time: 22:20",
+      "breakfast": "Green Chick Chop, Austin",
+      "attraction": "Museum of the Weird, Austin;",
+      "lunch": "Costa Coffee, Austin",
+      "dinner": "Cake o' Cuisine, Austin",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "attraction",
+      "slot_id": "attraction|d3|slot:spot|seg:None|Austin|None|None->None",
+      "counts": {
+        "kb": 20,
+        "after_nonbudget": 20,
+        "after_budget": 20,
+        "returned": 10,
+        "topk": 10
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 2.0,
+        "slot_cap": null,
+        "reserve": 0.0
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": null,
+  "failure_gradients": [],
+  "elapsed_seconds": 7.342422306071967
+}

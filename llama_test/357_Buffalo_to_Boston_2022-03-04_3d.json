@@ -1,0 +1,283 @@
+{
+  "success": false,
+  "cost": 632.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Help me draft a 3-day itinerary for 4 people traveling from Buffalo to Boston, spanning from March 4th to March 6th, 2022. Our budget is set at $2,400 and we are open to any sorts of accommodations. We'd ideally like to experience both French and American cuisines while we're there.",
+  "parsed": {
+    "org": "Buffalo",
+    "dest": "Boston",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-04",
+      "2022-03-05",
+      "2022-03-06"
+    ],
+    "people_number": 4,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": [
+        "French",
+        "American"
+      ],
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 2400,
+    "origin": "Buffalo",
+    "destination": "Boston",
+    "duration_days": 3,
+    "start_date": "2022-03-04",
+    "preferences": [
+      "French",
+      "American"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Boston"
+    ],
+    "transportation_dates": [
+      "2022-03-04",
+      "2022-03-06"
+    ],
+    "transportation_methods": [
+      "Flight F1998638, from Buffalo to Boston, Departure Time: 07:28, Arrival Time: 08:41, cost: 79.0",
+      "Flight F0821446, from Boston to Buffalo, Departure Time: 23:34, Arrival Time: 01:15, cost: 79.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Boston"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Buffalo to Boston",
+      "transportation": "Flight Number: F1998638, from Buffalo to Boston, Departure Time: 07:28, Arrival Time: 08:41",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Boston",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Boston to Buffalo",
+      "transportation": "Flight Number: F0821446, from Boston to Buffalo, Departure Time: 23:34, Arrival Time: 01:15",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Boston|None|None->None",
+      "counts": {
+        "kb": 3,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1768.0,
+        "slot_cap": 1294.921875,
+        "reserve": 265.30199999999996
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 367.2,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 312.11999999999995,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 265.30199999999996,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Boston|None|None->None",
+        "city": "Boston",
+        "city_bundle": [
+          "Boston"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1768.0,
+          "slot_cap": 1294.921875,
+          "reserve": 265.30199999999996,
+          "min_cost_nonbudget": 872.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "f696ddd81270",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Boston|None|None->None",
+      "bundle_fp": "7d041d8f8399"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "f696ddd81270",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Boston|None|None->None",
+        "bundle_fp": "7d041d8f8399"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "f696ddd81270",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Boston|None|None->None",
+        "bundle_fp": "7d041d8f8399"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "f696ddd81270",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Boston|None|None->None",
+        "bundle_fp": "7d041d8f8399"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.1268067928031087
+}

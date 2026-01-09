@@ -1,0 +1,1103 @@
+{
+  "success": false,
+  "cost": 3133.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you create a 7-day travel itinerary starting in Fayetteville and covering 3 cities in Texas from March 7th to March 13th, 2022 for two individuals? Our budget is set at $4,500. Our accommodations need to be pet-friendly as we'll be bringing our pets. Also, we prefer transportation methods other than flying. In terms of food preferences, we're interested in experiencing a variety of cuisines including Mediterranean, French, Chinese, and American. Additionally, due to uncertainty in the number of rooms needed, our accommodations should be arranged to accommodate multiple rooms if necessary.",
+  "parsed": {
+    "org": "Fayetteville",
+    "dest": "Texas",
+    "days": 7,
+    "visiting_city_number": 3,
+    "date": [
+      "2022-03-07",
+      "2022-03-08",
+      "2022-03-09",
+      "2022-03-10",
+      "2022-03-11",
+      "2022-03-12",
+      "2022-03-13"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "pets",
+      "cuisine": [
+        "Mediterranean",
+        "French",
+        "Chinese",
+        "American"
+      ],
+      "room type": null,
+      "transportation": "no flight"
+    },
+    "budget": 4500,
+    "origin": "Fayetteville",
+    "destination": "Texas",
+    "duration_days": 7,
+    "start_date": "2022-03-07",
+    "preferences": [
+      "Mediterranean",
+      "French",
+      "Chinese",
+      "American",
+      "pets"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas",
+      "Killeen",
+      "Laredo",
+      "Texarkana"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Fayetteville->Abilene 2157km cost 2157",
+    "move:seg1:taxi:Abilene->Corpus Christi 627km cost 627",
+    "move:seg2:taxi:Corpus Christi->Austin 349km cost 349"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Abilene",
+      "Corpus Christi",
+      "Austin"
+    ],
+    "transportation_dates": [
+      "2022-03-07",
+      "2022-03-09",
+      "2022-03-11",
+      "2022-03-13"
+    ],
+    "transportation_methods": [
+      "taxi, from Fayetteville to Abilene, cost: 2157.0",
+      "taxi, from Abilene to Corpus Christi, cost: 627.0",
+      "taxi, from Corpus Christi to Austin, cost: 349.0",
+      "Austin->Fayetteville missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Abilene",
+      "missing, Corpus Christi",
+      "missing, Austin"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Fayetteville to Abilene",
+      "transportation": "Taxi, from Fayetteville to Abilene, Cost: 2157",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Abilene",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Abilene to Corpus Christi",
+      "transportation": "Taxi, from Abilene to Corpus Christi, Cost: 627",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Corpus Christi",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Corpus Christi to Austin",
+      "transportation": "Taxi, from Corpus Christi to Austin, Cost: 349",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "Austin",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 7,
+      "current_city": "Austin",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-07|Corpus Christi->Austin",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 1716.0,
+        "slot_cap": 197.56578947368416,
+        "reserve": 1354.8999999999999
+      },
+      "segment_role": "intercity",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 1354.8999999999999,
+          "kept": 1
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-07|Austin->Fayetteville",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1367.0,
+        "slot_cap": 491.82771381578937,
+        "reserve": 978.9152499999999
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 1354.8999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 1151.665,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 978.9152499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-07|Austin->Fayetteville",
+        "city": "Fayetteville",
+        "city_bundle": [
+          "Abilene",
+          "Corpus Christi",
+          "Austin"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1367.0,
+          "slot_cap": 491.82771381578937,
+          "reserve": 978.9152499999999,
+          "min_cost_nonbudget": 1050.5
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [],
+        "city_bundle": [
+          "Abilene",
+          "San Angelo",
+          "Dallas"
+        ],
+        "current_bundle_features": {},
+        "current_bottleneck": null,
+        "budget_context": {
+          "remaining": 1782.0,
+          "slot_cap": 641.1389802631577,
+          "reserve": 783.6234999999999,
+          "min_cost_nonbudget": 931.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Fayetteville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1782.0,
+          "slot_cap": 641.1389802631577,
+          "reserve": 783.6234999999999,
+          "min_cost_nonbudget": 931.0
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4500,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": [
+              "Mediterranean",
+              "French",
+              "Chinese",
+              "American"
+            ],
+            "room type": null,
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Abilene",
+        "Corpus Christi",
+        "Austin"
+      ],
+      "reason": "Bundle risk and edge costs favor candidate 2",
+      "raw": "```json\n{\n  \"candidate_id\": 2,\n  \"reason\": \"Bundle risk and edge costs favor candidate 2\",\n  \"confidence\": 0.95,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"segment\", \"rule\": \"NO_SELF_DRIVING\", \"ttl\": 86400, \"city\": null, \"edge\": null}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"bundle\", \"feature\": \"cost_ratio\", \"delta\": -0.05},\n      {\"phase\": \"hotel\", \"feature\": \"hotel_price\", \"delta\": 10.0}\n    ]\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "Bundle risk and edge costs favor candidate 2",
+        "confidence": 0.95,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "NO_SELF_DRIVING",
+              "ttl": 86400,
+              "city": null,
+              "edge": null
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "bundle",
+              "feature": "cost_ratio",
+              "delta": -0.05
+            },
+            {
+              "phase": "hotel",
+              "feature": "hotel_price",
+              "delta": 10.0
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "NO_SELF_DRIVING",
+            "ttl": 86400,
+            "city": null,
+            "edge": null
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "bundle",
+            "feature": "cost_ratio",
+            "delta": -0.05
+          },
+          {
+            "phase": "hotel",
+            "feature": "hotel_price",
+            "delta": 10.0
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [],
+        "city_bundle": [
+          "Abilene",
+          "Corpus Christi",
+          "Austin"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 2101.0,
+          "bundle_lb_cost": 6894.0,
+          "stay_lb_cost": 1126.0,
+          "meal_lb_cost": 534.0,
+          "transport_lb_cost": 5234.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "fayetteville",
+              "abilene"
+            ],
+            [
+              "abilene",
+              "corpus christi"
+            ],
+            [
+              "corpus christi",
+              "austin"
+            ],
+            [
+              "austin",
+              "fayetteville"
+            ]
+          ],
+          "bundle_key": [
+            "abilene",
+            "austin",
+            "corpus christi"
+          ],
+          "bundle_key_set": [
+            "abilene",
+            "austin",
+            "corpus christi"
+          ],
+          "bundle_key_seq": [
+            "abilene",
+            "corpus christi",
+            "austin"
+          ],
+          "city_features": {
+            "Abilene": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 83.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 13,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 7,
+              "hotel_slack": 1
+            },
+            "Corpus Christi": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 412.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 16,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 10,
+              "hotel_slack": 1
+            },
+            "Austin": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 68.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 18,
+              "min_meal_cost": 15.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 9,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Fayetteville->Abilene": {
+              "min_cost": 2157.0,
+              "blocked": false
+            },
+            "Abilene->Corpus Christi": {
+              "min_cost": 627.0,
+              "blocked": false
+            },
+            "Corpus Christi->Austin": {
+              "min_cost": 349.0,
+              "blocked": false
+            },
+            "Austin->Fayetteville": {
+              "min_cost": 2101.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 7,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 412.0,
+            "bottleneck_city_meal": "Abilene",
+            "bottleneck_city_hotel": "Corpus Christi",
+            "bottleneck_edge": "Fayetteville->Abilene"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 7,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 412.0,
+          "bottleneck_city_meal": "Abilene",
+          "bottleneck_city_hotel": "Corpus Christi",
+          "bottleneck_edge": "Fayetteville->Abilene"
+        },
+        "budget_context": {
+          "remaining": 1367.0,
+          "slot_cap": 491.82771381578937,
+          "reserve": 978.9152499999999,
+          "min_cost_nonbudget": 1050.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Fayetteville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1367.0,
+          "slot_cap": 491.82771381578937,
+          "reserve": 978.9152499999999,
+          "min_cost_nonbudget": 1050.5
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4500,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": [
+              "Mediterranean",
+              "French",
+              "Chinese",
+              "American"
+            ],
+            "room type": null,
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Abilene",
+        "Corpus Christi",
+        "Longview"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n    \"candidate_id\": 2,\n    \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n    \"confidence\": 0.8,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            {\"phase\": \"segment\", \"rule\": \"AVOID_CITY\", \"ttl\": 10, \"city\": \"Fayetteville\"}\n        ],\n        \"soft_penalties\": [],\n        \"retrieval_patches\": []\n    }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "AVOID_CITY",
+              "ttl": 10,
+              "city": "Fayetteville"
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "AVOID_CITY",
+            "ttl": 10,
+            "city": "Fayetteville"
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Abilene",
+          "Corpus Christi",
+          "Longview"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1663.0,
+          "bundle_lb_cost": 6972.0,
+          "stay_lb_cost": 1366.0,
+          "meal_lb_cost": 480.0,
+          "transport_lb_cost": 5126.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "fayetteville",
+              "abilene"
+            ],
+            [
+              "abilene",
+              "corpus christi"
+            ],
+            [
+              "corpus christi",
+              "longview"
+            ],
+            [
+              "longview",
+              "fayetteville"
+            ]
+          ],
+          "bundle_key": [
+            "abilene",
+            "corpus christi",
+            "longview"
+          ],
+          "bundle_key_set": [
+            "abilene",
+            "corpus christi",
+            "longview"
+          ],
+          "bundle_key_seq": [
+            "abilene",
+            "corpus christi",
+            "longview"
+          ],
+          "city_features": {
+            "Abilene": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 83.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 13,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 7,
+              "hotel_slack": 1
+            },
+            "Corpus Christi": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 412.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 16,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 10,
+              "hotel_slack": 1
+            },
+            "Longview": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 188.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 13,
+              "meal_count": 13,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 10,
+              "meal_slack": 4,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Fayetteville->Abilene": {
+              "min_cost": 2157.0,
+              "blocked": false
+            },
+            "Abilene->Corpus Christi": {
+              "min_cost": 627.0,
+              "blocked": false
+            },
+            "Corpus Christi->Longview": {
+              "min_cost": 679.0,
+              "blocked": false
+            },
+            "Longview->Fayetteville": {
+              "min_cost": 1663.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 4,
+            "bottleneck_attr_slack": 10,
+            "bottleneck_hotel_price": 412.0,
+            "bottleneck_city_meal": "Longview",
+            "bottleneck_city_hotel": "Corpus Christi",
+            "bottleneck_edge": "Fayetteville->Abilene"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 4,
+          "bottleneck_attr_slack": 10,
+          "bottleneck_hotel_price": 412.0,
+          "bottleneck_city_meal": "Longview",
+          "bottleneck_city_hotel": "Corpus Christi",
+          "bottleneck_edge": "Fayetteville->Abilene"
+        },
+        "budget_context": {
+          "remaining": 1716.0,
+          "slot_cap": 308.6965460526315,
+          "reserve": 1126.30525,
+          "min_cost_nonbudget": 339.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Longview",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1716.0,
+          "slot_cap": 308.6965460526315,
+          "reserve": 1126.30525,
+          "min_cost_nonbudget": 339.5
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4500,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": [
+              "Mediterranean",
+              "French",
+              "Chinese",
+              "American"
+            ],
+            "room type": null,
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Abilene",
+        "Corpus Christi",
+        "Austin"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 2,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.9,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"segment\", \"rule\": \"NO_FLIGHT\", \"ttl\": 100, \"city\": \"Longview\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"segment\", \"feature\": \"budget_risk\", \"delta\": -0.5}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.9,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "NO_FLIGHT",
+              "ttl": 100,
+              "city": "Longview"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "budget_risk",
+              "delta": -0.5
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "NO_FLIGHT",
+            "ttl": 100,
+            "city": "Longview"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "budget_risk",
+            "delta": -0.5
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "767446fb6d08",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-07|Austin->Fayetteville",
+      "bundle_fp": "96b1139dfa2c"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "767446fb6d08",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-07|Dallas->Fayetteville",
+        "bundle_fp": "d54a246a7c12"
+      },
+      "confidence": 0.95,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "NO_SELF_DRIVING",
+          "ttl": 86400,
+          "city": null,
+          "edge": null
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "bundle",
+          "feature": "cost_ratio",
+          "delta": -0.05
+        },
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 10.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Abilene",
+        "Corpus Christi",
+        "Austin"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "767446fb6d08",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-07|Austin->Fayetteville",
+        "bundle_fp": "96b1139dfa2c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "767446fb6d08",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-07|Austin->Fayetteville",
+        "bundle_fp": "96b1139dfa2c"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "AVOID_CITY",
+          "ttl": 10,
+          "city": "Fayetteville"
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Abilene",
+        "Corpus Christi",
+        "Longview"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "767446fb6d08",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-07|Corpus Christi->Longview",
+        "bundle_fp": "cb24a720731b"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "767446fb6d08",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-07|Corpus Christi->Longview",
+        "bundle_fp": "cb24a720731b"
+      },
+      "confidence": 0.9,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "NO_FLIGHT",
+          "ttl": 100,
+          "city": "Longview"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": -0.5
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Abilene",
+        "Corpus Christi",
+        "Austin"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "767446fb6d08",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-07|Austin->Fayetteville",
+        "bundle_fp": "96b1139dfa2c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 19.62959642196074
+}

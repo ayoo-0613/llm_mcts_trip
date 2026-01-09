@@ -1,0 +1,347 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1557.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you create a travel plan for 2 people departing from Wilmington and visiting 3 cities in New York? The travel should span from March 18th to March 24th, 2022. Since smoking is a requirement for our accommodations, make sure to accommodate this. Entire rooms should be booked for accommodations. We prefer not to fly as our method of transportation. Our total budget for the trip is $2,900.",
+  "parsed": {
+    "org": "Wilmington",
+    "dest": "New York",
+    "days": 6,
+    "visiting_city_number": 3,
+    "date": [
+      "2022-03-18",
+      "2022-03-19",
+      "2022-03-20",
+      "2022-03-21",
+      "2022-03-22",
+      "2022-03-23"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "smoking",
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": "no flight"
+    },
+    "budget": 2900,
+    "origin": "Wilmington",
+    "destination": "New York",
+    "duration_days": 6,
+    "start_date": "2022-03-18",
+    "preferences": [
+      "smoking",
+      "entire room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Buffalo",
+      "Manhattan",
+      "Niagara Falls",
+      "Islip",
+      "New York",
+      "Watertown",
+      "Newburgh",
+      "Syracuse",
+      "Plattsburgh",
+      "Ogdensburg",
+      "Ithaca",
+      "Elmira",
+      "White Plains",
+      "Albany",
+      "Binghamton",
+      "Rochester"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Rochester",
+      "Watertown",
+      "Syracuse"
+    ],
+    "transportation_dates": [
+      "2022-03-18",
+      "2022-03-20",
+      "2022-03-22",
+      "2022-03-23"
+    ],
+    "transportation_methods": [
+      "taxi, from Wilmington to Rochester, cost: 1201.0",
+      "taxi, from Rochester to Watertown, cost: 242.0",
+      "taxi, from Watertown to Syracuse, cost: 114.0",
+      "Syracuse->Wilmington missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Rochester",
+      "missing, Watertown",
+      "missing, Syracuse"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Wilmington to Rochester",
+      "transportation": "Taxi, from Wilmington to Rochester, Cost: 1201",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Rochester",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Rochester to Watertown",
+      "transportation": "Taxi, from Rochester to Watertown, Cost: 242",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Watertown",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Watertown to Syracuse",
+      "transportation": "Taxi, from Watertown to Syracuse, Cost: 114",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "Syracuse",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-18|Syracuse->Wilmington",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1343.0,
+        "slot_cap": 483.1928453947367,
+        "reserve": 504.8107499999999
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 698.6999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 593.895,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 504.8107499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-18|Syracuse->Wilmington",
+        "city": "Wilmington",
+        "city_bundle": [
+          "Rochester",
+          "Watertown",
+          "Syracuse"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1343.0,
+          "slot_cap": 483.1928453947367,
+          "reserve": 504.8107499999999,
+          "min_cost_nonbudget": 588.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "c6ece543f8ef",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-18|Syracuse->Wilmington",
+      "bundle_fp": "a9ec0f9f2a10"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "c6ece543f8ef",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-18|Syracuse->Wilmington",
+        "bundle_fp": "a9ec0f9f2a10"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "c6ece543f8ef",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-18|Syracuse->Wilmington",
+        "bundle_fp": "a9ec0f9f2a10"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "c6ece543f8ef",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-18|Syracuse->Wilmington",
+        "bundle_fp": "a9ec0f9f2a10"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.7922745938412845
+}

@@ -1,0 +1,354 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1517.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you devise a 7-day travel itinerary for 2 people departing from Orlando and touring 3 cities in Louisiana, from March 19th to March 25th, 2022? Our budget is set at $3,600. We prefer not to take any flights as our mode of transportation, and we have a preference for private rooms as our accommodations. As for meals, we would like to explore Mexican, American, Mediterranean, and Indian cuisines.",
+  "parsed": {
+    "org": "Orlando",
+    "dest": "Louisiana",
+    "days": 7,
+    "visiting_city_number": 3,
+    "date": [
+      "2022-03-19",
+      "2022-03-20",
+      "2022-03-21",
+      "2022-03-22",
+      "2022-03-23",
+      "2022-03-24",
+      "2022-03-25"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": [
+        "Mexican",
+        "American",
+        "Mediterranean",
+        "Indian"
+      ],
+      "room type": "private room",
+      "transportation": "no flight"
+    },
+    "budget": 3600,
+    "origin": "Orlando",
+    "destination": "Louisiana",
+    "duration_days": 7,
+    "start_date": "2022-03-19",
+    "preferences": [
+      "Mexican",
+      "American",
+      "Mediterranean",
+      "Indian",
+      "private room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Lake Charles",
+      "Baton Rouge",
+      "New Orleans",
+      "Shreveport"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Baton Rouge",
+      "Shreveport",
+      "New Orleans"
+    ],
+    "transportation_dates": [
+      "2022-03-19",
+      "2022-03-21",
+      "2022-03-23",
+      "2022-03-25"
+    ],
+    "transportation_methods": [
+      "taxi, from Orlando to Baton Rouge, cost: 1120.0",
+      "taxi, from Baton Rouge to Shreveport, cost: 397.0",
+      "Shreveport->New Orleans missing mode",
+      "New Orleans->Orlando missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Baton Rouge",
+      "missing, Shreveport",
+      "missing, New Orleans"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Orlando to Baton Rouge",
+      "transportation": "Taxi, from Orlando to Baton Rouge, Cost: 1120",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Baton Rouge",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Baton Rouge to Shreveport",
+      "transportation": "Taxi, from Baton Rouge to Shreveport, Cost: 397",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Shreveport",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "New Orleans",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "New Orleans",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 7,
+      "current_city": "New Orleans",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-19|Shreveport->New Orleans",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 2083.0,
+        "slot_cap": 374.7173108552631,
+        "reserve": 2042.5797499999996
+      },
+      "segment_role": "intercity",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 2827.1,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 2403.035,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 2042.5797499999996,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-19|Shreveport->New Orleans",
+        "city": "New Orleans",
+        "city_bundle": [
+          "Baton Rouge",
+          "Shreveport",
+          "New Orleans"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 2083.0,
+          "slot_cap": 374.7173108552631,
+          "reserve": 2042.5797499999996,
+          "min_cost_nonbudget": 263.5
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "f6ed41164887",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-19|Shreveport->New Orleans",
+      "bundle_fp": "aff0f5105228"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "f6ed41164887",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-19|Shreveport->New Orleans",
+        "bundle_fp": "aff0f5105228"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "f6ed41164887",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-19|Shreveport->New Orleans",
+        "bundle_fp": "aff0f5105228"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "f6ed41164887",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-19|Shreveport->New Orleans",
+        "bundle_fp": "aff0f5105228"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.2887490689754486
+}

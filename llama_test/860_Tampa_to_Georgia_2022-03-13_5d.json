@@ -1,0 +1,1106 @@
+{
+  "success": false,
+  "cost": 1984.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you assist us in designing a 5-day travel plan for 2 individuals, starting from Tampa and visiting 2 cities in Georgia from March 13th to March 17th, 2022? We have allocated a budget of $2,500 for this trip. Our accommodations must not be shared rooms and we would also like the opportunity to partake in parties as a part of our stay. Traveling by flight is not an option for us.",
+  "parsed": {
+    "org": "Tampa",
+    "dest": "Georgia",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15",
+      "2022-03-16",
+      "2022-03-17"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "parties",
+      "cuisine": null,
+      "room type": "not shared room",
+      "transportation": "no flight"
+    },
+    "budget": 2500,
+    "origin": "Tampa",
+    "destination": "Georgia",
+    "duration_days": 5,
+    "start_date": "2022-03-13",
+    "preferences": [
+      "parties",
+      "not shared room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Augusta",
+      "Decatur",
+      "Atlanta",
+      "Valdosta",
+      "Savannah"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Tampa->Decatur 742km cost 742",
+    "move:seg1:taxi:Decatur->Augusta 228km cost 228",
+    "move:seg2:taxi:Augusta->Tampa 728km cost 728",
+    "stay:Decatur:492 TRAIN NEAR, 10JFK, 30LGA CuteBedr in3Bed,Manhattan Private room $143"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Decatur",
+      "Augusta"
+    ],
+    "transportation_dates": [
+      "2022-03-13",
+      "2022-03-15",
+      "2022-03-17"
+    ],
+    "transportation_methods": [
+      "taxi, from Tampa to Decatur, cost: 742.0",
+      "taxi, from Decatur to Augusta, cost: 228.0",
+      "taxi, from Augusta to Tampa, cost: 728.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "TRAIN NEAR, 10JFK, 30LGA CuteBedr in3Bed,Manhattan, Decatur",
+      "missing, Augusta"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Tampa to Decatur",
+      "transportation": "Taxi, from Tampa to Decatur, Cost: 742",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "TRAIN NEAR, 10JFK, 30LGA CuteBedr in3Bed,Manhattan, Decatur"
+    },
+    {
+      "days": 2,
+      "current_city": "Decatur",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "TRAIN NEAR, 10JFK, 30LGA CuteBedr in3Bed,Manhattan, Decatur"
+    },
+    {
+      "days": 3,
+      "current_city": "from Decatur to Augusta",
+      "transportation": "Taxi, from Decatur to Augusta, Cost: 228",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Augusta",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Augusta to Tampa",
+      "transportation": "Taxi, from Augusta to Tampa, Cost: 728",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Decatur|None|None->None",
+      "counts": {
+        "kb": 10,
+        "after_nonbudget": 8,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 5,
+        "violate_reserve": 2,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 802.0,
+        "slot_cap": 234.9609375,
+        "reserve": 479.73999999999995
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 564.4,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 479.73999999999995,
+          "kept": 1
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Augusta|None|None->None",
+      "counts": {
+        "kb": 11,
+        "after_nonbudget": 4,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 3,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 516.0,
+        "slot_cap": 377.9296875,
+        "reserve": 217.40024999999997
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 300.9,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 255.76499999999996,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 217.40024999999997,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Augusta|None|None->None",
+        "city": "Augusta",
+        "city_bundle": [
+          "Decatur",
+          "Augusta"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 11,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 516.0,
+          "slot_cap": 377.9296875,
+          "reserve": 217.40024999999997,
+          "min_cost_nonbudget": 256.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Decatur",
+          "Valdosta"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 372.0,
+          "bundle_lb_cost": 2519.0,
+          "stay_lb_cost": 700.0,
+          "meal_lb_cost": 336.0,
+          "transport_lb_cost": 1483.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "tampa",
+              "decatur"
+            ],
+            [
+              "decatur",
+              "valdosta"
+            ],
+            [
+              "valdosta",
+              "tampa"
+            ]
+          ],
+          "bundle_key": [
+            "decatur",
+            "valdosta"
+          ],
+          "bundle_key_set": [
+            "decatur",
+            "valdosta"
+          ],
+          "bundle_key_seq": [
+            "decatur",
+            "valdosta"
+          ],
+          "city_features": {
+            "Decatur": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 143.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            },
+            "Valdosta": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 207.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 16,
+              "meal_count": 32,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 13,
+              "meal_slack": 23,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Tampa->Decatur": {
+              "min_cost": 742.0,
+              "blocked": false
+            },
+            "Decatur->Valdosta": {
+              "min_cost": 369.0,
+              "blocked": false
+            },
+            "Valdosta->Tampa": {
+              "min_cost": 372.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 23,
+            "bottleneck_attr_slack": 13,
+            "bottleneck_hotel_price": 207.0,
+            "bottleneck_city_meal": "Valdosta",
+            "bottleneck_city_hotel": "Valdosta",
+            "bottleneck_edge": "Tampa->Decatur"
+          },
+          "min_bundle_cost": 2183.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 23,
+          "bottleneck_attr_slack": 13,
+          "bottleneck_hotel_price": 207.0,
+          "bottleneck_city_meal": "Valdosta",
+          "bottleneck_city_hotel": "Valdosta",
+          "bottleneck_edge": "Tampa->Decatur"
+        },
+        "budget_context": {
+          "remaining": 731.0,
+          "slot_cap": 535.400390625,
+          "reserve": 206.34599999999998,
+          "min_cost_nonbudget": 396.0
+        },
+        "counts": {
+          "kb": 9,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 6,
+          "topk": 0
+        },
+        "dead_end_city": "Valdosta",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 9,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 6,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 731.0,
+          "slot_cap": 535.400390625,
+          "reserve": 206.34599999999998,
+          "min_cost_nonbudget": 396.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 3,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2500,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "not shared room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Augusta",
+        "Decatur"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "```json\n{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.9,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"segment\", \"feature\": \"budget_risk\", \"delta\": -10},\n      {\"phase\": \"flight\", \"feature\": \"cost_ratio\", \"delta\": 0.2}\n    ]\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.9,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "budget_risk",
+              "delta": -10
+            },
+            {
+              "phase": "flight",
+              "feature": "cost_ratio",
+              "delta": 0.2
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "budget_risk",
+            "delta": -10
+          },
+          {
+            "phase": "flight",
+            "feature": "cost_ratio",
+            "delta": 0.2
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Augusta",
+          "Decatur"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 735.0,
+          "bundle_lb_cost": 2625.0,
+          "stay_lb_cost": 596.0,
+          "meal_lb_cost": 336.0,
+          "transport_lb_cost": 1693.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "tampa",
+              "augusta"
+            ],
+            [
+              "augusta",
+              "decatur"
+            ],
+            [
+              "decatur",
+              "tampa"
+            ]
+          ],
+          "bundle_key": [
+            "augusta",
+            "decatur"
+          ],
+          "bundle_key_set": [
+            "augusta",
+            "decatur"
+          ],
+          "bundle_key_seq": [
+            "augusta",
+            "decatur"
+          ],
+          "city_features": {
+            "Augusta": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 155.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            },
+            "Decatur": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 143.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 25,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Tampa->Augusta": {
+              "min_cost": 729.0,
+              "blocked": false
+            },
+            "Augusta->Decatur": {
+              "min_cost": 229.0,
+              "blocked": false
+            },
+            "Decatur->Tampa": {
+              "min_cost": 735.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 25,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 155.0,
+            "bottleneck_city_meal": "Decatur",
+            "bottleneck_city_hotel": "Augusta",
+            "bottleneck_edge": "Decatur->Tampa"
+          },
+          "min_bundle_cost": 2289.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 25,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 155.0,
+          "bottleneck_city_meal": "Decatur",
+          "bottleneck_city_hotel": "Augusta",
+          "bottleneck_edge": "Decatur->Tampa"
+        },
+        "budget_context": {
+          "remaining": 807.0,
+          "slot_cap": 295.5322265625,
+          "reserve": 381.98574999999994,
+          "min_cost_nonbudget": 256.0
+        },
+        "counts": {
+          "kb": 11,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_city": "Augusta",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 11,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 807.0,
+          "slot_cap": 295.5322265625,
+          "reserve": 381.98574999999994,
+          "min_cost_nonbudget": 256.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 4,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2500,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "not shared room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Decatur",
+        "Valdosta"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "```json\n{\n  \"candidate_id\": 1,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.93,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"hotel\", \"NO_FLIGHT\", 360, true],\n      [\"flight\", \"NO_SELF_DRIVING\", 120, false]\n    ],\n    \"soft_penalties\": [\n      [\"hotel\", \"cost_ratio\", -0.2],\n      [\"transport\", \"budget_risk\", 0.1]\n    ]\n  }\n}\n```\n\nIn this response:\n\n* The `candidate_id` is the index of the selected bundle (1).\n* The `reason` field indicates that the decision was based on a combination of bundle risk, city summary, edge summary, and lower-bound costs.\n* The `confidence` value represents the estimated confidence in the quality of the proposed solution (0.93).\n* The `gradient.hard_exclusions` field specifies two hard exclusions: one for flights due to no self-driving availability, and one for hotels with high bundle risk.\n* The `gradient.soft_penalties` field includes two soft penalties: a cost ratio penalty for hotels and a budget risk penalty for transportation.\n\nNote that the specific values used in this response are fictional examples and may not reflect real-world data.",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.93,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "hotel",
+              "NO_FLIGHT",
+              360,
+              true
+            ],
+            [
+              "flight",
+              "NO_SELF_DRIVING",
+              120,
+              false
+            ]
+          ],
+          "soft_penalties": [
+            [
+              "hotel",
+              "cost_ratio",
+              -0.2
+            ],
+            [
+              "transport",
+              "budget_risk",
+              0.1
+            ]
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "hotel",
+            "NO_FLIGHT",
+            360,
+            true
+          ],
+          [
+            "flight",
+            "NO_SELF_DRIVING",
+            120,
+            false
+          ]
+        ],
+        "soft_penalties": [
+          [
+            "hotel",
+            "cost_ratio",
+            -0.2
+          ],
+          [
+            "transport",
+            "budget_risk",
+            0.1
+          ]
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Decatur",
+          "Valdosta"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 372.0,
+          "bundle_lb_cost": 2519.0,
+          "stay_lb_cost": 700.0,
+          "meal_lb_cost": 336.0,
+          "transport_lb_cost": 1483.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "tampa",
+              "decatur"
+            ],
+            [
+              "decatur",
+              "valdosta"
+            ],
+            [
+              "valdosta",
+              "tampa"
+            ]
+          ],
+          "bundle_key": [
+            "decatur",
+            "valdosta"
+          ],
+          "bundle_key_set": [
+            "decatur",
+            "valdosta"
+          ],
+          "bundle_key_seq": [
+            "decatur",
+            "valdosta"
+          ],
+          "city_features": {
+            "Decatur": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 143.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            },
+            "Valdosta": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 207.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 16,
+              "meal_count": 32,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 13,
+              "meal_slack": 23,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Tampa->Decatur": {
+              "min_cost": 742.0,
+              "blocked": false
+            },
+            "Decatur->Valdosta": {
+              "min_cost": 369.0,
+              "blocked": false
+            },
+            "Valdosta->Tampa": {
+              "min_cost": 372.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 23,
+            "bottleneck_attr_slack": 13,
+            "bottleneck_hotel_price": 207.0,
+            "bottleneck_city_meal": "Valdosta",
+            "bottleneck_city_hotel": "Valdosta",
+            "bottleneck_edge": "Tampa->Decatur"
+          },
+          "min_bundle_cost": 2183.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 23,
+          "bottleneck_attr_slack": 13,
+          "bottleneck_hotel_price": 207.0,
+          "bottleneck_city_meal": "Valdosta",
+          "bottleneck_city_hotel": "Valdosta",
+          "bottleneck_edge": "Tampa->Decatur"
+        },
+        "budget_context": {
+          "remaining": 731.0,
+          "slot_cap": 535.400390625,
+          "reserve": 206.34599999999998,
+          "min_cost_nonbudget": 396.0
+        },
+        "counts": {
+          "kb": 9,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 6,
+          "topk": 0
+        },
+        "dead_end_city": "Valdosta",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 9,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 6,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 731.0,
+          "slot_cap": 535.400390625,
+          "reserve": 206.34599999999998,
+          "min_cost_nonbudget": 396.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 3,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2500,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "not shared room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Decatur",
+        "Augusta"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "```\n{\n  \"candidate_id\": 1,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [{\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 120}],\n    \"soft_penalties\": [{\"phase\": \"flight\", \"feature\": \"cost_ratio\", \"delta\": -0.2}],\n    \"retrieval_patches\": [{\"phase\": \"segment\", \"patch\": \"edge_cost\", \"ttl\": 60}]\n  }\n}\n```\n\nNote: This is a generated response and the exact values may vary depending on the specific requirements of your system. The `candidate_id` and other numerical fields are also just examples, in practice you should use the actual candidate IDs and values from your database or data source.",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 120
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "flight",
+              "feature": "cost_ratio",
+              "delta": -0.2
+            }
+          ],
+          "retrieval_patches": [
+            {
+              "phase": "segment",
+              "patch": "edge_cost",
+              "ttl": 60
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 120
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "flight",
+            "feature": "cost_ratio",
+            "delta": -0.2
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": "edge_cost",
+            "ttl": 60
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "2961832c13db",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Augusta|None|None->None",
+      "bundle_fp": "a4072bf96438"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "2961832c13db",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Valdosta|None|None->None",
+        "bundle_fp": "ef3bbbf7d4ce"
+      },
+      "confidence": 0.9,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": -10.0
+        },
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Augusta",
+        "Decatur"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "2961832c13db",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Augusta|None|None->None",
+        "bundle_fp": "4440a4ecaa4b"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "2961832c13db",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Augusta|None|None->None",
+        "bundle_fp": "4440a4ecaa4b"
+      },
+      "confidence": 0.93,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Decatur",
+        "Valdosta"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "2961832c13db",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Valdosta|None|None->None",
+        "bundle_fp": "ef3bbbf7d4ce"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "2961832c13db",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Valdosta|None|None->None",
+        "bundle_fp": "ef3bbbf7d4ce"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 120
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": -0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Decatur",
+        "Augusta"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "2961832c13db",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Augusta|None|None->None",
+        "bundle_fp": "a4072bf96438"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 29.24789756210521
+}

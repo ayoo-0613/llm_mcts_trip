@@ -1,0 +1,972 @@
+{
+  "success": false,
+  "cost": 1306.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you help create a 5-day traveling itinerary for 2 people? We're starting from Binghamton and plan to visit 2 cities in Michigan from March 18th until March 22nd, 2022. Our budget is set at $2,900. We require entire rooms for our accommodations, and it's crucial that the places allow parties. For dining, we'd love to experience a variety of cuisines including Mexican, Indian, Chinese, and Italian.",
+  "parsed": {
+    "org": "Binghamton",
+    "dest": "Michigan",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-18",
+      "2022-03-19",
+      "2022-03-20",
+      "2022-03-21",
+      "2022-03-22"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "parties",
+      "cuisine": [
+        "Mexican",
+        "Indian",
+        "Chinese",
+        "Italian"
+      ],
+      "room type": "entire room",
+      "transportation": null
+    },
+    "budget": 2900,
+    "origin": "Binghamton",
+    "destination": "Michigan",
+    "duration_days": 5,
+    "start_date": "2022-03-18",
+    "preferences": [
+      "Mexican",
+      "Indian",
+      "Chinese",
+      "Italian",
+      "parties",
+      "entire room"
+    ],
+    "candidate_cities": [
+      "Pellston",
+      "Traverse City",
+      "Alpena",
+      "Iron Mountain",
+      "Kalamazoo",
+      "Saginaw",
+      "Grand Rapids",
+      "Lansing",
+      "Muskegon",
+      "Hancock",
+      "Detroit",
+      "Escanaba"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Binghamton->Kalamazoo 996km cost 996",
+    "move:seg1:taxi:Kalamazoo->Traverse City 310km cost 310"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Kalamazoo",
+      "Traverse City"
+    ],
+    "transportation_dates": [
+      "2022-03-18",
+      "2022-03-20",
+      "2022-03-22"
+    ],
+    "transportation_methods": [
+      "taxi, from Binghamton to Kalamazoo, cost: 996.0",
+      "taxi, from Kalamazoo to Traverse City, cost: 310.0",
+      "Traverse City->Binghamton missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Kalamazoo",
+      "missing, Traverse City"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Binghamton to Kalamazoo",
+      "transportation": "Taxi, from Binghamton to Kalamazoo, Cost: 996",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Kalamazoo",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Kalamazoo to Traverse City",
+      "transportation": "Taxi, from Kalamazoo to Traverse City, Cost: 310",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Traverse City",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Traverse City",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:1|None|2022-03-18|Kalamazoo->Traverse City",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 1904.0,
+        "slot_cap": 175.36842105263153,
+        "reserve": 910.0
+      },
+      "segment_role": "intercity",
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-18|Traverse City->Binghamton",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1594.0,
+        "slot_cap": 573.4991776315788,
+        "reserve": 558.8537499999999
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 773.5,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 657.4749999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 558.8537499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-18|Traverse City->Binghamton",
+        "city": "Binghamton",
+        "city_bundle": [
+          "Kalamazoo",
+          "Traverse City"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1594.0,
+          "slot_cap": 573.4991776315788,
+          "reserve": 558.8537499999999,
+          "min_cost_nonbudget": 548.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Kalamazoo",
+          "Lansing"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 955.0,
+          "bundle_lb_cost": 2816.0,
+          "stay_lb_cost": 396.0,
+          "meal_lb_cost": 348.0,
+          "transport_lb_cost": 2072.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "binghamton",
+              "kalamazoo"
+            ],
+            [
+              "kalamazoo",
+              "lansing"
+            ],
+            [
+              "lansing",
+              "binghamton"
+            ]
+          ],
+          "bundle_key": [
+            "kalamazoo",
+            "lansing"
+          ],
+          "bundle_key_set": [
+            "kalamazoo",
+            "lansing"
+          ],
+          "bundle_key_seq": [
+            "kalamazoo",
+            "lansing"
+          ],
+          "city_features": {
+            "Kalamazoo": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 55.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 11,
+              "meal_count": 14,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 9,
+              "meal_slack": 8,
+              "hotel_slack": 0
+            },
+            "Lansing": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 143.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 16,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 7,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Binghamton->Kalamazoo": {
+              "min_cost": 996.0,
+              "blocked": false
+            },
+            "Kalamazoo->Lansing": {
+              "min_cost": 121.0,
+              "blocked": false
+            },
+            "Lansing->Binghamton": {
+              "min_cost": 955.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 7,
+            "bottleneck_attr_slack": 9,
+            "bottleneck_hotel_price": 143.0,
+            "bottleneck_city_meal": "Lansing",
+            "bottleneck_city_hotel": "Lansing",
+            "bottleneck_edge": "Binghamton->Kalamazoo"
+          },
+          "min_bundle_cost": 2468.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 7,
+          "bottleneck_attr_slack": 9,
+          "bottleneck_hotel_price": 143.0,
+          "bottleneck_city_meal": "Lansing",
+          "bottleneck_city_hotel": "Lansing",
+          "bottleneck_edge": "Binghamton->Kalamazoo"
+        },
+        "budget_context": {
+          "remaining": 272.0,
+          "slot_cap": 12.363636363636363,
+          "reserve": 238.0,
+          "min_cost_nonbudget": 11.0
+        },
+        "counts": {
+          "kb": 22,
+          "after_nonbudget": 22,
+          "after_budget": 3,
+          "budget_removed": 19,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Kalamazoo",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 22,
+          "after_nonbudget": 22,
+          "after_budget": 3,
+          "budget_removed": 19,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 272.0,
+          "slot_cap": 12.363636363636363,
+          "reserve": 238.0,
+          "min_cost_nonbudget": 11.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 22,
+        "dead_end_after_budget": 3,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2900,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": [
+              "Mexican",
+              "Indian",
+              "Chinese",
+              "Italian"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Detroit",
+        "Kalamazoo"
+      ],
+      "reason": null,
+      "raw": "This is a JSON data structure that represents the output of an algorithm for finding candidate travel bundles. The data includes various metrics and statistics for each candidate bundle.\n\nHere's a high-level overview of the data structure:\n\n* `bundles`: This is a list of objects, where each object represents a candidate travel bundle.\n\t+ Each bundle has an `id` (a unique identifier), which is a key field in the schema.\n\t+ The `bundle_risk` field contains various risk metrics for the bundle, such as `bottleneck_meal_slack`, `bottleneck_attr_slack`, and `bottleneck_hotel_price`.\n\t+ The `city_summary` field provides information about each city in the bundle, including its minimum hotel price, meal slack, and attraction slack.\n\t+ The `edge_summary` field contains information about each leg of the trip (e.g., between cities), including the minimum cost and whether it's blocked.\n* `lb_costs`: This is a list of objects, where each object represents a different type of cost metric for each bundle. The three types are:\n\t+ `transport_lb_cost`: The lower bound on transportation costs for the bundle.\n\t+ `stay_lb_cost`: The lower bound on stay costs (hotel) for the bundle.\n\t+ `meal_lb_cost`: The lower bound on meal costs for the bundle.\n\t+ `bundle_lb_cost`: The overall lower bound on cost for the bundle.\n\nThe schema at the end of the data structure defines the format and interpretation of each field in the data. It's written in a query language (e.g., GraphQL) that specifies the structure of the output.\n\nHere's an excerpt from the schema:\n```json\n{\n  \"candidate_id\": \"int\",\n  \"reason\": \"short string\",\n  \"confidence\": \"float in [0,1]\",\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\", \"rule\", \"ttl\", \"city?\", \"edge?\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\", \"feature\", \"delta\"}\n    ],\n    \"retrieval_patches\": [\n      {\"phase\", \"patch\", \"ttl\"}\n    ]\n  }\n}\n```\nThis excerpt defines the structure of each bundle object, including:\n\n* `candidate_id`: An integer ID for the candidate bundle.\n* `reason`: A short string explaining why this bundle was chosen (e.g., \"best fit\" or \"cheapest option\").\n* `confidence`: A float value between 0 and 1 indicating how confident the algorithm is in its choice of bundle.\n* `gradient`: An object containing three lists:\n\t+ `hard_exclusions`: A list of tuples describing hard exclusions from the search space (e.g., \"don't consider bundles with >3 cities\").\n\t+ `soft_penalties`: A list of tuples describing soft penalties for specific features or costs (e.g., \" penalize bundles with high transportation costs by 10%\").\n\t+ `retrieval_patches`: A list of tuples describing retrieval patches to apply during the search process (e.g., \"replace hotel prices with estimated values\").\n\nOverall, this data structure provides a detailed representation of candidate travel bundles and their associated metrics, allowing for further analysis or visualization.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Detroit",
+          "Kalamazoo"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 995.0,
+          "bundle_lb_cost": 2477.0,
+          "stay_lb_cost": 910.0,
+          "meal_lb_cost": 378.0,
+          "transport_lb_cost": 1189.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "binghamton",
+              "detroit"
+            ],
+            [
+              "detroit",
+              "kalamazoo"
+            ],
+            [
+              "kalamazoo",
+              "binghamton"
+            ]
+          ],
+          "bundle_key": [
+            "detroit",
+            "kalamazoo"
+          ],
+          "bundle_key_set": [
+            "detroit",
+            "kalamazoo"
+          ],
+          "bundle_key_seq": [
+            "detroit",
+            "kalamazoo"
+          ],
+          "city_features": {
+            "Detroit": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 400.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 13,
+              "min_meal_cost": 15.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 7,
+              "hotel_slack": 1
+            },
+            "Kalamazoo": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 55.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 11,
+              "meal_count": 14,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 8,
+              "meal_slack": 5,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Binghamton->Detroit": {
+              "min_cost": 150.0,
+              "blocked": false
+            },
+            "Detroit->Kalamazoo": {
+              "min_cost": 44.0,
+              "blocked": false
+            },
+            "Kalamazoo->Binghamton": {
+              "min_cost": 995.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 5,
+            "bottleneck_attr_slack": 8,
+            "bottleneck_hotel_price": 400.0,
+            "bottleneck_city_meal": "Kalamazoo",
+            "bottleneck_city_hotel": "Detroit",
+            "bottleneck_edge": "Kalamazoo->Binghamton"
+          },
+          "min_bundle_cost": 2099.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 5,
+          "bottleneck_attr_slack": 8,
+          "bottleneck_hotel_price": 400.0,
+          "bottleneck_city_meal": "Kalamazoo",
+          "bottleneck_city_hotel": "Detroit",
+          "bottleneck_edge": "Kalamazoo->Binghamton"
+        },
+        "budget_context": {
+          "remaining": 1711.0,
+          "slot_cap": 626.5869140625,
+          "reserve": 270.215,
+          "min_cost_nonbudget": 803.0
+        },
+        "counts": {
+          "kb": 4,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_city": "Detroit",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 4,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1711.0,
+          "slot_cap": 626.5869140625,
+          "reserve": 270.215,
+          "min_cost_nonbudget": 803.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2900,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": [
+              "Mexican",
+              "Indian",
+              "Chinese",
+              "Italian"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Lansing",
+        "Kalamazoo"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object representing the output of an optimization algorithm or a recommendation system. It contains various candidate solutions, each with its own set of attributes and properties.\n\nHere's a breakdown of the object:\n\n**Top-level keys**\n\n* `candidates`: A list of candidate solutions, where each solution has its own set of attributes.\n* `output_schema`: A dictionary describing the schema of the output, including the types and ranges of the attributes.\n\n**Candidate structure**\n\nEach candidate is represented by an object with the following keys:\n\n* `id` (optional): A unique identifier for the candidate.\n* `bundle`: The pair of cities that form the bundle.\n* `bundle_risk`: An object containing the risk measures for the bundle, including:\n\t+ `bottleneck_meal_slack`: Slack in meal costs.\n\t+ `bottleneck_attr_slack`: Slack in attribute scores.\n\t+ `hotel_price`: The cost of hotels in the bundle.\n\t+ `city_meal` and `city_hotel`: The city-specific measures for meals and hotel prices, respectively.\n* `edge`: An object containing information about the edges between the cities in the bundle:\n\t+ `min_cost`: The minimum cost of traveling between the cities.\n\t+ `blocked`: A boolean indicating whether the edge is blocked (i.e., the travel option is unavailable).\n* `city_summary` and `edge_summary`: Dictionaries containing summary statistics for each city and edge, respectively.\n* `lb_costs`: An object containing lower bound costs for various components of the candidate solution:\n\t+ `transport_lb_cost`\n\t+ `stay_lb_cost`\n\t+ `meal_lb_cost`\n\t+ `bundle_lb_cost`\n* `feasibility`: An object indicating whether the candidate is feasible (i.e., has all required features):\n\t+ `return_leg_exists`: Whether a return leg exists for each city in the bundle.\n\t+ `hotel_feasible_all`: Whether hotels are available for each city in the bundle.\n\n**Output schema**\n\nThe output schema describes the structure of the output, including:\n\n* `candidate_id`: The type and range of the candidate ID.\n* `reason`: The type and range of the reason attribute (short string).\n* `confidence`: The type and range of the confidence attribute (float between 0 and 1).\n* `gradient`: An object containing three types of gradients:\n\t+ `hard_exclusions`: A list of tuples describing hard exclusions, including phase, rule, TTL, city, and edge.\n\t+ `soft_penalties`: A list of tuples describing soft penalties, including phase, feature, and delta.\n\t+ `retrieval_patches`: A list of tuples describing retrieval patches, including phase, patch, and TTL.\n\nOverall, this output represents the results of an optimization or recommendation algorithm that has evaluated various candidate solutions based on a set of criteria.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "stay",
+            "feature": "hotel_price",
+            "delta": 0.6
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "stay",
+            "patch": {
+              "topk": 50,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Lansing",
+          "Kalamazoo"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 995.0,
+          "bundle_lb_cost": 2809.0,
+          "stay_lb_cost": 396.0,
+          "meal_lb_cost": 342.0,
+          "transport_lb_cost": 2071.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "binghamton",
+              "lansing"
+            ],
+            [
+              "lansing",
+              "kalamazoo"
+            ],
+            [
+              "kalamazoo",
+              "binghamton"
+            ]
+          ],
+          "bundle_key": [
+            "kalamazoo",
+            "lansing"
+          ],
+          "bundle_key_set": [
+            "kalamazoo",
+            "lansing"
+          ],
+          "bundle_key_seq": [
+            "lansing",
+            "kalamazoo"
+          ],
+          "city_features": {
+            "Lansing": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 143.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 16,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 10,
+              "hotel_slack": 1
+            },
+            "Kalamazoo": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 55.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 11,
+              "meal_count": 14,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 8,
+              "meal_slack": 5,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Binghamton->Lansing": {
+              "min_cost": 954.0,
+              "blocked": false
+            },
+            "Lansing->Kalamazoo": {
+              "min_cost": 122.0,
+              "blocked": false
+            },
+            "Kalamazoo->Binghamton": {
+              "min_cost": 995.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 5,
+            "bottleneck_attr_slack": 8,
+            "bottleneck_hotel_price": 143.0,
+            "bottleneck_city_meal": "Kalamazoo",
+            "bottleneck_city_hotel": "Lansing",
+            "bottleneck_edge": "Kalamazoo->Binghamton"
+          },
+          "min_bundle_cost": 2467.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 5,
+          "bottleneck_attr_slack": 8,
+          "bottleneck_hotel_price": 143.0,
+          "bottleneck_city_meal": "Kalamazoo",
+          "bottleneck_city_hotel": "Lansing",
+          "bottleneck_edge": "Kalamazoo->Binghamton"
+        },
+        "budget_context": {
+          "remaining": 249.0,
+          "slot_cap": 11.318181818181818,
+          "reserve": 222.0,
+          "min_cost_nonbudget": 12.0
+        },
+        "counts": {
+          "kb": 26,
+          "after_nonbudget": 26,
+          "after_budget": 1,
+          "budget_removed": 25,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Lansing",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 26,
+          "after_nonbudget": 26,
+          "after_budget": 1,
+          "budget_removed": 25,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 249.0,
+          "slot_cap": 11.318181818181818,
+          "reserve": 222.0,
+          "min_cost_nonbudget": 12.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 26,
+        "dead_end_after_budget": 1,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2900,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": [
+              "Mexican",
+              "Indian",
+              "Chinese",
+              "Italian"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Kalamazoo",
+        "Traverse City"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object representing the output of a recommendation system. It appears to be a list of candidate bundles, each with its own properties and associated costs.\n\nHere's a breakdown of the structure:\n\n* `output_schema`: This defines the schema for the output data. It includes fields such as `candidate_id`, `reason`, `confidence`, and various gradient-related fields.\n* `candidates`: This is an array of objects representing candidate bundles. Each object has several properties, including:\n\t+ `id`: The unique identifier for this bundle (e.g., `15`)\n\t+ `bundle`: An array of two city IDs (e.g., `[Kalamazoo, Traverse City]`)\n\t+ `lb_costs`: A dictionary containing the costs associated with this bundle, including `transport_lb_cost`, `stay_lb_cost`, and `meal_lb_cost`\n\t+ `feasibility`: An object indicating whether a return leg exists (`return_leg_exists`) and whether all hotels are feasible (`hotel_feasible_all`)\n* `edge_summary`: This is an object containing the minimum cost for each edge in the bundle (e.g., `Binghamton -> Traverse City: 1095`)\n\nSome potential questions or tasks related to this data:\n\n1. **Identify the top-scoring bundles**: Which bundles have the highest confidence scores and lowest costs?\n2. **Analyze the feasibility of hotel reservations**: Which hotels are feasible for each bundle, and how many bundles have all hotels as feasible options?\n3. **Investigate edge costs**: How do the costs associated with each edge in the bundle vary across different bundles?\n4. **Visualize the data**: Create a visualization to display the candidate bundles and their associated costs and feasibility.\n5. **Improve the recommendation system**: Use this data to inform improvements to the recommendation algorithm, such as adjusting weights for different features or incorporating additional information.\n\nPlease let me know if you have any specific questions about this data or would like help with any of these tasks!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "192708da53da",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-18|Traverse City->Binghamton",
+      "bundle_fp": "497b6eac2384"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "192708da53da",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:lunch|seg:None|Kalamazoo|None|None->None",
+        "bundle_fp": "0a4fb3d2c4c0"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Detroit",
+        "Kalamazoo"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "192708da53da",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Detroit|None|None->None",
+        "bundle_fp": "3c3226fcae71"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "192708da53da",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Detroit|None|None->None",
+        "bundle_fp": "3c3226fcae71"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Lansing",
+        "Kalamazoo"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "192708da53da",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:lunch|seg:None|Lansing|None|None->None",
+        "bundle_fp": "cd08cbfcdc09"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "192708da53da",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:lunch|seg:None|Lansing|None|None->None",
+        "bundle_fp": "cd08cbfcdc09"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Kalamazoo",
+        "Traverse City"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "192708da53da",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-18|Traverse City->Binghamton",
+        "bundle_fp": "497b6eac2384"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 85.8804890862666
+}

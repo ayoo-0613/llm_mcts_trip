@@ -1,0 +1,283 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 0.0,
+  "violations": [
+    "commonsense:is_valid_transportation",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Please help me create a travel plan departing from Atlanta and heading to Minneapolis for 3 days, from March 5th to March 7th, 2022, within a budget of $1,900.",
+  "parsed": {
+    "org": "Atlanta",
+    "dest": "Minneapolis",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-05",
+      "2022-03-06",
+      "2022-03-07"
+    ],
+    "people_number": null,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": "no flight"
+    },
+    "budget": 1900,
+    "origin": "Atlanta",
+    "destination": "Minneapolis",
+    "duration_days": 3,
+    "start_date": "2022-03-05",
+    "preferences": [],
+    "transport_forbid": [
+      "flight"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Minneapolis"
+    ],
+    "transportation_dates": [
+      "2022-03-05",
+      "2022-03-07"
+    ],
+    "transportation_methods": [
+      "Atlanta->Minneapolis missing mode",
+      "Minneapolis->Atlanta missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Minneapolis"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "Minneapolis",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Minneapolis",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "Minneapolis",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:0|None|2022-03-05|Atlanta->Minneapolis",
+      "counts": {
+        "kb": 2,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 2,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1900.0,
+        "slot_cap": 683.5937499999999,
+        "reserve": 208.80249999999998
+      },
+      "segment_role": "outbound",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 289.0,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 245.64999999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 208.80249999999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:0|None|2022-03-05|Atlanta->Minneapolis",
+        "city": "Minneapolis",
+        "city_bundle": [
+          "Minneapolis"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1900.0,
+          "slot_cap": 683.5937499999999,
+          "reserve": 208.80249999999998,
+          "min_cost_nonbudget": 1821.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "a099afefe7ac",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-05|Atlanta->Minneapolis",
+      "bundle_fp": "67225782d129"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "a099afefe7ac",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-05|Atlanta->Minneapolis",
+        "bundle_fp": "67225782d129"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "a099afefe7ac",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-05|Atlanta->Minneapolis",
+        "bundle_fp": "67225782d129"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "a099afefe7ac",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-05|Atlanta->Minneapolis",
+        "bundle_fp": "67225782d129"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.012121634092181921
+}

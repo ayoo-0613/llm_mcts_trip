@@ -1,0 +1,174 @@
+{
+  "parser_mode": "envspec",
+  "success": true,
+  "cost": 1346.0,
+  "violations": [],
+  "query": "Can you create a travel plan for two people departing Minneapolis and heading to St. Louis for 3 days, from March 14th to March 16th, 2022? Our budget is set at $1,400. As we're traveling with children under 10, please ensure that the accommodations are suitable for them. Moreover, we require non-shared rooms, and would prefer not to drive ourselves during the trip.",
+  "parsed": {
+    "origin": "Minneapolis",
+    "destination": "St. Louis",
+    "start_date": "2022-03-14",
+    "duration_days": 3,
+    "budget": 1400.0,
+    "people_number": 2,
+    "visiting_city_number": 1,
+    "preferences": [
+      "children under 10",
+      "not shared room",
+      "American",
+      "Chinese"
+    ],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight"
+        ],
+        "forbid": [
+          "self-driving",
+          "taxi"
+        ]
+      },
+      "meal": {
+        "cuisines": [
+          "American",
+          "Chinese"
+        ]
+      },
+      "stay": {
+        "room_type": "not shared room",
+        "house_rule": "children under 10"
+      },
+      "daily": {
+        "attractions_per_day_min": null,
+        "attractions_per_day_max": null
+      },
+      "city": {
+        "candidate_cities": [
+          "St. Louis"
+        ]
+      }
+    },
+    "transport_forbid": [
+      "self-driving",
+      "taxi"
+    ],
+    "candidate_cities": [
+      "St. Louis"
+    ]
+  },
+  "actions": [
+    "move:seg0:flight:F1258559 Minneapolis->St. Louis $89 21:31-22:53",
+    "move:seg1:flight:F1734050 St. Louis->Minneapolis $90 19:04-20:24",
+    "stay:St. Louis:4709 Cozy & Elegant  Private 1 Bedroom Private room $212",
+    "eat:d1:breakfast:634 The Latitude - Radisson Blu Pizza, French, BBQ, American, Seafood $18 rating 3.9",
+    "eat:d1:lunch:4499 Keventers Tea, Bakery, Fast Food, Chinese, Indian $23 rating 3.5",
+    "eat:d1:dinner:4338 Startup Cafe Bakery, Pizza, American, Cafe $31 rating 3.7",
+    "eat:d2:breakfast:5880 Giani Desserts, Tea, Pizza, Bakery, American $35 rating 3.6",
+    "eat:d2:lunch:1448 Burger King Tea, BBQ, Chinese, American, Seafood $21 rating 3.4",
+    "eat:d2:dinner:167 El Super Burrito Tea, Cafe, Mediterranean, Fast Food $43 rating 4.1",
+    "eat:d3:breakfast:9092 Mandarin Trail Cafe, Pizza, BBQ $43 rating 3.7",
+    "eat:d3:lunch:6360 4th Street Cafe Tea, Mexican, Bakery, Cafe, Mediterranean $42 rating 3.5",
+    "eat:d3:dinner:4204 Tingling Pepper Tea, Cafe $26 rating 3.4",
+    "visit:d1:spot:3498 Saint Louis Zoo @ St. Louis",
+    "visit:d2:spot:3499 City Museum @ St. Louis",
+    "visit:d3:spot:3500 Forest Park @ St. Louis"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "St. Louis"
+    ],
+    "transportation_dates": [
+      "2022-03-14",
+      "2022-03-16"
+    ],
+    "transportation_methods": [
+      "Flight F1258559, from Minneapolis to St. Louis, Departure Time: 21:31, Arrival Time: 22:53, cost: 89.0",
+      "Flight F1734050, from St. Louis to Minneapolis, Departure Time: 19:04, Arrival Time: 20:24, cost: 90.0"
+    ],
+    "restaurants": [
+      "The Latitude - Radisson Blu, St. Louis",
+      "Keventers, St. Louis",
+      "Startup Cafe, St. Louis",
+      "Giani, St. Louis",
+      "Burger King, St. Louis",
+      "El Super Burrito, St. Louis",
+      "Mandarin Trail, St. Louis",
+      "4th Street Cafe, St. Louis",
+      "Tingling Pepper, St. Louis"
+    ],
+    "attractions": [
+      "Saint Louis Zoo, St. Louis",
+      "City Museum, St. Louis",
+      "Forest Park, St. Louis"
+    ],
+    "accommodations": [
+      "Cozy & Elegant  Private 1 Bedroom, St. Louis"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Minneapolis to St. Louis",
+      "transportation": "Flight Number: F1258559, from Minneapolis to St. Louis, Departure Time: 21:31, Arrival Time: 22:53",
+      "breakfast": "The Latitude - Radisson Blu, St. Louis",
+      "attraction": "Saint Louis Zoo, St. Louis;",
+      "lunch": "Keventers, St. Louis",
+      "dinner": "Startup Cafe, St. Louis",
+      "accommodation": "Cozy & Elegant  Private 1 Bedroom, St. Louis"
+    },
+    {
+      "days": 2,
+      "current_city": "St. Louis",
+      "transportation": "-",
+      "breakfast": "Giani, St. Louis",
+      "attraction": "City Museum, St. Louis;",
+      "lunch": "Burger King, St. Louis",
+      "dinner": "El Super Burrito, St. Louis",
+      "accommodation": "Cozy & Elegant  Private 1 Bedroom, St. Louis"
+    },
+    {
+      "days": 3,
+      "current_city": "from St. Louis to Minneapolis",
+      "transportation": "Flight Number: F1734050, from St. Louis to Minneapolis, Departure Time: 19:04, Arrival Time: 20:24",
+      "breakfast": "Mandarin Trail, St. Louis",
+      "attraction": "Forest Park, St. Louis;",
+      "lunch": "4th Street Cafe, St. Louis",
+      "dinner": "Tingling Pepper, St. Louis",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "attraction",
+      "slot_id": "attraction|d3|slot:spot|seg:None|St. Louis|None|None->None",
+      "counts": {
+        "kb": 20,
+        "after_nonbudget": 20,
+        "after_budget": 20,
+        "returned": 5,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 54.0,
+        "slot_cap": null,
+        "reserve": 0.0
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": null,
+  "failure_gradients": [],
+  "elapsed_seconds": 6.209048194810748
+}

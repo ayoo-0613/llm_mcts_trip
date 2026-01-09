@@ -1,0 +1,1145 @@
+{
+  "success": false,
+  "cost": 890.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you help me come up with a 5-day travel itinerary, departing from Omaha and heading to Michigan, intending to cover 2 cities from March 21st to March 25th, 2022? We are a group of 5 people with a budget of $3,100, and we'd like to book accommodations where we'll have entire rooms to ourselves.",
+  "parsed": {
+    "org": "Omaha",
+    "dest": "Michigan",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-21",
+      "2022-03-22",
+      "2022-03-23",
+      "2022-03-24",
+      "2022-03-25"
+    ],
+    "people_number": 5,
+    "local_constraint": {
+      "house rule": "parties",
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": null
+    },
+    "budget": 3100,
+    "origin": "Omaha",
+    "destination": "Michigan",
+    "duration_days": 5,
+    "start_date": "2022-03-21",
+    "preferences": [
+      "parties",
+      "entire room"
+    ],
+    "candidate_cities": [
+      "Pellston",
+      "Traverse City",
+      "Alpena",
+      "Iron Mountain",
+      "Kalamazoo",
+      "Saginaw",
+      "Grand Rapids",
+      "Lansing",
+      "Muskegon",
+      "Hancock",
+      "Detroit",
+      "Escanaba"
+    ]
+  },
+  "actions": [
+    "move:seg0:flight:F0624197 Omaha->Detroit $130 18:14-21:05",
+    "move:seg1:flight:F0625810 Detroit->Pellston $48 12:05-13:06"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Detroit",
+      "Pellston"
+    ],
+    "transportation_dates": [
+      "2022-03-21",
+      "2022-03-23",
+      "2022-03-25"
+    ],
+    "transportation_methods": [
+      "Flight F0624197, from Omaha to Detroit, Departure Time: 18:14, Arrival Time: 21:05, cost: 130.0",
+      "Flight F0625810, from Detroit to Pellston, Departure Time: 12:05, Arrival Time: 13:06, cost: 48.0",
+      "Pellston->Omaha missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Detroit",
+      "missing, Pellston"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Omaha to Detroit",
+      "transportation": "Flight Number: F0624197, from Omaha to Detroit, Departure Time: 18:14, Arrival Time: 21:05",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Detroit",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Detroit to Pellston",
+      "transportation": "Flight Number: F0625810, from Detroit to Pellston, Departure Time: 12:05, Arrival Time: 13:06",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Pellston",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Pellston",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:1|None|2022-03-21|Detroit->Pellston",
+      "counts": {
+        "kb": 422,
+        "after_nonbudget": 422,
+        "after_budget": 48,
+        "returned": 5,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 374,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 2450.0,
+        "slot_cap": 176.29523026315786,
+        "reserve": 2166.633
+      },
+      "segment_role": "intercity",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 2998.7999999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 2548.9799999999996,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 2166.633,
+          "kept": 48
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-21|Pellston->Omaha",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 2210.0,
+        "slot_cap": 318.0509868421052,
+        "reserve": 2166.633
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 2998.7999999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 2548.9799999999996,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 2166.633,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-21|Pellston->Omaha",
+        "city": "Omaha",
+        "city_bundle": [
+          "Detroit",
+          "Pellston"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 2210.0,
+          "slot_cap": 318.0509868421052,
+          "reserve": 2166.633,
+          "min_cost_nonbudget": 534.0
+        }
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-21|Pellston->Omaha",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 2210.0,
+        "slot_cap": 318.0509868421052,
+        "reserve": 2166.633
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 2998.7999999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 2548.9799999999996,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 2166.633,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-21|Pellston->Omaha",
+        "city": "Omaha",
+        "city_bundle": [
+          "Detroit",
+          "Pellston"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 2210.0,
+          "slot_cap": 318.0509868421052,
+          "reserve": 2166.633,
+          "min_cost_nonbudget": 534.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [],
+        "city_bundle": [
+          "Detroit",
+          "Pellston"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1335.0,
+          "bundle_lb_cost": 5753.0,
+          "stay_lb_cost": 2748.0,
+          "meal_lb_cost": 780.0,
+          "transport_lb_cost": 2225.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "omaha",
+              "detroit"
+            ],
+            [
+              "detroit",
+              "pellston"
+            ],
+            [
+              "pellston",
+              "omaha"
+            ]
+          ],
+          "bundle_key": [
+            "detroit",
+            "pellston"
+          ],
+          "bundle_key_set": [
+            "detroit",
+            "pellston"
+          ],
+          "bundle_key_seq": [
+            "detroit",
+            "pellston"
+          ],
+          "city_features": {
+            "Detroit": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 803.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 28,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 22,
+              "hotel_slack": 1
+            },
+            "Pellston": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 571.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 37,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 28,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Omaha->Detroit": {
+              "min_cost": 650.0,
+              "blocked": false
+            },
+            "Detroit->Pellston": {
+              "min_cost": 240.0,
+              "blocked": false
+            },
+            "Pellston->Omaha": {
+              "min_cost": 1335.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 22,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 803.0,
+            "bottleneck_city_meal": "Detroit",
+            "bottleneck_city_hotel": "Detroit",
+            "bottleneck_edge": "Pellston->Omaha"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 22,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 803.0,
+          "bottleneck_city_meal": "Detroit",
+          "bottleneck_city_hotel": "Detroit",
+          "bottleneck_edge": "Pellston->Omaha"
+        },
+        "budget_context": {
+          "remaining": 2210.0,
+          "slot_cap": 318.0509868421052,
+          "reserve": 2166.633,
+          "min_cost_nonbudget": 534.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Omaha",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 2210.0,
+          "slot_cap": 318.0509868421052,
+          "reserve": 2166.633,
+          "min_cost_nonbudget": 534.0
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Escanaba",
+        "Alpena"
+      ],
+      "reason": null,
+      "raw": "This appears to be a JSON output from a machine learning model or an optimization algorithm. I'll try to provide a high-level summary and explanation of the structure.\n\n**Summary:**\n\nThe output is a list of 15 objects, each representing a candidate solution for a problem. Each object has several attributes:\n\n* `candidate_id`: an integer identifier\n* `reason`: a short string explaining why this solution was generated (not present in all solutions)\n* `confidence`: a floating-point number between 0 and 1 indicating the model's confidence in this solution\n* `gradient`: a nested dictionary with three sub-dictionaries:\n\t+ `hard_exclusions`: a list of dictionaries, each describing a hard exclusion rule (e.g., \"phase\": \"some_phase\", \"rule\": \"some_rule\")\n\t+ `soft_penalties`: a list of dictionaries, each describing a soft penalty (e.g., \"phase\": \"some_phase\", \"feature\": \"some_feature\", \"delta\": 0.5)\n\t+ `retrieval_patches`: a list of dictionaries, each describing a retrieval patch (e.g., \"phase\": \"some_phase\", \"patch\": \"some_patch\")\n\n**Structure:**\n\nThe output schema is defined at the bottom, which explains the structure of each object in the list. The main attributes are:\n\n* `candidate_id` (integer)\n* `reason` (short string)\n* `confidence` (floating-point number between 0 and 1)\n* `gradient`: a nested dictionary with three sub-dictionaries:\n\t+ `hard_exclusions`\n\t+ `soft_penalties`\n\t+ `retrieval_patches`\n\n**Interpretation:**\n\nWithout more context, it's difficult to provide specific insights into what this output represents. However, based on the structure and attributes, it appears that this is a solution from an optimization or machine learning algorithm.\n\nThe model has generated 15 candidate solutions for a problem, each with its own confidence score (between 0 and 1) and gradient information. The gradient provides details about hard exclusions, soft penalties, and retrieval patches.\n\nIf you can provide more context or information about the problem being solved, I may be able to offer more specific insights or help with interpretation.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Escanaba",
+          "Alpena"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1391.0,
+          "bundle_lb_cost": 7367.0,
+          "stay_lb_cost": 3678.0,
+          "meal_lb_cost": 825.0,
+          "transport_lb_cost": 2864.0,
+          "hotel_min_nights_min": 2,
+          "edges": [
+            [
+              "omaha",
+              "escanaba"
+            ],
+            [
+              "escanaba",
+              "alpena"
+            ],
+            [
+              "alpena",
+              "omaha"
+            ]
+          ],
+          "bundle_key": [
+            "alpena",
+            "escanaba"
+          ],
+          "bundle_key_set": [
+            "alpena",
+            "escanaba"
+          ],
+          "bundle_key_seq": [
+            "escanaba",
+            "alpena"
+          ],
+          "city_features": {
+            "Escanaba": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 868.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 14,
+              "meal_count": 34,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 12,
+              "meal_slack": 28,
+              "hotel_slack": 0
+            },
+            "Alpena": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 971.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 25,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 16,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Omaha->Escanaba": {
+              "min_cost": 1086.0,
+              "blocked": false
+            },
+            "Escanaba->Alpena": {
+              "min_cost": 387.0,
+              "blocked": false
+            },
+            "Alpena->Omaha": {
+              "min_cost": 1391.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 16,
+            "bottleneck_attr_slack": 12,
+            "bottleneck_hotel_price": 971.0,
+            "bottleneck_city_meal": "Alpena",
+            "bottleneck_city_hotel": "Alpena",
+            "bottleneck_edge": "Alpena->Omaha"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 16,
+          "bottleneck_attr_slack": 12,
+          "bottleneck_hotel_price": 971.0,
+          "bottleneck_city_meal": "Alpena",
+          "bottleneck_city_hotel": "Alpena",
+          "bottleneck_edge": "Alpena->Omaha"
+        },
+        "budget_context": {
+          "remaining": 3100.0,
+          "slot_cap": 148.71162280701753,
+          "reserve": 2765.4048749999997,
+          "min_cost_nonbudget": 217.2
+        },
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Escanaba",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 3100.0,
+          "slot_cap": 148.71162280701753,
+          "reserve": 2765.4048749999997,
+          "min_cost_nonbudget": 217.2
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Pellston",
+        "Detroit"
+      ],
+      "reason": null,
+      "raw": "This appears to be a JSON output from a machine learning model or a data processing pipeline. I'll provide an overview of the structure and highlight some key elements.\n\n**JSON Object Structure**\n\nThe outermost object has two main components:\n\n1. `output`: This is a list of objects, where each object represents a candidate solution.\n2. `output_schema`: This defines the schema for the output data.\n\n**Candidate Solutions (output)**\n\nEach candidate solution in the `output` list contains the following attributes:\n\n* `id`: A unique identifier for the candidate solution.\n* `bundle`: The bundle of cities associated with this candidate solution.\n* `risk`: An object containing risk metrics, including:\n\t+ `bottleneck_meal_slack`\n\t+ `bottleneck_attr_slack`\n\t+ `bottleneck_hotel_price`\n\t+ `bottleneck_city`\n\t+ `bottleneck_edge`\n* `city_summary`: An object with city-specific information, including:\n\t+ `days`\n\t+ `nights`\n\t+ `hotel_min_price`\n\t+ `hotel_slack`\n\t+ `meal_slack`\n\t+ `min_meal_cost`\n\t+ `attr_slack`\n* `edge_summary`: An object with edge-specific information, including:\n\t+ `min_cost`\n\t+ `blocked` (a boolean indicating whether the edge is blocked)\n* `lb_costs`: A list of costs associated with this candidate solution.\n* `feasibility`: An object containing feasibility metrics, including:\n\t+ `return_leg_exists`\n\t+ `hotel_feasible_all`\n\n**Output Schema**\n\nThe `output_schema` defines the schema for the output data. It includes:\n\n* `candidate_id`: The unique identifier for each candidate solution (an integer).\n* `reason`: A short string providing a reason or justification for the candidate solution.\n* `confidence`: A float value between 0 and 1 representing the confidence in the candidate solution.\n* `gradient`: An object containing three lists:\n\t+ `hard_exclusions`: A list of exclusions, each with phase, rule, TTL (time to live), city?, and edge? attributes.\n\t+ `soft_penalties`: A list of penalties, each with phase, feature, and delta attributes.\n\t+ `retrieval_patches`: A list of patches, each with phase, patch, and TTL attributes.\n\nPlease let me know if you have specific questions about any of these components or would like further assistance.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Pellston",
+          "Detroit"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 650.0,
+          "bundle_lb_cost": 5769.0,
+          "stay_lb_cost": 2748.0,
+          "meal_lb_cost": 795.0,
+          "transport_lb_cost": 2226.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "omaha",
+              "pellston"
+            ],
+            [
+              "pellston",
+              "detroit"
+            ],
+            [
+              "detroit",
+              "omaha"
+            ]
+          ],
+          "bundle_key": [
+            "detroit",
+            "pellston"
+          ],
+          "bundle_key_set": [
+            "detroit",
+            "pellston"
+          ],
+          "bundle_key_seq": [
+            "pellston",
+            "detroit"
+          ],
+          "city_features": {
+            "Pellston": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 571.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 37,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 31,
+              "hotel_slack": 0
+            },
+            "Detroit": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 803.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 28,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 19,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Omaha->Pellston": {
+              "min_cost": 1336.0,
+              "blocked": false
+            },
+            "Pellston->Detroit": {
+              "min_cost": 240.0,
+              "blocked": false
+            },
+            "Detroit->Omaha": {
+              "min_cost": 650.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 19,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 803.0,
+            "bottleneck_city_meal": "Detroit",
+            "bottleneck_city_hotel": "Detroit",
+            "bottleneck_edge": "Omaha->Pellston"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 19,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 803.0,
+          "bottleneck_city_meal": "Detroit",
+          "bottleneck_city_hotel": "Detroit",
+          "bottleneck_edge": "Omaha->Pellston"
+        },
+        "budget_context": {
+          "remaining": 3100.0,
+          "slot_cap": 148.71162280701753,
+          "reserve": 2175.844875,
+          "min_cost_nonbudget": 267.2
+        },
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Pellston",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 3100.0,
+          "slot_cap": 148.71162280701753,
+          "reserve": 2175.844875,
+          "min_cost_nonbudget": 267.2
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Detroit",
+        "Pellston"
+      ],
+      "reason": null,
+      "raw": "This is a JSON data dump from an optimization algorithm. It appears to be a set of candidate solutions for a problem, along with their associated costs and feasibility indicators.\n\nHere's a breakdown of the structure:\n\n* `output_schema`: This section defines the format of the output data.\n\t+ `candidate_id`: An integer identifier for each candidate solution.\n\t+ `reason`: A short string explaining why each solution was generated.\n\t+ `confidence`: A float value between 0 and 1 indicating the confidence in each solution's feasibility.\n\t+ `gradient`: This section contains a set of lists with different types of information:\n\t\t- `hard_exclusions`: A list of tuples containing phase, rule, TTL (time to live), city?, and edge? information. Each tuple represents an exclusion criterion that was applied during optimization.\n\t\t- `soft_penalties`: A list of tuples containing phase, feature, delta information. Each tuple represents a soft penalty imposed on each solution.\n\t\t- `retrieval_patches`: A list of tuples containing phase, patch, TTL information. Each tuple represents a retrieval patch applied to each solution.\n\nThe main data section consists of an array of candidate solutions, where each solution is represented by its corresponding properties (e.g., `candidate_id`, `reason`, `confidence`).\n\nTo extract meaningful insights from this data, you might want to:\n\n1. Analyze the `candidate_id` and `reason` fields to understand why certain solutions were generated.\n2. Examine the `gradient` section to identify patterns or correlations between hard exclusions, soft penalties, and retrieval patches.\n3. Investigate the relationships between candidate solutions using network analysis techniques (e.g., graph clustering, community detection).\n4. Visualize the data to gain insights into the optimization process and solution characteristics.\n\nKeep in mind that this is a complex dataset, and further exploration may require additional context or domain-specific knowledge about the problem being optimized.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "3474a089102b",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-21|Pellston->Omaha",
+      "bundle_fp": "3b6866474a12"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "3474a089102b",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-21|Pellston->Omaha",
+        "bundle_fp": "3b6866474a12"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Escanaba",
+        "Alpena"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "3474a089102b",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-21|Omaha->Escanaba",
+        "bundle_fp": "02b80fcac5ee"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "3474a089102b",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-21|Omaha->Escanaba",
+        "bundle_fp": "02b80fcac5ee"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Pellston",
+        "Detroit"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "3474a089102b",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-21|Omaha->Pellston",
+        "bundle_fp": "c0181a249135"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "3474a089102b",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-21|Omaha->Pellston",
+        "bundle_fp": "c0181a249135"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Detroit",
+        "Pellston"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "3474a089102b",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-21|Pellston->Omaha",
+        "bundle_fp": "3b6866474a12"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 67.32286718208343
+}

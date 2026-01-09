@@ -1,0 +1,278 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 440.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you assist in creating a 3-day travel plan for an individual starting in Omaha and ending in Las Vegas, from March 18th to March 20th, 2022? The budget for the trip is set at $700.",
+  "parsed": {
+    "org": "Omaha",
+    "dest": "Las Vegas",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-18",
+      "2022-03-19",
+      "2022-03-20"
+    ],
+    "people_number": 1,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 700,
+    "origin": "Omaha",
+    "destination": "Las Vegas",
+    "duration_days": 3,
+    "start_date": "2022-03-18",
+    "preferences": []
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Las Vegas"
+    ],
+    "transportation_dates": [
+      "2022-03-18",
+      "2022-03-20"
+    ],
+    "transportation_methods": [
+      "Flight F3966456, from Omaha to Las Vegas, Departure Time: 19:14, Arrival Time: 19:56, cost: 220.0",
+      "Flight F3129570, from Las Vegas to Omaha, Departure Time: 13:12, Arrival Time: 17:48, cost: 220.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Las Vegas"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Omaha to Las Vegas",
+      "transportation": "Flight Number: F3966456, from Omaha to Las Vegas, Departure Time: 19:14, Arrival Time: 19:56",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Las Vegas",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Las Vegas to Omaha",
+      "transportation": "Flight Number: F3129570, from Las Vegas to Omaha, Departure Time: 13:12, Arrival Time: 17:48",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Las Vegas|None|None->None",
+      "counts": {
+        "kb": 13,
+        "after_nonbudget": 8,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 6,
+        "violate_reserve": 2,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 260.0,
+        "slot_cap": 190.4296875,
+        "reserve": 116.06962499999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 160.65,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 136.55249999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 116.06962499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Las Vegas|None|None->None",
+        "city": "Las Vegas",
+        "city_bundle": [
+          "Las Vegas"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 13,
+          "after_nonbudget": 8,
+          "after_budget": 0,
+          "budget_removed": 8,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 260.0,
+          "slot_cap": 190.4296875,
+          "reserve": 116.06962499999999,
+          "min_cost_nonbudget": 100.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "2b2cc9e89991",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Las Vegas|None|None->None",
+      "bundle_fp": "6e6d0e6e8078"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "2b2cc9e89991",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Las Vegas|None|None->None",
+        "bundle_fp": "6e6d0e6e8078"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "2b2cc9e89991",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Las Vegas|None|None->None",
+        "bundle_fp": "6e6d0e6e8078"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "2b2cc9e89991",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Las Vegas|None|None->None",
+        "bundle_fp": "6e6d0e6e8078"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.16250113863497972
+}

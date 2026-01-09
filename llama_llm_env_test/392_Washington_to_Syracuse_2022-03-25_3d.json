@@ -1,0 +1,281 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 236.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you assist in creating a 3-day travel itinerary for 2 individuals, departing from Washington and arriving in Syracuse? The journey will take place from March 25th to March 27th, 2022. Our new budget is $1,800 for this trip. We would prefer to have private rooms for our accommodations.",
+  "parsed": {
+    "origin": "Washington",
+    "destination": "Syracuse",
+    "start_date": "2022-03-25",
+    "duration_days": 3,
+    "budget": 1800.0,
+    "people_number": 2,
+    "visiting_city_number": 1,
+    "preferences": [
+      "American",
+      "Chinese"
+    ],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight"
+        ],
+        "forbid": []
+      },
+      "meal": {
+        "cuisines": [
+          "American",
+          "Chinese"
+        ]
+      },
+      "stay": {
+        "room_type": "private room",
+        "house_rule": null
+      },
+      "daily": {
+        "attractions_per_day_min": 1,
+        "attractions_per_day_max": 2
+      },
+      "city": {
+        "candidate_cities": [
+          "New York City",
+          "Boston"
+        ]
+      }
+    },
+    "attractions_per_day_min": 1,
+    "attractions_per_day_max": 2,
+    "candidate_cities": [
+      "New York City",
+      "Boston"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Syracuse"
+    ],
+    "transportation_dates": [
+      "2022-03-25",
+      "2022-03-27"
+    ],
+    "transportation_methods": [
+      "Flight F0106806, from Washington to Syracuse, Departure Time: 17:04, Arrival Time: 18:11, cost: 59.0",
+      "Flight F0580172, from Syracuse to Washington, Departure Time: 15:07, Arrival Time: 16:16, cost: 59.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Syracuse"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Washington to Syracuse",
+      "transportation": "Flight Number: F0106806, from Washington to Syracuse, Departure Time: 17:04, Arrival Time: 18:11",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Syracuse",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Syracuse to Washington",
+      "transportation": "Flight Number: F0580172, from Syracuse to Washington, Departure Time: 15:07, Arrival Time: 16:16",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Syracuse|None|None->None",
+      "counts": {
+        "kb": 0,
+        "after_nonbudget": 0,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 1564.0,
+        "slot_cap": 586.5,
+        "reserve": 1565.0
+      },
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Syracuse|None|None->None",
+        "city": "Syracuse",
+        "city_bundle": [
+          "Syracuse"
+        ],
+        "reason": "constraint_mismatch",
+        "counts": {
+          "kb": 0,
+          "after_nonbudget": 0,
+          "after_budget": 0,
+          "budget_removed": 0,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": "bundle_infeasible",
+        "budget_context": {
+          "remaining": 1564.0,
+          "slot_cap": 586.5,
+          "reserve": 1565.0,
+          "min_cost_nonbudget": null
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "f101088a169a",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Syracuse|None|None->None",
+      "bundle_fp": "182a4bd32d48"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "f101088a169a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Syracuse|None|None->None",
+        "bundle_fp": "182a4bd32d48"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "f101088a169a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Syracuse|None|None->None",
+        "bundle_fp": "182a4bd32d48"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "f101088a169a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Syracuse|None|None->None",
+        "bundle_fp": "182a4bd32d48"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.16593189863488078
+}

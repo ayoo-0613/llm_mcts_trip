@@ -1,0 +1,251 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1214.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you help devise a 5-day travel plan for 2 people, starting in Pittsburgh and visiting 2 cities in Michigan from March 3rd to March 7th, 2022? Our budget is $1,500. We require accommodations that allow children under 10 and private rooms. In terms of cuisine, we want to try American, Italian, Indian, and Mediterranean food.",
+  "parsed": {
+    "org": "Pittsburgh",
+    "dest": "Michigan",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-03",
+      "2022-03-04",
+      "2022-03-05",
+      "2022-03-06",
+      "2022-03-07"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "children under 10",
+      "cuisine": [
+        "American",
+        "Italian",
+        "Indian",
+        "Mediterranean"
+      ],
+      "room type": "private room",
+      "transportation": null
+    },
+    "budget": 1500,
+    "origin": "Pittsburgh",
+    "destination": "Michigan",
+    "duration_days": 5,
+    "start_date": "2022-03-03",
+    "preferences": [
+      "American",
+      "Italian",
+      "Indian",
+      "Mediterranean",
+      "children under 10",
+      "private room"
+    ],
+    "candidate_cities": [
+      "Pellston",
+      "Traverse City",
+      "Alpena",
+      "Iron Mountain",
+      "Kalamazoo",
+      "Saginaw",
+      "Grand Rapids",
+      "Lansing",
+      "Muskegon",
+      "Hancock",
+      "Detroit",
+      "Escanaba"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Kalamazoo",
+      "Detroit"
+    ],
+    "transportation_dates": [
+      "2022-03-03",
+      "2022-03-05",
+      "2022-03-07"
+    ],
+    "transportation_methods": [
+      "taxi, from Pittsburgh to Kalamazoo, cost: 604.0",
+      "Flight F3210296, from Kalamazoo to Detroit, Departure Time: 14:10, Arrival Time: 14:53, cost: 22.0",
+      "Flight F0319924, from Detroit to Pittsburgh, Departure Time: 08:21, Arrival Time: 09:17, cost: 40.0"
+    ],
+    "restaurants": [
+      "Tamasha In Tafree, Kalamazoo",
+      "Kolkata Kathi Roll, Kalamazoo"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "Apartment in Ridgewood/Bushwick Neighborhood, Kalamazoo",
+      "Lovely, charming and clean bedroom in Manhattan., Detroit"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Pittsburgh to Kalamazoo",
+      "transportation": "Taxi, from Pittsburgh to Kalamazoo, Cost: 604",
+      "breakfast": "Tamasha In Tafree, Kalamazoo",
+      "attraction": "-",
+      "lunch": "Kolkata Kathi Roll, Kalamazoo",
+      "dinner": "-",
+      "accommodation": "Apartment in Ridgewood/Bushwick Neighborhood, Kalamazoo"
+    },
+    {
+      "days": 2,
+      "current_city": "Kalamazoo",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Apartment in Ridgewood/Bushwick Neighborhood, Kalamazoo"
+    },
+    {
+      "days": 3,
+      "current_city": "from Kalamazoo to Detroit",
+      "transportation": "Flight Number: F3210296, from Kalamazoo to Detroit, Departure Time: 14:10, Arrival Time: 14:53",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Lovely, charming and clean bedroom in Manhattan., Detroit"
+    },
+    {
+      "days": 4,
+      "current_city": "Detroit",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Lovely, charming and clean bedroom in Manhattan., Detroit"
+    },
+    {
+      "days": 5,
+      "current_city": "from Detroit to Pittsburgh",
+      "transportation": "Flight Number: F0319924, from Detroit to Pittsburgh, Departure Time: 08:21, Arrival Time: 09:17",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:dinner|seg:None|Kalamazoo|None|None->None",
+      "counts": {
+        "kb": 22,
+        "after_nonbudget": 22,
+        "after_budget": 2,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 20,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 286.0,
+        "slot_cap": 11.0,
+        "reserve": 264.0
+      },
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d1|slot:dinner|seg:None|Kalamazoo|None|None->None",
+        "city": "Kalamazoo",
+        "city_bundle": [
+          "Kalamazoo",
+          "Detroit"
+        ],
+        "reason": "duplication",
+        "counts": {
+          "kb": 22,
+          "after_nonbudget": 22,
+          "after_budget": 2,
+          "budget_removed": 20,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 286.0,
+          "slot_cap": 11.0,
+          "reserve": 264.0,
+          "min_cost_nonbudget": 11.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "0bb6c4b5765d",
+      "phase": "daily",
+      "slot_fp": "meal|d1|slot:dinner|seg:None|Kalamazoo|None|None->None",
+      "bundle_fp": "12cb1b4478b2"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "0bb6c4b5765d",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Kalamazoo|None|None->None",
+        "bundle_fp": "12cb1b4478b2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "0bb6c4b5765d",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Kalamazoo|None|None->None",
+        "bundle_fp": "12cb1b4478b2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "0bb6c4b5765d",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Kalamazoo|None|None->None",
+        "bundle_fp": "12cb1b4478b2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 1.3709231428802013
+}

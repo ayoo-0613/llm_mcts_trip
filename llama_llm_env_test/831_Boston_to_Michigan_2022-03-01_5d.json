@@ -1,0 +1,338 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 3257.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you assist me in creating a 5-day travel plan for two people that begins in Boston and involves visiting two separate cities in Michigan from March 1st through 5th, 2022? Our budget is set at $4,200. We require accommodations that allow pets and should ideally be entire rooms. We enjoy a variety of cuisines; including Italian, Mexican, Mediterranean, and Chinese.",
+  "parsed": {
+    "origin": "Boston",
+    "destination": "Michigan",
+    "start_date": "2022-03-01",
+    "duration_days": 5,
+    "budget": 4200.0,
+    "people_number": 2,
+    "visiting_city_number": 2,
+    "preferences": [
+      "Italian",
+      "Mexican",
+      "Mediterranean",
+      "Chinese",
+      "American"
+    ],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight",
+          "self-driving",
+          "taxi"
+        ],
+        "forbid": null
+      },
+      "meal": {
+        "cuisines": [
+          "American"
+        ]
+      },
+      "stay": {
+        "room_type": "entire room",
+        "house_rule": "pets"
+      },
+      "daily": {
+        "attractions_per_day_min": null,
+        "attractions_per_day_max": null
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    },
+    "candidate_cities": [
+      "Pellston",
+      "Traverse City",
+      "Alpena",
+      "Iron Mountain",
+      "Kalamazoo",
+      "Saginaw",
+      "Grand Rapids",
+      "Lansing",
+      "Muskegon",
+      "Hancock",
+      "Detroit",
+      "Escanaba"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Alpena",
+      "Pellston"
+    ],
+    "transportation_dates": [
+      "2022-03-01",
+      "2022-03-03",
+      "2022-03-05"
+    ],
+    "transportation_methods": [
+      "taxi, from Boston to Alpena, cost: 1459.0",
+      "taxi, from Alpena to Pellston, cost: 156.0",
+      "taxi, from Pellston to Boston, cost: 1512.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Wonderlust in WIlliamsburg, Alpena",
+      "missing, Pellston"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Boston to Alpena",
+      "transportation": "Taxi, from Boston to Alpena, Cost: 1459",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Wonderlust in WIlliamsburg, Alpena"
+    },
+    {
+      "days": 2,
+      "current_city": "Alpena",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Wonderlust in WIlliamsburg, Alpena"
+    },
+    {
+      "days": 3,
+      "current_city": "from Alpena to Pellston",
+      "transportation": "Taxi, from Alpena to Pellston, Cost: 156",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Pellston",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Pellston to Boston",
+      "transportation": "Taxi, from Pellston to Boston, Cost: 1512",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Pellston|None|None->None",
+      "counts": {
+        "kb": 5,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 2,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 943.0,
+        "slot_cap": 690.673828125,
+        "reserve": 191.60699999999997
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 265.2,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 225.42,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 191.60699999999997,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Pellston|None|None->None",
+        "city": "Pellston",
+        "city_bundle": [
+          "Alpena",
+          "Pellston"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 5,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 943.0,
+          "slot_cap": 690.673828125,
+          "reserve": 191.60699999999997,
+          "min_cost_nonbudget": 581.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "e9a900146c94",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Pellston|None|None->None",
+      "bundle_fp": "a5edb7caa827"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "e9a900146c94",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Pellston|None|None->None",
+        "bundle_fp": "a5edb7caa827"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "e9a900146c94",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Pellston|None|None->None",
+        "bundle_fp": "a5edb7caa827"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "e9a900146c94",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Pellston|None|None->None",
+        "bundle_fp": "a5edb7caa827"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.4796762899495661
+}

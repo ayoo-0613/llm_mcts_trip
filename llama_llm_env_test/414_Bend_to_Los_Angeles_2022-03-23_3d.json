@@ -1,0 +1,299 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 2037.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you assist in creating a 3-day travel itinerary for a group of 7, starting from Bend and visiting Los Angeles from March 23rd to March 25, 2022? Our budget for this trip is $12,900. We are particularly interested in trying Italian and Indian cuisines during our stay.",
+  "parsed": {
+    "origin": "Bend",
+    "destination": "Los Angeles",
+    "start_date": "2022-03-23",
+    "duration_days": 3,
+    "budget": 12900.0,
+    "people_number": 7,
+    "visiting_city_number": 1,
+    "preferences": [
+      "Italian",
+      "Indian"
+    ],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight"
+        ]
+      },
+      "meal": {
+        "cuisines": [
+          "Italian",
+          "Indian"
+        ]
+      },
+      "stay": {
+        "room_type": null,
+        "house_rule": null
+      },
+      "daily": {
+        "attractions_per_day_min": null,
+        "attractions_per_day_max": null
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    }
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Los Angeles"
+    ],
+    "transportation_dates": [
+      "2022-03-23",
+      "2022-03-25"
+    ],
+    "transportation_methods": [
+      "Flight F3818182, from Bend to Los Angeles, Departure Time: 06:57, Arrival Time: 09:22, cost: 145.0",
+      "Flight F0612042, from Los Angeles to Bend, Departure Time: 12:40, Arrival Time: 14:44, cost: 146.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Los Angeles"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Bend to Los Angeles",
+      "transportation": "Flight Number: F3818182, from Bend to Los Angeles, Departure Time: 06:57, Arrival Time: 09:22",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Los Angeles",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Los Angeles to Bend",
+      "transportation": "Flight Number: F0612042, from Los Angeles to Bend, Departure Time: 12:40, Arrival Time: 14:44",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Los Angeles|None|None->None",
+      "counts": {
+        "kb": 2,
+        "after_nonbudget": 0,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 10863.0,
+        "slot_cap": 4073.625,
+        "reserve": 819.0
+      },
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Los Angeles|None|None->None",
+        "city": "Los Angeles",
+        "city_bundle": [
+          "Los Angeles"
+        ],
+        "reason": "scarcity",
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 0,
+          "after_budget": 0,
+          "budget_removed": 0,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": "min_nights",
+        "budget_context": {
+          "remaining": 10863.0,
+          "slot_cap": 4073.625,
+          "reserve": 819.0,
+          "min_cost_nonbudget": null
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "56b8e63b4cd9",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Los Angeles|None|None->None",
+      "bundle_fp": "c271c768e94e"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [
+      {
+        "phase": "stay",
+        "rule": "AVOID_CITY",
+        "city": "Los Angeles",
+        "ttl": 1
+      }
+    ],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "56b8e63b4cd9",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Los Angeles|None|None->None",
+        "bundle_fp": "c271c768e94e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Los Angeles",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "56b8e63b4cd9",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Los Angeles|None|None->None",
+        "bundle_fp": "c271c768e94e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Los Angeles",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "56b8e63b4cd9",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Los Angeles|None|None->None",
+        "bundle_fp": "c271c768e94e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Los Angeles",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.1412537801079452
+}

@@ -1,0 +1,295 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 2818.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "We require a 7-day travel plan from March 2 to March 8, 2022, that accommodates 2 people. The itinerary should outline a journey beginning in Atlanta, with the intent to explore 3 different cities in Pennsylvania. Our expenditures must now remain within a reduced budget of $3,100. We need accommodations that are not shared and are also pet-friendly, as we'll be traveling with our pets. In terms of transportation, we'd prefer options that do not include flights.",
+  "parsed": {
+    "origin": "Atlanta",
+    "destination": "Pennsylvania",
+    "start_date": "2022-03-02",
+    "duration_days": 7,
+    "budget": 3100.0,
+    "people_number": 2,
+    "visiting_city_number": 3,
+    "preferences": [],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight"
+        ],
+        "forbid": []
+      },
+      "meal": {
+        "cuisines": null
+      },
+      "stay": {
+        "room_type": "not shared room",
+        "house_rule": "pets"
+      },
+      "daily": {
+        "attractions_per_day_min": null,
+        "attractions_per_day_max": null
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    },
+    "candidate_cities": [
+      "State College",
+      "Johnstown",
+      "Harrisburg",
+      "Erie",
+      "Pittsburgh",
+      "Latrobe",
+      "Philadelphia",
+      "Lewisburg",
+      "Scranton"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Pittsburgh",
+      "Philadelphia",
+      "Harrisburg"
+    ],
+    "transportation_dates": [
+      "2022-03-02",
+      "2022-03-04",
+      "2022-03-06",
+      "2022-03-08"
+    ],
+    "transportation_methods": [
+      "Flight F2947459, from Atlanta to Pittsburgh, Departure Time: 21:07, Arrival Time: 22:35, cost: 105.0",
+      "Flight F2621030, from Pittsburgh to Philadelphia, Departure Time: 13:15, Arrival Time: 14:36, cost: 53.0",
+      "Flight F1966293, from Philadelphia to Harrisburg, Departure Time: 10:49, Arrival Time: 11:33, cost: 16.0",
+      "Flight F1279834, from Harrisburg to Atlanta, Departure Time: 06:18, Arrival Time: 07:59, cost: 124.0"
+    ],
+    "restaurants": [
+      "Costa Coffee, Pittsburgh",
+      "Modi's Baker's Zone, Pittsburgh",
+      "Gian Ji Punjabi Dhaba, Pittsburgh",
+      "Beijing Cafe, Pittsburgh"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "4BR Brooklyn Apartment Minutes from City Life!, Pittsburgh",
+      "Top floor of an amazing duplex, Philadelphia",
+      "Cozy Nolita Apartment, Harrisburg"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Atlanta to Pittsburgh",
+      "transportation": "Flight Number: F2947459, from Atlanta to Pittsburgh, Departure Time: 21:07, Arrival Time: 22:35",
+      "breakfast": "Costa Coffee, Pittsburgh",
+      "attraction": "-",
+      "lunch": "Modi's Baker's Zone, Pittsburgh",
+      "dinner": "Gian Ji Punjabi Dhaba, Pittsburgh",
+      "accommodation": "4BR Brooklyn Apartment Minutes from City Life!, Pittsburgh"
+    },
+    {
+      "days": 2,
+      "current_city": "Pittsburgh",
+      "transportation": "-",
+      "breakfast": "Beijing Cafe, Pittsburgh",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "4BR Brooklyn Apartment Minutes from City Life!, Pittsburgh"
+    },
+    {
+      "days": 3,
+      "current_city": "from Pittsburgh to Philadelphia",
+      "transportation": "Flight Number: F2621030, from Pittsburgh to Philadelphia, Departure Time: 13:15, Arrival Time: 14:36",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Top floor of an amazing duplex, Philadelphia"
+    },
+    {
+      "days": 4,
+      "current_city": "Philadelphia",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Top floor of an amazing duplex, Philadelphia"
+    },
+    {
+      "days": 5,
+      "current_city": "from Philadelphia to Harrisburg",
+      "transportation": "Flight Number: F1966293, from Philadelphia to Harrisburg, Departure Time: 10:49, Arrival Time: 11:33",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Cozy Nolita Apartment, Harrisburg"
+    },
+    {
+      "days": 6,
+      "current_city": "Harrisburg",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Cozy Nolita Apartment, Harrisburg"
+    },
+    {
+      "days": 7,
+      "current_city": "from Harrisburg to Atlanta",
+      "transportation": "Flight Number: F1279834, from Harrisburg to Atlanta, Departure Time: 06:18, Arrival Time: 07:59",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d2|slot:lunch|seg:None|Pittsburgh|None|None->None",
+      "counts": {
+        "kb": 29,
+        "after_nonbudget": 29,
+        "after_budget": 4,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 25,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 282.0,
+        "slot_cap": 16.199448529411764,
+        "reserve": 207.57424999999998
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 287.3,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 244.20499999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 207.57424999999998,
+          "kept": 4
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d2|slot:lunch|seg:None|Pittsburgh|None|None->None",
+        "city": "Pittsburgh",
+        "city_bundle": [
+          "Pittsburgh",
+          "Philadelphia",
+          "Harrisburg"
+        ],
+        "reason": "duplication",
+        "counts": {
+          "kb": 29,
+          "after_nonbudget": 29,
+          "after_budget": 4,
+          "budget_removed": 25,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 282.0,
+          "slot_cap": 16.199448529411764,
+          "reserve": 207.57424999999998,
+          "min_cost_nonbudget": 19.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "14a48bdb7992",
+      "phase": "daily",
+      "slot_fp": "meal|d2|slot:lunch|seg:None|Pittsburgh|None|None->None",
+      "bundle_fp": "a4a823ab10e1"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "14a48bdb7992",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:lunch|seg:None|Pittsburgh|None|None->None",
+        "bundle_fp": "a4a823ab10e1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "14a48bdb7992",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:lunch|seg:None|Pittsburgh|None|None->None",
+        "bundle_fp": "a4a823ab10e1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "14a48bdb7992",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:lunch|seg:None|Pittsburgh|None|None->None",
+        "bundle_fp": "a4a823ab10e1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 4.009625741746277
+}

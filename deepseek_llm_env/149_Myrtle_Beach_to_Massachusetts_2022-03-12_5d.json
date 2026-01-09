@@ -1,0 +1,266 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 3502.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you provide a travel plan for our group of 3 from Myrtle Beach to Massachusetts, visiting 2 cities over five days, from March 12th to March 16th, 2022? We have a budget of $3,800. We would like to stay in entire rooms where smoking is allowed. Additionally, we are interested in Indian, Mexican, American, and Mediterranean cuisines.",
+  "parsed": {
+    "org": "Myrtle Beach",
+    "dest": "Massachusetts",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-12",
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15",
+      "2022-03-16"
+    ],
+    "people_number": 3,
+    "local_constraint": {
+      "house rule": "smoking",
+      "cuisine": [
+        "Indian",
+        "Mexican",
+        "American",
+        "Mediterranean"
+      ],
+      "room type": "entire room",
+      "transportation": null
+    },
+    "budget": 3800,
+    "origin": "Myrtle Beach",
+    "destination": "Massachusetts",
+    "duration_days": 5,
+    "start_date": "2022-03-12",
+    "preferences": [
+      "Indian",
+      "Mexican",
+      "American",
+      "Mediterranean",
+      "smoking",
+      "entire room"
+    ],
+    "candidate_cities": [
+      "Martha's Vineyard",
+      "Hyannis",
+      "Boston",
+      "Nantucket"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Hyannis",
+      "Boston"
+    ],
+    "transportation_dates": [
+      "2022-03-12",
+      "2022-03-14",
+      "2022-03-16"
+    ],
+    "transportation_methods": [
+      "taxi, from Myrtle Beach to Hyannis, cost: 1464.0",
+      "taxi, from Hyannis to Boston, cost: 114.0",
+      "Flight F2594564, from Boston to Myrtle Beach, Departure Time: 11:06, Arrival Time: 13:23, cost: 148.0"
+    ],
+    "restaurants": [
+      "Cafe Grub Up, Hyannis",
+      "Thirsty Scholar Cafe, Hyannis"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "Super Chill Studio, Hyannis",
+      "New Private studio-apartment, Boston"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Myrtle Beach to Hyannis",
+      "transportation": "Taxi, from Myrtle Beach to Hyannis, Cost: 1464",
+      "breakfast": "Cafe Grub Up, Hyannis",
+      "attraction": "-",
+      "lunch": "Thirsty Scholar Cafe, Hyannis",
+      "dinner": "-",
+      "accommodation": "Super Chill Studio, Hyannis"
+    },
+    {
+      "days": 2,
+      "current_city": "Hyannis",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Super Chill Studio, Hyannis"
+    },
+    {
+      "days": 3,
+      "current_city": "from Hyannis to Boston",
+      "transportation": "Taxi, from Hyannis to Boston, Cost: 114",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "New Private studio-apartment, Boston"
+    },
+    {
+      "days": 4,
+      "current_city": "Boston",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "New Private studio-apartment, Boston"
+    },
+    {
+      "days": 5,
+      "current_city": "from Boston to Myrtle Beach",
+      "transportation": "Flight Number: F2594564, from Boston to Myrtle Beach, Departure Time: 11:06, Arrival Time: 13:23",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:dinner|seg:None|Hyannis|None|None->None",
+      "counts": {
+        "kb": 33,
+        "after_nonbudget": 33,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 32,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 298.0,
+        "slot_cap": 14.923878205128206,
+        "reserve": 265.30199999999996
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 367.2,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 312.11999999999995,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 265.30199999999996,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d1|slot:dinner|seg:None|Hyannis|None|None->None",
+        "city": "Hyannis",
+        "city_bundle": [
+          "Hyannis",
+          "Boston"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 33,
+          "after_nonbudget": 33,
+          "after_budget": 0,
+          "budget_removed": 33,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 298.0,
+          "slot_cap": 14.923878205128206,
+          "reserve": 265.30199999999996,
+          "min_cost_nonbudget": 12.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "051916e5872f",
+      "phase": "daily",
+      "slot_fp": "meal|d1|slot:dinner|seg:None|Hyannis|None|None->None",
+      "bundle_fp": "29fc2e8ea850"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "051916e5872f",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Hyannis|None|None->None",
+        "bundle_fp": "29fc2e8ea850"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "051916e5872f",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Hyannis|None|None->None",
+        "bundle_fp": "29fc2e8ea850"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "051916e5872f",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Hyannis|None|None->None",
+        "bundle_fp": "29fc2e8ea850"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 1.1385309090837836
+}

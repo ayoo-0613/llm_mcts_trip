@@ -1,0 +1,285 @@
+{
+  "success": false,
+  "cost": 1214.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you create a travel itinerary for a group of 4 departing from Newark and visiting Charleston for 3 days, from March 29th to March 31st, 2022? Our budget is now set at $3,300. We're hoping to find accommodations that allow visitors and have entire rooms available for us. Additionally, we'd prefer our itinerary to not include any flight plans.",
+  "parsed": {
+    "org": "Newark",
+    "dest": "Charleston",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-29",
+      "2022-03-30",
+      "2022-03-31"
+    ],
+    "people_number": 4,
+    "local_constraint": {
+      "house rule": "visitors",
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": "no flight"
+    },
+    "budget": 3300,
+    "origin": "Newark",
+    "destination": "Charleston",
+    "duration_days": 3,
+    "start_date": "2022-03-29",
+    "preferences": [
+      "visitors",
+      "entire room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Charleston"
+    ],
+    "transportation_dates": [
+      "2022-03-29",
+      "2022-03-31"
+    ],
+    "transportation_methods": [
+      "taxi, from Newark to Charleston, cost: 1214.0",
+      "Charleston->Newark missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Charleston"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Newark to Charleston",
+      "transportation": "Taxi, from Newark to Charleston, Cost: 1214",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Charleston",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "Charleston",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:1|None|2022-03-29|Charleston->Newark",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 2086.0,
+        "slot_cap": 375.25699013157885,
+        "reserve": 945.7524999999998
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 1309.0,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 1112.6499999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 945.7524999999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:1|None|2022-03-29|Charleston->Newark",
+        "city": "Newark",
+        "city_bundle": [
+          "Charleston"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 2086.0,
+          "slot_cap": 375.25699013157885,
+          "reserve": 945.7524999999998,
+          "min_cost_nonbudget": 301.5
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "3ef9c4744c6f",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:1|None|2022-03-29|Charleston->Newark",
+      "bundle_fp": "d3c1dba1e467"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "3ef9c4744c6f",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:1|None|2022-03-29|Charleston->Newark",
+        "bundle_fp": "d3c1dba1e467"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "3ef9c4744c6f",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:1|None|2022-03-29|Charleston->Newark",
+        "bundle_fp": "d3c1dba1e467"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "3ef9c4744c6f",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:1|None|2022-03-29|Charleston->Newark",
+        "bundle_fp": "d3c1dba1e467"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.0392293781042099
+}

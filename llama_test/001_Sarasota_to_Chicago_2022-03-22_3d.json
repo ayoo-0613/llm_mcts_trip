@@ -1,0 +1,277 @@
+{
+  "success": false,
+  "cost": 417.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Please plan a trip for me starting from Sarasota to Chicago for 3 days, from March 22nd to March 24th, 2022. The budget for this trip is set at $1,900.",
+  "parsed": {
+    "org": "Sarasota",
+    "dest": "Chicago",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-22",
+      "2022-03-23",
+      "2022-03-24"
+    ],
+    "people_number": null,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 1900,
+    "origin": "Sarasota",
+    "destination": "Chicago",
+    "duration_days": 3,
+    "start_date": "2022-03-22",
+    "preferences": []
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Chicago"
+    ],
+    "transportation_dates": [
+      "2022-03-22",
+      "2022-03-24"
+    ],
+    "transportation_methods": [
+      "Flight F0646045, from Sarasota to Chicago, Departure Time: 06:40, Arrival Time: 08:13, cost: 208.0",
+      "Flight F3983502, from Chicago to Sarasota, Departure Time: 10:46, Arrival Time: 14:19, cost: 209.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Chicago"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Sarasota to Chicago",
+      "transportation": "Flight Number: F0646045, from Sarasota to Chicago, Departure Time: 06:40, Arrival Time: 08:13",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Chicago",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Chicago to Sarasota",
+      "transportation": "Flight Number: F3983502, from Chicago to Sarasota, Departure Time: 10:46, Arrival Time: 14:19",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+      "counts": {
+        "kb": 14,
+        "after_nonbudget": 4,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 4,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1483.0,
+        "slot_cap": 1086.181640625,
+        "reserve": 55.271249999999995
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 76.5,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 65.02499999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 55.271249999999995,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "city": "Chicago",
+        "city_bundle": [
+          "Chicago"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1483.0,
+          "slot_cap": 1086.181640625,
+          "reserve": 55.271249999999995,
+          "min_cost_nonbudget": 781.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "52075881010f",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+      "bundle_fp": "a47e6eb956a2"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "52075881010f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "a47e6eb956a2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "52075881010f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "a47e6eb956a2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "52075881010f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "a47e6eb956a2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.14317716099321842
+}

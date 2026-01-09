@@ -1,0 +1,1165 @@
+{
+  "success": false,
+  "cost": 1328.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you assist in creating a 5-day travel plan starting in Providence and covering 2 cities in North Carolina from March 13th to March 17th, 2022? The trip is for one person, with an allocated budget of $2,100.",
+  "parsed": {
+    "org": "Providence",
+    "dest": "North Carolina",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15",
+      "2022-03-16",
+      "2022-03-17"
+    ],
+    "people_number": 1,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": "no self-driving"
+    },
+    "budget": 2100,
+    "origin": "Providence",
+    "destination": "North Carolina",
+    "duration_days": 5,
+    "start_date": "2022-03-13",
+    "preferences": [],
+    "transport_forbid": [
+      "self-driving"
+    ],
+    "candidate_cities": [
+      "Greensboro",
+      "Wilmington",
+      "New Bern",
+      "Charlotte",
+      "Raleigh",
+      "Asheville",
+      "Fayetteville"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Providence->Fayetteville 1169km cost 1169",
+    "move:seg1:flight:F0797254 Fayetteville->Charlotte $23 15:04-16:00",
+    "move:seg2:flight:F3254622 Charlotte->Providence $136 16:23-18:01"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Fayetteville",
+      "Charlotte"
+    ],
+    "transportation_dates": [
+      "2022-03-13",
+      "2022-03-15",
+      "2022-03-17"
+    ],
+    "transportation_methods": [
+      "taxi, from Providence to Fayetteville, cost: 1169.0",
+      "Flight F0797254, from Fayetteville to Charlotte, Departure Time: 15:04, Arrival Time: 16:00, cost: 23.0",
+      "Flight F3254622, from Charlotte to Providence, Departure Time: 16:23, Arrival Time: 18:01, cost: 136.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Fayetteville",
+      "missing, Charlotte"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Providence to Fayetteville",
+      "transportation": "Taxi, from Providence to Fayetteville, Cost: 1169",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Fayetteville",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Fayetteville to Charlotte",
+      "transportation": "Flight Number: F0797254, from Fayetteville to Charlotte, Departure Time: 15:04, Arrival Time: 16:00",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Charlotte",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Charlotte to Providence",
+      "transportation": "Flight Number: F3254622, from Charlotte to Providence, Departure Time: 16:23, Arrival Time: 18:01",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-13|Charlotte->Providence",
+      "counts": {
+        "kb": 758,
+        "after_nonbudget": 758,
+        "after_budget": 204,
+        "returned": 5,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 553,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 908.0,
+        "slot_cap": 334.52631578947364,
+        "reserve": 713.0
+      },
+      "segment_role": "return",
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Fayetteville|None|None->None",
+      "counts": {
+        "kb": 14,
+        "after_nonbudget": 7,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 4,
+        "violate_reserve": 3,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 770.0,
+        "slot_cap": 281.982421875,
+        "reserve": 369.08912499999997
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 510.84999999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 434.22249999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 369.08912499999997,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Fayetteville|None|None->None",
+        "city": "Fayetteville",
+        "city_bundle": [
+          "Fayetteville",
+          "Charlotte"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 14,
+          "after_nonbudget": 7,
+          "after_budget": 0,
+          "budget_removed": 7,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 770.0,
+          "slot_cap": 281.982421875,
+          "reserve": 369.08912499999997,
+          "min_cost_nonbudget": 214.0
+        }
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Fayetteville|None|None->None",
+      "counts": {
+        "kb": 14,
+        "after_nonbudget": 7,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 4,
+        "violate_reserve": 3,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 772.0,
+        "slot_cap": 282.71484375,
+        "reserve": 369.08912499999997
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 510.84999999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 434.22249999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 369.08912499999997,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Fayetteville|None|None->None",
+        "city": "Fayetteville",
+        "city_bundle": [
+          "Fayetteville",
+          "Charlotte"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 14,
+          "after_nonbudget": 7,
+          "after_budget": 0,
+          "budget_removed": 7,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 772.0,
+          "slot_cap": 282.71484375,
+          "reserve": 369.08912499999997,
+          "min_cost_nonbudget": 214.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Fayetteville",
+          "Charlotte"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 136.0,
+          "bundle_lb_cost": 2041.0,
+          "stay_lb_cost": 548.0,
+          "meal_lb_cost": 165.0,
+          "transport_lb_cost": 1328.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "providence",
+              "fayetteville"
+            ],
+            [
+              "fayetteville",
+              "charlotte"
+            ],
+            [
+              "charlotte",
+              "providence"
+            ]
+          ],
+          "bundle_key": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "bundle_key_set": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "bundle_key_seq": [
+            "fayetteville",
+            "charlotte"
+          ],
+          "city_features": {
+            "Fayetteville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 56.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            },
+            "Charlotte": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 218.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Providence->Fayetteville": {
+              "min_cost": 1169.0,
+              "blocked": false
+            },
+            "Fayetteville->Charlotte": {
+              "min_cost": 23.0,
+              "blocked": false
+            },
+            "Charlotte->Providence": {
+              "min_cost": 136.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 21,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 218.0,
+            "bottleneck_city_meal": "Charlotte",
+            "bottleneck_city_hotel": "Charlotte",
+            "bottleneck_edge": "Providence->Fayetteville"
+          },
+          "min_bundle_cost": 1876.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 21,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 218.0,
+          "bottleneck_city_meal": "Charlotte",
+          "bottleneck_city_hotel": "Charlotte",
+          "bottleneck_edge": "Providence->Fayetteville"
+        },
+        "budget_context": {
+          "remaining": 772.0,
+          "slot_cap": 282.71484375,
+          "reserve": 369.08912499999997,
+          "min_cost_nonbudget": 214.0
+        },
+        "counts": {
+          "kb": 14,
+          "after_nonbudget": 7,
+          "after_budget": 0,
+          "budget_removed": 7,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_city": "Fayetteville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 14,
+          "after_nonbudget": 7,
+          "after_budget": 0,
+          "budget_removed": 7,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 772.0,
+          "slot_cap": 282.71484375,
+          "reserve": 369.08912499999997,
+          "min_cost_nonbudget": 214.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 7,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": "no self-driving"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Charlotte",
+        "Wilmington"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 1,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 30, \"city\": \"Fayetteville\"},\n      {\"phase\": \"segment\", \"rule\": \"BLOCK_EDGE\", \"ttl\": 30, \"edge\": \"Providence->Wilmington\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"bundle\", \"feature\": \"budget_risk\", \"delta\": -0.2},\n      {\"phase\": \"hotel\", \"feature\": \"hotel_price\", \"delta\": 10.0}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 30,
+              "city": "Fayetteville"
+            },
+            {
+              "phase": "segment",
+              "rule": "BLOCK_EDGE",
+              "ttl": 30,
+              "edge": "Providence->Wilmington"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "bundle",
+              "feature": "budget_risk",
+              "delta": -0.2
+            },
+            {
+              "phase": "hotel",
+              "feature": "hotel_price",
+              "delta": 10.0
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 30,
+            "city": "Fayetteville"
+          },
+          {
+            "phase": "segment",
+            "rule": "BLOCK_EDGE",
+            "ttl": 30,
+            "edge": "Providence->Wilmington"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "bundle",
+            "feature": "budget_risk",
+            "delta": -0.2
+          },
+          {
+            "phase": "hotel",
+            "feature": "hotel_price",
+            "delta": 10.0
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Charlotte",
+          "Wilmington"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1239.0,
+          "bundle_lb_cost": 2347.0,
+          "stay_lb_cost": 644.0,
+          "meal_lb_cost": 291.0,
+          "transport_lb_cost": 1412.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "providence",
+              "charlotte"
+            ],
+            [
+              "charlotte",
+              "wilmington"
+            ],
+            [
+              "wilmington",
+              "providence"
+            ]
+          ],
+          "bundle_key": [
+            "charlotte",
+            "wilmington"
+          ],
+          "bundle_key_set": [
+            "charlotte",
+            "wilmington"
+          ],
+          "bundle_key_seq": [
+            "charlotte",
+            "wilmington"
+          ],
+          "city_features": {
+            "Charlotte": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 218.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 24,
+              "hotel_slack": 1
+            },
+            "Wilmington": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 104.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 21,
+              "min_meal_cost": 25.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 12,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Providence->Charlotte": {
+              "min_cost": 136.0,
+              "blocked": false
+            },
+            "Charlotte->Wilmington": {
+              "min_cost": 37.0,
+              "blocked": false
+            },
+            "Wilmington->Providence": {
+              "min_cost": 1239.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 12,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 218.0,
+            "bottleneck_city_meal": "Wilmington",
+            "bottleneck_city_hotel": "Charlotte",
+            "bottleneck_edge": "Wilmington->Providence"
+          },
+          "min_bundle_cost": 2056.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 12,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 218.0,
+          "bottleneck_city_meal": "Wilmington",
+          "bottleneck_city_hotel": "Charlotte",
+          "bottleneck_edge": "Wilmington->Providence"
+        },
+        "budget_context": {
+          "remaining": 688.0,
+          "slot_cap": 251.953125,
+          "reserve": 306.44837499999994,
+          "min_cost_nonbudget": 218.0
+        },
+        "counts": {
+          "kb": 18,
+          "after_nonbudget": 7,
+          "after_budget": 0,
+          "budget_removed": 7,
+          "nonbudget_removed": 11,
+          "topk": 0
+        },
+        "dead_end_city": "Charlotte",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 18,
+          "after_nonbudget": 7,
+          "after_budget": 0,
+          "budget_removed": 7,
+          "nonbudget_removed": 11,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 688.0,
+          "slot_cap": 251.953125,
+          "reserve": 306.44837499999994,
+          "min_cost_nonbudget": 218.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 7,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": "no self-driving"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Charlotte",
+        "Fayetteville"
+      ],
+      "reason": "bundle_risk",
+      "raw": "```json\n{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk\",\n  \"confidence\": 0.9,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 86400, \"city\": \"Charlotte\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"transport\", \"feature\": \"cost_ratio\", \"delta\": -0.2}\n    ]\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk",
+        "confidence": 0.9,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 86400,
+              "city": "Charlotte"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "transport",
+              "feature": "cost_ratio",
+              "delta": -0.2
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 86400,
+            "city": "Charlotte"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "transport",
+            "feature": "cost_ratio",
+            "delta": -0.2
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Charlotte",
+          "Fayetteville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1163.0,
+          "bundle_lb_cost": 2035.0,
+          "stay_lb_cost": 548.0,
+          "meal_lb_cost": 165.0,
+          "transport_lb_cost": 1322.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "providence",
+              "charlotte"
+            ],
+            [
+              "charlotte",
+              "fayetteville"
+            ],
+            [
+              "fayetteville",
+              "providence"
+            ]
+          ],
+          "bundle_key": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "bundle_key_set": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "bundle_key_seq": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "city_features": {
+            "Charlotte": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 218.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 24,
+              "hotel_slack": 1
+            },
+            "Fayetteville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 56.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 25,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Providence->Charlotte": {
+              "min_cost": 136.0,
+              "blocked": false
+            },
+            "Charlotte->Fayetteville": {
+              "min_cost": 23.0,
+              "blocked": false
+            },
+            "Fayetteville->Providence": {
+              "min_cost": 1163.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 24,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 218.0,
+            "bottleneck_city_meal": "Charlotte",
+            "bottleneck_city_hotel": "Charlotte",
+            "bottleneck_edge": "Fayetteville->Providence"
+          },
+          "min_bundle_cost": 1870.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 24,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 218.0,
+          "bottleneck_city_meal": "Charlotte",
+          "bottleneck_city_hotel": "Charlotte",
+          "bottleneck_edge": "Fayetteville->Providence"
+        },
+        "budget_context": {
+          "remaining": 778.0,
+          "slot_cap": 145.875,
+          "reserve": 277.0,
+          "min_cost_nonbudget": 218.0
+        },
+        "counts": {
+          "kb": 18,
+          "after_nonbudget": 7,
+          "after_budget": 1,
+          "budget_removed": 6,
+          "nonbudget_removed": 11,
+          "topk": 0
+        },
+        "dead_end_city": "Charlotte",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 18,
+          "after_nonbudget": 7,
+          "after_budget": 1,
+          "budget_removed": 6,
+          "nonbudget_removed": 11,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 778.0,
+          "slot_cap": 145.875,
+          "reserve": 277.0,
+          "min_cost_nonbudget": 218.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 7,
+        "dead_end_after_budget": 1,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": "no self-driving"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Fayetteville",
+        "Charlotte"
+      ],
+      "reason": "no blocked edges",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"no blocked edges\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [],\n    \"soft_penalties\": [\n      {\"phase\": \"hotel\", \"feature\": \"budget_risk\", \"delta\": -10},\n      {\"phase\": \"segment\", \"feature\": \"cost_ratio\", \"delta\": 0.5}\n    ],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "no blocked edges",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [],
+          "soft_penalties": [
+            {
+              "phase": "hotel",
+              "feature": "budget_risk",
+              "delta": -10
+            },
+            {
+              "phase": "segment",
+              "feature": "cost_ratio",
+              "delta": 0.5
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "hotel",
+            "feature": "budget_risk",
+            "delta": -10
+          },
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.5
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "cd5b196cb51b",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Fayetteville|None|None->None",
+      "bundle_fp": "6b7204ca99fd"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "cd5b196cb51b",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Fayetteville|None|None->None",
+        "bundle_fp": "6b7204ca99fd"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 30,
+          "city": "Fayetteville"
+        },
+        {
+          "phase": "segment",
+          "rule": "BLOCK_EDGE",
+          "ttl": 30,
+          "edge": "Providence->Wilmington"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "bundle",
+          "feature": "budget_risk",
+          "delta": -0.2
+        },
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 10.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Charlotte",
+        "Wilmington"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "cd5b196cb51b",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Charlotte|None|None->None",
+        "bundle_fp": "241db7658fb2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "cd5b196cb51b",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Charlotte|None|None->None",
+        "bundle_fp": "241db7658fb2"
+      },
+      "confidence": 0.9,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 86400,
+          "city": "Charlotte"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "transport",
+          "feature": "cost_ratio",
+          "delta": -0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Charlotte",
+        "Fayetteville"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "cd5b196cb51b",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Charlotte|None|None->None",
+        "bundle_fp": "704cc740fe97"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "cd5b196cb51b",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Charlotte|None|None->None",
+        "bundle_fp": "704cc740fe97"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "budget_risk",
+          "delta": -10.0
+        },
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Fayetteville",
+        "Charlotte"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "cd5b196cb51b",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Fayetteville|None|None->None",
+        "bundle_fp": "6b7204ca99fd"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 19.28852008236572
+}

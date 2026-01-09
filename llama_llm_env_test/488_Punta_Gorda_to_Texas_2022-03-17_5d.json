@@ -1,0 +1,348 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 1338.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you help me create a 5-day trip for three people, starting from Punta Gorda and visiting 2 cities in Texas from March 17th to March 21st, 2022? Our budget is set at $3,400. For meals, we would like to have American and Indian cuisines.",
+  "parsed": {
+    "origin": "Punta Gorda",
+    "destination": "Texas",
+    "start_date": "2022-03-17",
+    "duration_days": 5,
+    "budget": 3400.0,
+    "people_number": 3,
+    "visiting_city_number": 2,
+    "preferences": [
+      "American",
+      "Indian"
+    ],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight",
+          "self-driving",
+          "taxi"
+        ]
+      },
+      "meal": {
+        "cuisines": [
+          "American",
+          "Indian"
+        ]
+      },
+      "stay": {
+        "room_type": "entire room",
+        "house_rule": null
+      },
+      "daily": {
+        "attractions_per_day_min": 1,
+        "attractions_per_day_max": 3
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    },
+    "attractions_per_day_min": 1,
+    "attractions_per_day_max": 3,
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas",
+      "Killeen",
+      "Laredo",
+      "Texarkana"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Austin",
+      "Houston"
+    ],
+    "transportation_dates": [
+      "2022-03-17",
+      "2022-03-19",
+      "2022-03-21"
+    ],
+    "transportation_methods": [
+      "Flight F3576887, from Punta Gorda to Austin, Departure Time: 21:47, Arrival Time: 23:57, cost: 200.0",
+      "Flight F2420506, from Austin to Houston, Departure Time: 05:28, Arrival Time: 06:09, cost: 28.0",
+      "Flight F0376458, from Houston to Punta Gorda, Departure Time: 14:57, Arrival Time: 17:52, cost: 218.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Austin",
+      "missing, Houston"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Punta Gorda to Austin",
+      "transportation": "Flight Number: F3576887, from Punta Gorda to Austin, Departure Time: 21:47, Arrival Time: 23:57",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Austin",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Austin to Houston",
+      "transportation": "Flight Number: F2420506, from Austin to Houston, Departure Time: 05:28, Arrival Time: 06:09",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Houston",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Houston to Punta Gorda",
+      "transportation": "Flight Number: F0376458, from Houston to Punta Gorda, Departure Time: 14:57, Arrival Time: 17:52",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Austin|None|None->None",
+      "counts": {
+        "kb": 5,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 10
+      },
+      "hard_reject": {
+        "over_budget": 2,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 2062.0,
+        "slot_cap": 755.126953125,
+        "reserve": 977.6869999999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 1353.2,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 1150.2199999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 977.6869999999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Austin|None|None->None",
+        "city": "Austin",
+        "city_bundle": [
+          "Austin",
+          "Houston"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 5,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 2062.0,
+          "slot_cap": 755.126953125,
+          "reserve": 977.6869999999999,
+          "min_cost_nonbudget": 1148.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "24c6e3cc608e",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Austin|None|None->None",
+      "bundle_fp": "43c7c66dd8a5"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "24c6e3cc608e",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Austin|None|None->None",
+        "bundle_fp": "43c7c66dd8a5"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "24c6e3cc608e",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Austin|None|None->None",
+        "bundle_fp": "43c7c66dd8a5"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "24c6e3cc608e",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Austin|None|None->None",
+        "bundle_fp": "43c7c66dd8a5"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 1.2207062360830605
+}

@@ -1,0 +1,293 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 1030.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you create a 3-day trip plan for a group of 5, departing from Washington and heading to Savannah from March 10th to March 12th, 2022? We have a budget of $3,100. We're foodies who enjoy French and Mexican cuisine, so integrating these dining experiences into our itinerary would be appreciated.",
+  "parsed": {
+    "origin": "Washington",
+    "destination": "Savannah",
+    "start_date": "2022-03-10",
+    "duration_days": 3,
+    "budget": 3100.0,
+    "people_number": 5,
+    "visiting_city_number": 1,
+    "preferences": [
+      "French",
+      "Mexican"
+    ],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": null,
+        "forbid": null
+      },
+      "meal": {
+        "cuisines": [
+          "French",
+          "Mexican"
+        ]
+      },
+      "stay": {
+        "room_type": null,
+        "house_rule": null
+      },
+      "daily": {
+        "attractions_per_day_min": null,
+        "attractions_per_day_max": null
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    }
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Savannah"
+    ],
+    "transportation_dates": [
+      "2022-03-10",
+      "2022-03-12"
+    ],
+    "transportation_methods": [
+      "Flight F1713004, from Washington to Savannah, Departure Time: 12:45, Arrival Time: 14:31, cost: 103.0",
+      "Flight F1096997, from Savannah to Washington, Departure Time: 14:22, Arrival Time: 15:51, cost: 103.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Savannah"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Washington to Savannah",
+      "transportation": "Flight Number: F1713004, from Washington to Savannah, Departure Time: 12:45, Arrival Time: 14:31",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Savannah",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Savannah to Washington",
+      "transportation": "Flight Number: F1096997, from Savannah to Washington, Departure Time: 14:22, Arrival Time: 15:51",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Savannah|None|None->None",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 2070.0,
+        "slot_cap": 1516.11328125,
+        "reserve": 331.62749999999994
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 459.0,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 390.15,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 331.62749999999994,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Savannah|None|None->None",
+        "city": "Savannah",
+        "city_bundle": [
+          "Savannah"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 2070.0,
+          "slot_cap": 1516.11328125,
+          "reserve": 331.62749999999994,
+          "min_cost_nonbudget": 976.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "ab170e518af8",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Savannah|None|None->None",
+      "bundle_fp": "cb7b8cb30c91"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "ab170e518af8",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Savannah|None|None->None",
+        "bundle_fp": "cb7b8cb30c91"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "ab170e518af8",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Savannah|None|None->None",
+        "bundle_fp": "cb7b8cb30c91"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "ab170e518af8",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Savannah|None|None->None",
+        "bundle_fp": "cb7b8cb30c91"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.16313134506344795
+}

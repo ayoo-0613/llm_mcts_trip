@@ -1,0 +1,1194 @@
+{
+  "success": false,
+  "cost": 344.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you assist in creating a travel itinerary for an individual departing from Everett and heading to Oregon with a plan to visit 3 cities within a span of 7 days from March 9th to March 15th, 2022? The total available budget for this trip is $1,600.",
+  "parsed": {
+    "org": "Everett",
+    "dest": "Oregon",
+    "days": 7,
+    "visiting_city_number": 3,
+    "date": [
+      "2022-03-09",
+      "2022-03-10",
+      "2022-03-11",
+      "2022-03-12",
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15"
+    ],
+    "people_number": 1,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 1600,
+    "origin": "Everett",
+    "destination": "Oregon",
+    "duration_days": 7,
+    "start_date": "2022-03-09",
+    "preferences": [],
+    "candidate_cities": [
+      "North Bend",
+      "Portland",
+      "Medford",
+      "Bend",
+      "Eugene"
+    ]
+  },
+  "actions": [
+    "move:seg0:flight:F0510836 Everett->Portland $32 07:01-07:50",
+    "move:seg1:flight:F3082394 Portland->Medford $44 16:11-17:04",
+    "move:seg2:taxi:Medford->Eugene 268km cost 268"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Portland",
+      "Medford",
+      "Eugene"
+    ],
+    "transportation_dates": [
+      "2022-03-09",
+      "2022-03-11",
+      "2022-03-13",
+      "2022-03-15"
+    ],
+    "transportation_methods": [
+      "Flight F0510836, from Everett to Portland, Departure Time: 07:01, Arrival Time: 07:50, cost: 32.0",
+      "Flight F3082394, from Portland to Medford, Departure Time: 16:11, Arrival Time: 17:04, cost: 44.0",
+      "taxi, from Medford to Eugene, cost: 268.0",
+      "Eugene->Everett missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Portland",
+      "missing, Medford",
+      "missing, Eugene"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Everett to Portland",
+      "transportation": "Flight Number: F0510836, from Everett to Portland, Departure Time: 07:01, Arrival Time: 07:50",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Portland",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Portland to Medford",
+      "transportation": "Flight Number: F3082394, from Portland to Medford, Departure Time: 16:11, Arrival Time: 17:04",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Medford",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Medford to Eugene",
+      "transportation": "Taxi, from Medford to Eugene, Cost: 268",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "Eugene",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 7,
+      "current_city": "Eugene",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-09|Medford->Eugene",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 1524.0,
+        "slot_cap": 280.7368421052631,
+        "reserve": 1246.0
+      },
+      "segment_role": "intercity",
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-09|Eugene->Everett",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1256.0,
+        "slot_cap": 903.782894736842,
+        "reserve": 765.1997499999999
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 1059.1,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 900.2349999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 765.1997499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-09|Eugene->Everett",
+        "city": "Everett",
+        "city_bundle": [
+          "Portland",
+          "Medford",
+          "Eugene"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1256.0,
+          "slot_cap": 903.782894736842,
+          "reserve": 765.1997499999999,
+          "min_cost_nonbudget": 500.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Eugene",
+          "Medford",
+          "Portland"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 32.0,
+          "bundle_lb_cost": 2074.0,
+          "stay_lb_cost": 952.0,
+          "meal_lb_cost": 276.0,
+          "transport_lb_cost": 846.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "everett",
+              "eugene"
+            ],
+            [
+              "eugene",
+              "medford"
+            ],
+            [
+              "medford",
+              "portland"
+            ],
+            [
+              "portland",
+              "everett"
+            ]
+          ],
+          "bundle_key": [
+            "eugene",
+            "medford",
+            "portland"
+          ],
+          "bundle_key_set": [
+            "eugene",
+            "medford",
+            "portland"
+          ],
+          "bundle_key_seq": [
+            "eugene",
+            "medford",
+            "portland"
+          ],
+          "city_features": {
+            "Eugene": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 92.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 26,
+              "min_meal_cost": 18.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 20,
+              "hotel_slack": 1
+            },
+            "Medford": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 178.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 29,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 23,
+              "hotel_slack": 1
+            },
+            "Portland": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 206.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 29,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 20,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Everett->Eugene": {
+              "min_cost": 500.0,
+              "blocked": false
+            },
+            "Eugene->Medford": {
+              "min_cost": 270.0,
+              "blocked": false
+            },
+            "Medford->Portland": {
+              "min_cost": 44.0,
+              "blocked": false
+            },
+            "Portland->Everett": {
+              "min_cost": 32.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 20,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 206.0,
+            "bottleneck_city_meal": "Eugene",
+            "bottleneck_city_hotel": "Portland",
+            "bottleneck_edge": "Everett->Eugene"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 20,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 206.0,
+          "bottleneck_city_meal": "Eugene",
+          "bottleneck_city_hotel": "Portland",
+          "bottleneck_edge": "Everett->Eugene"
+        },
+        "budget_context": {
+          "remaining": 786.0,
+          "slot_cap": 565.5838815789473,
+          "reserve": 754.1454999999999,
+          "min_cost_nonbudget": 32.0
+        },
+        "counts": {
+          "kb": 191,
+          "after_nonbudget": 191,
+          "after_budget": 0,
+          "budget_removed": 191,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Everett",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 191,
+          "after_nonbudget": 191,
+          "after_budget": 0,
+          "budget_removed": 191,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 786.0,
+          "slot_cap": 565.5838815789473,
+          "reserve": 754.1454999999999,
+          "min_cost_nonbudget": 32.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 191,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Portland",
+        "Medford",
+        "Eugene"
+      ],
+      "reason": "best bundle_risk",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"best bundle_risk\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"segment\", \"rule\": \"NO_FLIGHT\", \"ttl\": 1}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "best bundle_risk",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "NO_FLIGHT",
+              "ttl": 1
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "NO_FLIGHT",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Portland",
+          "Medford",
+          "Eugene"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 500.0,
+          "bundle_lb_cost": 2090.0,
+          "stay_lb_cost": 952.0,
+          "meal_lb_cost": 294.0,
+          "transport_lb_cost": 844.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "everett",
+              "portland"
+            ],
+            [
+              "portland",
+              "medford"
+            ],
+            [
+              "medford",
+              "eugene"
+            ],
+            [
+              "eugene",
+              "everett"
+            ]
+          ],
+          "bundle_key": [
+            "eugene",
+            "medford",
+            "portland"
+          ],
+          "bundle_key_set": [
+            "eugene",
+            "medford",
+            "portland"
+          ],
+          "bundle_key_seq": [
+            "portland",
+            "medford",
+            "eugene"
+          ],
+          "city_features": {
+            "Portland": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 206.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 29,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 23,
+              "hotel_slack": 1
+            },
+            "Medford": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 178.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 29,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 23,
+              "hotel_slack": 1
+            },
+            "Eugene": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 92.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 26,
+              "min_meal_cost": 18.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 17,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Everett->Portland": {
+              "min_cost": 32.0,
+              "blocked": false
+            },
+            "Portland->Medford": {
+              "min_cost": 44.0,
+              "blocked": false
+            },
+            "Medford->Eugene": {
+              "min_cost": 268.0,
+              "blocked": false
+            },
+            "Eugene->Everett": {
+              "min_cost": 500.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 17,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 206.0,
+            "bottleneck_city_meal": "Eugene",
+            "bottleneck_city_hotel": "Portland",
+            "bottleneck_edge": "Eugene->Everett"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 17,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 206.0,
+          "bottleneck_city_meal": "Eugene",
+          "bottleneck_city_hotel": "Portland",
+          "bottleneck_edge": "Eugene->Everett"
+        },
+        "budget_context": {
+          "remaining": 1256.0,
+          "slot_cap": 903.782894736842,
+          "reserve": 765.1997499999999,
+          "min_cost_nonbudget": 500.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Everett",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1256.0,
+          "slot_cap": 903.782894736842,
+          "reserve": 765.1997499999999,
+          "min_cost_nonbudget": 500.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Medford",
+        "Eugene",
+        "Portland"
+      ],
+      "reason": "bundle_risk",
+      "raw": "```\n{\n  \"candidate_id\": 2,\n  \"reason\": \"bundle_risk\",\n  \"confidence\": 0.9,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"segment\", \"rule\": \"AVOID_CITY\", \"ttl\": 100, \"city\": \"Everett\"},\n      {\"phase\": \"flight\", \"rule\": \"NO_FLIGHT\", \"ttl\": 200}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"bundle\", \"feature\": \"budget_risk\", \"delta\": -50},\n      {\"phase\": \"segment\", \"feature\": \"cost_ratio\", \"delta\": -20}\n    ]\n  }\n}\n```\n\nThis response was generated by analyzing the input data and selecting the best candidate based on the following criteria:\n\n* Bundle risk: The bundle with the lowest bottleneck meal slack (Medford, Eugene, Portland) has a lower risk.\n* City summary: Medford has the highest hotel price, which is considered a negative factor.\n* Edge summary: No blocked edges were found in this bundle.\n* LB costs: This bundle has the lowest bundle LB cost among all candidates.\n\nBased on these factors, candidate 2 (Medford, Eugene, Portland) was selected as the best option. The hard exclusions include avoiding Everett due to its high bottleneck meal slack and excluding flights from Portland due to a high risk of cancellation. Soft penalties include penalizing budget risk by -50 for this bundle and segment costs by -20.\n\nNote: This response assumes that you want to select the candidate with the lowest risk, which is often a good strategy in MCTS algorithms. However, the actual criteria for selecting candidates may vary depending on your specific requirements and preferences.",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "bundle_risk",
+        "confidence": 0.9,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "AVOID_CITY",
+              "ttl": 100,
+              "city": "Everett"
+            },
+            {
+              "phase": "flight",
+              "rule": "NO_FLIGHT",
+              "ttl": 200
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "bundle",
+              "feature": "budget_risk",
+              "delta": -50
+            },
+            {
+              "phase": "segment",
+              "feature": "cost_ratio",
+              "delta": -20
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "AVOID_CITY",
+            "ttl": 100,
+            "city": "Everett"
+          },
+          {
+            "phase": "flight",
+            "rule": "NO_FLIGHT",
+            "ttl": 200
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "bundle",
+            "feature": "budget_risk",
+            "delta": -50
+          },
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": -20
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Medford",
+          "Eugene",
+          "Portland"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 32.0,
+          "bundle_lb_cost": 2466.0,
+          "stay_lb_cost": 952.0,
+          "meal_lb_cost": 276.0,
+          "transport_lb_cost": 1238.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "everett",
+              "medford"
+            ],
+            [
+              "medford",
+              "eugene"
+            ],
+            [
+              "eugene",
+              "portland"
+            ],
+            [
+              "portland",
+              "everett"
+            ]
+          ],
+          "bundle_key": [
+            "eugene",
+            "medford",
+            "portland"
+          ],
+          "bundle_key_set": [
+            "eugene",
+            "medford",
+            "portland"
+          ],
+          "bundle_key_seq": [
+            "medford",
+            "eugene",
+            "portland"
+          ],
+          "city_features": {
+            "Medford": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 178.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 29,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 23,
+              "hotel_slack": 1
+            },
+            "Eugene": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 92.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 26,
+              "min_meal_cost": 18.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 20,
+              "hotel_slack": 1
+            },
+            "Portland": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 206.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 29,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 20,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Everett->Medford": {
+              "min_cost": 762.0,
+              "blocked": false
+            },
+            "Medford->Eugene": {
+              "min_cost": 268.0,
+              "blocked": false
+            },
+            "Eugene->Portland": {
+              "min_cost": 176.0,
+              "blocked": false
+            },
+            "Portland->Everett": {
+              "min_cost": 32.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 20,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 206.0,
+            "bottleneck_city_meal": "Eugene",
+            "bottleneck_city_hotel": "Portland",
+            "bottleneck_edge": "Everett->Medford"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 20,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 206.0,
+          "bottleneck_city_meal": "Eugene",
+          "bottleneck_city_hotel": "Portland",
+          "bottleneck_edge": "Everett->Medford"
+        },
+        "budget_context": {
+          "remaining": 838.0,
+          "slot_cap": 201.000548245614,
+          "reserve": 754.1454999999999,
+          "min_cost_nonbudget": 268.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Eugene",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 838.0,
+          "slot_cap": 201.000548245614,
+          "reserve": 754.1454999999999,
+          "min_cost_nonbudget": 268.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Portland",
+        "Medford",
+        "Eugene"
+      ],
+      "reason": "best bundle risk",
+      "raw": "{\n    \"candidate_id\": 1,\n    \"reason\": \"best bundle risk\",\n    \"confidence\": 0.95,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            {\"phase\": \"segment\", \"rule\": \"NO_FLIGHT\", \"ttl\": 30, \"city\": \"Eugene\"}\n        ],\n        \"soft_penalties\": [\n            {\"phase\": \"hotel\", \"feature\": \"hotel_price\", \"delta\": -10},\n            {\"phase\": \"meal\", \"feature\": \"meal_cost\", \"delta\": -5}\n        ],\n        \"retrieval_patches\": []\n    }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "best bundle risk",
+        "confidence": 0.95,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "NO_FLIGHT",
+              "ttl": 30,
+              "city": "Eugene"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "hotel",
+              "feature": "hotel_price",
+              "delta": -10
+            },
+            {
+              "phase": "meal",
+              "feature": "meal_cost",
+              "delta": -5
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "NO_FLIGHT",
+            "ttl": 30,
+            "city": "Eugene"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "hotel",
+            "feature": "hotel_price",
+            "delta": -10
+          },
+          {
+            "phase": "meal",
+            "feature": "meal_cost",
+            "delta": -5
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "9c645d2360c3",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-09|Eugene->Everett",
+      "bundle_fp": "9a2b9c33abe2"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "9c645d2360c3",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-09|Portland->Everett",
+        "bundle_fp": "f760feb37a30"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "NO_FLIGHT",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Portland",
+        "Medford",
+        "Eugene"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "9c645d2360c3",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-09|Eugene->Everett",
+        "bundle_fp": "9a2b9c33abe2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "9c645d2360c3",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-09|Eugene->Everett",
+        "bundle_fp": "9a2b9c33abe2"
+      },
+      "confidence": 0.9,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "AVOID_CITY",
+          "ttl": 100,
+          "city": "Everett"
+        },
+        {
+          "phase": "segment",
+          "rule": "NO_FLIGHT",
+          "ttl": 200
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "bundle",
+          "feature": "budget_risk",
+          "delta": -50.0
+        },
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": -20.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Medford",
+        "Eugene",
+        "Portland"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "9c645d2360c3",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:1|None|2022-03-09|Medford->Eugene",
+        "bundle_fp": "e1fd50a899d7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "9c645d2360c3",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:1|None|2022-03-09|Medford->Eugene",
+        "bundle_fp": "e1fd50a899d7"
+      },
+      "confidence": 0.95,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "NO_FLIGHT",
+          "ttl": 30,
+          "city": "Eugene"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": -10.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Portland",
+        "Medford",
+        "Eugene"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "9c645d2360c3",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-09|Eugene->Everett",
+        "bundle_fp": "9a2b9c33abe2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 29.400665819179267
+}

@@ -1,0 +1,291 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 460.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you design a three-day travel plan for two people, departing from Fort Dodge and heading to Denver on the dates of March 25th to March 27th, 2022? The accommodation preferences include non-shared rooms, with a total budget of $1,200.",
+  "parsed": {
+    "origin": "Fort Dodge",
+    "destination": "Denver",
+    "start_date": "2022-03-25",
+    "duration_days": 3,
+    "budget": 1200.0,
+    "people_number": 2,
+    "visiting_city_number": 1,
+    "preferences": [],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight",
+          "self-driving",
+          "taxi"
+        ]
+      },
+      "meal": {
+        "cuisines": null
+      },
+      "stay": {
+        "room_type": "not shared room",
+        "house_rule": null
+      },
+      "daily": {
+        "attractions_per_day_min": 1,
+        "attractions_per_day_max": null
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    },
+    "attractions_per_day_min": 1
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Denver"
+    ],
+    "transportation_dates": [
+      "2022-03-25",
+      "2022-03-27"
+    ],
+    "transportation_methods": [
+      "Flight F3853143, from Fort Dodge to Denver, Departure Time: 18:20, Arrival Time: 19:21, cost: 115.0",
+      "Flight F0601070, from Denver to Fort Dodge, Departure Time: 14:54, Arrival Time: 17:27, cost: 115.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Denver"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Fort Dodge to Denver",
+      "transportation": "Flight Number: F3853143, from Fort Dodge to Denver, Departure Time: 18:20, Arrival Time: 19:21",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Denver",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Denver to Fort Dodge",
+      "transportation": "Flight Number: F0601070, from Denver to Fort Dodge, Departure Time: 14:54, Arrival Time: 17:27",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Denver|None|None->None",
+      "counts": {
+        "kb": 7,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 740.0,
+        "slot_cap": 541.9921875,
+        "reserve": 132.65099999999998
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 183.6,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 156.05999999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 132.65099999999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Denver|None|None->None",
+        "city": "Denver",
+        "city_bundle": [
+          "Denver"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 7,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 6,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 740.0,
+          "slot_cap": 541.9921875,
+          "reserve": 132.65099999999998,
+          "min_cost_nonbudget": 414.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "cb96cc725088",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Denver|None|None->None",
+      "bundle_fp": "74ccdff3aeea"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "cb96cc725088",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Denver|None|None->None",
+        "bundle_fp": "74ccdff3aeea"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "cb96cc725088",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Denver|None|None->None",
+        "bundle_fp": "74ccdff3aeea"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "cb96cc725088",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Denver|None|None->None",
+        "bundle_fp": "74ccdff3aeea"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.12892715819180012
+}

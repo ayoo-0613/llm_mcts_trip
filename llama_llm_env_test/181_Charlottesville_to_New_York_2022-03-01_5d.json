@@ -1,0 +1,341 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 1971.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you help create a 5-day travel plan for me? I will be departing from Charlottesville to visit 2 cities in New York, with the travel dates ranging from March 1st to March 5th, 2022. The maximum budget for the trip is $3,000.",
+  "parsed": {
+    "origin": "Charlottesville",
+    "destination": "New York",
+    "start_date": "2022-03-01",
+    "duration_days": 5,
+    "budget": 3000.0,
+    "people_number": 1,
+    "visiting_city_number": 2,
+    "preferences": [
+      "American",
+      "Chinese"
+    ],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight",
+          "self-driving"
+        ],
+        "forbid": null
+      },
+      "meal": {
+        "cuisines": [
+          "American",
+          "Chinese"
+        ]
+      },
+      "stay": {
+        "room_type": "entire room",
+        "house_rule": null
+      },
+      "daily": {
+        "attractions_per_day_min": 1,
+        "attractions_per_day_max": 3
+      },
+      "city": {
+        "candidate_cities": []
+      }
+    },
+    "attractions_per_day_min": 1,
+    "attractions_per_day_max": 3,
+    "candidate_cities": [
+      "Buffalo",
+      "Manhattan",
+      "Niagara Falls",
+      "Islip",
+      "New York",
+      "Watertown",
+      "Newburgh",
+      "Syracuse",
+      "Plattsburgh",
+      "Ogdensburg",
+      "Ithaca",
+      "Elmira",
+      "White Plains",
+      "Albany",
+      "Binghamton",
+      "Rochester"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Rochester",
+      "Watertown"
+    ],
+    "transportation_dates": [
+      "2022-03-01",
+      "2022-03-03",
+      "2022-03-05"
+    ],
+    "transportation_methods": [
+      "self-driving, from Charlottesville to Rochester, cost: 820.0",
+      "self-driving, from Rochester to Watertown, cost: 242.0",
+      "self-driving, from Watertown to Charlottesville, cost: 909.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Rochester",
+      "missing, Watertown"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Charlottesville to Rochester",
+      "transportation": "Self-driving, from Charlottesville to Rochester, Cost: 820",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Rochester",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Rochester to Watertown",
+      "transportation": "Self-driving, from Rochester to Watertown, Cost: 242",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Watertown",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Watertown to Charlottesville",
+      "transportation": "Self-driving, from Watertown to Charlottesville, Cost: 909",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Rochester|None|None->None",
+      "counts": {
+        "kb": 6,
+        "after_nonbudget": 4,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 10
+      },
+      "hard_reject": {
+        "over_budget": 4,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1029.0,
+        "slot_cap": 376.8310546875,
+        "reserve": 175.63974999999996
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 243.1,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 206.635,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 175.63974999999996,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Rochester|None|None->None",
+        "city": "Rochester",
+        "city_bundle": [
+          "Rochester",
+          "Watertown"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 6,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1029.0,
+          "slot_cap": 376.8310546875,
+          "reserve": 175.63974999999996,
+          "min_cost_nonbudget": 558.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "330d304aa25f",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Rochester|None|None->None",
+      "bundle_fp": "5a4338baec1a"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "330d304aa25f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Rochester|None|None->None",
+        "bundle_fp": "5a4338baec1a"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "330d304aa25f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Rochester|None|None->None",
+        "bundle_fp": "5a4338baec1a"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "330d304aa25f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Rochester|None|None->None",
+        "bundle_fp": "5a4338baec1a"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.4700902341865003
+}

@@ -1,0 +1,1036 @@
+{
+  "success": false,
+  "cost": 1973.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you arrange a 5-day travel plan for 2 people, departing from Baton Rouge and visiting 2 cities in Texas from March 3rd to March 7th, 2022? We're working with a budget of $3,000 and prefer to stay in accommodations that allow parties and provide access to entire rooms. Please note that we do not want any flights included in our transportation plan.",
+  "parsed": {
+    "org": "Baton Rouge",
+    "dest": "Texas",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-03",
+      "2022-03-04",
+      "2022-03-05",
+      "2022-03-06",
+      "2022-03-07"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "parties",
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": "no flight"
+    },
+    "budget": 3000,
+    "origin": "Baton Rouge",
+    "destination": "Texas",
+    "duration_days": 5,
+    "start_date": "2022-03-03",
+    "preferences": [
+      "parties",
+      "entire room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Baton Rouge->San Antonio 745km cost 745",
+    "move:seg1:taxi:San Antonio->Austin 128km cost 128",
+    "move:seg2:taxi:Austin->Baton Rouge 696km cost 696",
+    "stay:San Antonio:480 Stay in Solar Powered Apartment in NYC!!! Entire home/apt $202"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "San Antonio",
+      "Austin"
+    ],
+    "transportation_dates": [
+      "2022-03-03",
+      "2022-03-05",
+      "2022-03-07"
+    ],
+    "transportation_methods": [
+      "taxi, from Baton Rouge to San Antonio, cost: 745.0",
+      "taxi, from San Antonio to Austin, cost: 128.0",
+      "taxi, from Austin to Baton Rouge, cost: 696.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Stay in Solar Powered Apartment in NYC!!!, San Antonio",
+      "missing, Austin"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Baton Rouge to San Antonio",
+      "transportation": "Taxi, from Baton Rouge to San Antonio, Cost: 745",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Stay in Solar Powered Apartment in NYC!!!, San Antonio"
+    },
+    {
+      "days": 2,
+      "current_city": "San Antonio",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Stay in Solar Powered Apartment in NYC!!!, San Antonio"
+    },
+    {
+      "days": 3,
+      "current_city": "from San Antonio to Austin",
+      "transportation": "Taxi, from San Antonio to Austin, Cost: 128",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Austin",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Austin to Baton Rouge",
+      "transportation": "Taxi, from Austin to Baton Rouge, Cost: 696",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|San Antonio|None|None->None",
+      "counts": {
+        "kb": 4,
+        "after_nonbudget": 3,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1431.0,
+        "slot_cap": 335.390625,
+        "reserve": 885.6999999999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 885.6999999999999,
+          "kept": 1
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Austin|None|None->None",
+      "counts": {
+        "kb": 5,
+        "after_nonbudget": 3,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 2,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1027.0,
+        "slot_cap": 752.197265625,
+        "reserve": 250.56299999999996
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 346.8,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 294.78,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 250.56299999999996,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Austin|None|None->None",
+        "city": "Austin",
+        "city_bundle": [
+          "San Antonio",
+          "Austin"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 5,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1027.0,
+          "slot_cap": 752.197265625,
+          "reserve": 250.56299999999996,
+          "min_cost_nonbudget": 455.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "San Antonio",
+          "Dallas"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 687.0,
+          "bundle_lb_cost": 3148.0,
+          "stay_lb_cost": 886.0,
+          "meal_lb_cost": 390.0,
+          "transport_lb_cost": 1872.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "baton rouge",
+              "san antonio"
+            ],
+            [
+              "san antonio",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "baton rouge"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "san antonio"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "san antonio"
+          ],
+          "bundle_key_seq": [
+            "san antonio",
+            "dallas"
+          ],
+          "city_features": {
+            "San Antonio": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 202.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 28,
+              "min_meal_cost": 16.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 22,
+              "hotel_slack": 1
+            },
+            "Dallas": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 241.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 62,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 53,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Baton Rouge->San Antonio": {
+              "min_cost": 745.0,
+              "blocked": false
+            },
+            "San Antonio->Dallas": {
+              "min_cost": 440.0,
+              "blocked": false
+            },
+            "Dallas->Baton Rouge": {
+              "min_cost": 687.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 22,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 241.0,
+            "bottleneck_city_meal": "San Antonio",
+            "bottleneck_city_hotel": "Dallas",
+            "bottleneck_edge": "Baton Rouge->San Antonio"
+          },
+          "min_bundle_cost": 2758.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 22,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 241.0,
+          "bottleneck_city_meal": "San Antonio",
+          "bottleneck_city_hotel": "Dallas",
+          "bottleneck_edge": "Baton Rouge->San Antonio"
+        },
+        "budget_context": {
+          "remaining": 724.0,
+          "slot_cap": 530.2734375,
+          "reserve": 239.50874999999996,
+          "min_cost_nonbudget": 314.0
+        },
+        "counts": {
+          "kb": 10,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dead_end_city": "Dallas",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 10,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 724.0,
+          "slot_cap": 530.2734375,
+          "reserve": 239.50874999999996,
+          "min_cost_nonbudget": 314.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 5,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "San Antonio",
+        "Austin"
+      ],
+      "reason": null,
+      "raw": "This is a JSON output from a recommendation system. It appears to be a list of candidate bundles with various attributes and costs associated with each bundle.\n\nHere's a breakdown of the structure:\n\n* `output_schema`: defines the schema for the output data\n\t+ `candidate_id`: an integer ID for each candidate bundle\n\t+ `reason`: a short string explaining why this bundle is a candidate (e.g., \"most likely\", \"least likely\")\n\t+ `confidence`: a float value between 0 and 1 representing the confidence level of the recommendation\n\t+ `gradient`: an object containing three lists:\n\t\t- `hard_exclusions`: a list of rules that exclude certain phases, rules, TTLs, cities, or edges from consideration\n\t\t- `soft_penalties`: a list of soft penalties applied to each phase and feature (e.g., \"delta\" represents the penalty value)\n\t\t- `retrieval_patches`: a list of patches that modify the retrieval process for certain phases and features (e.g., \"ttl\" represents the patch type)\n\nThe main data structure is a list of candidate bundles, where each bundle has the following attributes:\n\n* `id`: an integer ID\n* `bundle`: an object containing the individual items in the bundle (e.g., cities or edges)\n* `lb_costs`: an object containing the estimated costs for each phase and feature (e.g., transportation, stay, meal, etc.)\n\t+ `transport_lb_cost`, `stay_lb_cost`, `meal_lb_cost`: estimated costs for transportation, stay, and meal phases\n\t+ `bundle_lb_cost`: estimated total cost of the bundle\n\nSome possible applications or next steps with this data include:\n\n1. Ranking candidate bundles based on their confidence scores and costs.\n2. Filtering bundles based on specific criteria (e.g., maximum budget, minimum quality).\n3. Visualizing the recommended bundles using interactive tools like scatter plots or heatmaps to identify patterns and correlations.\n\nKeep in mind that without more context about the problem being solved and the data sources used, it's challenging to provide a precise analysis of this output.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "stay",
+            "feature": "hotel_price",
+            "delta": 0.6
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "stay",
+            "patch": {
+              "topk": 50,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "San Antonio",
+          "Austin"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 696.0,
+          "bundle_lb_cost": 3015.0,
+          "stay_lb_cost": 1038.0,
+          "meal_lb_cost": 408.0,
+          "transport_lb_cost": 1569.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "baton rouge",
+              "san antonio"
+            ],
+            [
+              "san antonio",
+              "austin"
+            ],
+            [
+              "austin",
+              "baton rouge"
+            ]
+          ],
+          "bundle_key": [
+            "austin",
+            "san antonio"
+          ],
+          "bundle_key_set": [
+            "austin",
+            "san antonio"
+          ],
+          "bundle_key_seq": [
+            "san antonio",
+            "austin"
+          ],
+          "city_features": {
+            "San Antonio": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 202.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 28,
+              "min_meal_cost": 16.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 22,
+              "hotel_slack": 1
+            },
+            "Austin": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 317.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 25,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Baton Rouge->San Antonio": {
+              "min_cost": 745.0,
+              "blocked": false
+            },
+            "San Antonio->Austin": {
+              "min_cost": 128.0,
+              "blocked": false
+            },
+            "Austin->Baton Rouge": {
+              "min_cost": 696.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 22,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 317.0,
+            "bottleneck_city_meal": "San Antonio",
+            "bottleneck_city_hotel": "Austin",
+            "bottleneck_edge": "Baton Rouge->San Antonio"
+          },
+          "min_bundle_cost": 2607.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 22,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 317.0,
+          "bottleneck_city_meal": "San Antonio",
+          "bottleneck_city_hotel": "Austin",
+          "bottleneck_edge": "Baton Rouge->San Antonio"
+        },
+        "budget_context": {
+          "remaining": 1027.0,
+          "slot_cap": 752.197265625,
+          "reserve": 250.56299999999996,
+          "min_cost_nonbudget": 455.0
+        },
+        "counts": {
+          "kb": 5,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_city": "Austin",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 5,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1027.0,
+          "slot_cap": 752.197265625,
+          "reserve": 250.56299999999996,
+          "min_cost_nonbudget": 455.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 3,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Dallas",
+        "Wichita Falls"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that appears to be the output of some kind of machine learning or optimization algorithm. It's a bit too complex for me to give you a concise summary, but I can try to break it down into its main components.\n\n**Data Structure**\n\nThe JSON object has the following structure:\n\n* `candidates`: an array of objects, where each object represents a candidate solution.\n* `output_schema`: an object that defines the schema of the output data.\n\n**Candidate Objects**\n\nEach candidate object in the `candidates` array has the following properties:\n\n* `id`: a unique integer identifier for the candidate.\n* `bundle`: an array of two cities (e.g., [\"San Antonio\", \"Abilene\"]).\n* `lb_costs`: an object with four key-value pairs, where each key is a string (e.g., \"transport_lb_cost\") and each value is a number (e.g., 2117.0).\n* `feasibility`: an object with two key-value pairs: `return_leg_exists` (a boolean) and `hotel_feasible_all` (a boolean).\n\n**Output Schema**\n\nThe `output_schema` object defines the structure of the output data. It has four key-value pairs:\n\n* `candidate_id`: a string that represents the identifier of the candidate.\n* `reason`: a short string that provides additional information about the candidate.\n* `confidence`: a floating-point number between 0 and 1 that represents the confidence level in the candidate solution.\n* `gradient`: an object with three key-value pairs:\n\t+ `hard_exclusions`: a list of objects, where each object has four properties: `phase`, `rule`, `ttl`, `city?`, and `edge?`.\n\t+ `soft_penalties`: a list of objects, where each object has three properties: `phase`, `feature`, and `delta`.\n\t+ `retrieval_patches`: a list of objects, where each object has three properties: `phase`, `patch`, and `ttl`.\n\nI hope this helps you understand the structure of the JSON object! Let me know if you have any specific questions about it.",
+      "parsed": null,
+      "error": "invalid_candidate_id",
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "stay",
+            "feature": "hotel_price",
+            "delta": 0.6
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "stay",
+            "patch": {
+              "topk": 50,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Dallas",
+          "Wichita Falls"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 908.0,
+          "bundle_lb_cost": 2990.0,
+          "stay_lb_cost": 838.0,
+          "meal_lb_cost": 330.0,
+          "transport_lb_cost": 1822.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "baton rouge",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "wichita falls"
+            ],
+            [
+              "wichita falls",
+              "baton rouge"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "wichita falls"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "wichita falls"
+          ],
+          "bundle_key_seq": [
+            "dallas",
+            "wichita falls"
+          ],
+          "city_features": {
+            "Dallas": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 241.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 62,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 56,
+              "hotel_slack": 1
+            },
+            "Wichita Falls": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 178.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 27,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 18,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Baton Rouge->Dallas": {
+              "min_cost": 687.0,
+              "blocked": false
+            },
+            "Dallas->Wichita Falls": {
+              "min_cost": 227.0,
+              "blocked": false
+            },
+            "Wichita Falls->Baton Rouge": {
+              "min_cost": 908.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 18,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 241.0,
+            "bottleneck_city_meal": "Wichita Falls",
+            "bottleneck_city_hotel": "Dallas",
+            "bottleneck_edge": "Wichita Falls->Baton Rouge"
+          },
+          "min_bundle_cost": 2660.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 18,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 241.0,
+          "bottleneck_city_meal": "Wichita Falls",
+          "bottleneck_city_hotel": "Dallas",
+          "bottleneck_edge": "Wichita Falls->Baton Rouge"
+        },
+        "budget_context": {
+          "remaining": 550.0,
+          "slot_cap": 402.83203125,
+          "reserve": 202.66124999999997,
+          "min_cost_nonbudget": 823.0
+        },
+        "counts": {
+          "kb": 5,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dead_end_city": "Wichita Falls",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 5,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 550.0,
+          "slot_cap": 402.83203125,
+          "reserve": 202.66124999999997,
+          "min_cost_nonbudget": 823.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "San Antonio",
+        "Austin"
+      ],
+      "reason": null,
+      "raw": "This is a JSON data format containing information about candidate bundles and their associated costs and feasibility metrics. Here's an analysis of the structure and content:\n\n**Structure:**\n\nThe main object contains two keys: `candidate_bundles` and `output_schema`.\n\n* `candidate_bundles`: A list of objects, each representing a candidate bundle.\n* `output_schema`: An object defining the schema for the output.\n\n**Candidate Bundles:**\n\nEach candidate bundle is represented by an object with several key-value pairs:\n\n* `id`: A unique identifier for the candidate bundle (an integer).\n* `bundle`: The list of cities in the bundle.\n* `lb_costs`: An object containing costs for different components, such as transportation and stay.\n* `feasibility`: An object containing feasibility metrics, including whether a return leg is available.\n\n**Costs:**\n\nThe `lb_costs` object contains four keys:\n\n* `transport_lb_cost`: The lower bound cost of transportation.\n* `stay_lb_cost`: The lower bound cost of stay.\n* `meal_lb_cost`: The lower bound cost of meals.\n* `bundle_lb_cost`: The overall lower bound cost of the bundle.\n\n**Feasibility:**\n\nThe `feasibility` object contains two keys:\n\n* `return_leg_exists`: A boolean indicating whether a return leg is available for each city in the bundle.\n* `hotel_feasible_all`: A boolean indicating whether hotels are feasible for all cities in the bundle.\n\n**Output Schema:**\n\nThe `output_schema` object defines the structure of the output data. It contains three key-value pairs:\n\n* `candidate_id`: An integer representing the candidate ID.\n* `reason`: A short string providing additional information about the candidate.\n* `confidence`: A float value between 0 and 1 indicating the confidence in the candidate bundle.\n\nOverall, this JSON data format provides a structured representation of candidate bundles, including costs, feasibility metrics, and output schema definitions.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "stay",
+            "feature": "hotel_price",
+            "delta": 0.6
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "stay",
+            "patch": {
+              "topk": 50,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "90653f160419",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Austin|None|None->None",
+      "bundle_fp": "ca5797f820b7"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "90653f160419",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "0263fc47108d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "San Antonio",
+        "Austin"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "90653f160419",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Austin|None|None->None",
+        "bundle_fp": "ca5797f820b7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "90653f160419",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Austin|None|None->None",
+        "bundle_fp": "ca5797f820b7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Dallas",
+        "Wichita Falls"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "90653f160419",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Wichita Falls|None|None->None",
+        "bundle_fp": "60f850c68bff"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "90653f160419",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Wichita Falls|None|None->None",
+        "bundle_fp": "60f850c68bff"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "San Antonio",
+        "Austin"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "90653f160419",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Austin|None|None->None",
+        "bundle_fp": "ca5797f820b7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 63.78056826815009
+}

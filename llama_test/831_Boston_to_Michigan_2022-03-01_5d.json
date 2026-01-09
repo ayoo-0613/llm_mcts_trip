@@ -1,0 +1,1112 @@
+{
+  "success": false,
+  "cost": 3956.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you assist me in creating a 5-day travel plan for two people that begins in Boston and involves visiting two separate cities in Michigan from March 1st through 5th, 2022? Our budget is set at $4,200. We require accommodations that allow pets and should ideally be entire rooms. We enjoy a variety of cuisines; including Italian, Mexican, Mediterranean, and Chinese.",
+  "parsed": {
+    "org": "Boston",
+    "dest": "Michigan",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-01",
+      "2022-03-02",
+      "2022-03-03",
+      "2022-03-04",
+      "2022-03-05"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "pets",
+      "cuisine": [
+        "Italian",
+        "Mexican",
+        "Mediterranean",
+        "Chinese"
+      ],
+      "room type": "entire room",
+      "transportation": null
+    },
+    "budget": 4200,
+    "origin": "Boston",
+    "destination": "Michigan",
+    "duration_days": 5,
+    "start_date": "2022-03-01",
+    "preferences": [
+      "Italian",
+      "Mexican",
+      "Mediterranean",
+      "Chinese",
+      "pets",
+      "entire room"
+    ],
+    "candidate_cities": [
+      "Pellston",
+      "Traverse City",
+      "Alpena",
+      "Iron Mountain",
+      "Kalamazoo",
+      "Saginaw",
+      "Grand Rapids",
+      "Lansing",
+      "Muskegon",
+      "Hancock",
+      "Detroit",
+      "Escanaba"
+    ]
+  },
+  "actions": [
+    "move:seg0:flight:F2751253 Boston->Traverse City $151 12:27-14:42",
+    "move:seg1:flight:F1163746 Traverse City->Detroit $41 19:32-20:22",
+    "move:seg2:flight:F3528059 Detroit->Boston $126 23:02-00:34",
+    "stay:Traverse City:4105 Cozy , Cute and Spacious one bedroom Brooklyn Apt Entire home/apt $830",
+    "stay:Detroit:2961 NEW Brooklyn studio get away! Entire home/apt $803",
+    "eat:d1:breakfast:1111 Tasty Bites Chinese, Bakery, Desserts, Seafood $27 rating 0.0"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Traverse City",
+      "Detroit"
+    ],
+    "transportation_dates": [
+      "2022-03-01",
+      "2022-03-03",
+      "2022-03-05"
+    ],
+    "transportation_methods": [
+      "Flight F2751253, from Boston to Traverse City, Departure Time: 12:27, Arrival Time: 14:42, cost: 151.0",
+      "Flight F1163746, from Traverse City to Detroit, Departure Time: 19:32, Arrival Time: 20:22, cost: 41.0",
+      "Flight F3528059, from Detroit to Boston, Departure Time: 23:02, Arrival Time: 00:34, cost: 126.0"
+    ],
+    "restaurants": [
+      "Tasty Bites, Traverse City"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "Cozy , Cute and Spacious one bedroom Brooklyn Apt, Traverse City",
+      "NEW Brooklyn studio get away!, Detroit"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Boston to Traverse City",
+      "transportation": "Flight Number: F2751253, from Boston to Traverse City, Departure Time: 12:27, Arrival Time: 14:42",
+      "breakfast": "Tasty Bites, Traverse City",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Cozy , Cute and Spacious one bedroom Brooklyn Apt, Traverse City"
+    },
+    {
+      "days": 2,
+      "current_city": "Traverse City",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Cozy , Cute and Spacious one bedroom Brooklyn Apt, Traverse City"
+    },
+    {
+      "days": 3,
+      "current_city": "from Traverse City to Detroit",
+      "transportation": "Flight Number: F1163746, from Traverse City to Detroit, Departure Time: 19:32, Arrival Time: 20:22",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "NEW Brooklyn studio get away!, Detroit"
+    },
+    {
+      "days": 4,
+      "current_city": "Detroit",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "NEW Brooklyn studio get away!, Detroit"
+    },
+    {
+      "days": 5,
+      "current_city": "from Detroit to Boston",
+      "transportation": "Flight Number: F3528059, from Detroit to Boston, Departure Time: 23:02, Arrival Time: 00:34",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:breakfast|seg:None|Traverse City|None|None->None",
+      "counts": {
+        "kb": 25,
+        "after_nonbudget": 25,
+        "after_budget": 4,
+        "returned": 4,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 21,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 298.0,
+        "slot_cap": 19.401041666666668,
+        "reserve": 232.13924999999998
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 321.3,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 273.10499999999996,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 232.13924999999998,
+          "kept": 4
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:lunch|seg:None|Traverse City|None|None->None",
+      "counts": {
+        "kb": 25,
+        "after_nonbudget": 25,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 25,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 234.0,
+        "slot_cap": 16.322544642857142,
+        "reserve": 210.03074999999998
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 290.7,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 247.09499999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 210.03074999999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d1|slot:lunch|seg:None|Traverse City|None|None->None",
+        "city": "Traverse City",
+        "city_bundle": [
+          "Traverse City",
+          "Detroit"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 25,
+          "after_nonbudget": 25,
+          "after_budget": 0,
+          "budget_removed": 25,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 234.0,
+          "slot_cap": 16.322544642857142,
+          "reserve": 210.03074999999998,
+          "min_cost_nonbudget": 18.0
+        }
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:lunch|seg:None|Traverse City|None|None->None",
+      "counts": {
+        "kb": 25,
+        "after_nonbudget": 25,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 25,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 244.0,
+        "slot_cap": 17.020089285714285,
+        "reserve": 210.03074999999998
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 290.7,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 247.09499999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 210.03074999999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d1|slot:lunch|seg:None|Traverse City|None|None->None",
+        "city": "Traverse City",
+        "city_bundle": [
+          "Traverse City",
+          "Detroit"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 25,
+          "after_nonbudget": 25,
+          "after_budget": 0,
+          "budget_removed": 25,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 244.0,
+          "slot_cap": 17.020089285714285,
+          "reserve": 210.03074999999998,
+          "min_cost_nonbudget": 18.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Detroit",
+          "Traverse City"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 304.0,
+          "bundle_lb_cost": 2964.0,
+          "stay_lb_cost": 1600.0,
+          "meal_lb_cost": 726.0,
+          "transport_lb_cost": 638.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "boston",
+              "detroit"
+            ],
+            [
+              "detroit",
+              "traverse city"
+            ],
+            [
+              "traverse city",
+              "boston"
+            ]
+          ],
+          "bundle_key": [
+            "detroit",
+            "traverse city"
+          ],
+          "bundle_key_set": [
+            "detroit",
+            "traverse city"
+          ],
+          "bundle_key_seq": [
+            "detroit",
+            "traverse city"
+          ],
+          "city_features": {
+            "Detroit": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 400.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 14,
+              "min_meal_cost": 20.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 8,
+              "hotel_slack": 0
+            },
+            "Traverse City": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 400.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 15,
+              "min_meal_cost": 27.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 6,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Boston->Detroit": {
+              "min_cost": 252.0,
+              "blocked": false
+            },
+            "Detroit->Traverse City": {
+              "min_cost": 82.0,
+              "blocked": false
+            },
+            "Traverse City->Boston": {
+              "min_cost": 304.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 6,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 400.0,
+            "bottleneck_city_meal": "Traverse City",
+            "bottleneck_city_hotel": "Detroit",
+            "bottleneck_edge": "Traverse City->Boston"
+          },
+          "min_bundle_cost": 2238.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 6,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 400.0,
+          "bottleneck_city_meal": "Traverse City",
+          "bottleneck_city_hotel": "Detroit",
+          "bottleneck_edge": "Traverse City->Boston"
+        },
+        "budget_context": {
+          "remaining": 274.0,
+          "slot_cap": 19.112723214285715,
+          "reserve": 253.01949999999997,
+          "min_cost_nonbudget": 11.0
+        },
+        "counts": {
+          "kb": 28,
+          "after_nonbudget": 28,
+          "after_budget": 0,
+          "budget_removed": 28,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Detroit",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 28,
+          "after_nonbudget": 28,
+          "after_budget": 0,
+          "budget_removed": 28,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 274.0,
+          "slot_cap": 19.112723214285715,
+          "reserve": 253.01949999999997,
+          "min_cost_nonbudget": 11.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 28,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": [
+              "Italian",
+              "Mexican",
+              "Mediterranean",
+              "Chinese"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Traverse City",
+        "Detroit"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"meal\", \"NO_FLIGHT\", 0, null],\n      [\"stay\", \"AVOID_CITY\", 0, \"Detroit\"]\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "meal",
+              "NO_FLIGHT",
+              0,
+              null
+            ],
+            [
+              "stay",
+              "AVOID_CITY",
+              0,
+              "Detroit"
+            ]
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "meal",
+            "NO_FLIGHT",
+            0,
+            null
+          ],
+          [
+            "stay",
+            "AVOID_CITY",
+            0,
+            "Detroit"
+          ]
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Traverse City",
+          "Detroit"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 252.0,
+          "bundle_lb_cost": 2920.0,
+          "stay_lb_cost": 1600.0,
+          "meal_lb_cost": 684.0,
+          "transport_lb_cost": 636.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "boston",
+              "traverse city"
+            ],
+            [
+              "traverse city",
+              "detroit"
+            ],
+            [
+              "detroit",
+              "boston"
+            ]
+          ],
+          "bundle_key": [
+            "detroit",
+            "traverse city"
+          ],
+          "bundle_key_set": [
+            "detroit",
+            "traverse city"
+          ],
+          "bundle_key_seq": [
+            "traverse city",
+            "detroit"
+          ],
+          "city_features": {
+            "Traverse City": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 400.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 15,
+              "min_meal_cost": 27.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 9,
+              "hotel_slack": 1
+            },
+            "Detroit": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 400.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 14,
+              "min_meal_cost": 20.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 5,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Boston->Traverse City": {
+              "min_cost": 302.0,
+              "blocked": false
+            },
+            "Traverse City->Detroit": {
+              "min_cost": 82.0,
+              "blocked": false
+            },
+            "Detroit->Boston": {
+              "min_cost": 252.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 5,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 400.0,
+            "bottleneck_city_meal": "Detroit",
+            "bottleneck_city_hotel": "Traverse City",
+            "bottleneck_edge": "Boston->Traverse City"
+          },
+          "min_bundle_cost": 2236.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 5,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 400.0,
+          "bottleneck_city_meal": "Detroit",
+          "bottleneck_city_hotel": "Traverse City",
+          "bottleneck_edge": "Boston->Traverse City"
+        },
+        "budget_context": {
+          "remaining": 244.0,
+          "slot_cap": 17.020089285714285,
+          "reserve": 210.03074999999998,
+          "min_cost_nonbudget": 18.0
+        },
+        "counts": {
+          "kb": 25,
+          "after_nonbudget": 25,
+          "after_budget": 0,
+          "budget_removed": 25,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Traverse City",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 25,
+          "after_nonbudget": 25,
+          "after_budget": 0,
+          "budget_removed": 25,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 244.0,
+          "slot_cap": 17.020089285714285,
+          "reserve": 210.03074999999998,
+          "min_cost_nonbudget": 18.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 25,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": [
+              "Italian",
+              "Mexican",
+              "Mediterranean",
+              "Chinese"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Detroit",
+        "Traverse City"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"meal\", \"rule\": \"NO_FLIGHT\", \"ttl\": 0, \"city\": \"\", \"edge\": \"\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"segment\", \"feature\": \"budget_risk\", \"delta\": -1.0},\n      {\"phase\": \"attraction\", \"feature\": \"cost_ratio\", \"delta\": -0.5}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "meal",
+              "rule": "NO_FLIGHT",
+              "ttl": 0,
+              "city": "",
+              "edge": ""
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "budget_risk",
+              "delta": -1.0
+            },
+            {
+              "phase": "attraction",
+              "feature": "cost_ratio",
+              "delta": -0.5
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "meal",
+            "rule": "NO_FLIGHT",
+            "ttl": 0,
+            "city": "",
+            "edge": ""
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "budget_risk",
+            "delta": -1.0
+          },
+          {
+            "phase": "attraction",
+            "feature": "cost_ratio",
+            "delta": -0.5
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Detroit",
+          "Traverse City"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 304.0,
+          "bundle_lb_cost": 2964.0,
+          "stay_lb_cost": 1600.0,
+          "meal_lb_cost": 726.0,
+          "transport_lb_cost": 638.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "boston",
+              "detroit"
+            ],
+            [
+              "detroit",
+              "traverse city"
+            ],
+            [
+              "traverse city",
+              "boston"
+            ]
+          ],
+          "bundle_key": [
+            "detroit",
+            "traverse city"
+          ],
+          "bundle_key_set": [
+            "detroit",
+            "traverse city"
+          ],
+          "bundle_key_seq": [
+            "detroit",
+            "traverse city"
+          ],
+          "city_features": {
+            "Detroit": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 400.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 14,
+              "min_meal_cost": 20.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 8,
+              "hotel_slack": 0
+            },
+            "Traverse City": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 400.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 15,
+              "min_meal_cost": 27.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 6,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Boston->Detroit": {
+              "min_cost": 252.0,
+              "blocked": false
+            },
+            "Detroit->Traverse City": {
+              "min_cost": 82.0,
+              "blocked": false
+            },
+            "Traverse City->Boston": {
+              "min_cost": 304.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 6,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 400.0,
+            "bottleneck_city_meal": "Traverse City",
+            "bottleneck_city_hotel": "Detroit",
+            "bottleneck_edge": "Traverse City->Boston"
+          },
+          "min_bundle_cost": 2238.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 6,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 400.0,
+          "bottleneck_city_meal": "Traverse City",
+          "bottleneck_city_hotel": "Detroit",
+          "bottleneck_edge": "Traverse City->Boston"
+        },
+        "budget_context": {
+          "remaining": 274.0,
+          "slot_cap": 19.112723214285715,
+          "reserve": 253.01949999999997,
+          "min_cost_nonbudget": 11.0
+        },
+        "counts": {
+          "kb": 28,
+          "after_nonbudget": 28,
+          "after_budget": 0,
+          "budget_removed": 28,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Detroit",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 28,
+          "after_nonbudget": 28,
+          "after_budget": 0,
+          "budget_removed": 28,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 274.0,
+          "slot_cap": 19.112723214285715,
+          "reserve": 253.01949999999997,
+          "min_cost_nonbudget": 11.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 28,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": [
+              "Italian",
+              "Mexican",
+              "Mediterranean",
+              "Chinese"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Traverse City",
+        "Detroit"
+      ],
+      "reason": "prefer candidates with no blocked edges for segment/flight failures",
+      "raw": "```\n{\n  \"candidate_id\": 0,\n  \"reason\": \"prefer candidates with no blocked edges for segment/flight failures\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"meal\", \"NO_FLIGHT\", 5, \"\", \"\"]\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "prefer candidates with no blocked edges for segment/flight failures",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "meal",
+              "NO_FLIGHT",
+              5,
+              "",
+              ""
+            ]
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "meal",
+            "NO_FLIGHT",
+            5,
+            "",
+            ""
+          ]
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "b25117ae7d49",
+      "phase": "daily",
+      "slot_fp": "meal|d1|slot:lunch|seg:None|Traverse City|None|None->None",
+      "bundle_fp": "e04cd19545e7"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "b25117ae7d49",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:lunch|seg:None|Detroit|None|None->None",
+        "bundle_fp": "af788917e66a"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Traverse City",
+        "Detroit"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "b25117ae7d49",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:lunch|seg:None|Traverse City|None|None->None",
+        "bundle_fp": "e04cd19545e7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "b25117ae7d49",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:lunch|seg:None|Traverse City|None|None->None",
+        "bundle_fp": "e04cd19545e7"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "daily",
+          "rule": "NO_FLIGHT",
+          "ttl": 1,
+          "city": "",
+          "edge": ""
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": -1.0
+        },
+        {
+          "phase": "daily",
+          "feature": "cost_ratio",
+          "delta": -0.5
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Detroit",
+        "Traverse City"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "b25117ae7d49",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:lunch|seg:None|Detroit|None|None->None",
+        "bundle_fp": "af788917e66a"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "b25117ae7d49",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:lunch|seg:None|Detroit|None|None->None",
+        "bundle_fp": "af788917e66a"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Traverse City",
+        "Detroit"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "b25117ae7d49",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:lunch|seg:None|Traverse City|None|None->None",
+        "bundle_fp": "e04cd19545e7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 18.35374542232603
+}

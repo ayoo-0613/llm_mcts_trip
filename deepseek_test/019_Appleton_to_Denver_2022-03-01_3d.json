@@ -1,0 +1,277 @@
+{
+  "success": false,
+  "cost": 354.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Kindly assist in creating a travel plan for a solo traveler heading from Appleton to Denver. The trip should span three days, from March 1st to March 3rd, 2022, with a budget set at $1,200.",
+  "parsed": {
+    "org": "Appleton",
+    "dest": "Denver",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-01",
+      "2022-03-02",
+      "2022-03-03"
+    ],
+    "people_number": 1,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 1200,
+    "origin": "Appleton",
+    "destination": "Denver",
+    "duration_days": 3,
+    "start_date": "2022-03-01",
+    "preferences": []
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Denver"
+    ],
+    "transportation_dates": [
+      "2022-03-01",
+      "2022-03-03"
+    ],
+    "transportation_methods": [
+      "Flight F1349099, from Appleton to Denver, Departure Time: 07:12, Arrival Time: 08:39, cost: 178.0",
+      "Flight F1341370, from Denver to Appleton, Departure Time: 09:43, Arrival Time: 12:56, cost: 176.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Denver"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Appleton to Denver",
+      "transportation": "Flight Number: F1349099, from Appleton to Denver, Departure Time: 07:12, Arrival Time: 08:39",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Denver",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Denver to Appleton",
+      "transportation": "Flight Number: F1341370, from Denver to Appleton, Departure Time: 09:43, Arrival Time: 12:56",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Denver|None|None->None",
+      "counts": {
+        "kb": 9,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 846.0,
+        "slot_cap": 619.62890625,
+        "reserve": 66.32549999999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 91.8,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 78.02999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 66.32549999999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Denver|None|None->None",
+        "city": "Denver",
+        "city_bundle": [
+          "Denver"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 9,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 846.0,
+          "slot_cap": 619.62890625,
+          "reserve": 66.32549999999999,
+          "min_cost_nonbudget": 414.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "f165f337bd20",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Denver|None|None->None",
+      "bundle_fp": "74ccdff3aeea"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "f165f337bd20",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Denver|None|None->None",
+        "bundle_fp": "74ccdff3aeea"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "f165f337bd20",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Denver|None|None->None",
+        "bundle_fp": "74ccdff3aeea"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "f165f337bd20",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Denver|None|None->None",
+        "bundle_fp": "74ccdff3aeea"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.13957547396421432
+}

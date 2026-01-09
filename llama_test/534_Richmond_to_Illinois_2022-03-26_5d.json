@@ -1,0 +1,1020 @@
+{
+  "success": false,
+  "cost": 1644.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you help with a 5-day travel plan for 2 people departing from Richmond heading to Illinois, visiting 2 cities from March 26th to March 30th, 2022? Our budget is now set at $3,400. We would love to try out Mexican and French cuisines during our trip.",
+  "parsed": {
+    "org": "Richmond",
+    "dest": "Illinois",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-26",
+      "2022-03-27",
+      "2022-03-28",
+      "2022-03-29",
+      "2022-03-30"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": [
+        "Mexican",
+        "French"
+      ],
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 3400,
+    "origin": "Richmond",
+    "destination": "Illinois",
+    "duration_days": 5,
+    "start_date": "2022-03-26",
+    "preferences": [
+      "Mexican",
+      "French"
+    ],
+    "candidate_cities": [
+      "Moline",
+      "Belleville",
+      "Bloomington",
+      "Champaign",
+      "Chicago",
+      "Rockford",
+      "Peoria"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Richmond->Moline 1495km cost 1495",
+    "move:seg1:taxi:Moline->Peoria 149km cost 149"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Moline",
+      "Peoria"
+    ],
+    "transportation_dates": [
+      "2022-03-26",
+      "2022-03-28",
+      "2022-03-30"
+    ],
+    "transportation_methods": [
+      "taxi, from Richmond to Moline, cost: 1495.0",
+      "taxi, from Moline to Peoria, cost: 149.0",
+      "Peoria->Richmond missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Moline",
+      "missing, Peoria"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Richmond to Moline",
+      "transportation": "Taxi, from Richmond to Moline, Cost: 1495",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Moline",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Moline to Peoria",
+      "transportation": "Taxi, from Moline to Peoria, Cost: 149",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Peoria",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Peoria",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:1|None|2022-03-26|Moline->Peoria",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 1905.0,
+        "slot_cap": 175.46052631578945,
+        "reserve": 1110.0
+      },
+      "segment_role": "intercity",
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-26|Peoria->Richmond",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1756.0,
+        "slot_cap": 631.784539473684,
+        "reserve": 681.6787499999999
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 943.5,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 801.9749999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 681.6787499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-26|Peoria->Richmond",
+        "city": "Richmond",
+        "city_bundle": [
+          "Moline",
+          "Peoria"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1756.0,
+          "slot_cap": 631.784539473684,
+          "reserve": 681.6787499999999,
+          "min_cost_nonbudget": 672.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Peoria",
+          "Moline"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1493.0,
+          "bundle_lb_cost": 4207.0,
+          "stay_lb_cost": 660.0,
+          "meal_lb_cost": 558.0,
+          "transport_lb_cost": 2989.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "richmond",
+              "peoria"
+            ],
+            [
+              "peoria",
+              "moline"
+            ],
+            [
+              "moline",
+              "richmond"
+            ]
+          ],
+          "bundle_key": [
+            "moline",
+            "peoria"
+          ],
+          "bundle_key_set": [
+            "moline",
+            "peoria"
+          ],
+          "bundle_key_seq": [
+            "peoria",
+            "moline"
+          ],
+          "city_features": {
+            "Peoria": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 62.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 9,
+              "min_meal_cost": 24.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 3,
+              "hotel_slack": 1
+            },
+            "Moline": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 268.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 11,
+              "min_meal_cost": 15.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 2,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Richmond->Peoria": {
+              "min_cost": 1345.0,
+              "blocked": false
+            },
+            "Peoria->Moline": {
+              "min_cost": 151.0,
+              "blocked": false
+            },
+            "Moline->Richmond": {
+              "min_cost": 1493.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 2,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 268.0,
+            "bottleneck_city_meal": "Moline",
+            "bottleneck_city_hotel": "Moline",
+            "bottleneck_edge": "Moline->Richmond"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 2,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 268.0,
+          "bottleneck_city_meal": "Moline",
+          "bottleneck_city_hotel": "Moline",
+          "bottleneck_edge": "Moline->Richmond"
+        },
+        "budget_context": {
+          "remaining": 1904.0,
+          "slot_cap": 685.032894736842,
+          "reserve": 681.6787499999999,
+          "min_cost_nonbudget": 746.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Richmond",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1904.0,
+          "slot_cap": 685.032894736842,
+          "reserve": 681.6787499999999,
+          "min_cost_nonbudget": 746.5
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3400,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Mexican",
+              "French"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Moline",
+        "Peoria"
+      ],
+      "reason": "budget",
+      "raw": "```\n{\n  \"candidate_id\": 0,\n  \"reason\": \"budget\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"segment\", \"NO_FLIGHT\", 10, null, null]\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}\n```\n\nNote: The above JSON output is based on the assumption that the algorithm has selected candidate_id 0 as the best option. The reason for this selection is that it has a budget issue (dead_end_reason = \"budget\"), and the algorithm prefers avoiding dead_end_city for hotel/stay failures if feasible. \n\nThe `hard_exclusions` list contains one rule, which is to exclude flights during segment phase for 10 time steps. The `soft_penalties` and `retrieval_patches` lists are empty since there are no soft penalties or retrieval patches needed in this case.",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "budget",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "segment",
+              "NO_FLIGHT",
+              10,
+              null,
+              null
+            ]
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "segment",
+            "NO_FLIGHT",
+            10,
+            null,
+            null
+          ]
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Moline",
+          "Peoria"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1344.0,
+          "bundle_lb_cost": 4260.0,
+          "stay_lb_cost": 660.0,
+          "meal_lb_cost": 612.0,
+          "transport_lb_cost": 2988.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "richmond",
+              "moline"
+            ],
+            [
+              "moline",
+              "peoria"
+            ],
+            [
+              "peoria",
+              "richmond"
+            ]
+          ],
+          "bundle_key": [
+            "moline",
+            "peoria"
+          ],
+          "bundle_key_set": [
+            "moline",
+            "peoria"
+          ],
+          "bundle_key_seq": [
+            "moline",
+            "peoria"
+          ],
+          "city_features": {
+            "Moline": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 268.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 11,
+              "min_meal_cost": 15.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 5,
+              "hotel_slack": 1
+            },
+            "Peoria": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 62.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 9,
+              "min_meal_cost": 24.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 0,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Richmond->Moline": {
+              "min_cost": 1495.0,
+              "blocked": false
+            },
+            "Moline->Peoria": {
+              "min_cost": 149.0,
+              "blocked": false
+            },
+            "Peoria->Richmond": {
+              "min_cost": 1344.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 0,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 268.0,
+            "bottleneck_city_meal": "Peoria",
+            "bottleneck_city_hotel": "Moline",
+            "bottleneck_edge": "Richmond->Moline"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 0,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 268.0,
+          "bottleneck_city_meal": "Peoria",
+          "bottleneck_city_hotel": "Moline",
+          "bottleneck_edge": "Richmond->Moline"
+        },
+        "budget_context": {
+          "remaining": 1756.0,
+          "slot_cap": 631.784539473684,
+          "reserve": 681.6787499999999,
+          "min_cost_nonbudget": 672.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Richmond",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1756.0,
+          "slot_cap": 631.784539473684,
+          "reserve": 681.6787499999999,
+          "min_cost_nonbudget": 672.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3400,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Mexican",
+              "French"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Peoria",
+        "Moline"
+      ],
+      "reason": "prefer candidate with no blocked edges for segment/flight failures",
+      "raw": "```json\n{\n  \"candidate_id\": 0,\n  \"reason\": \"prefer candidate with no blocked edges for segment/flight failures\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"segment\", \"NO_FLIGHT\", 0, null, null]\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}\n```\n\nThis response selects the candidate with id 0 as it is the only valid option given in the input. The reason for selecting this candidate is that we prefer candidates with no blocked edges for segment/flight failures, and since there are no other candidates to choose from, we go with this one. The confidence is set to 1.0 as it's the best possible choice given the circumstances. The gradient is an empty list of hard exclusions and soft penalties, but includes a retrieval patch that would allow us to avoid dead-end cities for hotel/stay failures if feasible.",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "prefer candidate with no blocked edges for segment/flight failures",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "segment",
+              "NO_FLIGHT",
+              0,
+              null,
+              null
+            ]
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "segment",
+            "NO_FLIGHT",
+            0,
+            null,
+            null
+          ]
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Peoria",
+          "Moline"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1493.0,
+          "bundle_lb_cost": 4207.0,
+          "stay_lb_cost": 660.0,
+          "meal_lb_cost": 558.0,
+          "transport_lb_cost": 2989.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "richmond",
+              "peoria"
+            ],
+            [
+              "peoria",
+              "moline"
+            ],
+            [
+              "moline",
+              "richmond"
+            ]
+          ],
+          "bundle_key": [
+            "moline",
+            "peoria"
+          ],
+          "bundle_key_set": [
+            "moline",
+            "peoria"
+          ],
+          "bundle_key_seq": [
+            "peoria",
+            "moline"
+          ],
+          "city_features": {
+            "Peoria": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 62.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 9,
+              "min_meal_cost": 24.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 3,
+              "hotel_slack": 1
+            },
+            "Moline": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 268.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 11,
+              "min_meal_cost": 15.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 2,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Richmond->Peoria": {
+              "min_cost": 1345.0,
+              "blocked": false
+            },
+            "Peoria->Moline": {
+              "min_cost": 151.0,
+              "blocked": false
+            },
+            "Moline->Richmond": {
+              "min_cost": 1493.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 2,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 268.0,
+            "bottleneck_city_meal": "Moline",
+            "bottleneck_city_hotel": "Moline",
+            "bottleneck_edge": "Moline->Richmond"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 2,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 268.0,
+          "bottleneck_city_meal": "Moline",
+          "bottleneck_city_hotel": "Moline",
+          "bottleneck_edge": "Moline->Richmond"
+        },
+        "budget_context": {
+          "remaining": 1904.0,
+          "slot_cap": 685.032894736842,
+          "reserve": 681.6787499999999,
+          "min_cost_nonbudget": 746.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Richmond",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1904.0,
+          "slot_cap": 685.032894736842,
+          "reserve": 681.6787499999999,
+          "min_cost_nonbudget": 746.5
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3400,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Mexican",
+              "French"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Moline",
+        "Peoria"
+      ],
+      "reason": "prefer candidates with no blocked edges for segment/flight failures",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"prefer candidates with no blocked edges for segment/flight failures\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"segment\", \"rule\": \"NO_FLIGHT\", \"ttl\": 100, \"city\": null, \"edge\": \"Richmond->Moline\"}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "prefer candidates with no blocked edges for segment/flight failures",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "NO_FLIGHT",
+              "ttl": 100,
+              "city": null,
+              "edge": "Richmond->Moline"
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "NO_FLIGHT",
+            "ttl": 100,
+            "city": null,
+            "edge": "Richmond->Moline"
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "ce0c423d591c",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-26|Peoria->Richmond",
+      "bundle_fp": "81fa3e779f71"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "ce0c423d591c",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-26|Moline->Richmond",
+        "bundle_fp": "47c4d3827bb2"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Moline",
+        "Peoria"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "ce0c423d591c",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-26|Peoria->Richmond",
+        "bundle_fp": "81fa3e779f71"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "ce0c423d591c",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-26|Peoria->Richmond",
+        "bundle_fp": "81fa3e779f71"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Peoria",
+        "Moline"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "ce0c423d591c",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-26|Moline->Richmond",
+        "bundle_fp": "47c4d3827bb2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "ce0c423d591c",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-26|Moline->Richmond",
+        "bundle_fp": "47c4d3827bb2"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "NO_FLIGHT",
+          "ttl": 100,
+          "city": null,
+          "edge": "Richmond->Moline"
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Moline",
+        "Peoria"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "ce0c423d591c",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-26|Peoria->Richmond",
+        "bundle_fp": "81fa3e779f71"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 23.46854120725766
+}

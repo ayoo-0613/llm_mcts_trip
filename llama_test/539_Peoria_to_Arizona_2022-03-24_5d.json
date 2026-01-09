@@ -1,0 +1,1169 @@
+{
+  "success": false,
+  "cost": 3733.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you help create a 5-day travel plan for a party of 4, leaving from Peoria to visit 2 cities in Arizona, starting on March 24th through March 28th, 2022? Our budget is now set at $7,000. During our trip, we would love to experience both Italian and Indian cuisines.",
+  "parsed": {
+    "org": "Peoria",
+    "dest": "Arizona",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-24",
+      "2022-03-25",
+      "2022-03-26",
+      "2022-03-27",
+      "2022-03-28"
+    ],
+    "people_number": 4,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": [
+        "Italian",
+        "Indian"
+      ],
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 7000,
+    "origin": "Peoria",
+    "destination": "Arizona",
+    "duration_days": 5,
+    "start_date": "2022-03-24",
+    "preferences": [
+      "Italian",
+      "Indian"
+    ],
+    "candidate_cities": [
+      "Flagstaff",
+      "Yuma",
+      "Phoenix",
+      "Prescott",
+      "Tucson"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Peoria->Flagstaff 2461km cost 2461",
+    "move:seg1:flight:F1726697 Flagstaff->Phoenix $23 10:33-11:12",
+    "move:seg2:flight:F0913211 Phoenix->Peoria $295 15:22-18:58"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Flagstaff",
+      "Phoenix"
+    ],
+    "transportation_dates": [
+      "2022-03-24",
+      "2022-03-26",
+      "2022-03-28"
+    ],
+    "transportation_methods": [
+      "taxi, from Peoria to Flagstaff, cost: 2461.0",
+      "Flight F1726697, from Flagstaff to Phoenix, Departure Time: 10:33, Arrival Time: 11:12, cost: 23.0",
+      "Flight F0913211, from Phoenix to Peoria, Departure Time: 15:22, Arrival Time: 18:58, cost: 295.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Flagstaff",
+      "missing, Phoenix"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Peoria to Flagstaff",
+      "transportation": "Taxi, from Peoria to Flagstaff, Cost: 2461",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Flagstaff",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Flagstaff to Phoenix",
+      "transportation": "Flight Number: F1726697, from Flagstaff to Phoenix, Departure Time: 10:33, Arrival Time: 11:12",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Phoenix",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Phoenix to Peoria",
+      "transportation": "Flight Number: F0913211, from Phoenix to Peoria, Departure Time: 15:22, Arrival Time: 18:58",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-24|Phoenix->Peoria",
+      "counts": {
+        "kb": 87,
+        "after_nonbudget": 87,
+        "after_budget": 30,
+        "returned": 5,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 57,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 4447.0,
+        "slot_cap": 511.9901315789473,
+        "reserve": 2788.0
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 2788.0,
+          "kept": 30
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Flagstaff|None|None->None",
+      "counts": {
+        "kb": 3,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 3183.0,
+        "slot_cap": 1165.6494140625,
+        "reserve": 1503.3779999999997
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 2080.7999999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 1768.6799999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 1503.3779999999997,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Flagstaff|None|None->None",
+        "city": "Flagstaff",
+        "city_bundle": [
+          "Flagstaff",
+          "Phoenix"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 3183.0,
+          "slot_cap": 1165.6494140625,
+          "reserve": 1503.3779999999997,
+          "min_cost_nonbudget": 1086.0
+        }
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Flagstaff|None|None->None",
+      "counts": {
+        "kb": 3,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 3267.0,
+        "slot_cap": 1196.4111328125,
+        "reserve": 1503.3779999999997
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 2080.7999999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 1768.6799999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 1503.3779999999997,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Flagstaff|None|None->None",
+        "city": "Flagstaff",
+        "city_bundle": [
+          "Flagstaff",
+          "Phoenix"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 3267.0,
+          "slot_cap": 1196.4111328125,
+          "reserve": 1503.3779999999997,
+          "min_cost_nonbudget": 1086.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Prescott",
+          "Phoenix"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1180.0,
+          "bundle_lb_cost": 7367.0,
+          "stay_lb_cost": 2706.0,
+          "meal_lb_cost": 708.0,
+          "transport_lb_cost": 3953.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "peoria",
+              "prescott"
+            ],
+            [
+              "prescott",
+              "phoenix"
+            ],
+            [
+              "phoenix",
+              "peoria"
+            ]
+          ],
+          "bundle_key": [
+            "phoenix",
+            "prescott"
+          ],
+          "bundle_key_set": [
+            "phoenix",
+            "prescott"
+          ],
+          "bundle_key_seq": [
+            "prescott",
+            "phoenix"
+          ],
+          "city_features": {
+            "Prescott": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 519.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 11,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 5,
+              "hotel_slack": 0
+            },
+            "Phoenix": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 834.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 11,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 2,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Peoria->Prescott": {
+              "min_cost": 2611.0,
+              "blocked": false
+            },
+            "Prescott->Phoenix": {
+              "min_cost": 162.0,
+              "blocked": false
+            },
+            "Phoenix->Peoria": {
+              "min_cost": 1180.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 2,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 834.0,
+            "bottleneck_city_meal": "Phoenix",
+            "bottleneck_city_hotel": "Phoenix",
+            "bottleneck_edge": "Peoria->Prescott"
+          },
+          "min_bundle_cost": 6659.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 2,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 834.0,
+          "bottleneck_city_meal": "Phoenix",
+          "bottleneck_city_hotel": "Phoenix",
+          "bottleneck_edge": "Peoria->Prescott"
+        },
+        "budget_context": {
+          "remaining": 3047.0,
+          "slot_cap": 1115.8447265625,
+          "reserve": 1459.1609999999998,
+          "min_cost_nonbudget": 938.0
+        },
+        "counts": {
+          "kb": 4,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_city": "Prescott",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 4,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 3047.0,
+          "slot_cap": 1115.8447265625,
+          "reserve": 1459.1609999999998,
+          "min_cost_nonbudget": 938.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 7000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Italian",
+              "Indian"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Flagstaff",
+        "Phoenix"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 10, \"city\": \"Prescott\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"segment\", \"feature\": \"budget_risk\", \"delta\": -0.5}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 10,
+              "city": "Prescott"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "budget_risk",
+              "delta": -0.5
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 10,
+            "city": "Prescott"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "budget_risk",
+            "delta": -0.5
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Flagstaff",
+          "Phoenix"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1180.0,
+          "bundle_lb_cost": 7013.0,
+          "stay_lb_cost": 2500.0,
+          "meal_lb_cost": 780.0,
+          "transport_lb_cost": 3733.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "peoria",
+              "flagstaff"
+            ],
+            [
+              "flagstaff",
+              "phoenix"
+            ],
+            [
+              "phoenix",
+              "peoria"
+            ]
+          ],
+          "bundle_key": [
+            "flagstaff",
+            "phoenix"
+          ],
+          "bundle_key_set": [
+            "flagstaff",
+            "phoenix"
+          ],
+          "bundle_key_seq": [
+            "flagstaff",
+            "phoenix"
+          ],
+          "city_features": {
+            "Flagstaff": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 416.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 7,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 1,
+              "hotel_slack": 0
+            },
+            "Phoenix": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 834.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 11,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 2,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Peoria->Flagstaff": {
+              "min_cost": 2461.0,
+              "blocked": false
+            },
+            "Flagstaff->Phoenix": {
+              "min_cost": 92.0,
+              "blocked": false
+            },
+            "Phoenix->Peoria": {
+              "min_cost": 1180.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 1,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 834.0,
+            "bottleneck_city_meal": "Flagstaff",
+            "bottleneck_city_hotel": "Phoenix",
+            "bottleneck_edge": "Peoria->Flagstaff"
+          },
+          "min_bundle_cost": 6233.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 1,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 834.0,
+          "bottleneck_city_meal": "Flagstaff",
+          "bottleneck_city_hotel": "Phoenix",
+          "bottleneck_edge": "Peoria->Flagstaff"
+        },
+        "budget_context": {
+          "remaining": 3267.0,
+          "slot_cap": 1196.4111328125,
+          "reserve": 1503.3779999999997,
+          "min_cost_nonbudget": 1086.0
+        },
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_city": "Flagstaff",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 3267.0,
+          "slot_cap": 1196.4111328125,
+          "reserve": 1503.3779999999997,
+          "min_cost_nonbudget": 1086.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 7000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Italian",
+              "Indian"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Yuma",
+        "Phoenix"
+      ],
+      "reason": "bundle_risk is higher for other candidates",
+      "raw": "{\n    \"candidate_id\": 2,\n    \"reason\": \"bundle_risk is higher for other candidates\",\n    \"confidence\": 0.8,\n    \"gradient\": {\n        \"hard_exclusions\": [{\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 1, \"city\": \"Flagstaff\"}],\n        \"soft_penalties\": [{\"phase\": \"transport\", \"feature\": \"budget_risk\", \"delta\": 0.2}],\n        \"retrieval_patches\": [{\"phase\": \"stay\", \"patch\": \"hotel_price\", \"ttl\": 1}]\n    }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "bundle_risk is higher for other candidates",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 1,
+              "city": "Flagstaff"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "transport",
+              "feature": "budget_risk",
+              "delta": 0.2
+            }
+          ],
+          "retrieval_patches": [
+            {
+              "phase": "stay",
+              "patch": "hotel_price",
+              "ttl": 1
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 1,
+            "city": "Flagstaff"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "transport",
+            "feature": "budget_risk",
+            "delta": 0.2
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "stay",
+            "patch": "hotel_price",
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Yuma",
+          "Phoenix"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1180.0,
+          "bundle_lb_cost": 7625.0,
+          "stay_lb_cost": 2604.0,
+          "meal_lb_cost": 804.0,
+          "transport_lb_cost": 4217.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "peoria",
+              "yuma"
+            ],
+            [
+              "yuma",
+              "phoenix"
+            ],
+            [
+              "phoenix",
+              "peoria"
+            ]
+          ],
+          "bundle_key": [
+            "phoenix",
+            "yuma"
+          ],
+          "bundle_key_set": [
+            "phoenix",
+            "yuma"
+          ],
+          "bundle_key_seq": [
+            "yuma",
+            "phoenix"
+          ],
+          "city_features": {
+            "Yuma": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 468.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 7,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 1,
+              "hotel_slack": 1
+            },
+            "Phoenix": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 834.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 11,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 2,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Peoria->Yuma": {
+              "min_cost": 2909.0,
+              "blocked": false
+            },
+            "Yuma->Phoenix": {
+              "min_cost": 128.0,
+              "blocked": false
+            },
+            "Phoenix->Peoria": {
+              "min_cost": 1180.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 1,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 834.0,
+            "bottleneck_city_meal": "Yuma",
+            "bottleneck_city_hotel": "Phoenix",
+            "bottleneck_edge": "Peoria->Yuma"
+          },
+          "min_bundle_cost": 6821.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 1,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 834.0,
+          "bottleneck_city_meal": "Yuma",
+          "bottleneck_city_hotel": "Phoenix",
+          "bottleneck_edge": "Peoria->Yuma"
+        },
+        "budget_context": {
+          "remaining": 1847.0,
+          "slot_cap": 1352.783203125,
+          "reserve": 493.75649999999996,
+          "min_cost_nonbudget": 834.0
+        },
+        "counts": {
+          "kb": 5,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_city": "Phoenix",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 5,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1847.0,
+          "slot_cap": 1352.783203125,
+          "reserve": 493.75649999999996,
+          "min_cost_nonbudget": 834.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 4,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 7000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Italian",
+              "Indian"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Flagstaff",
+        "Phoenix"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs prefer this candidate",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs prefer this candidate\",\n  \"confidence\": 0.9,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 10, \"city\": \"Flagstaff\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"segment\", \"feature\": \"cost_ratio\", \"delta\": -0.1}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs prefer this candidate",
+        "confidence": 0.9,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 10,
+              "city": "Flagstaff"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "cost_ratio",
+              "delta": -0.1
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 10,
+            "city": "Flagstaff"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": -0.1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "17854d67a0e4",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Flagstaff|None|None->None",
+      "bundle_fp": "59da6067b1a7"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "17854d67a0e4",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Prescott|None|None->None",
+        "bundle_fp": "869897ad940b"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 10,
+          "city": "Prescott"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": -0.5
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Flagstaff",
+        "Phoenix"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "17854d67a0e4",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Flagstaff|None|None->None",
+        "bundle_fp": "59da6067b1a7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "17854d67a0e4",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Flagstaff|None|None->None",
+        "bundle_fp": "59da6067b1a7"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 1,
+          "city": "Flagstaff"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "transport",
+          "feature": "budget_risk",
+          "delta": 0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Yuma",
+        "Phoenix"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "17854d67a0e4",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Phoenix|None|None->None",
+        "bundle_fp": "35d7760a36bc"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "17854d67a0e4",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Phoenix|None|None->None",
+        "bundle_fp": "35d7760a36bc"
+      },
+      "confidence": 0.9,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 10,
+          "city": "Flagstaff"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": -0.1
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Flagstaff",
+        "Phoenix"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "17854d67a0e4",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Flagstaff|None|None->None",
+        "bundle_fp": "59da6067b1a7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 18.651083840057254
+}

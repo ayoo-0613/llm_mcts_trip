@@ -1,0 +1,1159 @@
+{
+  "success": false,
+  "cost": 2236.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you create a 5-day travel itinerary for 2 people, starting from Daytona Beach and visiting 2 cities in Texas from March 15th to March 19th, 2022? We have a budget of $3,200. We want to stay in accommodations that allow parties, and we need private rooms. For meals, we'd like to experience a variety of cuisines including Chinese, Mediterranean, American, and Mexican.",
+  "parsed": {
+    "org": "Daytona Beach",
+    "dest": "Texas",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-15",
+      "2022-03-16",
+      "2022-03-17",
+      "2022-03-18",
+      "2022-03-19"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "parties",
+      "cuisine": [
+        "Chinese",
+        "Mediterranean",
+        "American",
+        "Mexican"
+      ],
+      "room type": "private room",
+      "transportation": null
+    },
+    "budget": 3200,
+    "origin": "Daytona Beach",
+    "destination": "Texas",
+    "duration_days": 5,
+    "start_date": "2022-03-15",
+    "preferences": [
+      "Chinese",
+      "Mediterranean",
+      "American",
+      "Mexican",
+      "parties",
+      "private room"
+    ],
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Daytona Beach->Waco 1796km cost 1796",
+    "move:seg1:flight:F1038023 Waco->Dallas $17 18:42-19:42",
+    "move:seg2:flight:F0392436 Dallas->Daytona Beach $203 12:32-15:50"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Waco",
+      "Dallas"
+    ],
+    "transportation_dates": [
+      "2022-03-15",
+      "2022-03-17",
+      "2022-03-19"
+    ],
+    "transportation_methods": [
+      "taxi, from Daytona Beach to Waco, cost: 1796.0",
+      "Flight F1038023, from Waco to Dallas, Departure Time: 18:42, Arrival Time: 19:42, cost: 17.0",
+      "Flight F0392436, from Dallas to Daytona Beach, Departure Time: 12:32, Arrival Time: 15:50, cost: 203.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Waco",
+      "missing, Dallas"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Daytona Beach to Waco",
+      "transportation": "Taxi, from Daytona Beach to Waco, Cost: 1796",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Waco",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Waco to Dallas",
+      "transportation": "Flight Number: F1038023, from Waco to Dallas, Departure Time: 18:42, Arrival Time: 19:42",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Dallas",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Dallas to Daytona Beach",
+      "transportation": "Flight Number: F0392436, from Dallas to Daytona Beach, Departure Time: 12:32, Arrival Time: 15:50",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-15|Dallas->Daytona Beach",
+      "counts": {
+        "kb": 82,
+        "after_nonbudget": 82,
+        "after_budget": 7,
+        "returned": 5,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 74,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1370.0,
+        "slot_cap": 394.32565789473676,
+        "reserve": 917.5749999999999
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 1079.5,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 917.5749999999999,
+          "kept": 7
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Waco|None|None->None",
+      "counts": {
+        "kb": 3,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 940.0,
+        "slot_cap": 344.23828125,
+        "reserve": 464.27849999999995
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 642.6,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 546.2099999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 464.27849999999995,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Waco|None|None->None",
+        "city": "Waco",
+        "city_bundle": [
+          "Waco",
+          "Dallas"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 940.0,
+          "slot_cap": 344.23828125,
+          "reserve": 464.27849999999995,
+          "min_cost_nonbudget": 257.0
+        }
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Waco|None|None->None",
+      "counts": {
+        "kb": 3,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 964.0,
+        "slot_cap": 353.02734375,
+        "reserve": 464.27849999999995
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 642.6,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 546.2099999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 464.27849999999995,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Waco|None|None->None",
+        "city": "Waco",
+        "city_bundle": [
+          "Waco",
+          "Dallas"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 964.0,
+          "slot_cap": 353.02734375,
+          "reserve": 464.27849999999995,
+          "min_cost_nonbudget": 257.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Dallas",
+          "Waco"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1805.0,
+          "bundle_lb_cost": 3651.0,
+          "stay_lb_cost": 892.0,
+          "meal_lb_cost": 522.0,
+          "transport_lb_cost": 2237.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "daytona beach",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "waco"
+            ],
+            [
+              "waco",
+              "daytona beach"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "waco"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "waco"
+          ],
+          "bundle_key_seq": [
+            "dallas",
+            "waco"
+          ],
+          "city_features": {
+            "Dallas": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 189.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 35,
+              "min_meal_cost": 21.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 29,
+              "hotel_slack": 1
+            },
+            "Waco": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 257.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 16,
+              "min_meal_cost": 15.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 7,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Daytona Beach->Dallas": {
+              "min_cost": 398.0,
+              "blocked": false
+            },
+            "Dallas->Waco": {
+              "min_cost": 34.0,
+              "blocked": false
+            },
+            "Waco->Daytona Beach": {
+              "min_cost": 1805.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 7,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 257.0,
+            "bottleneck_city_meal": "Waco",
+            "bottleneck_city_hotel": "Waco",
+            "bottleneck_edge": "Waco->Daytona Beach"
+          },
+          "min_bundle_cost": 3129.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 7,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 257.0,
+          "bottleneck_city_meal": "Waco",
+          "bottleneck_city_hotel": "Waco",
+          "bottleneck_edge": "Waco->Daytona Beach"
+        },
+        "budget_context": {
+          "remaining": 585.0,
+          "slot_cap": 428.466796875,
+          "reserve": 246.87824999999998,
+          "min_cost_nonbudget": 257.0
+        },
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_city": "Waco",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 3,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 585.0,
+          "slot_cap": 428.466796875,
+          "reserve": 246.87824999999998,
+          "min_cost_nonbudget": 257.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": [
+              "Chinese",
+              "Mediterranean",
+              "American",
+              "Mexican"
+            ],
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Waco",
+        "Dallas"
+      ],
+      "reason": "best candidate based on bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"best candidate based on bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 0, \"city\": null, \"edge\": null}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "best candidate based on bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 0,
+              "city": null,
+              "edge": null
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 0,
+            "city": null,
+            "edge": null
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Waco",
+          "Dallas"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 406.0,
+          "bundle_lb_cost": 3686.0,
+          "stay_lb_cost": 892.0,
+          "meal_lb_cost": 558.0,
+          "transport_lb_cost": 2236.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "daytona beach",
+              "waco"
+            ],
+            [
+              "waco",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "daytona beach"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "waco"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "waco"
+          ],
+          "bundle_key_seq": [
+            "waco",
+            "dallas"
+          ],
+          "city_features": {
+            "Waco": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 257.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 16,
+              "min_meal_cost": 15.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 10,
+              "hotel_slack": 1
+            },
+            "Dallas": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 189.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 35,
+              "min_meal_cost": 21.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 26,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Daytona Beach->Waco": {
+              "min_cost": 1796.0,
+              "blocked": false
+            },
+            "Waco->Dallas": {
+              "min_cost": 34.0,
+              "blocked": false
+            },
+            "Dallas->Daytona Beach": {
+              "min_cost": 406.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 10,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 257.0,
+            "bottleneck_city_meal": "Waco",
+            "bottleneck_city_hotel": "Waco",
+            "bottleneck_edge": "Daytona Beach->Waco"
+          },
+          "min_bundle_cost": 3128.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 10,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 257.0,
+          "bottleneck_city_meal": "Waco",
+          "bottleneck_city_hotel": "Waco",
+          "bottleneck_edge": "Daytona Beach->Waco"
+        },
+        "budget_context": {
+          "remaining": 964.0,
+          "slot_cap": 353.02734375,
+          "reserve": 464.27849999999995,
+          "min_cost_nonbudget": 257.0
+        },
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_city": "Waco",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 3,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 964.0,
+          "slot_cap": 353.02734375,
+          "reserve": 464.27849999999995,
+          "min_cost_nonbudget": 257.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": [
+              "Chinese",
+              "Mediterranean",
+              "American",
+              "Mexican"
+            ],
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Dallas",
+        "Waco"
+      ],
+      "reason": "best available",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"best available\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [{\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 86400, \"city\": \"Waco\"}],\n    \"soft_penalties\": [{\"phase\": \"transport\", \"feature\": \"cost_ratio\", \"delta\": 0.5}],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "best available",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 86400,
+              "city": "Waco"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "transport",
+              "feature": "cost_ratio",
+              "delta": 0.5
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 86400,
+            "city": "Waco"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "transport",
+            "feature": "cost_ratio",
+            "delta": 0.5
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Dallas",
+          "Waco"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1805.0,
+          "bundle_lb_cost": 3651.0,
+          "stay_lb_cost": 892.0,
+          "meal_lb_cost": 522.0,
+          "transport_lb_cost": 2237.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "daytona beach",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "waco"
+            ],
+            [
+              "waco",
+              "daytona beach"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "waco"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "waco"
+          ],
+          "bundle_key_seq": [
+            "dallas",
+            "waco"
+          ],
+          "city_features": {
+            "Dallas": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 189.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 35,
+              "min_meal_cost": 21.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 29,
+              "hotel_slack": 1
+            },
+            "Waco": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 257.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 16,
+              "min_meal_cost": 15.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 7,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Daytona Beach->Dallas": {
+              "min_cost": 398.0,
+              "blocked": false
+            },
+            "Dallas->Waco": {
+              "min_cost": 34.0,
+              "blocked": false
+            },
+            "Waco->Daytona Beach": {
+              "min_cost": 1805.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 7,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 257.0,
+            "bottleneck_city_meal": "Waco",
+            "bottleneck_city_hotel": "Waco",
+            "bottleneck_edge": "Waco->Daytona Beach"
+          },
+          "min_bundle_cost": 3129.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 7,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 257.0,
+          "bottleneck_city_meal": "Waco",
+          "bottleneck_city_hotel": "Waco",
+          "bottleneck_edge": "Waco->Daytona Beach"
+        },
+        "budget_context": {
+          "remaining": 585.0,
+          "slot_cap": 428.466796875,
+          "reserve": 246.87824999999998,
+          "min_cost_nonbudget": 257.0
+        },
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_city": "Waco",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 3,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 585.0,
+          "slot_cap": 428.466796875,
+          "reserve": 246.87824999999998,
+          "min_cost_nonbudget": 257.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": [
+              "Chinese",
+              "Mediterranean",
+              "American",
+              "Mexican"
+            ],
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Waco",
+        "Dallas"
+      ],
+      "reason": "no reason given",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"no reason given\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [],\n    \"soft_penalties\": [\n      {\"phase\": \"hotel\", \"feature\": \"budget_risk\", \"delta\": -0.5}\n    ],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "no reason given",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [],
+          "soft_penalties": [
+            {
+              "phase": "hotel",
+              "feature": "budget_risk",
+              "delta": -0.5
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "hotel",
+            "feature": "budget_risk",
+            "delta": -0.5
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "ee800a9381b3",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Waco|None|None->None",
+      "bundle_fp": "27f7ecad208f"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "ee800a9381b3",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Waco|None|None->None",
+        "bundle_fp": "306304ab87d7"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 1,
+          "city": null,
+          "edge": null
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Waco",
+        "Dallas"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "ee800a9381b3",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Waco|None|None->None",
+        "bundle_fp": "27f7ecad208f"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "ee800a9381b3",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Waco|None|None->None",
+        "bundle_fp": "27f7ecad208f"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 86400,
+          "city": "Waco"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "transport",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Dallas",
+        "Waco"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "ee800a9381b3",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Waco|None|None->None",
+        "bundle_fp": "306304ab87d7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "ee800a9381b3",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Waco|None|None->None",
+        "bundle_fp": "306304ab87d7"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "budget_risk",
+          "delta": -0.5
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Waco",
+        "Dallas"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "ee800a9381b3",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Waco|None|None->None",
+        "bundle_fp": "27f7ecad208f"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 15.367713653016835
+}

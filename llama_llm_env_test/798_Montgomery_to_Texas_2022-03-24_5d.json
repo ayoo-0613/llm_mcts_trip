@@ -1,0 +1,333 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 2673.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you plan a 5-day trip, beginning in Montgomery and visiting 2 cities in Texas from March 24th to March 28th, 2022, for a group of 3? We require accommodations that allow smoking and should be entire rooms. Our transport preference is anything other than flight and our budget for this trip is $4,000.",
+  "parsed": {
+    "org": "Montgomery",
+    "dest": "Texas",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-24",
+      "2022-03-25",
+      "2022-03-26",
+      "2022-03-27",
+      "2022-03-28"
+    ],
+    "people_number": 3,
+    "local_constraint": {
+      "house rule": "smoking",
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": "no flight"
+    },
+    "budget": 4000,
+    "origin": "Montgomery",
+    "destination": "Texas",
+    "duration_days": 5,
+    "start_date": "2022-03-24",
+    "preferences": [
+      "smoking",
+      "entire room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Abilene",
+      "Dallas"
+    ],
+    "transportation_dates": [
+      "2022-03-24",
+      "2022-03-26",
+      "2022-03-28"
+    ],
+    "transportation_methods": [
+      "taxi, from Montgomery to Abilene, cost: 1338.0",
+      "taxi, from Abilene to Dallas, cost: 292.0",
+      "taxi, from Dallas to Montgomery, cost: 1043.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Abilene",
+      "missing, Dallas"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Montgomery to Abilene",
+      "transportation": "Taxi, from Montgomery to Abilene, Cost: 1338",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Abilene",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Abilene to Dallas",
+      "transportation": "Taxi, from Abilene to Dallas, Cost: 292",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Dallas",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Dallas to Montgomery",
+      "transportation": "Taxi, from Dallas to Montgomery, Cost: 1043",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+      "counts": {
+        "kb": 6,
+        "after_nonbudget": 3,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 2,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1327.0,
+        "slot_cap": 485.9619140625,
+        "reserve": 600.0001249999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 830.4499999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 705.8824999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 600.0001249999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "city": "Abilene",
+        "city_bundle": [
+          "Abilene",
+          "Dallas"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 6,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1327.0,
+          "slot_cap": 485.9619140625,
+          "reserve": 600.0001249999999,
+          "min_cost_nonbudget": 404.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "5a4c2fb37c33",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+      "bundle_fp": "9b60345db0fd"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "5a4c2fb37c33",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "bundle_fp": "9b60345db0fd"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "5a4c2fb37c33",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "bundle_fp": "9b60345db0fd"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "5a4c2fb37c33",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "bundle_fp": "9b60345db0fd"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.7686378252692521
+}

@@ -1,0 +1,332 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 3945.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you help create a travel plan for a group of 5 departing from Milwaukee and exploring 2 cities in North Carolina over the course of 5 days, from March 25th to March 29th, 2022? We have allocated a budget of $5,500 for our trip. We will not be using flights for transportation and we require entire rooms for our stay. As for our preferences, we'd like our accommodations to allow smoking.",
+  "parsed": {
+    "origin": "Milwaukee",
+    "destination": "North Carolina",
+    "start_date": "2022-03-25",
+    "duration_days": 5,
+    "budget": 5500.0,
+    "people_number": 5,
+    "visiting_city_number": 2,
+    "preferences": [
+      "entire room",
+      "smoking"
+    ],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "self-driving"
+        ],
+        "forbid": [
+          "flight"
+        ]
+      },
+      "meal": {
+        "cuisines": null
+      },
+      "stay": {
+        "room_type": "entire room",
+        "house_rule": "smoking"
+      },
+      "daily": {
+        "attractions_per_day_min": 1,
+        "attractions_per_day_max": null
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    },
+    "transport_forbid": [
+      "flight"
+    ],
+    "attractions_per_day_min": 1,
+    "candidate_cities": [
+      "Greensboro",
+      "Wilmington",
+      "New Bern",
+      "Charlotte",
+      "Raleigh",
+      "Asheville",
+      "Fayetteville"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Asheville",
+      "Charlotte"
+    ],
+    "transportation_dates": [
+      "2022-03-25",
+      "2022-03-27",
+      "2022-03-29"
+    ],
+    "transportation_methods": [
+      "self-driving, from Milwaukee to Asheville, cost: 1208.0",
+      "self-driving, from Asheville to Charlotte, cost: 209.0",
+      "self-driving, from Charlotte to Milwaukee, cost: 1370.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Little Italy/Soho, Asheville",
+      "missing, Charlotte"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Milwaukee to Asheville",
+      "transportation": "Self-driving, from Milwaukee to Asheville, Cost: 1208",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Little Italy/Soho, Asheville"
+    },
+    {
+      "days": 2,
+      "current_city": "Asheville",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Little Italy/Soho, Asheville"
+    },
+    {
+      "days": 3,
+      "current_city": "from Asheville to Charlotte",
+      "transportation": "Self-driving, from Asheville to Charlotte, Cost: 209",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Charlotte",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Charlotte to Milwaukee",
+      "transportation": "Self-driving, from Charlotte to Milwaukee, Cost: 1370",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Charlotte|None|None->None",
+      "counts": {
+        "kb": 8,
+        "after_nonbudget": 3,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 2,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1555.0,
+        "slot_cap": 1138.916015625,
+        "reserve": 506.65312499999993
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 701.25,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 596.0624999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 506.65312499999993,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Charlotte|None|None->None",
+        "city": "Charlotte",
+        "city_bundle": [
+          "Asheville",
+          "Charlotte"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 8,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1555.0,
+          "slot_cap": 1138.916015625,
+          "reserve": 506.65312499999993,
+          "min_cost_nonbudget": 640.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "9296fe35b400",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Charlotte|None|None->None",
+      "bundle_fp": "b89f75ab2dd7"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "9296fe35b400",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Charlotte|None|None->None",
+        "bundle_fp": "b89f75ab2dd7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "9296fe35b400",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Charlotte|None|None->None",
+        "bundle_fp": "b89f75ab2dd7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "9296fe35b400",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Charlotte|None|None->None",
+        "bundle_fp": "b89f75ab2dd7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.49750602105632424
+}

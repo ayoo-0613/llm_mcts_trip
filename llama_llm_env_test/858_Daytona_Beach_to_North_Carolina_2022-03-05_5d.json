@@ -1,0 +1,263 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 3315.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you assist in preparing a 5-day travel plan for two people, starting from Daytona Beach and covering 2 cities in North Carolina from March 5th to March 9th, 2022? We require accommodations that are pet-friendly as well as private rooms, and we have a budget of $3,600. Please take into consideration that we will not be flying.",
+  "parsed": {
+    "org": "Daytona Beach",
+    "dest": "North Carolina",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-05",
+      "2022-03-06",
+      "2022-03-07",
+      "2022-03-08",
+      "2022-03-09"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "pets",
+      "cuisine": null,
+      "room type": "private room",
+      "transportation": "no flight"
+    },
+    "budget": 3600,
+    "origin": "Daytona Beach",
+    "destination": "North Carolina",
+    "duration_days": 5,
+    "start_date": "2022-03-05",
+    "preferences": [
+      "pets",
+      "private room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Greensboro",
+      "Wilmington",
+      "New Bern",
+      "Charlotte",
+      "Raleigh",
+      "Asheville",
+      "Fayetteville"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Wilmington",
+      "Fayetteville"
+    ],
+    "transportation_dates": [
+      "2022-03-05",
+      "2022-03-07",
+      "2022-03-09"
+    ],
+    "transportation_methods": [
+      "taxi, from Daytona Beach to Wilmington, cost: 844.0",
+      "taxi, from Wilmington to Fayetteville, cost: 149.0",
+      "taxi, from Fayetteville to Daytona Beach, cost: 786.0"
+    ],
+    "restaurants": [
+      "Bandit Burrito, Wilmington",
+      "Dunkin' Donuts, Wilmington"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "Charming 1BR in heart of Chinatown, Wilmington",
+      "AWESOME SUNNY 2 BEDS C NEAR 3 METROS WILLIAMSBURG, Fayetteville"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Daytona Beach to Wilmington",
+      "transportation": "Taxi, from Daytona Beach to Wilmington, Cost: 844",
+      "breakfast": "Bandit Burrito, Wilmington",
+      "attraction": "-",
+      "lunch": "Dunkin' Donuts, Wilmington",
+      "dinner": "-",
+      "accommodation": "Charming 1BR in heart of Chinatown, Wilmington"
+    },
+    {
+      "days": 2,
+      "current_city": "Wilmington",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Charming 1BR in heart of Chinatown, Wilmington"
+    },
+    {
+      "days": 3,
+      "current_city": "from Wilmington to Fayetteville",
+      "transportation": "Taxi, from Wilmington to Fayetteville, Cost: 149",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "AWESOME SUNNY 2 BEDS C NEAR 3 METROS WILLIAMSBURG, Fayetteville"
+    },
+    {
+      "days": 4,
+      "current_city": "Fayetteville",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "AWESOME SUNNY 2 BEDS C NEAR 3 METROS WILLIAMSBURG, Fayetteville"
+    },
+    {
+      "days": 5,
+      "current_city": "from Fayetteville to Daytona Beach",
+      "transportation": "Taxi, from Fayetteville to Daytona Beach, Cost: 786",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:dinner|seg:None|Wilmington|None|None->None",
+      "counts": {
+        "kb": 21,
+        "after_nonbudget": 21,
+        "after_budget": 2,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 19,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 285.0,
+        "slot_cap": 21.409254807692307,
+        "reserve": 213.71549999999996
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 295.8,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 251.42999999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 213.71549999999996,
+          "kept": 2
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d1|slot:dinner|seg:None|Wilmington|None|None->None",
+        "city": "Wilmington",
+        "city_bundle": [
+          "Wilmington",
+          "Fayetteville"
+        ],
+        "reason": "duplication",
+        "counts": {
+          "kb": 21,
+          "after_nonbudget": 21,
+          "after_budget": 2,
+          "budget_removed": 19,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 285.0,
+          "slot_cap": 21.409254807692307,
+          "reserve": 213.71549999999996,
+          "min_cost_nonbudget": 25.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "e0902595669c",
+      "phase": "daily",
+      "slot_fp": "meal|d1|slot:dinner|seg:None|Wilmington|None|None->None",
+      "bundle_fp": "3d600d8f807d"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "e0902595669c",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Wilmington|None|None->None",
+        "bundle_fp": "3d600d8f807d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "e0902595669c",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Wilmington|None|None->None",
+        "bundle_fp": "3d600d8f807d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "e0902595669c",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Wilmington|None|None->None",
+        "bundle_fp": "3d600d8f807d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 1.1947527551092207
+}

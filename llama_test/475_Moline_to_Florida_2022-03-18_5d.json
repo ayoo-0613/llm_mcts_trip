@@ -1,0 +1,1034 @@
+{
+  "success": false,
+  "cost": 2116.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you organize a five-day journey for two people, departing from Moline and visiting two cities in Florida from March 18th to March 22nd, 2022? We have a budget of $3,000, and we require accommodations that allow smoking.",
+  "parsed": {
+    "org": "Moline",
+    "dest": "Florida",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-18",
+      "2022-03-19",
+      "2022-03-20",
+      "2022-03-21",
+      "2022-03-22"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "smoking",
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 3000,
+    "origin": "Moline",
+    "destination": "Florida",
+    "duration_days": 5,
+    "start_date": "2022-03-18",
+    "preferences": [
+      "smoking"
+    ],
+    "candidate_cities": [
+      "Sarasota",
+      "Fort Myers",
+      "Gainesville",
+      "Orlando",
+      "Daytona Beach",
+      "Jacksonville",
+      "Tampa",
+      "Panama City",
+      "Key West",
+      "West Palm Beach",
+      "Miami",
+      "Tallahassee",
+      "Punta Gorda",
+      "Fort Lauderdale",
+      "Pensacola"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Moline->Orlando 1964km cost 1964",
+    "move:seg1:flight:F0417164 Orlando->Pensacola $76 12:41-13:01"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Orlando",
+      "Pensacola"
+    ],
+    "transportation_dates": [
+      "2022-03-18",
+      "2022-03-20",
+      "2022-03-22"
+    ],
+    "transportation_methods": [
+      "taxi, from Moline to Orlando, cost: 1964.0",
+      "Flight F0417164, from Orlando to Pensacola, Departure Time: 12:41, Arrival Time: 13:01, cost: 76.0",
+      "Pensacola->Moline missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Orlando",
+      "missing, Pensacola"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Moline to Orlando",
+      "transportation": "Taxi, from Moline to Orlando, Cost: 1964",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Orlando",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Orlando to Pensacola",
+      "transportation": "Flight Number: F0417164, from Orlando to Pensacola, Departure Time: 12:41, Arrival Time: 13:01",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Pensacola",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Pensacola",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:1|None|2022-03-18|Orlando->Pensacola",
+      "counts": {
+        "kb": 158,
+        "after_nonbudget": 158,
+        "after_budget": 157,
+        "returned": 5,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1036.0,
+        "slot_cap": 95.42105263157893,
+        "reserve": 594.0
+      },
+      "segment_role": "intercity",
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-18|Pensacola->Moline",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 878.0,
+        "slot_cap": 315.892269736842,
+        "reserve": 364.79024999999996
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 504.9,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 429.16499999999996,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 364.79024999999996,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-18|Pensacola->Moline",
+        "city": "Moline",
+        "city_bundle": [
+          "Orlando",
+          "Pensacola"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 878.0,
+          "slot_cap": 315.892269736842,
+          "reserve": 364.79024999999996,
+          "min_cost_nonbudget": 788.5
+        }
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-18|Pensacola->Moline",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 884.0,
+        "slot_cap": 318.0509868421052,
+        "reserve": 364.79024999999996
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 504.9,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 429.16499999999996,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 364.79024999999996,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-18|Pensacola->Moline",
+        "city": "Moline",
+        "city_bundle": [
+          "Orlando",
+          "Pensacola"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 884.0,
+          "slot_cap": 318.0509868421052,
+          "reserve": 364.79024999999996,
+          "min_cost_nonbudget": 788.5
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Panama City",
+          "Pensacola"
+        ],
+        "current_bundle_features": {},
+        "current_bottleneck": null,
+        "budget_context": {
+          "remaining": 1178.0,
+          "slot_cap": 423.8281249999999,
+          "reserve": 442.16999999999996,
+          "min_cost_nonbudget": 788.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Moline",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1178.0,
+          "slot_cap": 423.8281249999999,
+          "reserve": 442.16999999999996,
+          "min_cost_nonbudget": 788.5
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Gainesville",
+        "Tallahassee"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that represents the output of a machine learning model or a data processing pipeline. It contains a list of candidate bundles, each with various attributes and metrics.\n\nHere's a breakdown of the structure:\n\n1. `output_schema`: This section defines the schema of the output, including the data types and ranges for each field.\n2. `bundle_list`: This is the main list of candidate bundles, each represented as an object with multiple fields.\n3. Each bundle has the following attributes:\n\t* `id`: A unique identifier for the bundle (e.g., 1-15).\n\t* `bundle_risk`: An object that contains various metrics related to the bundle's risk or feasibility.\n\t\t+ `bottleneck_meal_slack`, `bottleneck_attr_slack`, and `bottleneck_hotel_price` are all metrics related to the bundle's meal, attractions, and hotel costs.\n\t* `city_summary`: An object that contains summaries of each city in the bundle, including their respective minimum prices for hotels (e.g., 70.0 for Orlando).\n\t* `edge_summary`: An object that contains information about the transportation costs between cities in the bundle (e.g., from Moline to Orlando).\n\t* `lb_costs`: A list of four cost metrics:\n\t\t+ `transport_lb_cost`\n\t\t+ `stay_lb_cost`\n\t\t+ `meal_lb_cost`\n\t\t+ `bundle_lb_cost` (which is the total cost)\n4. The `output_schema` section defines the data types and ranges for each field, which can be used to interpret the values in the output.\n\nTo answer specific questions about this data, please let me know what you would like to know!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Gainesville",
+          "Tallahassee"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1651.0,
+          "bundle_lb_cost": 4392.0,
+          "stay_lb_cost": 384.0,
+          "meal_lb_cost": 324.0,
+          "transport_lb_cost": 3684.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "moline",
+              "gainesville"
+            ],
+            [
+              "gainesville",
+              "tallahassee"
+            ],
+            [
+              "tallahassee",
+              "moline"
+            ]
+          ],
+          "bundle_key": [
+            "gainesville",
+            "tallahassee"
+          ],
+          "bundle_key_set": [
+            "gainesville",
+            "tallahassee"
+          ],
+          "bundle_key_seq": [
+            "gainesville",
+            "tallahassee"
+          ],
+          "city_features": {
+            "Gainesville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 119.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            },
+            "Tallahassee": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 73.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 14,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Moline->Gainesville": {
+              "min_cost": 1792.0,
+              "blocked": false
+            },
+            "Gainesville->Tallahassee": {
+              "min_cost": 241.0,
+              "blocked": false
+            },
+            "Tallahassee->Moline": {
+              "min_cost": 1651.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 14,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 119.0,
+            "bottleneck_city_meal": "Tallahassee",
+            "bottleneck_city_hotel": "Gainesville",
+            "bottleneck_edge": "Moline->Gainesville"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 14,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 119.0,
+          "bottleneck_city_meal": "Tallahassee",
+          "bottleneck_city_hotel": "Gainesville",
+          "bottleneck_edge": "Moline->Gainesville"
+        },
+        "budget_context": {
+          "remaining": 967.0,
+          "slot_cap": 347.91324013157885,
+          "reserve": 434.80049999999994,
+          "min_cost_nonbudget": 825.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Moline",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 967.0,
+          "slot_cap": 347.91324013157885,
+          "reserve": 434.80049999999994,
+          "min_cost_nonbudget": 825.5
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Gainesville",
+        "Pensacola"
+      ],
+      "reason": null,
+      "raw": "The provided output is a JSON-formatted dataset that appears to be the result of some kind of ranking or scoring system. The data includes various cities, travel costs (both actual and lower bound), and feasibility assessments for different pairs of cities.\n\nHere's a breakdown of the main components:\n\n1. **Data**: This section contains an array of objects, each representing a specific combination of two cities that are being evaluated.\n   \n2. **Output Schema**: This part defines the structure and content of each object in the data array.\n\nLet's focus on extracting insights from this dataset.\n\n### Insights\n\n#### Most Expensive Cities for Travel\n\nLooking at the `bundle_lb_cost` values, which represent the lower-bound costs for travel between pairs of cities, it seems that Panama City and Jacksonville are among the most expensive destinations based on travel cost alone.\n\n#### Feasibility Assessments\n\nThe feasibility assessments don't seem to indicate any major issues with returning from the destinations (both \"return_leg_exists\" is true). The evaluation of hotel feasibility (\"hotel_feasible_all\") also doesn't raise any red flags across all combinations.\n\n### Code Example for Extracting Insights\n\nBelow is a simple example in Python that might help in extracting insights:\n\n```python\nimport json\n\n# Load the JSON data\nwith open('your_data.json') as f:\n    data = json.load(f)\n\n# Calculate total travel cost per city pair and group by destination 1 and 2\ncosts_by_pair = {}\nfor pair in data:\n    dest1, dest2 = pair['bundle_risk']['bottleneck_city_meal'], pair['bundle_risk']['bottleneck_city_hotel']\n    key = f\"{dest1}-{dest2}\"\n    if key not in costs_by_pair:\n        costs_by_pair[key] = {'total': 0}\n    cost = pair['lb_costs']['transport_lb_cost'] + pair['lb_costs']['stay_lb_cost'] + pair['lb_costs']['meal_lb_cost']\n    costs_by_pair[key]['total'] += cost\n\n# Sort and print the top 5 pairs by total travel cost\nsorted_pairs = sorted(costs_by_pair.items(), key=lambda x: x[1]['total'], reverse=True)\nfor i, (key, value) in enumerate(sorted_pairs[:5]):\n    dest1, dest2 = key.split('-')\n    print(f\"{i+1}. Travel between {dest1} and {dest2}: Total Cost = {value['total']}\")\n```\n\nThis script loads the JSON data, calculates the total travel cost for each pair of cities, sorts these pairs by their total costs in descending order, and then prints out the top 5 pairs.\n\n### Note\n\nPlease replace `'your_data.json'` with the path to your actual JSON file.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Gainesville",
+          "Pensacola"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1577.0,
+          "bundle_lb_cost": 4613.0,
+          "stay_lb_cost": 350.0,
+          "meal_lb_cost": 342.0,
+          "transport_lb_cost": 3921.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "moline",
+              "gainesville"
+            ],
+            [
+              "gainesville",
+              "pensacola"
+            ],
+            [
+              "pensacola",
+              "moline"
+            ]
+          ],
+          "bundle_key": [
+            "gainesville",
+            "pensacola"
+          ],
+          "bundle_key_set": [
+            "gainesville",
+            "pensacola"
+          ],
+          "bundle_key_seq": [
+            "gainesville",
+            "pensacola"
+          ],
+          "city_features": {
+            "Gainesville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 119.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            },
+            "Pensacola": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 56.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 38,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 29,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Moline->Gainesville": {
+              "min_cost": 1792.0,
+              "blocked": false
+            },
+            "Gainesville->Pensacola": {
+              "min_cost": 552.0,
+              "blocked": false
+            },
+            "Pensacola->Moline": {
+              "min_cost": 1577.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 28,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 119.0,
+            "bottleneck_city_meal": "Gainesville",
+            "bottleneck_city_hotel": "Gainesville",
+            "bottleneck_edge": "Moline->Gainesville"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 28,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 119.0,
+          "bottleneck_city_meal": "Gainesville",
+          "bottleneck_city_hotel": "Gainesville",
+          "bottleneck_edge": "Moline->Gainesville"
+        },
+        "budget_context": {
+          "remaining": 656.0,
+          "slot_cap": 236.01973684210523,
+          "reserve": 424.9744999999999,
+          "min_cost_nonbudget": 788.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Moline",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 656.0,
+          "slot_cap": 236.01973684210523,
+          "reserve": 424.9744999999999,
+          "min_cost_nonbudget": 788.5
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Orlando",
+        "Pensacola"
+      ],
+      "reason": null,
+      "raw": "This is a large JSON object that appears to be an output of some kind of machine learning or optimization algorithm. Here's a high-level overview of the structure and contents:\n\n**Main Object**\n\nThe main object has two keys: `output` and `output_schema`.\n\n**`output` Key**\n\nThe `output` key contains an array of 16 objects, each representing a candidate solution to some problem. Each object has several keys that describe the candidate solution.\n\nHere are the keys you'll find in each object:\n\n* `candidate_id`: a unique integer ID for the candidate\n* `reason`: a short string describing why this candidate was generated\n* `confidence`: a float value between 0 and 1 indicating how confident the algorithm is in the candidate's quality\n* `gradient`: an object containing several sub-objects that describe the trade-offs involved in selecting this candidate\n\n**`output_schema` Key**\n\nThe `output_schema` key contains a dictionary that describes the structure of the output data. It has three keys:\n\n* `candidate_id`: describes the type and format of the `candidate_id` field\n* `reason`: describes the type and format of the `reason` field\n* `confidence`: describes the type and format of the `confidence` field\n\nThe `gradient` key is an object that contains several sub-objects, which are described as follows:\n\n* `hard_exclusions`: a list of objects, each containing four keys: `phase`, `rule`, `ttl`, and either `city?` or `edge?`. These represent hard exclusions or penalties that were applied to the candidate solution.\n* `soft_penalties`: a list of objects, each containing three keys: `phase`, `feature`, and `delta`. These represent soft penalties or trade-offs that were applied to the candidate solution.\n* `retrieval_patches`: a list of objects, each containing three keys: `phase`, `patch`, and `ttl`. These represent retrieval patches or adjustments that were made to the candidate solution.\n\nI hope this helps you understand the structure and contents of this JSON object! Let me know if you have any further questions.",
+      "parsed": null,
+      "error": "invalid_candidate_id",
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "09a29c03094c",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-18|Pensacola->Moline",
+      "bundle_fp": "2b1621476fd1"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "09a29c03094c",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-18|Pensacola->Moline",
+        "bundle_fp": "ce0c2b8e3a02"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Gainesville",
+        "Tallahassee"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "09a29c03094c",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-18|Tallahassee->Moline",
+        "bundle_fp": "105e56ec5617"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "09a29c03094c",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-18|Tallahassee->Moline",
+        "bundle_fp": "105e56ec5617"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Gainesville",
+        "Pensacola"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "09a29c03094c",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-18|Pensacola->Moline",
+        "bundle_fp": "8e190391a389"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "09a29c03094c",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-18|Pensacola->Moline",
+        "bundle_fp": "8e190391a389"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Orlando",
+        "Pensacola"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "09a29c03094c",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-18|Pensacola->Moline",
+        "bundle_fp": "2b1621476fd1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 67.17666674917564
+}

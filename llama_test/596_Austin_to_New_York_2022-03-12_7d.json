@@ -1,0 +1,1070 @@
+{
+  "success": false,
+  "cost": 1480.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "I need you to come up with a one-week travel plan for two individuals beginning in Austin and visiting 3 cities in New York. The travel date is from the 12th to the 18th of March, 2022. Our budget is now set at $5,700 for the trip. Our accommodation preference is private rooms. We have no specific requirements regarding food and transportation.",
+  "parsed": {
+    "org": "Austin",
+    "dest": "New York",
+    "days": 7,
+    "visiting_city_number": 3,
+    "date": [
+      "2022-03-12",
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15",
+      "2022-03-16",
+      "2022-03-17",
+      "2022-03-18"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": "private room",
+      "transportation": null
+    },
+    "budget": 5700,
+    "origin": "Austin",
+    "destination": "New York",
+    "duration_days": 7,
+    "start_date": "2022-03-12",
+    "preferences": [
+      "private room"
+    ],
+    "candidate_cities": [
+      "Buffalo",
+      "Manhattan",
+      "Niagara Falls",
+      "Islip",
+      "New York",
+      "Watertown",
+      "Newburgh",
+      "Syracuse",
+      "Plattsburgh",
+      "Ogdensburg",
+      "Ithaca",
+      "Elmira",
+      "White Plains",
+      "Albany",
+      "Binghamton",
+      "Rochester"
+    ]
+  },
+  "actions": [
+    "move:seg0:flight:F2036925 Austin->New York $304 12:36-17:30",
+    "move:seg1:taxi:New York->Watertown 510km cost 510",
+    "move:seg2:taxi:Watertown->Niagara Falls 362km cost 362"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "New York",
+      "Watertown",
+      "Niagara Falls"
+    ],
+    "transportation_dates": [
+      "2022-03-12",
+      "2022-03-14",
+      "2022-03-16",
+      "2022-03-18"
+    ],
+    "transportation_methods": [
+      "Flight F2036925, from Austin to New York, Departure Time: 12:36, Arrival Time: 17:30, cost: 304.0",
+      "taxi, from New York to Watertown, cost: 510.0",
+      "taxi, from Watertown to Niagara Falls, cost: 362.0",
+      "Niagara Falls->Austin missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, New York",
+      "missing, Watertown",
+      "missing, Niagara Falls"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Austin to New York",
+      "transportation": "Flight Number: F2036925, from Austin to New York, Departure Time: 12:36, Arrival Time: 17:30",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "New York",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from New York to Watertown",
+      "transportation": "Taxi, from New York to Watertown, Cost: 510",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Watertown",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Watertown to Niagara Falls",
+      "transportation": "Taxi, from Watertown to Niagara Falls, Cost: 362",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "Niagara Falls",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 7,
+      "current_city": "Niagara Falls",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-12|Watertown->Niagara Falls",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 4582.0,
+        "slot_cap": 422.0263157894736,
+        "reserve": 2762.0
+      },
+      "segment_role": "intercity",
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-12|Niagara Falls->Austin",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 4220.0,
+        "slot_cap": 1518.2976973684208,
+        "reserve": 1696.2132499999998
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 2347.7,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 1995.5449999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 1696.2132499999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-12|Niagara Falls->Austin",
+        "city": "Austin",
+        "city_bundle": [
+          "New York",
+          "Watertown",
+          "Niagara Falls"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 4220.0,
+          "slot_cap": 1518.2976973684208,
+          "reserve": 1696.2132499999998,
+          "min_cost_nonbudget": 1275.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Niagara Falls",
+          "Binghamton",
+          "New York"
+        ],
+        "current_bundle_features": {},
+        "current_bottleneck": null,
+        "budget_context": {
+          "remaining": 1883.0,
+          "slot_cap": 459.716796875,
+          "reserve": 1749.0279999999998,
+          "min_cost_nonbudget": 244.0
+        },
+        "counts": {
+          "kb": 4,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_city": "Niagara Falls",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 4,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1883.0,
+          "slot_cap": 459.716796875,
+          "reserve": 1749.0279999999998,
+          "min_cost_nonbudget": 244.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 5700,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "New York",
+        "Islip",
+        "Binghamton"
+      ],
+      "reason": "hotel_feasible_all",
+      "raw": "{\n  \"candidate_id\": 1,\n  \"reason\": \"hotel_feasible_all\",\n  \"confidence\": 0.99,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 10, \"city\": \"Niagara Falls\"}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "hotel_feasible_all",
+        "confidence": 0.99,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 10,
+              "city": "Niagara Falls"
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 10,
+            "city": "Niagara Falls"
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "New York",
+          "Islip",
+          "Binghamton"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 2789.0,
+          "bundle_lb_cost": 7307.2,
+          "stay_lb_cost": 2898.0,
+          "meal_lb_cost": 552.0,
+          "transport_lb_cost": 3857.2,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "austin",
+              "new york"
+            ],
+            [
+              "new york",
+              "islip"
+            ],
+            [
+              "islip",
+              "binghamton"
+            ],
+            [
+              "binghamton",
+              "austin"
+            ]
+          ],
+          "bundle_key": [
+            "binghamton",
+            "islip",
+            "new york"
+          ],
+          "bundle_key_set": [
+            "binghamton",
+            "islip",
+            "new york"
+          ],
+          "bundle_key_seq": [
+            "new york",
+            "islip",
+            "binghamton"
+          ],
+          "city_features": {
+            "New York": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 980.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 17.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 17,
+              "hotel_slack": 1
+            },
+            "Islip": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 304.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 17,
+              "hotel_slack": 0
+            },
+            "Binghamton": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 165.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 15,
+              "meal_count": 33,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 12,
+              "meal_slack": 24,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Austin->New York": {
+              "min_cost": 608.0,
+              "blocked": false
+            },
+            "New York->Islip": {
+              "min_cost": 84.2,
+              "blocked": false
+            },
+            "Islip->Binghamton": {
+              "min_cost": 376.0,
+              "blocked": false
+            },
+            "Binghamton->Austin": {
+              "min_cost": 2789.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 17,
+            "bottleneck_attr_slack": 12,
+            "bottleneck_hotel_price": 980.0,
+            "bottleneck_city_meal": "New York",
+            "bottleneck_city_hotel": "New York",
+            "bottleneck_edge": "Binghamton->Austin"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 17,
+          "bottleneck_attr_slack": 12,
+          "bottleneck_hotel_price": 980.0,
+          "bottleneck_city_meal": "New York",
+          "bottleneck_city_hotel": "New York",
+          "bottleneck_edge": "Binghamton->Austin"
+        },
+        "budget_context": {
+          "remaining": 4631.8,
+          "slot_cap": 1666.4576480263156,
+          "reserve": 2118.73125,
+          "min_cost_nonbudget": 1394.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Austin",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 4631.8,
+          "slot_cap": 1666.4576480263156,
+          "reserve": 2118.73125,
+          "min_cost_nonbudget": 1394.5
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 5700,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "New York",
+        "Buffalo",
+        "Niagara Falls"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n    \"candidate_id\": 4,\n    \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n    \"confidence\": 0.9,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            {\"phase\": \"segment\", \"rule\": \"AVOID_CITY\", \"ttl\": 10, \"city\": \"Austin\"},\n            {\"phase\": \"hotel/stay\", \"rule\": \"BLOCK_EDGE\", \"ttl\": 5, \"edge\": \"Niagara Falls->Austin\"}\n        ],\n        \"soft_penalties\": [\n            {\"phase\": \"budget\", \"feature\": \"cost_ratio\", \"delta\": 0.1},\n            {\"phase\": \"segment\", \"feature\": \"edge_cost\", \"delta\": 10}\n        ]\n    }\n}",
+      "parsed": {
+        "candidate_id": 4,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.9,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "AVOID_CITY",
+              "ttl": 10,
+              "city": "Austin"
+            },
+            {
+              "phase": "hotel/stay",
+              "rule": "BLOCK_EDGE",
+              "ttl": 5,
+              "edge": "Niagara Falls->Austin"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "budget",
+              "feature": "cost_ratio",
+              "delta": 0.1
+            },
+            {
+              "phase": "segment",
+              "feature": "edge_cost",
+              "delta": 10
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "AVOID_CITY",
+            "ttl": 10,
+            "city": "Austin"
+          },
+          {
+            "phase": "hotel/stay",
+            "rule": "BLOCK_EDGE",
+            "ttl": 5,
+            "edge": "Niagara Falls->Austin"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "budget",
+            "feature": "cost_ratio",
+            "delta": 0.1
+          },
+          {
+            "phase": "segment",
+            "feature": "edge_cost",
+            "delta": 10
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "New York",
+          "Buffalo",
+          "Niagara Falls"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 2550.0,
+          "bundle_lb_cost": 7787.9,
+          "stay_lb_cost": 3936.0,
+          "meal_lb_cost": 546.0,
+          "transport_lb_cost": 3305.9,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "austin",
+              "new york"
+            ],
+            [
+              "new york",
+              "buffalo"
+            ],
+            [
+              "buffalo",
+              "niagara falls"
+            ],
+            [
+              "niagara falls",
+              "austin"
+            ]
+          ],
+          "bundle_key": [
+            "buffalo",
+            "new york",
+            "niagara falls"
+          ],
+          "bundle_key_set": [
+            "buffalo",
+            "new york",
+            "niagara falls"
+          ],
+          "bundle_key_seq": [
+            "new york",
+            "buffalo",
+            "niagara falls"
+          ],
+          "city_features": {
+            "New York": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 980.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 17.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 17,
+              "hotel_slack": 1
+            },
+            "Buffalo": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 929.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 27,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 21,
+              "hotel_slack": 0
+            },
+            "Niagara Falls": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 59.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 36,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 27,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Austin->New York": {
+              "min_cost": 608.0,
+              "blocked": false
+            },
+            "New York->Buffalo": {
+              "min_cost": 116.0,
+              "blocked": false
+            },
+            "Buffalo->Niagara Falls": {
+              "min_cost": 31.9,
+              "blocked": false
+            },
+            "Niagara Falls->Austin": {
+              "min_cost": 2550.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 17,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 980.0,
+            "bottleneck_city_meal": "New York",
+            "bottleneck_city_hotel": "New York",
+            "bottleneck_edge": "Niagara Falls->Austin"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 17,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 980.0,
+          "bottleneck_city_meal": "New York",
+          "bottleneck_city_hotel": "New York",
+          "bottleneck_edge": "Niagara Falls->Austin"
+        },
+        "budget_context": {
+          "remaining": 4944.1,
+          "slot_cap": 1778.818873355263,
+          "reserve": 2752.50825,
+          "min_cost_nonbudget": 1275.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Austin",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 4944.1,
+          "slot_cap": 1778.818873355263,
+          "reserve": 2752.50825,
+          "min_cost_nonbudget": 1275.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 5700,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "New York",
+        "Watertown",
+        "Niagara Falls"
+      ],
+      "reason": "prefer bundle with lower transport cost",
+      "raw": "```json\n{\n  \"candidate_id\": 0,\n  \"reason\": \"prefer bundle with lower transport cost\",\n  \"confidence\": 0.9,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"segment\", \"AVOID_CITY\", 10, \"Austin\"]\n    ],\n    \"soft_penalties\": [\n      [\"transport_risk\", -123],\n      [\"meal_risk\", -50]\n    ]\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "prefer bundle with lower transport cost",
+        "confidence": 0.9,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "segment",
+              "AVOID_CITY",
+              10,
+              "Austin"
+            ]
+          ],
+          "soft_penalties": [
+            [
+              "transport_risk",
+              -123
+            ],
+            [
+              "meal_risk",
+              -50
+            ]
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "segment",
+            "AVOID_CITY",
+            10,
+            "Austin"
+          ]
+        ],
+        "soft_penalties": [
+          [
+            "transport_risk",
+            -123
+          ],
+          [
+            "meal_risk",
+            -50
+          ]
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "5288e53a27bc",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-12|Niagara Falls->Austin",
+      "bundle_fp": "45d10cc99c98"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "5288e53a27bc",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Niagara Falls|None|None->None",
+        "bundle_fp": "9d67bf4b9942"
+      },
+      "confidence": 0.99,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 10,
+          "city": "Niagara Falls"
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "New York",
+        "Islip",
+        "Binghamton"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "5288e53a27bc",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-12|Binghamton->Austin",
+        "bundle_fp": "c456afb2d4ee"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "5288e53a27bc",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-12|Binghamton->Austin",
+        "bundle_fp": "c456afb2d4ee"
+      },
+      "confidence": 0.9,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "AVOID_CITY",
+          "ttl": 10,
+          "city": "Austin"
+        },
+        {
+          "phase": "hotel/stay",
+          "rule": "BLOCK_EDGE",
+          "ttl": 5,
+          "edge": "Niagara Falls->Austin"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "budget",
+          "feature": "cost_ratio",
+          "delta": 0.1
+        },
+        {
+          "phase": "segment",
+          "feature": "edge_cost",
+          "delta": 10.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "New York",
+        "Buffalo",
+        "Niagara Falls"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "5288e53a27bc",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-12|Niagara Falls->Austin",
+        "bundle_fp": "af0b703e2ad1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "5288e53a27bc",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-12|Niagara Falls->Austin",
+        "bundle_fp": "af0b703e2ad1"
+      },
+      "confidence": 0.9,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "New York",
+        "Watertown",
+        "Niagara Falls"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "5288e53a27bc",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-12|Niagara Falls->Austin",
+        "bundle_fp": "45d10cc99c98"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 20.578987461980432
+}

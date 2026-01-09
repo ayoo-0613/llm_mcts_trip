@@ -1,0 +1,325 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1509.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you generate a 5-day travel plan for 2 people, departing from Milwaukee and visiting 2 cities in New York from March 12th to March 16th, 2022? Our budget is set at $2,600, and we require accommodations that allow pets.",
+  "parsed": {
+    "org": "Milwaukee",
+    "dest": "New York",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-12",
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15",
+      "2022-03-16"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "pets",
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 2600,
+    "origin": "Milwaukee",
+    "destination": "New York",
+    "duration_days": 5,
+    "start_date": "2022-03-12",
+    "preferences": [
+      "pets"
+    ],
+    "candidate_cities": [
+      "Buffalo",
+      "Manhattan",
+      "Niagara Falls",
+      "Islip",
+      "New York",
+      "Watertown",
+      "Newburgh",
+      "Syracuse",
+      "Plattsburgh",
+      "Ogdensburg",
+      "Ithaca",
+      "Elmira",
+      "White Plains",
+      "Albany",
+      "Binghamton",
+      "Rochester"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Rochester",
+      "New York"
+    ],
+    "transportation_dates": [
+      "2022-03-12",
+      "2022-03-14",
+      "2022-03-16"
+    ],
+    "transportation_methods": [
+      "taxi, from Milwaukee to Rochester, cost: 1115.0",
+      "Flight F2780952, from Rochester to New York, Departure Time: 05:55, Arrival Time: 06:58, cost: 50.0",
+      "Flight F2781569, from New York to Milwaukee, Departure Time: 15:37, Arrival Time: 17:00, cost: 147.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Rochester",
+      "missing, New York"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Milwaukee to Rochester",
+      "transportation": "Taxi, from Milwaukee to Rochester, Cost: 1115",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Rochester",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Rochester to New York",
+      "transportation": "Flight Number: F2780952, from Rochester to New York, Departure Time: 05:55, Arrival Time: 06:58",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "New York",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from New York to Milwaukee",
+      "transportation": "Flight Number: F2781569, from New York to Milwaukee, Departure Time: 15:37, Arrival Time: 17:00",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Rochester|None|None->None",
+      "counts": {
+        "kb": 4,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1091.0,
+        "slot_cap": 399.5361328125,
+        "reserve": 453.2242499999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 627.3,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 533.2049999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 453.2242499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Rochester|None|None->None",
+        "city": "Rochester",
+        "city_bundle": [
+          "Rochester",
+          "New York"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 4,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1091.0,
+          "slot_cap": 399.5361328125,
+          "reserve": 453.2242499999999,
+          "min_cost_nonbudget": 558.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "736be0713a1f",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Rochester|None|None->None",
+      "bundle_fp": "d27e518770e4"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "736be0713a1f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Rochester|None|None->None",
+        "bundle_fp": "d27e518770e4"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "736be0713a1f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Rochester|None|None->None",
+        "bundle_fp": "d27e518770e4"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "736be0713a1f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Rochester|None|None->None",
+        "bundle_fp": "d27e518770e4"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.7765333601273596
+}

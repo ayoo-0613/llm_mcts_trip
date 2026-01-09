@@ -1,0 +1,339 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 3028.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you create a five-day travel plan for two people departing from Charlottesville and heading to visit two cities in Georgia from March 15th to March 19th, 2022? Our budget is set at $4,000 and we will be bringing our pets, so we require pet-friendly accommodations.",
+  "parsed": {
+    "origin": "Charlottesville",
+    "destination": "Georgia",
+    "start_date": "2022-03-15",
+    "duration_days": 5,
+    "budget": 4000.0,
+    "people_number": 2,
+    "visiting_city_number": 2,
+    "preferences": [
+      "American",
+      "Chinese",
+      "French",
+      "Indian",
+      "Italian",
+      "Mediterranean",
+      "Mexican"
+    ],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight",
+          "self-driving"
+        ],
+        "forbid": null
+      },
+      "meal": {
+        "cuisines": [
+          "American",
+          "Chinese",
+          "French",
+          "Indian",
+          "Italian",
+          "Mediterranean",
+          "Mexican"
+        ]
+      },
+      "stay": {
+        "room_type": "entire room",
+        "house_rule": "pets"
+      },
+      "daily": {
+        "attractions_per_day_min": 1,
+        "attractions_per_day_max": null
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    },
+    "attractions_per_day_min": 1,
+    "candidate_cities": [
+      "Augusta",
+      "Decatur",
+      "Atlanta",
+      "Valdosta",
+      "Savannah"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Augusta",
+      "Atlanta"
+    ],
+    "transportation_dates": [
+      "2022-03-15",
+      "2022-03-17",
+      "2022-03-19"
+    ],
+    "transportation_methods": [
+      "self-driving, from Charlottesville to Augusta, cost: 698.0",
+      "self-driving, from Augusta to Atlanta, cost: 234.0",
+      "self-driving, from Atlanta to Charlottesville, cost: 822.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Planta Baja Studio, Augusta",
+      "missing, Atlanta"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Charlottesville to Augusta",
+      "transportation": "Self-driving, from Charlottesville to Augusta, Cost: 698",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Planta Baja Studio, Augusta"
+    },
+    {
+      "days": 2,
+      "current_city": "Augusta",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Planta Baja Studio, Augusta"
+    },
+    {
+      "days": 3,
+      "current_city": "from Augusta to Atlanta",
+      "transportation": "Self-driving, from Augusta to Atlanta, Cost: 234",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Atlanta",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Atlanta to Charlottesville",
+      "transportation": "Self-driving, from Atlanta to Charlottesville, Cost: 822",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Atlanta|None|None->None",
+      "counts": {
+        "kb": 6,
+        "after_nonbudget": 3,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 10
+      },
+      "hard_reject": {
+        "over_budget": 2,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 972.0,
+        "slot_cap": 711.9140625,
+        "reserve": 239.50874999999996
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 331.5,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 281.775,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 239.50874999999996,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Atlanta|None|None->None",
+        "city": "Atlanta",
+        "city_bundle": [
+          "Augusta",
+          "Atlanta"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 6,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 972.0,
+          "slot_cap": 711.9140625,
+          "reserve": 239.50874999999996,
+          "min_cost_nonbudget": 394.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "ecfc97fde865",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Atlanta|None|None->None",
+      "bundle_fp": "86dde57040f8"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "ecfc97fde865",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Atlanta|None|None->None",
+        "bundle_fp": "86dde57040f8"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "ecfc97fde865",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Atlanta|None|None->None",
+        "bundle_fp": "86dde57040f8"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "ecfc97fde865",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Atlanta|None|None->None",
+        "bundle_fp": "86dde57040f8"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.5308796660974622
+}

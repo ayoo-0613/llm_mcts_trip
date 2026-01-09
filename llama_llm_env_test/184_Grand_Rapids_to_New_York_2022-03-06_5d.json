@@ -1,0 +1,326 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 2484.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you construct a 5-day travel itinerary for me departing from Grand Rapids and visiting 2 cities in New York from March 6th to March 10th, 2022, with a budget of $3,000?",
+  "parsed": {
+    "org": "Grand Rapids",
+    "dest": "New York",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-06",
+      "2022-03-07",
+      "2022-03-08",
+      "2022-03-09",
+      "2022-03-10"
+    ],
+    "people_number": null,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": "no flight"
+    },
+    "budget": 3000,
+    "origin": "Grand Rapids",
+    "destination": "New York",
+    "duration_days": 5,
+    "start_date": "2022-03-06",
+    "preferences": [],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Buffalo",
+      "Manhattan",
+      "Niagara Falls",
+      "Islip",
+      "New York",
+      "Watertown",
+      "Newburgh",
+      "Syracuse",
+      "Plattsburgh",
+      "Ogdensburg",
+      "Ithaca",
+      "Elmira",
+      "White Plains",
+      "Albany",
+      "Binghamton",
+      "Rochester"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Rochester",
+      "Niagara Falls"
+    ],
+    "transportation_dates": [
+      "2022-03-06",
+      "2022-03-08",
+      "2022-03-10"
+    ],
+    "transportation_methods": [
+      "taxi, from Grand Rapids to Rochester, cost: 733.0",
+      "taxi, from Rochester to Niagara Falls, cost: 139.0",
+      "taxi, from Niagara Falls to Grand Rapids, cost: 594.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Private room in Bed-Stuy, Brooklyn, Rochester",
+      "missing, Niagara Falls"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Grand Rapids to Rochester",
+      "transportation": "Taxi, from Grand Rapids to Rochester, Cost: 733",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Private room in Bed-Stuy, Brooklyn, Rochester"
+    },
+    {
+      "days": 2,
+      "current_city": "Rochester",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Private room in Bed-Stuy, Brooklyn, Rochester"
+    },
+    {
+      "days": 3,
+      "current_city": "from Rochester to Niagara Falls",
+      "transportation": "Taxi, from Rochester to Niagara Falls, Cost: 139",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Niagara Falls",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Niagara Falls to Grand Rapids",
+      "transportation": "Taxi, from Niagara Falls to Grand Rapids, Cost: 594",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Niagara Falls|None|None->None",
+      "counts": {
+        "kb": 9,
+        "after_nonbudget": 5,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 4,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 516.0,
+        "slot_cap": 377.9296875,
+        "reserve": 112.38487499999998
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 155.54999999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 132.21749999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 112.38487499999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Niagara Falls|None|None->None",
+        "city": "Niagara Falls",
+        "city_bundle": [
+          "Rochester",
+          "Niagara Falls"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 9,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 516.0,
+          "slot_cap": 377.9296875,
+          "reserve": 112.38487499999998,
+          "min_cost_nonbudget": 244.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "e2c7f551f2c7",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Niagara Falls|None|None->None",
+      "bundle_fp": "31624496b2cb"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "e2c7f551f2c7",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Niagara Falls|None|None->None",
+        "bundle_fp": "31624496b2cb"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "e2c7f551f2c7",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Niagara Falls|None|None->None",
+        "bundle_fp": "31624496b2cb"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "e2c7f551f2c7",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Niagara Falls|None|None->None",
+        "bundle_fp": "31624496b2cb"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.8182450658641756
+}

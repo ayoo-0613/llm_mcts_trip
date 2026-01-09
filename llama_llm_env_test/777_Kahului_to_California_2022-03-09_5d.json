@@ -1,0 +1,329 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 0.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_valid_transportation",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you please create a 5-day travel itinerary for a group of 7, where we will be departing from Kahului and plan to visit 2 cities in California from March 9th to March 13th, 2022? Our budget is set at $21,000. We require accommodations that allow pets and would prefer to have entire rooms to ourselves. We'd also appreciate if the transportation did not involve self-driving.",
+  "parsed": {
+    "origin": "Kahului",
+    "destination": "California",
+    "start_date": "2022-03-09",
+    "duration_days": 5,
+    "budget": 21000.0,
+    "people_number": 7,
+    "visiting_city_number": 2,
+    "preferences": [
+      "{'name': 'transport_mode', 'value': 'flight'}",
+      "{'name': 'accommodation_pets_allowed', 'value': True}",
+      "{'name': 'room_type', 'value': 'entire room'}"
+    ],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight",
+          "taxi"
+        ],
+        "forbid": [
+          "self-driving"
+        ]
+      },
+      "meal": {
+        "cuisines": null
+      },
+      "stay": {
+        "room_type": "entire room",
+        "house_rule": "pets"
+      },
+      "daily": {
+        "attractions_per_day_min": 1,
+        "attractions_per_day_max": 2
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    },
+    "transport_forbid": [
+      "self-driving"
+    ],
+    "attractions_per_day_min": 1,
+    "attractions_per_day_max": 2,
+    "candidate_cities": [
+      "San Diego",
+      "Redding",
+      "Sacramento",
+      "Fresno",
+      "San Luis Obispo",
+      "Oakland",
+      "Santa Barbara",
+      "Stockton",
+      "Santa Rosa",
+      "Bakersfield",
+      "Santa Ana",
+      "Santa Maria",
+      "San Jose",
+      "Burbank",
+      "Arcata",
+      "Butte",
+      "Palm Springs",
+      "Los Angeles",
+      "Long Beach",
+      "San Francisco",
+      "Monterey"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Santa Rosa",
+      "Long Beach"
+    ],
+    "transportation_dates": [
+      "2022-03-09",
+      "2022-03-11",
+      "2022-03-13"
+    ],
+    "transportation_methods": [
+      "Kahului->Santa Rosa missing mode",
+      "Santa Rosa->Long Beach missing mode",
+      "Long Beach->Kahului missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Santa Rosa",
+      "missing, Long Beach"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "Santa Rosa",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Santa Rosa",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "Long Beach",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Long Beach",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Long Beach",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:0|None|2022-03-09|Kahului->Santa Rosa",
+      "counts": {
+        "kb": 0,
+        "after_nonbudget": 0,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 10
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 21000.0,
+        "slot_cap": 368.42105263157885,
+        "reserve": 4717.0
+      },
+      "segment_role": "outbound",
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:0|None|2022-03-09|Kahului->Santa Rosa",
+        "city": "Santa Rosa",
+        "city_bundle": [
+          "Santa Rosa",
+          "Long Beach"
+        ],
+        "reason": "scarcity",
+        "counts": {
+          "kb": 0,
+          "after_nonbudget": 0,
+          "after_budget": 0,
+          "budget_removed": 0,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 21000.0,
+          "slot_cap": 368.42105263157885,
+          "reserve": 4717.0,
+          "min_cost_nonbudget": null
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "febb0b986103",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-09|Kahului->Santa Rosa",
+      "bundle_fp": "10fb615d516b"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "febb0b986103",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-09|Kahului->Santa Rosa",
+        "bundle_fp": "10fb615d516b"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "febb0b986103",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-09|Kahului->Santa Rosa",
+        "bundle_fp": "10fb615d516b"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "febb0b986103",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-09|Kahului->Santa Rosa",
+        "bundle_fp": "10fb615d516b"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.12074254779145122
+}

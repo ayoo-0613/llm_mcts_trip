@@ -1,0 +1,277 @@
+{
+  "success": false,
+  "cost": 386.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you create a 3-day travel plan for one person, departing from Houston and heading to Punta Gorda from March 20th to March 22nd, 2022, with a budget of $1,700?",
+  "parsed": {
+    "org": "Houston",
+    "dest": "Punta Gorda",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-20",
+      "2022-03-21",
+      "2022-03-22"
+    ],
+    "people_number": 1,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 1700,
+    "origin": "Houston",
+    "destination": "Punta Gorda",
+    "duration_days": 3,
+    "start_date": "2022-03-20",
+    "preferences": []
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Punta Gorda"
+    ],
+    "transportation_dates": [
+      "2022-03-20",
+      "2022-03-22"
+    ],
+    "transportation_methods": [
+      "Flight F0376458, from Houston to Punta Gorda, Departure Time: 14:57, Arrival Time: 17:52, cost: 218.0",
+      "Flight F0917789, from Punta Gorda to Houston, Departure Time: 13:08, Arrival Time: 14:28, cost: 168.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Punta Gorda"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Houston to Punta Gorda",
+      "transportation": "Flight Number: F0376458, from Houston to Punta Gorda, Departure Time: 14:57, Arrival Time: 17:52",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Punta Gorda",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Punta Gorda to Houston",
+      "transportation": "Flight Number: F0917789, from Punta Gorda to Houston, Departure Time: 13:08, Arrival Time: 14:28",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Punta Gorda|None|None->None",
+      "counts": {
+        "kb": 13,
+        "after_nonbudget": 7,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 6,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1314.0,
+        "slot_cap": 962.40234375,
+        "reserve": 60.79837499999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 84.14999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 71.52749999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 60.79837499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Punta Gorda|None|None->None",
+        "city": "Punta Gorda",
+        "city_bundle": [
+          "Punta Gorda"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 13,
+          "after_nonbudget": 7,
+          "after_budget": 0,
+          "budget_removed": 7,
+          "nonbudget_removed": 6,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1314.0,
+          "slot_cap": 962.40234375,
+          "reserve": 60.79837499999999,
+          "min_cost_nonbudget": 630.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "d3b6cdf31764",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Punta Gorda|None|None->None",
+      "bundle_fp": "70c934ae12fa"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "d3b6cdf31764",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Punta Gorda|None|None->None",
+        "bundle_fp": "70c934ae12fa"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "d3b6cdf31764",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Punta Gorda|None|None->None",
+        "bundle_fp": "70c934ae12fa"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "d3b6cdf31764",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Punta Gorda|None|None->None",
+        "bundle_fp": "70c934ae12fa"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.1282680667936802
+}

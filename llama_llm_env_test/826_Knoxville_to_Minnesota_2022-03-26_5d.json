@@ -1,0 +1,337 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 2378.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you craft a 5-day travel plan for a pair, setting out from Knoxville and aiming to explore 2 cities in Minnesota, taking place from March 26th to March 30th, 2022? We prefer accommodations that allow children under 10, and our rooms should be private. When it comes to food, we are interested in Mexican, French, Mediterranean, and Indian cuisines. Our budget for this adventure is $2,900.",
+  "parsed": {
+    "origin": "Knoxville",
+    "destination": "Minnesota",
+    "start_date": "2022-03-26",
+    "duration_days": 5,
+    "budget": 2900.0,
+    "people_number": 2,
+    "visiting_city_number": 2,
+    "preferences": [
+      "private room",
+      "children under 10",
+      "Mexican",
+      "French",
+      "Mediterranean",
+      "Indian"
+    ],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight",
+          "self-driving",
+          "taxi"
+        ]
+      },
+      "meal": {
+        "cuisines": [
+          "Mexican",
+          "French",
+          "Mediterranean",
+          "Indian"
+        ]
+      },
+      "stay": {
+        "room_type": "private room",
+        "house_rule": "children under 10"
+      },
+      "daily": {
+        "attractions_per_day_min": null,
+        "attractions_per_day_max": null
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    },
+    "candidate_cities": [
+      "Bemidji",
+      "Minneapolis",
+      "Duluth",
+      "Brainerd",
+      "Gustavus",
+      "St. Cloud",
+      "Hibbing",
+      "International Falls"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Duluth",
+      "Minneapolis"
+    ],
+    "transportation_dates": [
+      "2022-03-26",
+      "2022-03-28",
+      "2022-03-30"
+    ],
+    "transportation_methods": [
+      "taxi, from Knoxville to Duluth, cost: 1624.0",
+      "Flight F0149833, from Duluth to Minneapolis, Departure Time: 10:45, Arrival Time: 11:34, cost: 28.0",
+      "Flight F1344271, from Minneapolis to Knoxville, Departure Time: 13:37, Arrival Time: 16:35, cost: 163.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Modern loft in Cobble Hill, BK, Duluth",
+      "missing, Minneapolis"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Knoxville to Duluth",
+      "transportation": "Taxi, from Knoxville to Duluth, Cost: 1624",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Modern loft in Cobble Hill, BK, Duluth"
+    },
+    {
+      "days": 2,
+      "current_city": "Duluth",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Modern loft in Cobble Hill, BK, Duluth"
+    },
+    {
+      "days": 3,
+      "current_city": "from Duluth to Minneapolis",
+      "transportation": "Flight Number: F0149833, from Duluth to Minneapolis, Departure Time: 10:45, Arrival Time: 11:34",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Minneapolis",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Minneapolis to Knoxville",
+      "transportation": "Flight Number: F1344271, from Minneapolis to Knoxville, Departure Time: 13:37, Arrival Time: 16:35",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Minneapolis|None|None->None",
+      "counts": {
+        "kb": 5,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 2,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 522.0,
+        "slot_cap": 382.32421875,
+        "reserve": 235.82399999999996
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 326.4,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 277.43999999999994,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 235.82399999999996,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Minneapolis|None|None->None",
+        "city": "Minneapolis",
+        "city_bundle": [
+          "Duluth",
+          "Minneapolis"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 5,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 522.0,
+          "slot_cap": 382.32421875,
+          "reserve": 235.82399999999996,
+          "min_cost_nonbudget": 315.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "0dcbb9161a5c",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Minneapolis|None|None->None",
+      "bundle_fp": "de4e066a391c"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "0dcbb9161a5c",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Minneapolis|None|None->None",
+        "bundle_fp": "de4e066a391c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "0dcbb9161a5c",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Minneapolis|None|None->None",
+        "bundle_fp": "de4e066a391c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "0dcbb9161a5c",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Minneapolis|None|None->None",
+        "bundle_fp": "de4e066a391c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.7181208259426057
+}

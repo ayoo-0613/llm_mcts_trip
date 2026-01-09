@@ -1,0 +1,1062 @@
+{
+  "success": false,
+  "cost": 11540.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "I need a detailed 7-day travel plan for a group of 6 people. We will depart from Tampa and would like to visit 3 different cities in California. The trip will be from March 7th to March 13th, 2022, and our new budget is $18,000. For our stays, we prefer accommodations that offer us entire rooms.",
+  "parsed": {
+    "org": "Tampa",
+    "dest": "California",
+    "days": 7,
+    "visiting_city_number": 3,
+    "date": [
+      "2022-03-07",
+      "2022-03-08",
+      "2022-03-09",
+      "2022-03-10",
+      "2022-03-11",
+      "2022-03-12",
+      "2022-03-13"
+    ],
+    "people_number": 6,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": null
+    },
+    "budget": 18000,
+    "origin": "Tampa",
+    "destination": "California",
+    "duration_days": 7,
+    "start_date": "2022-03-07",
+    "preferences": [
+      "entire room"
+    ],
+    "candidate_cities": [
+      "San Diego",
+      "Redding",
+      "Sacramento",
+      "Fresno",
+      "San Luis Obispo",
+      "Oakland",
+      "Santa Barbara",
+      "Stockton",
+      "Santa Rosa",
+      "Bakersfield",
+      "Santa Ana",
+      "Santa Maria",
+      "San Jose",
+      "Burbank",
+      "Arcata",
+      "Butte",
+      "Palm Springs",
+      "Los Angeles",
+      "Long Beach",
+      "San Francisco",
+      "Monterey"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Tampa->Redding 4824km cost 4824",
+    "move:seg1:taxi:Redding->Santa Barbara 842km cost 842",
+    "move:seg2:taxi:Santa Barbara->Santa Maria 104km cost 104"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Redding",
+      "Santa Barbara",
+      "Santa Maria"
+    ],
+    "transportation_dates": [
+      "2022-03-07",
+      "2022-03-09",
+      "2022-03-11",
+      "2022-03-13"
+    ],
+    "transportation_methods": [
+      "taxi, from Tampa to Redding, cost: 4824.0",
+      "taxi, from Redding to Santa Barbara, cost: 842.0",
+      "taxi, from Santa Barbara to Santa Maria, cost: 104.0",
+      "Santa Maria->Tampa missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Redding",
+      "missing, Santa Barbara",
+      "missing, Santa Maria"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Tampa to Redding",
+      "transportation": "Taxi, from Tampa to Redding, Cost: 4824",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Redding",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Redding to Santa Barbara",
+      "transportation": "Taxi, from Redding to Santa Barbara, Cost: 842",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Santa Barbara",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Santa Barbara to Santa Maria",
+      "transportation": "Taxi, from Santa Barbara to Santa Maria, Cost: 104",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "Santa Maria",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 7,
+      "current_city": "Santa Maria",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-07|Santa Barbara->Santa Maria",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 6668.0,
+        "slot_cap": 255.8991228070175,
+        "reserve": 5992.5
+      },
+      "segment_role": "intercity",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 5992.5,
+          "kept": 1
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-07|Santa Maria->Tampa",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 6460.0,
+        "slot_cap": 774.7395833333331,
+        "reserve": 4329.581249999999
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 5992.5,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 5093.624999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 4329.581249999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-07|Santa Maria->Tampa",
+        "city": "Tampa",
+        "city_bundle": [
+          "Redding",
+          "Santa Barbara",
+          "Santa Maria"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 6460.0,
+          "slot_cap": 774.7395833333331,
+          "reserve": 4329.581249999999,
+          "min_cost_nonbudget": 1440.6666666666667
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Bakersfield",
+          "Santa Maria",
+          "Long Beach"
+        ],
+        "current_bundle_features": {},
+        "current_bottleneck": null,
+        "budget_context": {
+          "remaining": 8810.0,
+          "slot_cap": 1056.5720942982455,
+          "reserve": 4074.1052499999996,
+          "min_cost_nonbudget": 1361.3333333333333
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Tampa",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 8810.0,
+          "slot_cap": 1056.5720942982455,
+          "reserve": 4074.1052499999996,
+          "min_cost_nonbudget": 1361.3333333333333
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 18000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Redding",
+        "Santa Rosa",
+        "Stockton"
+      ],
+      "reason": "prefer avoiding dead_end_city for hotel/stay failures if feasible.",
+      "raw": "```json\n{\n  \"candidate_id\": 1,\n  \"reason\": \"prefer avoiding dead_end_city for hotel/stay failures if feasible.\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"segment\", \"NO_FLIGHT\", 86400, null, null],\n      [\"segment\", \"AVOID_CITY\", 86400, \"Tampa\", null]\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "prefer avoiding dead_end_city for hotel/stay failures if feasible.",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "segment",
+              "NO_FLIGHT",
+              86400,
+              null,
+              null
+            ],
+            [
+              "segment",
+              "AVOID_CITY",
+              86400,
+              "Tampa",
+              null
+            ]
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "segment",
+            "NO_FLIGHT",
+            86400,
+            null,
+            null
+          ],
+          [
+            "segment",
+            "AVOID_CITY",
+            86400,
+            "Tampa",
+            null
+          ]
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Redding",
+          "Santa Rosa",
+          "Stockton"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 8954.0,
+          "bundle_lb_cost": 26338.0,
+          "stay_lb_cost": 5106.0,
+          "meal_lb_cost": 1656.0,
+          "transport_lb_cost": 19576.0,
+          "hotel_min_nights_min": 2,
+          "edges": [
+            [
+              "tampa",
+              "redding"
+            ],
+            [
+              "redding",
+              "santa rosa"
+            ],
+            [
+              "santa rosa",
+              "stockton"
+            ],
+            [
+              "stockton",
+              "tampa"
+            ]
+          ],
+          "bundle_key": [
+            "redding",
+            "santa rosa",
+            "stockton"
+          ],
+          "bundle_key_set": [
+            "redding",
+            "santa rosa",
+            "stockton"
+          ],
+          "bundle_key_seq": [
+            "redding",
+            "santa rosa",
+            "stockton"
+          ],
+          "city_features": {
+            "Redding": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1033.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 36,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 30,
+              "hotel_slack": 0
+            },
+            "Santa Rosa": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 913.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 0
+            },
+            "Stockton": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 607.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 27,
+              "min_meal_cost": 16.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 18,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Tampa->Redding": {
+              "min_cost": 9648.0,
+              "blocked": false
+            },
+            "Redding->Santa Rosa": {
+              "min_cost": 624.0,
+              "blocked": false
+            },
+            "Santa Rosa->Stockton": {
+              "min_cost": 350.0,
+              "blocked": false
+            },
+            "Stockton->Tampa": {
+              "min_cost": 8954.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 18,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1033.0,
+            "bottleneck_city_meal": "Stockton",
+            "bottleneck_city_hotel": "Redding",
+            "bottleneck_edge": "Tampa->Redding"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 18,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1033.0,
+          "bottleneck_city_meal": "Stockton",
+          "bottleneck_city_hotel": "Redding",
+          "bottleneck_edge": "Tampa->Redding"
+        },
+        "budget_context": {
+          "remaining": 7378.0,
+          "slot_cap": 884.8341557017543,
+          "reserve": 4152.71325,
+          "min_cost_nonbudget": 1492.3333333333333
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Tampa",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 7378.0,
+          "slot_cap": 884.8341557017543,
+          "reserve": 4152.71325,
+          "min_cost_nonbudget": 1492.3333333333333
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 18000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Redding",
+        "Santa Barbara",
+        "Long Beach"
+      ],
+      "reason": "low bundle_risk",
+      "raw": "{\n    \"candidate_id\": 4,\n    \"reason\": \"low bundle_risk\",\n    \"confidence\": 0.8,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            [\"segment\", \"AVOID_CITY\", 86400, \"Santa Barbara\"]\n        ],\n        \"soft_penalties\": [\n            [\"segment\", \"cost_ratio\", -1]\n        ],\n        \"retrieval_patches\": []\n    }\n}",
+      "parsed": {
+        "candidate_id": 4,
+        "reason": "low bundle_risk",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "segment",
+              "AVOID_CITY",
+              86400,
+              "Santa Barbara"
+            ]
+          ],
+          "soft_penalties": [
+            [
+              "segment",
+              "cost_ratio",
+              -1
+            ]
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "segment",
+            "AVOID_CITY",
+            86400,
+            "Santa Barbara"
+          ]
+        ],
+        "soft_penalties": [
+          [
+            "segment",
+            "cost_ratio",
+            -1
+          ]
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Redding",
+          "Santa Barbara",
+          "Long Beach"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 8168.0,
+          "bundle_lb_cost": 27138.0,
+          "stay_lb_cost": 5918.0,
+          "meal_lb_cost": 1350.0,
+          "transport_lb_cost": 19870.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "tampa",
+              "redding"
+            ],
+            [
+              "redding",
+              "santa barbara"
+            ],
+            [
+              "santa barbara",
+              "long beach"
+            ],
+            [
+              "long beach",
+              "tampa"
+            ]
+          ],
+          "bundle_key": [
+            "long beach",
+            "redding",
+            "santa barbara"
+          ],
+          "bundle_key_set": [
+            "long beach",
+            "redding",
+            "santa barbara"
+          ],
+          "bundle_key_seq": [
+            "redding",
+            "santa barbara",
+            "long beach"
+          ],
+          "city_features": {
+            "Redding": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1033.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 36,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 30,
+              "hotel_slack": 0
+            },
+            "Santa Barbara": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1079.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 24,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 18,
+              "hotel_slack": 0
+            },
+            "Long Beach": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 847.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 33,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 24,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Tampa->Redding": {
+              "min_cost": 9648.0,
+              "blocked": false
+            },
+            "Redding->Santa Barbara": {
+              "min_cost": 1684.0,
+              "blocked": false
+            },
+            "Santa Barbara->Long Beach": {
+              "min_cost": 370.0,
+              "blocked": false
+            },
+            "Long Beach->Tampa": {
+              "min_cost": 8168.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 18,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1079.0,
+            "bottleneck_city_meal": "Santa Barbara",
+            "bottleneck_city_hotel": "Santa Barbara",
+            "bottleneck_edge": "Tampa->Redding"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 18,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1079.0,
+          "bottleneck_city_meal": "Santa Barbara",
+          "bottleneck_city_hotel": "Santa Barbara",
+          "bottleneck_edge": "Tampa->Redding"
+        },
+        "budget_context": {
+          "remaining": 6298.0,
+          "slot_cap": 755.3111293859648,
+          "reserve": 4463.460499999999,
+          "min_cost_nonbudget": 1361.3333333333333
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Tampa",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 6298.0,
+          "slot_cap": 755.3111293859648,
+          "reserve": 4463.460499999999,
+          "min_cost_nonbudget": 1361.3333333333333
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 18000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Redding",
+        "Santa Barbara",
+        "Santa Maria"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 4,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.9,\n  \"gradient\": {\n    \"hard_exclusions\": [{\"phase\": \"segment\", \"rule\": \"AVOID_CITY\", \"ttl\": 1, \"city\": \"Tampa\"}],\n    \"soft_penalties\": [{\"phase\": \"flight\", \"feature\": \"budget_risk\", \"delta\": -100}],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 4,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.9,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "AVOID_CITY",
+              "ttl": 1,
+              "city": "Tampa"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "flight",
+              "feature": "budget_risk",
+              "delta": -100
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "AVOID_CITY",
+            "ttl": 1,
+            "city": "Tampa"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "flight",
+            "feature": "budget_risk",
+            "delta": -100
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "1cb86ba995ed",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-07|Santa Maria->Tampa",
+      "bundle_fp": "454552018801"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "1cb86ba995ed",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-07|Long Beach->Tampa",
+        "bundle_fp": "b982785bb151"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Redding",
+        "Santa Rosa",
+        "Stockton"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "1cb86ba995ed",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-07|Stockton->Tampa",
+        "bundle_fp": "aa28235bfad7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "1cb86ba995ed",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-07|Stockton->Tampa",
+        "bundle_fp": "aa28235bfad7"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Redding",
+        "Santa Barbara",
+        "Long Beach"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "1cb86ba995ed",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-07|Long Beach->Tampa",
+        "bundle_fp": "66150047eace"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "1cb86ba995ed",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-07|Long Beach->Tampa",
+        "bundle_fp": "66150047eace"
+      },
+      "confidence": 0.9,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "AVOID_CITY",
+          "ttl": 1,
+          "city": "Tampa"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": -100.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Redding",
+        "Santa Barbara",
+        "Santa Maria"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "1cb86ba995ed",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-07|Santa Maria->Tampa",
+        "bundle_fp": "454552018801"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 18.13469541212544
+}

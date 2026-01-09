@@ -1,0 +1,318 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 3953.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you help create a 5-day travel plan for a party of 4, leaving from Peoria to visit 2 cities in Arizona, starting on March 24th through March 28th, 2022? Our budget is now set at $7,000. During our trip, we would love to experience both Italian and Indian cuisines.",
+  "parsed": {
+    "org": "Peoria",
+    "dest": "Arizona",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-24",
+      "2022-03-25",
+      "2022-03-26",
+      "2022-03-27",
+      "2022-03-28"
+    ],
+    "people_number": 4,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": [
+        "Italian",
+        "Indian"
+      ],
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 7000,
+    "origin": "Peoria",
+    "destination": "Arizona",
+    "duration_days": 5,
+    "start_date": "2022-03-24",
+    "preferences": [
+      "Italian",
+      "Indian"
+    ],
+    "candidate_cities": [
+      "Flagstaff",
+      "Yuma",
+      "Phoenix",
+      "Prescott",
+      "Tucson"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Prescott",
+      "Phoenix"
+    ],
+    "transportation_dates": [
+      "2022-03-24",
+      "2022-03-26",
+      "2022-03-28"
+    ],
+    "transportation_methods": [
+      "taxi, from Peoria to Prescott, cost: 2611.0",
+      "taxi, from Prescott to Phoenix, cost: 162.0",
+      "Flight F0913211, from Phoenix to Peoria, Departure Time: 15:22, Arrival Time: 18:58, cost: 295.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Prescott",
+      "missing, Phoenix"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Peoria to Prescott",
+      "transportation": "Taxi, from Peoria to Prescott, Cost: 2611",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Prescott",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Prescott to Phoenix",
+      "transportation": "Taxi, from Prescott to Phoenix, Cost: 162",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Phoenix",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Phoenix to Peoria",
+      "transportation": "Flight Number: F0913211, from Phoenix to Peoria, Departure Time: 15:22, Arrival Time: 18:58",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Prescott|None|None->None",
+      "counts": {
+        "kb": 4,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 3047.0,
+        "slot_cap": 1115.8447265625,
+        "reserve": 1459.1609999999998
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 2019.6,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 1716.6599999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 1459.1609999999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Prescott|None|None->None",
+        "city": "Prescott",
+        "city_bundle": [
+          "Prescott",
+          "Phoenix"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 4,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 3047.0,
+          "slot_cap": 1115.8447265625,
+          "reserve": 1459.1609999999998,
+          "min_cost_nonbudget": 938.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "17854d67a0e4",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Prescott|None|None->None",
+      "bundle_fp": "869897ad940b"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "17854d67a0e4",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Prescott|None|None->None",
+        "bundle_fp": "869897ad940b"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "17854d67a0e4",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Prescott|None|None->None",
+        "bundle_fp": "869897ad940b"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "17854d67a0e4",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Prescott|None|None->None",
+        "bundle_fp": "869897ad940b"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.3600525143556297
+}

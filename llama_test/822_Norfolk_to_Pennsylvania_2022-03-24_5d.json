@@ -1,0 +1,1047 @@
+{
+  "success": false,
+  "cost": 0.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_valid_transportation",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you design a 5-day travel itinerary for two people, departing from Norfolk and visiting two cities in Pennsylvania from March 24th to 28th, 2022? We have a budget of $1,300. Our accommodations must allow visitors. We'd love to try local Indian, Mexican, Italian, and Mediterranean cuisines during our trip. Please note that we would prefer not to take any flights.",
+  "parsed": {
+    "org": "Norfolk",
+    "dest": "Pennsylvania",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-24",
+      "2022-03-25",
+      "2022-03-26",
+      "2022-03-27",
+      "2022-03-28"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "visitors",
+      "cuisine": [
+        "Indian",
+        "Mexican",
+        "Italian",
+        "Mediterranean"
+      ],
+      "room type": null,
+      "transportation": "no flight"
+    },
+    "budget": 1300,
+    "origin": "Norfolk",
+    "destination": "Pennsylvania",
+    "duration_days": 5,
+    "start_date": "2022-03-24",
+    "preferences": [
+      "Indian",
+      "Mexican",
+      "Italian",
+      "Mediterranean",
+      "visitors"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "State College",
+      "Johnstown",
+      "Harrisburg",
+      "Erie",
+      "Pittsburgh",
+      "Latrobe",
+      "Philadelphia",
+      "Lewisburg",
+      "Scranton"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Latrobe",
+      "Harrisburg"
+    ],
+    "transportation_dates": [
+      "2022-03-24",
+      "2022-03-26",
+      "2022-03-28"
+    ],
+    "transportation_methods": [
+      "Norfolk->Latrobe missing mode",
+      "Latrobe->Harrisburg missing mode",
+      "Harrisburg->Norfolk missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Latrobe",
+      "missing, Harrisburg"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "Latrobe",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Latrobe",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "Harrisburg",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Harrisburg",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Harrisburg",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:0|None|2022-03-24|Norfolk->Latrobe",
+      "counts": {
+        "kb": 2,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 2,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1300.0,
+        "slot_cap": 155.90734649122803,
+        "reserve": 763.9714999999999
+      },
+      "segment_role": "outbound",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 1057.3999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 898.7899999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 763.9714999999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:0|None|2022-03-24|Norfolk->Latrobe",
+        "city": "Latrobe",
+        "city_bundle": [
+          "Latrobe",
+          "Harrisburg"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1300.0,
+          "slot_cap": 155.90734649122803,
+          "reserve": 763.9714999999999,
+          "min_cost_nonbudget": 308.5
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [],
+        "city_bundle": [
+          "Johnstown",
+          "Harrisburg"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 494.0,
+          "bundle_lb_cost": 2196.0,
+          "stay_lb_cost": 442.0,
+          "meal_lb_cost": 450.0,
+          "transport_lb_cost": 1304.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "norfolk",
+              "johnstown"
+            ],
+            [
+              "johnstown",
+              "harrisburg"
+            ],
+            [
+              "harrisburg",
+              "norfolk"
+            ]
+          ],
+          "bundle_key": [
+            "harrisburg",
+            "johnstown"
+          ],
+          "bundle_key_set": [
+            "harrisburg",
+            "johnstown"
+          ],
+          "bundle_key_seq": [
+            "johnstown",
+            "harrisburg"
+          ],
+          "city_features": {
+            "Johnstown": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 51.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 18,
+              "meal_count": 14,
+              "min_meal_cost": 18.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 16,
+              "meal_slack": 8,
+              "hotel_slack": 1
+            },
+            "Harrisburg": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 170.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 21,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 12,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Norfolk->Johnstown": {
+              "min_cost": 588.0,
+              "blocked": false
+            },
+            "Johnstown->Harrisburg": {
+              "min_cost": 222.0,
+              "blocked": false
+            },
+            "Harrisburg->Norfolk": {
+              "min_cost": 494.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 8,
+            "bottleneck_attr_slack": 16,
+            "bottleneck_hotel_price": 170.0,
+            "bottleneck_city_meal": "Johnstown",
+            "bottleneck_city_hotel": "Harrisburg",
+            "bottleneck_edge": "Norfolk->Johnstown"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 8,
+          "bottleneck_attr_slack": 16,
+          "bottleneck_hotel_price": 170.0,
+          "bottleneck_city_meal": "Johnstown",
+          "bottleneck_city_hotel": "Harrisburg",
+          "bottleneck_edge": "Norfolk->Johnstown"
+        },
+        "budget_context": {
+          "remaining": 490.0,
+          "slot_cap": 176.29523026315786,
+          "reserve": 463.05024999999995,
+          "min_cost_nonbudget": 247.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Norfolk",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 490.0,
+          "slot_cap": 176.29523026315786,
+          "reserve": 463.05024999999995,
+          "min_cost_nonbudget": 247.0
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1300,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "Indian",
+              "Mexican",
+              "Italian",
+              "Mediterranean"
+            ],
+            "room type": null,
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Latrobe",
+        "Harrisburg"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that represents the output of an optimization algorithm, likely for recommending travel itineraries. Here's a breakdown of the structure:\n\n**Main Object**\n\n* `output_schema`: defines the schema of the output data\n* `candidates`: an array of candidate itineraries (15 objects)\n\n**Output Schema**\n\nThis specifies the format of each object in the `candidates` array.\n\n* `candidate_id`: an integer ID for each candidate itinerary\n* `reason`: a short string describing why this itinerary was recommended\n* `confidence`: a float between 0 and 1 indicating how confident the algorithm is in this recommendation\n* `gradient`: an object containing three lists of gradient updates:\n\t+ `hard_exclusions`: list of phase-rule-ttl-city-edge tuples representing hard exclusions\n\t+ `soft_penalties`: list of phase-feature-delta tuples representing soft penalties\n\t+ `retrieval_patches`: list of phase-patch-ttl tuples representing retrieval patches\n\n**Candidates Array**\n\nEach object in this array represents a candidate itinerary, with the following properties:\n\n* `id`: integer ID for each candidate itinerary (matches the `candidate_id` property in the output schema)\n* `bundle`: an array of two cities that make up this itinerary\n* `risk_factors`: an array of risk factors associated with this itinerary (e.g., transportation costs, accommodation costs, etc.)\n* `lb_costs`: an object containing lower-bound estimates for various costs associated with this itinerary (transportation, accommodation, meal costs, etc.)\n* `feasibility`: an object containing feasibility indicators for the return journey and hotel availability\n\nTo analyze or extract specific information from this data, you would need to specify what aspect of the output you are interested in. Do you have a particular question about this data, such as:\n\n* What is the recommended itinerary with the highest confidence?\n* How does the algorithm handle transportation costs for each candidate itinerary?\n* Can we infer any specific risk factors or penalties from the `hard_exclusions` list?\n\nPlease let me know how I can assist further!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Latrobe",
+          "Harrisburg"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 494.0,
+          "bundle_lb_cost": 2660.0,
+          "stay_lb_cost": 920.0,
+          "meal_lb_cost": 378.0,
+          "transport_lb_cost": 1362.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "norfolk",
+              "latrobe"
+            ],
+            [
+              "latrobe",
+              "harrisburg"
+            ],
+            [
+              "harrisburg",
+              "norfolk"
+            ]
+          ],
+          "bundle_key": [
+            "harrisburg",
+            "latrobe"
+          ],
+          "bundle_key_set": [
+            "harrisburg",
+            "latrobe"
+          ],
+          "bundle_key_seq": [
+            "latrobe",
+            "harrisburg"
+          ],
+          "city_features": {
+            "Latrobe": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 290.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 18,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 12,
+              "hotel_slack": 1
+            },
+            "Harrisburg": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 170.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 21,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 12,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Norfolk->Latrobe": {
+              "min_cost": 617.0,
+              "blocked": false
+            },
+            "Latrobe->Harrisburg": {
+              "min_cost": 251.0,
+              "blocked": false
+            },
+            "Harrisburg->Norfolk": {
+              "min_cost": 494.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 12,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 290.0,
+            "bottleneck_city_meal": "Latrobe",
+            "bottleneck_city_hotel": "Latrobe",
+            "bottleneck_edge": "Norfolk->Latrobe"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 12,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 290.0,
+          "bottleneck_city_meal": "Latrobe",
+          "bottleneck_city_hotel": "Latrobe",
+          "bottleneck_edge": "Norfolk->Latrobe"
+        },
+        "budget_context": {
+          "remaining": 1300.0,
+          "slot_cap": 155.90734649122803,
+          "reserve": 763.9714999999999,
+          "min_cost_nonbudget": 308.5
+        },
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Latrobe",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1300.0,
+          "slot_cap": 155.90734649122803,
+          "reserve": 763.9714999999999,
+          "min_cost_nonbudget": 308.5
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1300,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "Indian",
+              "Mexican",
+              "Italian",
+              "Mediterranean"
+            ],
+            "room type": null,
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Harrisburg",
+        "Johnstown"
+      ],
+      "reason": null,
+      "raw": "This is a JSON data dump from a machine learning model's output. It appears to be related to route optimization or travel planning. The structure of the data suggests that it contains candidate routes (with IDs 1-15) along with their associated costs and feasibility metrics.\n\nHere are some observations about the data:\n\n* Each candidate route has an ID, a \"bundle\" of cities, and a set of associated costs (transport, stay, meal, and bundle).\n* The `edge_summary` field contains information about each leg of the trip, including the cost to travel between two cities.\n* The `city_summary` field provides additional details about each city in the route, such as hotel prices and meal options.\n* The output schema defines several fields that are present in the data:\n\t+ `candidate_id`: a unique identifier for each candidate route\n\t+ `reason`: a short string describing why this route was generated (not provided in the sample data)\n\t+ `confidence`: a float value between 0 and 1 indicating how confident the model is in the route's feasibility\n\t+ `gradient`: an object containing several lists of tuples, which seem to represent penalties or exclusions applied to the route during optimization. The fields are:\n\t\t- `hard_exclusions`: a list of tuples with information about excluded edges (cities or routes)\n\t\t- `soft_penalties`: a list of tuples with information about soft penalties (features or costs) applied to the route\n\t\t- `retrieval_patches`: a list of tuples with information about patches (modifications) applied to the route\n\nTo extract insights from this data, one would need to investigate each candidate route in more detail and analyze their associated costs, feasibility metrics, and gradient fields. This could involve:\n\n1. Filtering or ranking the routes based on their cost or confidence values.\n2. Analyzing the edge summaries to identify patterns or anomalies in travel costs or times between cities.\n3. Examining the city summaries to understand the distribution of hotel prices and meal options across different cities.\n4. Investigating the gradient fields to gain insights into the optimization process, such as which features or penalties had the greatest impact on the route selection.\n\nKeep in mind that this is a complex dataset, and extracting meaningful insights will require careful analysis and interpretation.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [],
+        "city_bundle": [
+          "Harrisburg",
+          "Johnstown"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 590.0,
+          "bundle_lb_cost": 2225.0,
+          "stay_lb_cost": 442.0,
+          "meal_lb_cost": 480.0,
+          "transport_lb_cost": 1303.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "norfolk",
+              "harrisburg"
+            ],
+            [
+              "harrisburg",
+              "johnstown"
+            ],
+            [
+              "johnstown",
+              "norfolk"
+            ]
+          ],
+          "bundle_key": [
+            "harrisburg",
+            "johnstown"
+          ],
+          "bundle_key_set": [
+            "harrisburg",
+            "johnstown"
+          ],
+          "bundle_key_seq": [
+            "harrisburg",
+            "johnstown"
+          ],
+          "city_features": {
+            "Harrisburg": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 170.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 21,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 15,
+              "hotel_slack": 0
+            },
+            "Johnstown": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 51.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 18,
+              "meal_count": 14,
+              "min_meal_cost": 18.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 15,
+              "meal_slack": 5,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Norfolk->Harrisburg": {
+              "min_cost": 492.0,
+              "blocked": false
+            },
+            "Harrisburg->Johnstown": {
+              "min_cost": 221.0,
+              "blocked": false
+            },
+            "Johnstown->Norfolk": {
+              "min_cost": 590.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 5,
+            "bottleneck_attr_slack": 15,
+            "bottleneck_hotel_price": 170.0,
+            "bottleneck_city_meal": "Johnstown",
+            "bottleneck_city_hotel": "Harrisburg",
+            "bottleneck_edge": "Johnstown->Norfolk"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 5,
+          "bottleneck_attr_slack": 15,
+          "bottleneck_hotel_price": 170.0,
+          "bottleneck_city_meal": "Johnstown",
+          "bottleneck_city_hotel": "Harrisburg",
+          "bottleneck_edge": "Johnstown->Norfolk"
+        },
+        "budget_context": {
+          "remaining": 587.0,
+          "slot_cap": 211.1944901315789,
+          "reserve": 466.73499999999996,
+          "min_cost_nonbudget": 295.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Norfolk",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 587.0,
+          "slot_cap": 211.1944901315789,
+          "reserve": 466.73499999999996,
+          "min_cost_nonbudget": 295.0
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1300,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "Indian",
+              "Mexican",
+              "Italian",
+              "Mediterranean"
+            ],
+            "room type": null,
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Latrobe",
+        "Harrisburg"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object representing a dataset of travel bundles with various attributes. Here's a breakdown of the structure and content:\n\n**Outer Object**\n\nThe outermost object represents the entire dataset.\n\n**`bundles` Array**\n\nThis array contains 15 objects, each representing a travel bundle.\n\n**Bundle Object**\n\nEach bundle object has several key-value pairs:\n\n* `id`: a unique integer identifier for the bundle.\n* `bundle_risk`: an object containing various risk metrics for the bundle (e.g., `bottleneck_meal_slack`, `bottleneck_attr_slack`, etc.).\n* `city_summary` and `edge_summary`: objects representing city-level and edge-level summaries, respectively.\n\n**`output_schema` Object**\n\nThis object defines the structure of the output data. It contains several key-value pairs:\n\n* `candidate_id`: an integer identifier for each bundle.\n* `reason`: a short string explaining why this bundle was generated (not present in the actual data).\n* `confidence`: a float value between 0 and 1 indicating the confidence level of the bundle (not present in the actual data).\n* `gradient`: an object containing three lists:\n\t+ `hard_exclusions`: a list of phase, rule, TTL, city, and edge combinations that are excluded from consideration.\n\t+ `soft_penalties`: a list of phase, feature, and delta values representing soft penalties for each bundle.\n\t+ `retrieval_patches`: a list of phase, patch, and TTL values representing retrieval patches for each bundle.\n\nPlease note that some fields (e.g., `reason`, `confidence`) are not present in the actual data, but are likely placeholders or default values.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "c90e57d9f18d",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-24|Norfolk->Latrobe",
+      "bundle_fp": "9025cdd67a09"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "c90e57d9f18d",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-24|Harrisburg->Norfolk",
+        "bundle_fp": "8bc39b2d0f76"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Latrobe",
+        "Harrisburg"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "c90e57d9f18d",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-24|Norfolk->Latrobe",
+        "bundle_fp": "9025cdd67a09"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "c90e57d9f18d",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-24|Norfolk->Latrobe",
+        "bundle_fp": "9025cdd67a09"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Harrisburg",
+        "Johnstown"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "c90e57d9f18d",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-24|Johnstown->Norfolk",
+        "bundle_fp": "5b4d48fbe688"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "c90e57d9f18d",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-24|Johnstown->Norfolk",
+        "bundle_fp": "5b4d48fbe688"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Latrobe",
+        "Harrisburg"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "c90e57d9f18d",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-24|Norfolk->Latrobe",
+        "bundle_fp": "9025cdd67a09"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 61.35950161796063
+}

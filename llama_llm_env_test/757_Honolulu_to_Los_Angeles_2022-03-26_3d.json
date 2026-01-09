@@ -1,0 +1,289 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 4088.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you create a travel itinerary for a group of 4 departing from Honolulu to Los Angeles for 3 days, from March 26th to March 28th, 2022? We are on a new budget of $6,200. Keep in mind that our accommodations must allow children under 10 and we need entire rooms to accommodate all of us. Please note that we won't be self-driving for transportation.",
+  "parsed": {
+    "org": "Honolulu",
+    "dest": "Los Angeles",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-26",
+      "2022-03-27",
+      "2022-03-28"
+    ],
+    "people_number": 4,
+    "local_constraint": {
+      "house rule": "children under 10",
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": "no self-driving"
+    },
+    "budget": 6200,
+    "origin": "Honolulu",
+    "destination": "Los Angeles",
+    "duration_days": 3,
+    "start_date": "2022-03-26",
+    "preferences": [
+      "children under 10",
+      "entire room"
+    ],
+    "transport_forbid": [
+      "self-driving"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Los Angeles"
+    ],
+    "transportation_dates": [
+      "2022-03-26",
+      "2022-03-28"
+    ],
+    "transportation_methods": [
+      "Flight F2565196, from Honolulu to Los Angeles, Departure Time: 21:29, Arrival Time: 05:43, cost: 511.0",
+      "Flight F0687749, from Los Angeles to Honolulu, Departure Time: 13:19, Arrival Time: 16:39, cost: 511.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Los Angeles"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Honolulu to Los Angeles",
+      "transportation": "Flight Number: F2565196, from Honolulu to Los Angeles, Departure Time: 21:29, Arrival Time: 05:43",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Los Angeles",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Los Angeles to Honolulu",
+      "transportation": "Flight Number: F0687749, from Los Angeles to Honolulu, Departure Time: 13:19, Arrival Time: 16:39",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Los Angeles|None|None->None",
+      "counts": {
+        "kb": 3,
+        "after_nonbudget": 0,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 2112.0,
+        "slot_cap": 792.0,
+        "reserve": 468.0
+      },
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Los Angeles|None|None->None",
+        "city": "Los Angeles",
+        "city_bundle": [
+          "Los Angeles"
+        ],
+        "reason": "scarcity",
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 0,
+          "after_budget": 0,
+          "budget_removed": 0,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": "min_nights",
+        "budget_context": {
+          "remaining": 2112.0,
+          "slot_cap": 792.0,
+          "reserve": 468.0,
+          "min_cost_nonbudget": null
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "c346818afd3b",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Los Angeles|None|None->None",
+      "bundle_fp": "c271c768e94e"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [
+      {
+        "phase": "stay",
+        "rule": "AVOID_CITY",
+        "city": "Los Angeles",
+        "ttl": 1
+      }
+    ],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "c346818afd3b",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Los Angeles|None|None->None",
+        "bundle_fp": "c271c768e94e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Los Angeles",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "c346818afd3b",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Los Angeles|None|None->None",
+        "bundle_fp": "c271c768e94e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Los Angeles",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "c346818afd3b",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Los Angeles|None|None->None",
+        "bundle_fp": "c271c768e94e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Los Angeles",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.2434354037977755
+}

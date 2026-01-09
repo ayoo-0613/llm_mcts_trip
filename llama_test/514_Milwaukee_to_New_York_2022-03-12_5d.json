@@ -1,0 +1,1226 @@
+{
+  "success": false,
+  "cost": 2015.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you generate a 5-day travel plan for 2 people, departing from Milwaukee and visiting 2 cities in New York from March 12th to March 16th, 2022? Our budget is set at $2,600, and we require accommodations that allow pets.",
+  "parsed": {
+    "org": "Milwaukee",
+    "dest": "New York",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-12",
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15",
+      "2022-03-16"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "pets",
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 2600,
+    "origin": "Milwaukee",
+    "destination": "New York",
+    "duration_days": 5,
+    "start_date": "2022-03-12",
+    "preferences": [
+      "pets"
+    ],
+    "candidate_cities": [
+      "Buffalo",
+      "Manhattan",
+      "Niagara Falls",
+      "Islip",
+      "New York",
+      "Watertown",
+      "Newburgh",
+      "Syracuse",
+      "Plattsburgh",
+      "Ogdensburg",
+      "Ithaca",
+      "Elmira",
+      "White Plains",
+      "Albany",
+      "Binghamton",
+      "Rochester"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Milwaukee->Buffalo 1011km cost 1011",
+    "move:seg1:flight:F3654382 Buffalo->New York $58 05:56-07:18",
+    "move:seg2:flight:F2781569 New York->Milwaukee $147 15:37-17:00",
+    "stay:Buffalo:582 Ideal 3 Bedroom Apartment by Times Square Entire home/apt $297"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Buffalo",
+      "New York"
+    ],
+    "transportation_dates": [
+      "2022-03-12",
+      "2022-03-14",
+      "2022-03-16"
+    ],
+    "transportation_methods": [
+      "taxi, from Milwaukee to Buffalo, cost: 1011.0",
+      "Flight F3654382, from Buffalo to New York, Departure Time: 05:56, Arrival Time: 07:18, cost: 58.0",
+      "Flight F2781569, from New York to Milwaukee, Departure Time: 15:37, Arrival Time: 17:00, cost: 147.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Ideal 3 Bedroom Apartment by Times Square, Buffalo",
+      "missing, New York"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Milwaukee to Buffalo",
+      "transportation": "Taxi, from Milwaukee to Buffalo, Cost: 1011",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Ideal 3 Bedroom Apartment by Times Square, Buffalo"
+    },
+    {
+      "days": 2,
+      "current_city": "Buffalo",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Ideal 3 Bedroom Apartment by Times Square, Buffalo"
+    },
+    {
+      "days": 3,
+      "current_city": "from Buffalo to New York",
+      "transportation": "Flight Number: F3654382, from Buffalo to New York, Departure Time: 05:56, Arrival Time: 07:18",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "New York",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from New York to Milwaukee",
+      "transportation": "Flight Number: F2781569, from New York to Milwaukee, Departure Time: 15:37, Arrival Time: 17:00",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Buffalo|None|None->None",
+      "counts": {
+        "kb": 7,
+        "after_nonbudget": 6,
+        "after_budget": 2,
+        "returned": 2,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 2,
+        "violate_reserve": 2,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1179.0,
+        "slot_cap": 345.41015625,
+        "reserve": 515.8649999999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 606.9,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 515.8649999999999,
+          "kept": 2
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|New York|None|None->None",
+      "counts": {
+        "kb": 5,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 2,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 581.0,
+        "slot_cap": 425.537109375,
+        "reserve": 276.35625
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 382.5,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 325.12499999999994,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 276.35625,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|New York|None|None->None",
+        "city": "New York",
+        "city_bundle": [
+          "Buffalo",
+          "New York"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 5,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 581.0,
+          "slot_cap": 425.537109375,
+          "reserve": 276.35625,
+          "min_cost_nonbudget": 318.0
+        }
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|New York|None|None->None",
+      "counts": {
+        "kb": 5,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 2,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 585.0,
+        "slot_cap": 428.466796875,
+        "reserve": 276.35625
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 382.5,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 325.12499999999994,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 276.35625,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|New York|None|None->None",
+        "city": "New York",
+        "city_bundle": [
+          "Buffalo",
+          "New York"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 5,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 585.0,
+          "slot_cap": 428.466796875,
+          "reserve": 276.35625,
+          "min_cost_nonbudget": 318.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Rochester",
+          "New York"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 294.0,
+          "bundle_lb_cost": 2387.0,
+          "stay_lb_cost": 404.0,
+          "meal_lb_cost": 474.0,
+          "transport_lb_cost": 1509.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "milwaukee",
+              "rochester"
+            ],
+            [
+              "rochester",
+              "new york"
+            ],
+            [
+              "new york",
+              "milwaukee"
+            ]
+          ],
+          "bundle_key": [
+            "new york",
+            "rochester"
+          ],
+          "bundle_key_set": [
+            "new york",
+            "rochester"
+          ],
+          "bundle_key_seq": [
+            "rochester",
+            "new york"
+          ],
+          "city_features": {
+            "Rochester": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 70.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 36,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 30,
+              "hotel_slack": 0
+            },
+            "New York": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 132.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 17.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 14,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Milwaukee->Rochester": {
+              "min_cost": 1115.0,
+              "blocked": false
+            },
+            "Rochester->New York": {
+              "min_cost": 100.0,
+              "blocked": false
+            },
+            "New York->Milwaukee": {
+              "min_cost": 294.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 14,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 132.0,
+            "bottleneck_city_meal": "New York",
+            "bottleneck_city_hotel": "New York",
+            "bottleneck_edge": "Milwaukee->Rochester"
+          },
+          "min_bundle_cost": 1913.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 14,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 132.0,
+          "bottleneck_city_meal": "New York",
+          "bottleneck_city_hotel": "New York",
+          "bottleneck_edge": "Milwaukee->Rochester"
+        },
+        "budget_context": {
+          "remaining": 1091.0,
+          "slot_cap": 399.5361328125,
+          "reserve": 453.2242499999999,
+          "min_cost_nonbudget": 558.0
+        },
+        "counts": {
+          "kb": 4,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_city": "Rochester",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 4,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1091.0,
+          "slot_cap": 399.5361328125,
+          "reserve": 453.2242499999999,
+          "min_cost_nonbudget": 558.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Binghamton",
+        "New York"
+      ],
+      "reason": "prefer candidates with no blocked edges for segment/flight failures",
+      "raw": "{\n  \"candidate_id\": 3,\n  \"reason\": \"prefer candidates with no blocked edges for segment/flight failures\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\"},\n      {\"phase\": \"segment\", \"rule\": \"NO_SELF_DRIVING\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"budget_risk\", \"feature\": \"cost_ratio\", \"delta\": 0.1},\n      {\"phase\": \"edge_cost\", \"feature\": \"hotel_price\", \"delta\": 10}\n    ],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 3,
+        "reason": "prefer candidates with no blocked edges for segment/flight failures",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT"
+            },
+            {
+              "phase": "segment",
+              "rule": "NO_SELF_DRIVING"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "budget_risk",
+              "feature": "cost_ratio",
+              "delta": 0.1
+            },
+            {
+              "phase": "edge_cost",
+              "feature": "hotel_price",
+              "delta": 10
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT"
+          },
+          {
+            "phase": "segment",
+            "rule": "NO_SELF_DRIVING"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "budget_risk",
+            "feature": "cost_ratio",
+            "delta": 0.1
+          },
+          {
+            "phase": "edge_cost",
+            "feature": "hotel_price",
+            "delta": 10
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Binghamton",
+          "New York"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 294.0,
+          "bundle_lb_cost": 2658.0,
+          "stay_lb_cost": 374.0,
+          "meal_lb_cost": 426.0,
+          "transport_lb_cost": 1858.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "milwaukee",
+              "binghamton"
+            ],
+            [
+              "binghamton",
+              "new york"
+            ],
+            [
+              "new york",
+              "milwaukee"
+            ]
+          ],
+          "bundle_key": [
+            "binghamton",
+            "new york"
+          ],
+          "bundle_key_set": [
+            "binghamton",
+            "new york"
+          ],
+          "bundle_key_seq": [
+            "binghamton",
+            "new york"
+          ],
+          "city_features": {
+            "Binghamton": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 55.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 15,
+              "meal_count": 33,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 13,
+              "meal_slack": 27,
+              "hotel_slack": 1
+            },
+            "New York": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 132.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 17.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 14,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Milwaukee->Binghamton": {
+              "min_cost": 1280.0,
+              "blocked": false
+            },
+            "Binghamton->New York": {
+              "min_cost": 284.0,
+              "blocked": false
+            },
+            "New York->Milwaukee": {
+              "min_cost": 294.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 14,
+            "bottleneck_attr_slack": 13,
+            "bottleneck_hotel_price": 132.0,
+            "bottleneck_city_meal": "New York",
+            "bottleneck_city_hotel": "New York",
+            "bottleneck_edge": "Milwaukee->Binghamton"
+          },
+          "min_bundle_cost": 2232.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 14,
+          "bottleneck_attr_slack": 13,
+          "bottleneck_hotel_price": 132.0,
+          "bottleneck_city_meal": "New York",
+          "bottleneck_city_hotel": "New York",
+          "bottleneck_edge": "Milwaukee->Binghamton"
+        },
+        "budget_context": {
+          "remaining": 742.0,
+          "slot_cap": 271.728515625,
+          "reserve": 423.7462499999999,
+          "min_cost_nonbudget": 165.0
+        },
+        "counts": {
+          "kb": 9,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dead_end_city": "Binghamton",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 9,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 742.0,
+          "slot_cap": 271.728515625,
+          "reserve": 423.7462499999999,
+          "min_cost_nonbudget": 165.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 4,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Watertown",
+        "New York"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "```\n{\n  \"candidate_id\": 7,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 2, \"city\": \"Binghamton\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"meal\", \"feature\": \"cost_ratio\", \"delta\": -0.5},\n      {\"phase\": \"edge\", \"feature\": \"lb_cost\", \"delta\": -100}\n    ],\n    \"retrieval_patches\": [\n      {\"phase\": \"hotel\", \"patch\": \"high_risk_hotel\", \"ttl\": 1},\n      {\"phase\": \"meal\", \"patch\": \"low_cost_meal\", \"ttl\": 2}\n    ]\n  }\n}\n```\n\nNote: The values in the output are fictional and used only for demonstration purposes. They should be replaced with actual data in a real-world application.\n\nExplanation:\n\n*   We prefer candidates with no blocked edges for segment/flight failures, so we select the candidate with the minimum number of blocked edges.\n*   For hotel/stay failures, we prefer avoiding dead_end_city if feasible. Since Binghamton is a dead-end city, we choose the candidate that avoids it.\n*   Finally, we use bundle\\_risk + city\\_summary + edge\\_summary + lb\\_costs to decide on the best candidate.\n\nThe gradient is calculated based on the bundle\\_risk of each candidate and the city\\_summary, edge\\_summary, and lb\\_costs. The soft penalties are chosen to penalize high-cost meals and edges, while the hard exclusions are chosen to avoid Binghamton as a dead-end city.",
+      "parsed": {
+        "candidate_id": 7,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 2,
+              "city": "Binghamton"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "meal",
+              "feature": "cost_ratio",
+              "delta": -0.5
+            },
+            {
+              "phase": "edge",
+              "feature": "lb_cost",
+              "delta": -100
+            }
+          ],
+          "retrieval_patches": [
+            {
+              "phase": "hotel",
+              "patch": "high_risk_hotel",
+              "ttl": 1
+            },
+            {
+              "phase": "meal",
+              "patch": "low_cost_meal",
+              "ttl": 2
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 2,
+            "city": "Binghamton"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "meal",
+            "feature": "cost_ratio",
+            "delta": -0.5
+          },
+          {
+            "phase": "edge",
+            "feature": "lb_cost",
+            "delta": -100
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "hotel",
+            "patch": "high_risk_hotel",
+            "ttl": 1
+          },
+          {
+            "phase": "meal",
+            "patch": "low_cost_meal",
+            "ttl": 2
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Watertown",
+          "New York"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 294.0,
+          "bundle_lb_cost": 2945.0,
+          "stay_lb_cost": 376.0,
+          "meal_lb_cost": 426.0,
+          "transport_lb_cost": 2143.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "milwaukee",
+              "watertown"
+            ],
+            [
+              "watertown",
+              "new york"
+            ],
+            [
+              "new york",
+              "milwaukee"
+            ]
+          ],
+          "bundle_key": [
+            "new york",
+            "watertown"
+          ],
+          "bundle_key_set": [
+            "new york",
+            "watertown"
+          ],
+          "bundle_key_seq": [
+            "watertown",
+            "new york"
+          ],
+          "city_features": {
+            "Watertown": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 56.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 15,
+              "meal_count": 32,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 13,
+              "meal_slack": 26,
+              "hotel_slack": 1
+            },
+            "New York": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 132.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 17.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 14,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Milwaukee->Watertown": {
+              "min_cost": 1339.0,
+              "blocked": false
+            },
+            "Watertown->New York": {
+              "min_cost": 510.0,
+              "blocked": false
+            },
+            "New York->Milwaukee": {
+              "min_cost": 294.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 14,
+            "bottleneck_attr_slack": 13,
+            "bottleneck_hotel_price": 132.0,
+            "bottleneck_city_meal": "New York",
+            "bottleneck_city_hotel": "New York",
+            "bottleneck_edge": "Milwaukee->Watertown"
+          },
+          "min_bundle_cost": 2519.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 14,
+          "bottleneck_attr_slack": 13,
+          "bottleneck_hotel_price": 132.0,
+          "bottleneck_city_meal": "New York",
+          "bottleneck_city_hotel": "New York",
+          "bottleneck_edge": "Milwaukee->Watertown"
+        },
+        "budget_context": {
+          "remaining": 751.0,
+          "slot_cap": 270.1994243421052,
+          "reserve": 492.52824999999996,
+          "min_cost_nonbudget": 147.0
+        },
+        "counts": {
+          "kb": 784,
+          "after_nonbudget": 784,
+          "after_budget": 0,
+          "budget_removed": 784,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Milwaukee",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 784,
+          "after_nonbudget": 784,
+          "after_budget": 0,
+          "budget_removed": 784,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 751.0,
+          "slot_cap": 270.1994243421052,
+          "reserve": 492.52824999999996,
+          "min_cost_nonbudget": 147.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 784,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Buffalo",
+        "New York"
+      ],
+      "reason": "avoid dead_end_city for hotel/stay failures if feasible",
+      "raw": "```json\n{\n  \"candidate_id\": 7,\n  \"reason\": \"avoid dead_end_city for hotel/stay failures if feasible\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"segment\", \"AVOID_CITY\", 100, \"Buffalo\"],\n      [\"flight\", \"NO_SELF_DRIVING\", 200]\n    ],\n    \"soft_penalties\": [\n      [\"segment\", \"cost_ratio\", -1.2],\n      [\"hotel\", \"soft_penalty\", -10]\n    ]\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 7,
+        "reason": "avoid dead_end_city for hotel/stay failures if feasible",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "segment",
+              "AVOID_CITY",
+              100,
+              "Buffalo"
+            ],
+            [
+              "flight",
+              "NO_SELF_DRIVING",
+              200
+            ]
+          ],
+          "soft_penalties": [
+            [
+              "segment",
+              "cost_ratio",
+              -1.2
+            ],
+            [
+              "hotel",
+              "soft_penalty",
+              -10
+            ]
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "segment",
+            "AVOID_CITY",
+            100,
+            "Buffalo"
+          ],
+          [
+            "flight",
+            "NO_SELF_DRIVING",
+            200
+          ]
+        ],
+        "soft_penalties": [
+          [
+            "segment",
+            "cost_ratio",
+            -1.2
+          ],
+          [
+            "hotel",
+            "soft_penalty",
+            -10
+          ]
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "736be0713a1f",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|New York|None|None->None",
+      "bundle_fp": "5eb1cb3ef4ee"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "736be0713a1f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Rochester|None|None->None",
+        "bundle_fp": "d27e518770e4"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 1
+        },
+        {
+          "phase": "segment",
+          "rule": "NO_SELF_DRIVING",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "budget_risk",
+          "feature": "cost_ratio",
+          "delta": 0.1
+        },
+        {
+          "phase": "edge_cost",
+          "feature": "hotel_price",
+          "delta": 10.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Binghamton",
+        "New York"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "736be0713a1f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Binghamton|None|None->None",
+        "bundle_fp": "cc9bb4ec5e7d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "736be0713a1f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Binghamton|None|None->None",
+        "bundle_fp": "cc9bb4ec5e7d"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 2,
+          "city": "Binghamton"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "daily",
+          "feature": "cost_ratio",
+          "delta": -0.5
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Watertown",
+        "New York"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "736be0713a1f",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-12|New York->Milwaukee",
+        "bundle_fp": "fdb344105e3c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "736be0713a1f",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-12|New York->Milwaukee",
+        "bundle_fp": "fdb344105e3c"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Buffalo",
+        "New York"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "736be0713a1f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|New York|None|None->None",
+        "bundle_fp": "5eb1cb3ef4ee"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 34.70786148495972
+}

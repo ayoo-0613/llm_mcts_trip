@@ -1,0 +1,344 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 1528.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you put together a 5-day travel itinerary for a group of 4, starting in Tampa and visiting 2 cities in Texas from March 18th to March 22nd, 2022? Our budget is set at $3,600. We are keen on experiencing a variety of cuisines during our visit, such as Italian, Chinese, Indian, and French. Additionally, we require accommodations that allow smoking and prefer to have entire rooms to ourselves.",
+  "parsed": {
+    "origin": "Tampa",
+    "destination": "Texas",
+    "start_date": "2022-03-18",
+    "duration_days": 5,
+    "budget": 3600.0,
+    "people_number": 4,
+    "visiting_city_number": 2,
+    "preferences": [
+      "Italian",
+      "Chinese",
+      "Indian",
+      "French"
+    ],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight",
+          "self-driving",
+          "taxi"
+        ]
+      },
+      "meal": {
+        "cuisines": null
+      },
+      "stay": {
+        "room_type": "entire room",
+        "house_rule": "smoking"
+      },
+      "daily": {
+        "attractions_per_day_min": 0,
+        "attractions_per_day_max": 10
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    },
+    "attractions_per_day_min": 0,
+    "attractions_per_day_max": 10,
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Dallas",
+      "Houston"
+    ],
+    "transportation_dates": [
+      "2022-03-18",
+      "2022-03-20",
+      "2022-03-22"
+    ],
+    "transportation_methods": [
+      "Flight F2210419, from Tampa to Dallas, Departure Time: 13:00, Arrival Time: 14:23, cost: 183.0",
+      "Flight F1603225, from Dallas to Houston, Departure Time: 08:14, Arrival Time: 09:05, cost: 43.0",
+      "Flight F2176850, from Houston to Tampa, Departure Time: 09:21, Arrival Time: 12:13, cost: 156.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Dallas",
+      "missing, Houston"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Tampa to Dallas",
+      "transportation": "Flight Number: F2210419, from Tampa to Dallas, Departure Time: 13:00, Arrival Time: 14:23",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Dallas",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Dallas to Houston",
+      "transportation": "Flight Number: F1603225, from Dallas to Houston, Departure Time: 08:14, Arrival Time: 09:05",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Houston",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Houston to Tampa",
+      "transportation": "Flight Number: F2176850, from Houston to Tampa, Departure Time: 09:21, Arrival Time: 12:13",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+      "counts": {
+        "kb": 7,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 2,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 2072.0,
+        "slot_cap": 758.7890625,
+        "reserve": 1084.5447499999998
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 1501.1,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 1275.935,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 1084.5447499999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "city": "Dallas",
+        "city_bundle": [
+          "Dallas",
+          "Houston"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 7,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 2072.0,
+          "slot_cap": 758.7890625,
+          "reserve": 1084.5447499999998,
+          "min_cost_nonbudget": 559.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "e38e69d0897f",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+      "bundle_fp": "9f0cd5a8b7f7"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "e38e69d0897f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "9f0cd5a8b7f7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "e38e69d0897f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "9f0cd5a8b7f7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "e38e69d0897f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "9f0cd5a8b7f7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 1.8518350841477513
+}

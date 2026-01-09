@@ -1,0 +1,998 @@
+{
+  "success": false,
+  "cost": 2438.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you please devise a travel plan for me from La Crosse to Minnesota, spanning five days from March 20th to the 24th, 2022? The trip should cover two cities within Minnesota, with an allocated budget of $2,500.",
+  "parsed": {
+    "org": "La Crosse",
+    "dest": "Minnesota",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-20",
+      "2022-03-21",
+      "2022-03-22",
+      "2022-03-23",
+      "2022-03-24"
+    ],
+    "people_number": null,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 2500,
+    "origin": "La Crosse",
+    "destination": "Minnesota",
+    "duration_days": 5,
+    "start_date": "2022-03-20",
+    "preferences": [],
+    "candidate_cities": [
+      "Bemidji",
+      "Minneapolis",
+      "Duluth",
+      "Brainerd",
+      "Gustavus",
+      "St. Cloud",
+      "Hibbing",
+      "International Falls"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:La Crosse->Gustavus 261km cost 261",
+    "move:seg1:taxi:Gustavus->Minneapolis 113km cost 113",
+    "move:seg2:flight:F2337452 Minneapolis->La Crosse $23 13:03-13:46",
+    "stay:Gustavus:1771 Your joyful and comfy space near 7 train Private room $648",
+    "stay:Minneapolis:4028 20min To Times Square, 10min LGA Private room $315",
+    "eat:d1:breakfast:4131 The Great Indian Food Truck Fast Food, BBQ, Italian $17 rating 3.0",
+    "eat:d1:lunch:2202 Bikaner Sweets Tea, Desserts, Fast Food $18 rating 0.0",
+    "eat:d1:dinner:5981 Gelato Vinto Cafe, Bakery, Fast Food, Chinese, Seafood $14 rating 2.7",
+    "eat:d2:breakfast:2752 Bengali Pastry Shop & Snack Bar Tea, Cafe $14 rating 3.2",
+    "eat:d2:lunch:2690 FFC Restaurant Mexican, American, Desserts, Fast Food $11 rating 0.0",
+    "eat:d2:dinner:3986 Imperfecto Tea, Cafe, BBQ, Fast Food $10 rating 3.7",
+    "eat:d3:breakfast:250 The Cafe Indian, Mediterranean, Desserts, Seafood $14 rating 4.9",
+    "eat:d3:lunch:4567 Giani Cafe, Mexican, Bakery, Desserts $17 rating 2.7"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Gustavus",
+      "Minneapolis"
+    ],
+    "transportation_dates": [
+      "2022-03-20",
+      "2022-03-22",
+      "2022-03-24"
+    ],
+    "transportation_methods": [
+      "taxi, from La Crosse to Gustavus, cost: 261.0",
+      "taxi, from Gustavus to Minneapolis, cost: 113.0",
+      "Flight F2337452, from Minneapolis to La Crosse, Departure Time: 13:03, Arrival Time: 13:46, cost: 23.0"
+    ],
+    "restaurants": [
+      "The Great Indian Food Truck, Gustavus",
+      "Bikaner Sweets, Gustavus",
+      "Gelato Vinto, Gustavus",
+      "Bengali Pastry Shop & Snack Bar, Gustavus",
+      "FFC Restaurant, Gustavus",
+      "Imperfecto, Gustavus",
+      "The Cafe, Minneapolis",
+      "Giani, Minneapolis"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "Your joyful and comfy space near 7 train, Gustavus",
+      "20min To Times Square, 10min LGA, Minneapolis"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from La Crosse to Gustavus",
+      "transportation": "Taxi, from La Crosse to Gustavus, Cost: 261",
+      "breakfast": "The Great Indian Food Truck, Gustavus",
+      "attraction": "-",
+      "lunch": "Bikaner Sweets, Gustavus",
+      "dinner": "Gelato Vinto, Gustavus",
+      "accommodation": "Your joyful and comfy space near 7 train, Gustavus"
+    },
+    {
+      "days": 2,
+      "current_city": "Gustavus",
+      "transportation": "-",
+      "breakfast": "Bengali Pastry Shop & Snack Bar, Gustavus",
+      "attraction": "-",
+      "lunch": "FFC Restaurant, Gustavus",
+      "dinner": "Imperfecto, Gustavus",
+      "accommodation": "Your joyful and comfy space near 7 train, Gustavus"
+    },
+    {
+      "days": 3,
+      "current_city": "from Gustavus to Minneapolis",
+      "transportation": "Taxi, from Gustavus to Minneapolis, Cost: 113",
+      "breakfast": "The Cafe, Minneapolis",
+      "attraction": "-",
+      "lunch": "Giani, Minneapolis",
+      "dinner": "-",
+      "accommodation": "20min To Times Square, 10min LGA, Minneapolis"
+    },
+    {
+      "days": 4,
+      "current_city": "Minneapolis",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "20min To Times Square, 10min LGA, Minneapolis"
+    },
+    {
+      "days": 5,
+      "current_city": "from Minneapolis to La Crosse",
+      "transportation": "Flight Number: F2337452, from Minneapolis to La Crosse, Departure Time: 13:03, Arrival Time: 13:46",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d3|slot:lunch|seg:None|Minneapolis|None|None->None",
+      "counts": {
+        "kb": 37,
+        "after_nonbudget": 37,
+        "after_budget": 2,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 12,
+        "violate_reserve": 23,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 79.0,
+        "slot_cap": 19.287109375,
+        "reserve": 60.18424999999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 83.3,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 70.80499999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 60.18424999999999,
+          "kept": 2
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "meal",
+      "slot_id": "meal|d3|slot:dinner|seg:None|Minneapolis|None|None->None",
+      "counts": {
+        "kb": 37,
+        "after_nonbudget": 37,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 15,
+        "violate_reserve": 22,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 62.0,
+        "slot_cap": 17.299107142857142,
+        "reserve": 51.586499999999994
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 71.39999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 60.68999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 51.586499999999994,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d3|slot:dinner|seg:None|Minneapolis|None|None->None",
+        "city": "Minneapolis",
+        "city_bundle": [
+          "Gustavus",
+          "Minneapolis"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 37,
+          "after_nonbudget": 37,
+          "after_budget": 0,
+          "budget_removed": 37,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 62.0,
+          "slot_cap": 17.299107142857142,
+          "reserve": 51.586499999999994,
+          "min_cost_nonbudget": 14.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Minneapolis",
+          "Gustavus"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 261.0,
+          "bundle_lb_cost": 1186.0,
+          "stay_lb_cost": 618.0,
+          "meal_lb_cost": 174.0,
+          "transport_lb_cost": 394.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "la crosse",
+              "minneapolis"
+            ],
+            [
+              "minneapolis",
+              "gustavus"
+            ],
+            [
+              "gustavus",
+              "la crosse"
+            ]
+          ],
+          "bundle_key": [
+            "gustavus",
+            "minneapolis"
+          ],
+          "bundle_key_set": [
+            "gustavus",
+            "minneapolis"
+          ],
+          "bundle_key_seq": [
+            "minneapolis",
+            "gustavus"
+          ],
+          "city_features": {
+            "Minneapolis": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 107.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 37,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 31,
+              "hotel_slack": 1
+            },
+            "Gustavus": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 202.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 15,
+              "meal_count": 33,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 12,
+              "meal_slack": 24,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "La Crosse->Minneapolis": {
+              "min_cost": 23.0,
+              "blocked": false
+            },
+            "Minneapolis->Gustavus": {
+              "min_cost": 110.0,
+              "blocked": false
+            },
+            "Gustavus->La Crosse": {
+              "min_cost": 261.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 24,
+            "bottleneck_attr_slack": 12,
+            "bottleneck_hotel_price": 202.0,
+            "bottleneck_city_meal": "Gustavus",
+            "bottleneck_city_hotel": "Gustavus",
+            "bottleneck_edge": "Gustavus->La Crosse"
+          },
+          "min_bundle_cost": 1012.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 24,
+          "bottleneck_attr_slack": 12,
+          "bottleneck_hotel_price": 202.0,
+          "bottleneck_city_meal": "Gustavus",
+          "bottleneck_city_hotel": "Gustavus",
+          "bottleneck_edge": "Gustavus->La Crosse"
+        },
+        "budget_context": {
+          "remaining": 149.0,
+          "slot_cap": 11.461538461538462,
+          "reserve": 132.0,
+          "min_cost_nonbudget": 14.0
+        },
+        "counts": {
+          "kb": 37,
+          "after_nonbudget": 37,
+          "after_budget": 2,
+          "budget_removed": 35,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Minneapolis",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 37,
+          "after_nonbudget": 37,
+          "after_budget": 2,
+          "budget_removed": 35,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 149.0,
+          "slot_cap": 11.461538461538462,
+          "reserve": 132.0,
+          "min_cost_nonbudget": 14.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 37,
+        "dead_end_after_budget": 2,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2500,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Gustavus",
+        "Minneapolis"
+      ],
+      "reason": "Prefer candidates with no blocked edges for segment/flight failures.",
+      "raw": "```\n{\n  \"candidate_id\": 0,\n  \"reason\": \"Prefer candidates with no blocked edges for segment/flight failures.\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"meal\", \"NO_FLIGHT\", null, null, null]\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "Prefer candidates with no blocked edges for segment/flight failures.",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "meal",
+              "NO_FLIGHT",
+              null,
+              null,
+              null
+            ]
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "meal",
+            "NO_FLIGHT",
+            null,
+            null,
+            null
+          ]
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Gustavus",
+          "Minneapolis"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 23.0,
+          "bundle_lb_cost": 1201.0,
+          "stay_lb_cost": 618.0,
+          "meal_lb_cost": 186.0,
+          "transport_lb_cost": 397.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "la crosse",
+              "gustavus"
+            ],
+            [
+              "gustavus",
+              "minneapolis"
+            ],
+            [
+              "minneapolis",
+              "la crosse"
+            ]
+          ],
+          "bundle_key": [
+            "gustavus",
+            "minneapolis"
+          ],
+          "bundle_key_set": [
+            "gustavus",
+            "minneapolis"
+          ],
+          "bundle_key_seq": [
+            "gustavus",
+            "minneapolis"
+          ],
+          "city_features": {
+            "Gustavus": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 202.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 15,
+              "meal_count": 33,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 13,
+              "meal_slack": 27,
+              "hotel_slack": 1
+            },
+            "Minneapolis": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 107.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 37,
+              "min_meal_cost": 14.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "La Crosse->Gustavus": {
+              "min_cost": 261.0,
+              "blocked": false
+            },
+            "Gustavus->Minneapolis": {
+              "min_cost": 113.0,
+              "blocked": false
+            },
+            "Minneapolis->La Crosse": {
+              "min_cost": 23.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 27,
+            "bottleneck_attr_slack": 13,
+            "bottleneck_hotel_price": 202.0,
+            "bottleneck_city_meal": "Gustavus",
+            "bottleneck_city_hotel": "Gustavus",
+            "bottleneck_edge": "La Crosse->Gustavus"
+          },
+          "min_bundle_cost": 1015.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 27,
+          "bottleneck_attr_slack": 13,
+          "bottleneck_hotel_price": 202.0,
+          "bottleneck_city_meal": "Gustavus",
+          "bottleneck_city_hotel": "Gustavus",
+          "bottleneck_edge": "La Crosse->Gustavus"
+        },
+        "budget_context": {
+          "remaining": 62.0,
+          "slot_cap": 17.299107142857142,
+          "reserve": 51.586499999999994,
+          "min_cost_nonbudget": 14.0
+        },
+        "counts": {
+          "kb": 37,
+          "after_nonbudget": 37,
+          "after_budget": 0,
+          "budget_removed": 37,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Minneapolis",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 37,
+          "after_nonbudget": 37,
+          "after_budget": 0,
+          "budget_removed": 37,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 62.0,
+          "slot_cap": 17.299107142857142,
+          "reserve": 51.586499999999994,
+          "min_cost_nonbudget": 14.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 37,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2500,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Minneapolis",
+        "Gustavus"
+      ],
+      "reason": "No explicit reason provided",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"No explicit reason provided\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"meal\", \"NO_FLIGHT\", 1, \"\", \"\"]\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "No explicit reason provided",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "meal",
+              "NO_FLIGHT",
+              1,
+              "",
+              ""
+            ]
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "meal",
+            "NO_FLIGHT",
+            1,
+            "",
+            ""
+          ]
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Minneapolis",
+          "Gustavus"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 261.0,
+          "bundle_lb_cost": 1186.0,
+          "stay_lb_cost": 618.0,
+          "meal_lb_cost": 174.0,
+          "transport_lb_cost": 394.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "la crosse",
+              "minneapolis"
+            ],
+            [
+              "minneapolis",
+              "gustavus"
+            ],
+            [
+              "gustavus",
+              "la crosse"
+            ]
+          ],
+          "bundle_key": [
+            "gustavus",
+            "minneapolis"
+          ],
+          "bundle_key_set": [
+            "gustavus",
+            "minneapolis"
+          ],
+          "bundle_key_seq": [
+            "minneapolis",
+            "gustavus"
+          ],
+          "city_features": {
+            "Minneapolis": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 107.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 37,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 31,
+              "hotel_slack": 1
+            },
+            "Gustavus": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 202.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 15,
+              "meal_count": 33,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 12,
+              "meal_slack": 24,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "La Crosse->Minneapolis": {
+              "min_cost": 23.0,
+              "blocked": false
+            },
+            "Minneapolis->Gustavus": {
+              "min_cost": 110.0,
+              "blocked": false
+            },
+            "Gustavus->La Crosse": {
+              "min_cost": 261.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 24,
+            "bottleneck_attr_slack": 12,
+            "bottleneck_hotel_price": 202.0,
+            "bottleneck_city_meal": "Gustavus",
+            "bottleneck_city_hotel": "Gustavus",
+            "bottleneck_edge": "Gustavus->La Crosse"
+          },
+          "min_bundle_cost": 1012.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 24,
+          "bottleneck_attr_slack": 12,
+          "bottleneck_hotel_price": 202.0,
+          "bottleneck_city_meal": "Gustavus",
+          "bottleneck_city_hotel": "Gustavus",
+          "bottleneck_edge": "Gustavus->La Crosse"
+        },
+        "budget_context": {
+          "remaining": 149.0,
+          "slot_cap": 11.461538461538462,
+          "reserve": 132.0,
+          "min_cost_nonbudget": 14.0
+        },
+        "counts": {
+          "kb": 37,
+          "after_nonbudget": 37,
+          "after_budget": 2,
+          "budget_removed": 35,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Minneapolis",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 37,
+          "after_nonbudget": 37,
+          "after_budget": 2,
+          "budget_removed": 35,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 149.0,
+          "slot_cap": 11.461538461538462,
+          "reserve": 132.0,
+          "min_cost_nonbudget": 14.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 37,
+        "dead_end_after_budget": 2,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2500,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Gustavus",
+        "Minneapolis"
+      ],
+      "reason": "default choice",
+      "raw": "```json\n{\n    \"candidate_id\": 0,\n    \"reason\": \"default choice\",\n    \"confidence\": 1.0,\n    \"gradient\": {\n        \"hard_exclusions\": [],\n        \"soft_penalties\": [\n            {\"phase\": \"meal\", \"feature\": \"budget_risk\", \"delta\": 1.0},\n            {\"phase\": \"segment/flight\", \"feature\": \"cost_ratio\", \"delta\": 1.0}\n        ],\n        \"retrieval_patches\": []\n    }\n}\n```",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "default choice",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [],
+          "soft_penalties": [
+            {
+              "phase": "meal",
+              "feature": "budget_risk",
+              "delta": 1.0
+            },
+            {
+              "phase": "segment/flight",
+              "feature": "cost_ratio",
+              "delta": 1.0
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "meal",
+            "feature": "budget_risk",
+            "delta": 1.0
+          },
+          {
+            "phase": "segment/flight",
+            "feature": "cost_ratio",
+            "delta": 1.0
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "bb627f23fef4",
+      "phase": "daily",
+      "slot_fp": "meal|d3|slot:dinner|seg:None|Minneapolis|None|None->None",
+      "bundle_fp": "00915166438f"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "bb627f23fef4",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Minneapolis|None|None->None",
+        "bundle_fp": "858fc4c8e3c5"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Gustavus",
+        "Minneapolis"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "bb627f23fef4",
+        "phase": "daily",
+        "slot_fp": "meal|d3|slot:dinner|seg:None|Minneapolis|None|None->None",
+        "bundle_fp": "00915166438f"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "bb627f23fef4",
+        "phase": "daily",
+        "slot_fp": "meal|d3|slot:dinner|seg:None|Minneapolis|None|None->None",
+        "bundle_fp": "00915166438f"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Minneapolis",
+        "Gustavus"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "bb627f23fef4",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Minneapolis|None|None->None",
+        "bundle_fp": "858fc4c8e3c5"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "bb627f23fef4",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Minneapolis|None|None->None",
+        "bundle_fp": "858fc4c8e3c5"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "daily",
+          "feature": "budget_risk",
+          "delta": 1.0
+        },
+        {
+          "phase": "segment/flight",
+          "feature": "cost_ratio",
+          "delta": 1.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Gustavus",
+        "Minneapolis"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "bb627f23fef4",
+        "phase": "daily",
+        "slot_fp": "meal|d3|slot:dinner|seg:None|Minneapolis|None|None->None",
+        "bundle_fp": "00915166438f"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 19.945867764763534
+}

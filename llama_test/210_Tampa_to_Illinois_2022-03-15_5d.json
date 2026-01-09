@@ -1,0 +1,1161 @@
+{
+  "success": false,
+  "cost": 2505.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Please help organize a 5-day travel plan for an individual, departing from Tampa and visiting 2 cities in Illinois. The trip is scheduled for March 15th to March 19th, 2022, with a budget of $3,200.",
+  "parsed": {
+    "org": "Tampa",
+    "dest": "Illinois",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-15",
+      "2022-03-16",
+      "2022-03-17",
+      "2022-03-18",
+      "2022-03-19"
+    ],
+    "people_number": 1,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 3200,
+    "origin": "Tampa",
+    "destination": "Illinois",
+    "duration_days": 5,
+    "start_date": "2022-03-15",
+    "preferences": [],
+    "candidate_cities": [
+      "Moline",
+      "Belleville",
+      "Bloomington",
+      "Champaign",
+      "Chicago",
+      "Rockford",
+      "Peoria"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Tampa->Peoria 1845km cost 1845",
+    "move:seg1:flight:F1020813 Peoria->Chicago $26 09:46-10:31",
+    "move:seg2:flight:F0093257 Chicago->Tampa $200 21:37-01:03",
+    "stay:Peoria:1446 Bushwick Music Mansion Private room $217"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Peoria",
+      "Chicago"
+    ],
+    "transportation_dates": [
+      "2022-03-15",
+      "2022-03-17",
+      "2022-03-19"
+    ],
+    "transportation_methods": [
+      "taxi, from Tampa to Peoria, cost: 1845.0",
+      "Flight F1020813, from Peoria to Chicago, Departure Time: 09:46, Arrival Time: 10:31, cost: 26.0",
+      "Flight F0093257, from Chicago to Tampa, Departure Time: 21:37, Arrival Time: 01:03, cost: 200.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Bushwick Music Mansion, Peoria",
+      "missing, Chicago"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Tampa to Peoria",
+      "transportation": "Taxi, from Tampa to Peoria, Cost: 1845",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Bushwick Music Mansion, Peoria"
+    },
+    {
+      "days": 2,
+      "current_city": "Peoria",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Bushwick Music Mansion, Peoria"
+    },
+    {
+      "days": 3,
+      "current_city": "from Peoria to Chicago",
+      "transportation": "Flight Number: F1020813, from Peoria to Chicago, Departure Time: 09:46, Arrival Time: 10:31",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Chicago",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Chicago to Tampa",
+      "transportation": "Flight Number: F0093257, from Chicago to Tampa, Departure Time: 21:37, Arrival Time: 01:03",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Peoria|None|None->None",
+      "counts": {
+        "kb": 12,
+        "after_nonbudget": 7,
+        "after_budget": 3,
+        "returned": 3,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 4,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1129.0,
+        "slot_cap": 211.6875,
+        "reserve": 398.0
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+      "counts": {
+        "kb": 14,
+        "after_nonbudget": 4,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 4,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 691.0,
+        "slot_cap": 506.103515625,
+        "reserve": 110.54249999999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 153.0,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 130.04999999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 110.54249999999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "city": "Chicago",
+        "city_bundle": [
+          "Peoria",
+          "Chicago"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 691.0,
+          "slot_cap": 506.103515625,
+          "reserve": 110.54249999999999,
+          "min_cost_nonbudget": 781.0
+        }
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+      "counts": {
+        "kb": 14,
+        "after_nonbudget": 4,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 4,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 695.0,
+        "slot_cap": 509.033203125,
+        "reserve": 110.54249999999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 153.0,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 130.04999999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 110.54249999999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "city": "Chicago",
+        "city_bundle": [
+          "Peoria",
+          "Chicago"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 695.0,
+          "slot_cap": 509.033203125,
+          "reserve": 110.54249999999999,
+          "min_cost_nonbudget": 781.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Belleville",
+          "Chicago"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 199.0,
+          "bundle_lb_cost": 2801.0,
+          "stay_lb_cost": 364.0,
+          "meal_lb_cost": 156.0,
+          "transport_lb_cost": 2281.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "tampa",
+              "belleville"
+            ],
+            [
+              "belleville",
+              "chicago"
+            ],
+            [
+              "chicago",
+              "tampa"
+            ]
+          ],
+          "bundle_key": [
+            "belleville",
+            "chicago"
+          ],
+          "bundle_key_set": [
+            "belleville",
+            "chicago"
+          ],
+          "bundle_key_seq": [
+            "belleville",
+            "chicago"
+          ],
+          "city_features": {
+            "Belleville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 73.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 27,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            },
+            "Chicago": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 109.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 24,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 15,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Tampa->Belleville": {
+              "min_cost": 1608.0,
+              "blocked": false
+            },
+            "Belleville->Chicago": {
+              "min_cost": 474.0,
+              "blocked": false
+            },
+            "Chicago->Tampa": {
+              "min_cost": 199.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 15,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 109.0,
+            "bottleneck_city_meal": "Chicago",
+            "bottleneck_city_hotel": "Chicago",
+            "bottleneck_edge": "Tampa->Belleville"
+          },
+          "min_bundle_cost": 2645.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 15,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 109.0,
+          "bottleneck_city_meal": "Chicago",
+          "bottleneck_city_hotel": "Chicago",
+          "bottleneck_edge": "Tampa->Belleville"
+        },
+        "budget_context": {
+          "remaining": 772.0,
+          "slot_cap": 565.4296875,
+          "reserve": 95.80349999999999,
+          "min_cost_nonbudget": 781.0
+        },
+        "counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dead_end_city": "Chicago",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 772.0,
+          "slot_cap": 565.4296875,
+          "reserve": 95.80349999999999,
+          "min_cost_nonbudget": 781.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 4,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Peoria",
+        "Chicago"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n    \"candidate_id\": 0,\n    \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n    \"confidence\": 0.92,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 2, \"city\": \"Chicago\"}\n        ],\n        \"soft_penalties\": [],\n        \"retrieval_patches\": []\n    }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.92,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 2,
+              "city": "Chicago"
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 2,
+            "city": "Chicago"
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Peoria",
+          "Chicago"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 199.0,
+          "bundle_lb_cost": 2592.0,
+          "stay_lb_cost": 342.0,
+          "meal_lb_cost": 180.0,
+          "transport_lb_cost": 2070.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "tampa",
+              "peoria"
+            ],
+            [
+              "peoria",
+              "chicago"
+            ],
+            [
+              "chicago",
+              "tampa"
+            ]
+          ],
+          "bundle_key": [
+            "chicago",
+            "peoria"
+          ],
+          "bundle_key_set": [
+            "chicago",
+            "peoria"
+          ],
+          "bundle_key_seq": [
+            "peoria",
+            "chicago"
+          ],
+          "city_features": {
+            "Peoria": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 62.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 31,
+              "min_meal_cost": 15.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 25,
+              "hotel_slack": 1
+            },
+            "Chicago": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 109.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 24,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 15,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Tampa->Peoria": {
+              "min_cost": 1845.0,
+              "blocked": false
+            },
+            "Peoria->Chicago": {
+              "min_cost": 26.0,
+              "blocked": false
+            },
+            "Chicago->Tampa": {
+              "min_cost": 199.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 15,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 109.0,
+            "bottleneck_city_meal": "Chicago",
+            "bottleneck_city_hotel": "Chicago",
+            "bottleneck_edge": "Tampa->Peoria"
+          },
+          "min_bundle_cost": 2412.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 15,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 109.0,
+          "bottleneck_city_meal": "Chicago",
+          "bottleneck_city_hotel": "Chicago",
+          "bottleneck_edge": "Tampa->Peoria"
+        },
+        "budget_context": {
+          "remaining": 696.0,
+          "slot_cap": 509.765625,
+          "reserve": 110.54249999999999,
+          "min_cost_nonbudget": 781.0
+        },
+        "counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dead_end_city": "Chicago",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 696.0,
+          "slot_cap": 509.765625,
+          "reserve": 110.54249999999999,
+          "min_cost_nonbudget": 781.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 4,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Chicago",
+        "Rockford"
+      ],
+      "reason": "bundle_risk is higher for candidate 6",
+      "raw": "{\n  \"candidate_id\": 4,\n  \"reason\": \"bundle_risk is higher for candidate 6\",\n  \"confidence\": 0.9,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 10, \"city\": \"Chicago\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"transport\", \"feature\": \"budget_risk\", \"delta\": 0.5},\n      {\"phase\": \"meal\", \"feature\": \"cost_ratio\", \"delta\": -0.2}\n    ],\n    \"retrieval_patches\": [\n      {\"phase\": \"hotel\", \"patch\": \"new_patch_1\", \"ttl\": 20}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 4,
+        "reason": "bundle_risk is higher for candidate 6",
+        "confidence": 0.9,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 10,
+              "city": "Chicago"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "transport",
+              "feature": "budget_risk",
+              "delta": 0.5
+            },
+            {
+              "phase": "meal",
+              "feature": "cost_ratio",
+              "delta": -0.2
+            }
+          ],
+          "retrieval_patches": [
+            {
+              "phase": "hotel",
+              "patch": "new_patch_1",
+              "ttl": 20
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 10,
+            "city": "Chicago"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "transport",
+            "feature": "budget_risk",
+            "delta": 0.5
+          },
+          {
+            "phase": "meal",
+            "feature": "cost_ratio",
+            "delta": -0.2
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "hotel",
+            "patch": "new_patch_1",
+            "ttl": 20
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Chicago",
+          "Rockford"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 2022.0,
+          "bundle_lb_cost": 3130.0,
+          "stay_lb_cost": 526.0,
+          "meal_lb_cost": 240.0,
+          "transport_lb_cost": 2364.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "tampa",
+              "chicago"
+            ],
+            [
+              "chicago",
+              "rockford"
+            ],
+            [
+              "rockford",
+              "tampa"
+            ]
+          ],
+          "bundle_key": [
+            "chicago",
+            "rockford"
+          ],
+          "bundle_key_set": [
+            "chicago",
+            "rockford"
+          ],
+          "bundle_key_seq": [
+            "chicago",
+            "rockford"
+          ],
+          "city_features": {
+            "Chicago": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 109.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 24,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 18,
+              "hotel_slack": 0
+            },
+            "Rockford": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 154.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 27,
+              "min_meal_cost": 20.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 18,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Tampa->Chicago": {
+              "min_cost": 199.0,
+              "blocked": false
+            },
+            "Chicago->Rockford": {
+              "min_cost": 143.0,
+              "blocked": false
+            },
+            "Rockford->Tampa": {
+              "min_cost": 2022.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 18,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 154.0,
+            "bottleneck_city_meal": "Chicago",
+            "bottleneck_city_hotel": "Rockford",
+            "bottleneck_edge": "Rockford->Tampa"
+          },
+          "min_bundle_cost": 2890.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 18,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 154.0,
+          "bottleneck_city_meal": "Chicago",
+          "bottleneck_city_hotel": "Rockford",
+          "bottleneck_edge": "Rockford->Tampa"
+        },
+        "budget_context": {
+          "remaining": 836.0,
+          "slot_cap": 306.15234375,
+          "reserve": 336.54049999999995,
+          "min_cost_nonbudget": 781.0
+        },
+        "counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dead_end_city": "Chicago",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 836.0,
+          "slot_cap": 306.15234375,
+          "reserve": 336.54049999999995,
+          "min_cost_nonbudget": 781.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 4,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Peoria",
+        "Chicago"
+      ],
+      "reason": "Bundle risk is lowest",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"Bundle risk is lowest\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 10, \"city\": \"Chicago\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"segment\", \"feature\": \"budget_risk\", \"delta\": -0.2},\n      {\"phase\": \"flight\", \"feature\": \"cost_ratio\", \"delta\": -0.1}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "Bundle risk is lowest",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 10,
+              "city": "Chicago"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "budget_risk",
+              "delta": -0.2
+            },
+            {
+              "phase": "flight",
+              "feature": "cost_ratio",
+              "delta": -0.1
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://127.0.0.1:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 10,
+            "city": "Chicago"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "budget_risk",
+            "delta": -0.2
+          },
+          {
+            "phase": "flight",
+            "feature": "cost_ratio",
+            "delta": -0.1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "999624be285a",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+      "bundle_fp": "e14d229d6439"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "999624be285a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "efc96bd4dd43"
+      },
+      "confidence": 0.92,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 2,
+          "city": "Chicago"
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Peoria",
+        "Chicago"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "999624be285a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "e14d229d6439"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "999624be285a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "e14d229d6439"
+      },
+      "confidence": 0.9,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 10,
+          "city": "Chicago"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "transport",
+          "feature": "budget_risk",
+          "delta": 0.5
+        },
+        {
+          "phase": "daily",
+          "feature": "cost_ratio",
+          "delta": -0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Chicago",
+        "Rockford"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "999624be285a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "33cfae9271df"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "999624be285a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "33cfae9271df"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 10,
+          "city": "Chicago"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": -0.2
+        },
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": -0.1
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Peoria",
+        "Chicago"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "999624be285a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "e14d229d6439"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 22.386109421029687
+}

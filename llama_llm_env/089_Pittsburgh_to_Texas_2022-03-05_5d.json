@@ -1,0 +1,260 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 15239.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you create a 5-day travel itinerary starting from Pittsburgh and venturing into 2 cities in Texas from March 5th to March 9th, 2022, for a group of 7 people? Our budget is set at $16,100. It's important for us to stay in accommodations that permit children under the age of 10.",
+  "parsed": {
+    "origin": "Pittsburgh",
+    "destination": "Texas",
+    "start_date": "2022-03-05",
+    "duration_days": 5,
+    "budget": 16100.0,
+    "people_number": 7,
+    "visiting_city_number": 2,
+    "preferences": [],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight",
+          "self-driving"
+        ],
+        "forbid": null
+      },
+      "meal": {
+        "cuisines": null
+      },
+      "stay": {
+        "room_type": "not shared room",
+        "house_rule": "children under 10"
+      },
+      "daily": {
+        "attractions_per_day_min": null,
+        "attractions_per_day_max": null
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    },
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Amarillo",
+      "Austin"
+    ],
+    "transportation_dates": [
+      "2022-03-05",
+      "2022-03-07",
+      "2022-03-09"
+    ],
+    "transportation_methods": [
+      "self-driving, from Pittsburgh to Amarillo, cost: 2186.0",
+      "self-driving, from Amarillo to Austin, cost: 798.0",
+      "self-driving, from Austin to Pittsburgh, cost: 2278.0"
+    ],
+    "restaurants": [
+      "Sugar Daddy Bakers, Amarillo",
+      "Cafe Coffee Day, Amarillo",
+      "Biryani Sons & Co., Amarillo",
+      "Wood Box Cafe, Amarillo",
+      "Burger Point, Amarillo"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "Gramercy Park restful, cozy, sun-filled home, Amarillo",
+      "Gorgeous Zen Home at Crossroads of Nolita and Soho, Austin"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Pittsburgh to Amarillo",
+      "transportation": "Self-driving, from Pittsburgh to Amarillo, Cost: 2186",
+      "breakfast": "Sugar Daddy Bakers, Amarillo",
+      "attraction": "-",
+      "lunch": "Cafe Coffee Day, Amarillo",
+      "dinner": "Biryani Sons & Co., Amarillo",
+      "accommodation": "Gramercy Park restful, cozy, sun-filled home, Amarillo"
+    },
+    {
+      "days": 2,
+      "current_city": "Amarillo",
+      "transportation": "-",
+      "breakfast": "Wood Box Cafe, Amarillo",
+      "attraction": "-",
+      "lunch": "Burger Point, Amarillo",
+      "dinner": "-",
+      "accommodation": "Gramercy Park restful, cozy, sun-filled home, Amarillo"
+    },
+    {
+      "days": 3,
+      "current_city": "from Amarillo to Austin",
+      "transportation": "Self-driving, from Amarillo to Austin, Cost: 798",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Gorgeous Zen Home at Crossroads of Nolita and Soho, Austin"
+    },
+    {
+      "days": 4,
+      "current_city": "Austin",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Gorgeous Zen Home at Crossroads of Nolita and Soho, Austin"
+    },
+    {
+      "days": 5,
+      "current_city": "from Austin to Pittsburgh",
+      "transportation": "Self-driving, from Austin to Pittsburgh, Cost: 2278",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d2|slot:dinner|seg:None|Amarillo|None|None->None",
+      "counts": {
+        "kb": 30,
+        "after_nonbudget": 30,
+        "after_budget": 5,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 25,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 861.0,
+        "slot_cap": 12.299999999999999,
+        "reserve": 756.0
+      },
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d2|slot:dinner|seg:None|Amarillo|None|None->None",
+        "city": "Amarillo",
+        "city_bundle": [
+          "Amarillo",
+          "Austin"
+        ],
+        "reason": "duplication",
+        "counts": {
+          "kb": 30,
+          "after_nonbudget": 30,
+          "after_budget": 5,
+          "budget_removed": 25,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 861.0,
+          "slot_cap": 12.299999999999999,
+          "reserve": 756.0,
+          "min_cost_nonbudget": 11.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "db4daf928874",
+      "phase": "daily",
+      "slot_fp": "meal|d2|slot:dinner|seg:None|Amarillo|None|None->None",
+      "bundle_fp": "6a8286e6744a"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "db4daf928874",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:dinner|seg:None|Amarillo|None|None->None",
+        "bundle_fp": "6a8286e6744a"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "db4daf928874",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:dinner|seg:None|Amarillo|None|None->None",
+        "bundle_fp": "6a8286e6744a"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "db4daf928874",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:dinner|seg:None|Amarillo|None|None->None",
+        "bundle_fp": "6a8286e6744a"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 2.73750873003155
+}

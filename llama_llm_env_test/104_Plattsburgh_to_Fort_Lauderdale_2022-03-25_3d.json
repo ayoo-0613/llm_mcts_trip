@@ -1,0 +1,156 @@
+{
+  "parser_mode": "envspec",
+  "success": true,
+  "cost": 1012.0,
+  "violations": [],
+  "query": "Please create a travel plan for one person departing from Plattsburgh to Fort Lauderdale. The trip should last 3 days, from March 25th to March 27th, 2022, and the budget is set at $1,200. There are no specific constraints regarding house rules, cuisine, room types, or transportation.",
+  "parsed": {
+    "origin": "Plattsburgh",
+    "destination": "Fort Lauderdale",
+    "start_date": "2022-03-25",
+    "duration_days": 3,
+    "budget": 1200.0,
+    "people_number": 1,
+    "visiting_city_number": 1,
+    "preferences": [],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight",
+          "self-driving",
+          "taxi"
+        ],
+        "forbid": null
+      },
+      "meal": {
+        "cuisines": null
+      },
+      "stay": {
+        "room_type": null,
+        "house_rule": null
+      },
+      "daily": {
+        "attractions_per_day_min": null,
+        "attractions_per_day_max": null
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    }
+  },
+  "actions": [
+    "move:seg0:flight:F3582418 Plattsburgh->Fort Lauderdale $284 11:13-14:59",
+    "move:seg1:flight:F0370439 Fort Lauderdale->Plattsburgh $281 08:06-11:21",
+    "stay:Fort Lauderdale:2361 Room in Brooklyn Private room $81",
+    "eat:d1:breakfast:619 Rajasthan Al Malaki Desserts, Tea, BBQ, American, Seafood $31 rating 4.8",
+    "eat:d1:lunch:249 Hickory Park Desserts, Mexican, Fast Food, Cafe, Seafood $12 rating 4.5",
+    "eat:d1:dinner:3863 Big Yellow Door Tea, Chinese, Seafood $29 rating 4.3",
+    "eat:d2:breakfast:3708 The Sugar Cube Tea, Seafood, Pizza, Fast Food $35 rating 4.1",
+    "eat:d2:lunch:4616 Suruchi Desserts, Tea, French, Mexican, BBQ, Fast Food $13 rating 3.8",
+    "eat:d2:dinner:5524 C L Corner Chinese, Bakery, BBQ, Fast Food $59 rating 3.8",
+    "eat:d3:breakfast:476 Archie's Waeside Tea, Cafe, Fast Food $26 rating 3.7",
+    "eat:d3:lunch:553 Tony's La Pizzeria Tea, Chinese, Bakery, Cafe $32 rating 3.6",
+    "eat:d3:dinner:2397 Thakkaaram Tea, Mexican, Fast Food $48 rating 3.6",
+    "visit:d1:spot:4484 Bonnet House Museum & Gardens @ Fort Lauderdale",
+    "visit:d2:spot:4485 Jungle Queen Riverboat @ Fort Lauderdale",
+    "visit:d3:spot:4487 Museum of Discovery and Science @ Fort Lauderdale"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Fort Lauderdale"
+    ],
+    "transportation_dates": [
+      "2022-03-25",
+      "2022-03-27"
+    ],
+    "transportation_methods": [
+      "Flight F3582418, from Plattsburgh to Fort Lauderdale, Departure Time: 11:13, Arrival Time: 14:59, cost: 284.0",
+      "Flight F0370439, from Fort Lauderdale to Plattsburgh, Departure Time: 08:06, Arrival Time: 11:21, cost: 281.0"
+    ],
+    "restaurants": [
+      "Rajasthan Al Malaki, Fort Lauderdale",
+      "Hickory Park, Fort Lauderdale",
+      "Big Yellow Door, Fort Lauderdale",
+      "The Sugar Cube, Fort Lauderdale",
+      "Suruchi, Fort Lauderdale",
+      "C L Corner, Fort Lauderdale",
+      "Archie's Waeside, Fort Lauderdale",
+      "Tony's La Pizzeria, Fort Lauderdale",
+      "Thakkaaram, Fort Lauderdale"
+    ],
+    "attractions": [
+      "Bonnet House Museum & Gardens, Fort Lauderdale",
+      "Jungle Queen Riverboat, Fort Lauderdale",
+      "Museum of Discovery and Science, Fort Lauderdale"
+    ],
+    "accommodations": [
+      "Room in Brooklyn, Fort Lauderdale"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Plattsburgh to Fort Lauderdale",
+      "transportation": "Flight Number: F3582418, from Plattsburgh to Fort Lauderdale, Departure Time: 11:13, Arrival Time: 14:59",
+      "breakfast": "Rajasthan Al Malaki, Fort Lauderdale",
+      "attraction": "Bonnet House Museum & Gardens, Fort Lauderdale;",
+      "lunch": "Hickory Park, Fort Lauderdale",
+      "dinner": "Big Yellow Door, Fort Lauderdale",
+      "accommodation": "Room in Brooklyn, Fort Lauderdale"
+    },
+    {
+      "days": 2,
+      "current_city": "Fort Lauderdale",
+      "transportation": "-",
+      "breakfast": "The Sugar Cube, Fort Lauderdale",
+      "attraction": "Jungle Queen Riverboat, Fort Lauderdale;",
+      "lunch": "Suruchi, Fort Lauderdale",
+      "dinner": "C L Corner, Fort Lauderdale",
+      "accommodation": "Room in Brooklyn, Fort Lauderdale"
+    },
+    {
+      "days": 3,
+      "current_city": "from Fort Lauderdale to Plattsburgh",
+      "transportation": "Flight Number: F0370439, from Fort Lauderdale to Plattsburgh, Departure Time: 08:06, Arrival Time: 11:21",
+      "breakfast": "Archie's Waeside, Fort Lauderdale",
+      "attraction": "Museum of Discovery and Science, Fort Lauderdale;",
+      "lunch": "Tony's La Pizzeria, Fort Lauderdale",
+      "dinner": "Thakkaaram, Fort Lauderdale",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "attraction",
+      "slot_id": "attraction|d3|slot:spot|seg:None|Fort Lauderdale|None|None->None",
+      "counts": {
+        "kb": 20,
+        "after_nonbudget": 20,
+        "after_budget": 20,
+        "returned": 5,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 188.0,
+        "slot_cap": null,
+        "reserve": 0.0
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": null,
+  "failure_gradients": [],
+  "elapsed_seconds": 6.243478154763579
+}

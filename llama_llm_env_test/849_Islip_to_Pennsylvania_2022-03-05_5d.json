@@ -1,0 +1,254 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 3033.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you create a 5-day travel plan for a group of 3 starting in Islip and visiting two cities in Pennsylvania? The trip will happen from March 5th to March 9th, 2022. We have a budget limit of $3,100. We are choosing no-flights as our mode of transportation and require stays where visitors are allowed. We'd prefer to have entire rooms for accommodation.",
+  "parsed": {
+    "org": "Islip",
+    "dest": "Pennsylvania",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-05",
+      "2022-03-06",
+      "2022-03-07",
+      "2022-03-08",
+      "2022-03-09"
+    ],
+    "people_number": 3,
+    "local_constraint": {
+      "house rule": "visitors",
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": "no flight"
+    },
+    "budget": 3100,
+    "origin": "Islip",
+    "destination": "Pennsylvania",
+    "duration_days": 5,
+    "start_date": "2022-03-05",
+    "preferences": [
+      "visitors",
+      "entire room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "State College",
+      "Johnstown",
+      "Harrisburg",
+      "Erie",
+      "Pittsburgh",
+      "Latrobe",
+      "Philadelphia",
+      "Lewisburg",
+      "Scranton"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Harrisburg",
+      "Philadelphia"
+    ],
+    "transportation_dates": [
+      "2022-03-05",
+      "2022-03-07",
+      "2022-03-09"
+    ],
+    "transportation_methods": [
+      "taxi, from Islip to Harrisburg, cost: 365.0",
+      "taxi, from Harrisburg to Philadelphia, cost: 171.0",
+      "taxi, from Philadelphia to Islip, cost: 228.0"
+    ],
+    "restaurants": [
+      "Union Deli, Harrisburg",
+      "Art of Spices, Harrisburg",
+      "Halki Aanch, Harrisburg",
+      "Masala Fusion, Harrisburg",
+      "Burger Hut, Harrisburg",
+      "Oriental Lee, Harrisburg",
+      "Asian Chopstick, Philadelphia",
+      "Muncheezz, Philadelphia",
+      "Momozone, Philadelphia",
+      "Bangla Sweet Corner, Philadelphia",
+      "Gurdas Ram Jalebi Wala, Philadelphia",
+      "Mini Mughal, Philadelphia",
+      "Red Mesa Cantina, Philadelphia",
+      "Arabian & Turkish Caf愆, Philadelphia"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "Cozy Nolita Apartment, Harrisburg",
+      "Modern Luxury Apartment in Heart of Williamsburg, Philadelphia"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Islip to Harrisburg",
+      "transportation": "Taxi, from Islip to Harrisburg, Cost: 365",
+      "breakfast": "Union Deli, Harrisburg",
+      "attraction": "-",
+      "lunch": "Art of Spices, Harrisburg",
+      "dinner": "Halki Aanch, Harrisburg",
+      "accommodation": "Cozy Nolita Apartment, Harrisburg"
+    },
+    {
+      "days": 2,
+      "current_city": "Harrisburg",
+      "transportation": "-",
+      "breakfast": "Masala Fusion, Harrisburg",
+      "attraction": "-",
+      "lunch": "Burger Hut, Harrisburg",
+      "dinner": "Oriental Lee, Harrisburg",
+      "accommodation": "Cozy Nolita Apartment, Harrisburg"
+    },
+    {
+      "days": 3,
+      "current_city": "from Harrisburg to Philadelphia",
+      "transportation": "Taxi, from Harrisburg to Philadelphia, Cost: 171",
+      "breakfast": "Asian Chopstick, Philadelphia",
+      "attraction": "-",
+      "lunch": "Muncheezz, Philadelphia",
+      "dinner": "Momozone, Philadelphia",
+      "accommodation": "Modern Luxury Apartment in Heart of Williamsburg, Philadelphia"
+    },
+    {
+      "days": 4,
+      "current_city": "Philadelphia",
+      "transportation": "-",
+      "breakfast": "Bangla Sweet Corner, Philadelphia",
+      "attraction": "-",
+      "lunch": "Gurdas Ram Jalebi Wala, Philadelphia",
+      "dinner": "Mini Mughal, Philadelphia",
+      "accommodation": "Modern Luxury Apartment in Heart of Williamsburg, Philadelphia"
+    },
+    {
+      "days": 5,
+      "current_city": "from Philadelphia to Islip",
+      "transportation": "Taxi, from Philadelphia to Islip, Cost: 228",
+      "breakfast": "Red Mesa Cantina, Philadelphia",
+      "attraction": "-",
+      "lunch": "Arabian & Turkish Caf愆, Philadelphia",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d5|slot:dinner|seg:None|Philadelphia|None|None->None",
+      "counts": {
+        "kb": 29,
+        "after_nonbudget": 29,
+        "after_budget": 5,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 24,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 67.0,
+        "slot_cap": 22.333333333333332,
+        "reserve": 0.0
+      },
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d5|slot:dinner|seg:None|Philadelphia|None|None->None",
+        "city": "Philadelphia",
+        "city_bundle": [
+          "Harrisburg",
+          "Philadelphia"
+        ],
+        "reason": "duplication",
+        "counts": {
+          "kb": 29,
+          "after_nonbudget": 29,
+          "after_budget": 5,
+          "budget_removed": 24,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 67.0,
+          "slot_cap": 22.333333333333332,
+          "reserve": 0.0,
+          "min_cost_nonbudget": 10.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "5140f4c3225b",
+      "phase": "daily",
+      "slot_fp": "meal|d5|slot:dinner|seg:None|Philadelphia|None|None->None",
+      "bundle_fp": "1efe31b0d8e0"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "5140f4c3225b",
+        "phase": "daily",
+        "slot_fp": "meal|d5|slot:dinner|seg:None|Philadelphia|None|None->None",
+        "bundle_fp": "1efe31b0d8e0"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "5140f4c3225b",
+        "phase": "daily",
+        "slot_fp": "meal|d5|slot:dinner|seg:None|Philadelphia|None|None->None",
+        "bundle_fp": "1efe31b0d8e0"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "5140f4c3225b",
+        "phase": "daily",
+        "slot_fp": "meal|d5|slot:dinner|seg:None|Philadelphia|None|None->None",
+        "bundle_fp": "1efe31b0d8e0"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 11.332966483198106
+}

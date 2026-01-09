@@ -1,0 +1,241 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 3313.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you formulate a 5-day travel plan for a party of 2, beginning in Chicago and covering 2 cities in North Carolina from March 20th to March 24th, 2022? We have set aside a budget of $3,600. We have a preference for accommodations that allow parties and should ideally not be shared rooms. As for transportation, we prefer a travel mode that doesn't involve flights.",
+  "parsed": {
+    "org": "Chicago",
+    "dest": "North Carolina",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-20",
+      "2022-03-21",
+      "2022-03-22",
+      "2022-03-23",
+      "2022-03-24"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "parties",
+      "cuisine": null,
+      "room type": "not shared room",
+      "transportation": "no flight"
+    },
+    "budget": 3600,
+    "origin": "Chicago",
+    "destination": "North Carolina",
+    "duration_days": 5,
+    "start_date": "2022-03-20",
+    "preferences": [
+      "parties",
+      "not shared room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Greensboro",
+      "Wilmington",
+      "New Bern",
+      "Charlotte",
+      "Raleigh",
+      "Asheville",
+      "Fayetteville"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Asheville",
+      "Charlotte"
+    ],
+    "transportation_dates": [
+      "2022-03-20",
+      "2022-03-22",
+      "2022-03-24"
+    ],
+    "transportation_methods": [
+      "self-driving, from Chicago to Asheville, cost: 1053.0",
+      "self-driving, from Asheville to Charlotte, cost: 209.0",
+      "self-driving, from Charlotte to Chicago, cost: 1215.0"
+    ],
+    "restaurants": [
+      "Pizza Hut, Asheville",
+      "The Taste of Punjab, Asheville",
+      "Glen's Bakehouse, Asheville"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "Habitación comoda, Asheville",
+      "Luxury 2 bdr/2 bath prime Williamburg, Charlotte"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Chicago to Asheville",
+      "transportation": "Self-driving, from Chicago to Asheville, Cost: 1053",
+      "breakfast": "Pizza Hut, Asheville",
+      "attraction": "-",
+      "lunch": "The Taste of Punjab, Asheville",
+      "dinner": "Glen's Bakehouse, Asheville",
+      "accommodation": "Habitación comoda, Asheville"
+    },
+    {
+      "days": 2,
+      "current_city": "Asheville",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Habitación comoda, Asheville"
+    },
+    {
+      "days": 3,
+      "current_city": "from Asheville to Charlotte",
+      "transportation": "Self-driving, from Asheville to Charlotte, Cost: 209",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Luxury 2 bdr/2 bath prime Williamburg, Charlotte"
+    },
+    {
+      "days": 4,
+      "current_city": "Charlotte",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Luxury 2 bdr/2 bath prime Williamburg, Charlotte"
+    },
+    {
+      "days": 5,
+      "current_city": "from Charlotte to Chicago",
+      "transportation": "Self-driving, from Charlotte to Chicago, Cost: 1215",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d2|slot:breakfast|seg:None|Asheville|None|None->None",
+      "counts": {
+        "kb": 20,
+        "after_nonbudget": 20,
+        "after_budget": 3,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 17,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 287.0,
+        "slot_cap": 11.958333333333334,
+        "reserve": 242.0
+      },
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d2|slot:breakfast|seg:None|Asheville|None|None->None",
+        "city": "Asheville",
+        "city_bundle": [
+          "Asheville",
+          "Charlotte"
+        ],
+        "reason": "duplication",
+        "counts": {
+          "kb": 20,
+          "after_nonbudget": 20,
+          "after_budget": 3,
+          "budget_removed": 17,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 287.0,
+          "slot_cap": 11.958333333333334,
+          "reserve": 242.0,
+          "min_cost_nonbudget": 11.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "4553359394bd",
+      "phase": "daily",
+      "slot_fp": "meal|d2|slot:breakfast|seg:None|Asheville|None|None->None",
+      "bundle_fp": "b89f75ab2dd7"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "4553359394bd",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:breakfast|seg:None|Asheville|None|None->None",
+        "bundle_fp": "b89f75ab2dd7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "4553359394bd",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:breakfast|seg:None|Asheville|None|None->None",
+        "bundle_fp": "b89f75ab2dd7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "4553359394bd",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:breakfast|seg:None|Asheville|None|None->None",
+        "bundle_fp": "b89f75ab2dd7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 1.4442276624031365
+}

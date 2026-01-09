@@ -1,0 +1,277 @@
+{
+  "parser_mode": "envspec",
+  "success": false,
+  "cost": 1428.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you arrange a 3-day travel plan departing from Houston and going to Colorado Springs for two people from March 21st to March 23rd, 2022? We have a budget of $2,200 and we're bringing pets, so accommodations need to be pet-friendly.",
+  "parsed": {
+    "origin": "Houston",
+    "destination": "Colorado Springs",
+    "start_date": "2022-03-21",
+    "duration_days": 3,
+    "budget": 2200.0,
+    "people_number": 2,
+    "visiting_city_number": 1,
+    "preferences": [
+      "American"
+    ],
+    "must_visit_cities": [],
+    "fixed_city_order": [],
+    "priority_cities": [],
+    "constraints": {
+      "transport": {
+        "allow": [
+          "flight",
+          "self-driving"
+        ],
+        "forbid": null
+      },
+      "meal": {
+        "cuisines": [
+          "American"
+        ]
+      },
+      "stay": {
+        "room_type": "entire room",
+        "house_rule": "pets"
+      },
+      "daily": {
+        "attractions_per_day_min": 1,
+        "attractions_per_day_max": null
+      },
+      "city": {
+        "candidate_cities": null
+      }
+    },
+    "attractions_per_day_min": 1
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Colorado Springs"
+    ],
+    "transportation_dates": [
+      "2022-03-21",
+      "2022-03-23"
+    ],
+    "transportation_methods": [
+      "Flight F1743775, from Houston to Colorado Springs, Departure Time: 13:33, Arrival Time: 14:47, cost: 162.0",
+      "Flight F3409034, from Colorado Springs to Houston, Departure Time: 07:33, Arrival Time: 10:53, cost: 162.0"
+    ],
+    "restaurants": [
+      "Sushi Masa, Colorado Springs",
+      "Underdoggs Sports Bar & Grill, Colorado Springs",
+      "Derby, Colorado Springs",
+      "Nobu - One&Only, Colorado Springs",
+      "Mamu's Infusion, Colorado Springs",
+      "#Dilliwaala6, Colorado Springs",
+      "PizzaExpress, Colorado Springs",
+      "South Cafe, Colorado Springs"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "Large sunny park slope apartment, Colorado Springs"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Houston to Colorado Springs",
+      "transportation": "Flight Number: F1743775, from Houston to Colorado Springs, Departure Time: 13:33, Arrival Time: 14:47",
+      "breakfast": "Sushi Masa, Colorado Springs",
+      "attraction": "-",
+      "lunch": "Underdoggs Sports Bar & Grill, Colorado Springs",
+      "dinner": "Derby, Colorado Springs",
+      "accommodation": "Large sunny park slope apartment, Colorado Springs"
+    },
+    {
+      "days": 2,
+      "current_city": "Colorado Springs",
+      "transportation": "-",
+      "breakfast": "Nobu - One&Only, Colorado Springs",
+      "attraction": "-",
+      "lunch": "Mamu's Infusion, Colorado Springs",
+      "dinner": "#Dilliwaala6, Colorado Springs",
+      "accommodation": "Large sunny park slope apartment, Colorado Springs"
+    },
+    {
+      "days": 3,
+      "current_city": "from Colorado Springs to Houston",
+      "transportation": "Flight Number: F3409034, from Colorado Springs to Houston, Departure Time: 07:33, Arrival Time: 10:53",
+      "breakfast": "PizzaExpress, Colorado Springs",
+      "attraction": "-",
+      "lunch": "South Cafe, Colorado Springs",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d3|slot:dinner|seg:None|Colorado Springs|None|None->None",
+      "counts": {
+        "kb": 30,
+        "after_nonbudget": 0,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 772.0,
+        "slot_cap": 386.0,
+        "reserve": 0.0
+      },
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d3|slot:dinner|seg:None|Colorado Springs|None|None->None",
+        "city": "Colorado Springs",
+        "city_bundle": [
+          "Colorado Springs"
+        ],
+        "reason": "scarcity",
+        "counts": {
+          "kb": 30,
+          "after_nonbudget": 0,
+          "after_budget": 0,
+          "budget_removed": 0,
+          "nonbudget_removed": 30,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": "missing_cuisine",
+        "budget_context": {
+          "remaining": 772.0,
+          "slot_cap": 386.0,
+          "reserve": 0.0,
+          "min_cost_nonbudget": null
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "448351b915fb",
+      "phase": "daily",
+      "slot_fp": "meal|d3|slot:dinner|seg:None|Colorado Springs|None|None->None",
+      "bundle_fp": "343352b6fff3"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "daily",
+        "feature": "budget_risk",
+        "delta": 0.2
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "daily",
+        "patch": {
+          "topk": 50
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "448351b915fb",
+        "phase": "daily",
+        "slot_fp": "meal|d3|slot:dinner|seg:None|Colorado Springs|None|None->None",
+        "bundle_fp": "343352b6fff3"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "daily",
+          "feature": "budget_risk",
+          "delta": 0.2
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "daily",
+          "patch": {
+            "topk": 50
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "448351b915fb",
+        "phase": "daily",
+        "slot_fp": "meal|d3|slot:dinner|seg:None|Colorado Springs|None|None->None",
+        "bundle_fp": "343352b6fff3"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "daily",
+          "feature": "budget_risk",
+          "delta": 0.2
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "daily",
+          "patch": {
+            "topk": 50
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "448351b915fb",
+        "phase": "daily",
+        "slot_fp": "meal|d3|slot:dinner|seg:None|Colorado Springs|None|None->None",
+        "bundle_fp": "343352b6fff3"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "daily",
+          "feature": "budget_risk",
+          "delta": 0.2
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "daily",
+          "patch": {
+            "topk": 50
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 3.487987235188484
+}
