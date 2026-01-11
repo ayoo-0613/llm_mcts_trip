@@ -430,6 +430,20 @@ def parse_args():
         help="Apply LLM policy priors at root, all nodes, or disable.",
     )
     parser.add_argument(
+        "--prior-mode",
+        choices=["uniform", "cost", "cost_branch"],
+        default="uniform",
+        help="Heuristic priors when not using LLM priors (uniform/cost/cost_branch).",
+    )
+    parser.add_argument("--prior-cost-weight", type=float, default=1.0)
+    parser.add_argument("--prior-branch-weight", type=float, default=1.0)
+    parser.add_argument(
+        "--soft-penalty-tau",
+        type=float,
+        default=0.7,
+        help="Strength of soft_penalty in heuristic priors (when available).",
+    )
+    parser.add_argument(
         "--relax-max-tries",
         type=int,
         default=6,

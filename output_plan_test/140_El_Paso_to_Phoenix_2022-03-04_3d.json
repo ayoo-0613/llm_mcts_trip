@@ -1,0 +1,240 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1814.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you assist in formulating a 3-day trip for two individuals, initiating from El Paso and concluding in Phoenix? The travel dates we're considering are March 4th to March 6th, 2022. We have a budget of $1,900. For accommodations, we have one constraint: the establishments must allow visitors. As far as meals go, we have a diverse taste palette, encompassing American, French, Mexican, and Indian cuisines. And to clarify, we are willing to travel, but not via flight.",
+  "parsed": {
+    "org": "El Paso",
+    "dest": "Phoenix",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-04",
+      "2022-03-05",
+      "2022-03-06"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "visitors",
+      "cuisine": [
+        "American",
+        "French",
+        "Mexican",
+        "Indian"
+      ],
+      "room type": null,
+      "transportation": "no flight"
+    },
+    "budget": 1900,
+    "origin": "El Paso",
+    "destination": "Phoenix",
+    "duration_days": 3,
+    "start_date": "2022-03-04",
+    "preferences": [
+      "American",
+      "French",
+      "Mexican",
+      "Indian",
+      "visitors"
+    ],
+    "transport_forbid": [
+      "flight"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Phoenix"
+    ],
+    "transportation_dates": [
+      "2022-03-04",
+      "2022-03-06"
+    ],
+    "transportation_methods": [
+      "taxi, from El Paso to Phoenix, cost: 692.0",
+      "taxi, from Phoenix to El Paso, cost: 694.0"
+    ],
+    "restaurants": [
+      "Vero Gusto, Phoenix",
+      "Doughlicious, Phoenix",
+      "Spooky Sky, Phoenix",
+      "Rupa Bangali Dhaba, Phoenix",
+      "Amritsari Naan Hut, Phoenix",
+      "Delhi Dairy, Phoenix",
+      "Cafe Amigo, Phoenix"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "DLKLC Residence, Phoenix"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from El Paso to Phoenix",
+      "transportation": "Taxi, from El Paso to Phoenix, Cost: 692",
+      "breakfast": "Vero Gusto, Phoenix",
+      "attraction": "-",
+      "lunch": "Doughlicious, Phoenix",
+      "dinner": "Spooky Sky, Phoenix",
+      "accommodation": "DLKLC Residence, Phoenix"
+    },
+    {
+      "days": 2,
+      "current_city": "Phoenix",
+      "transportation": "-",
+      "breakfast": "Rupa Bangali Dhaba, Phoenix",
+      "attraction": "-",
+      "lunch": "Amritsari Naan Hut, Phoenix",
+      "dinner": "Delhi Dairy, Phoenix",
+      "accommodation": "DLKLC Residence, Phoenix"
+    },
+    {
+      "days": 3,
+      "current_city": "from Phoenix to El Paso",
+      "transportation": "Taxi, from Phoenix to El Paso, Cost: 694",
+      "breakfast": "Cafe Amigo, Phoenix",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d3|slot:lunch|seg:None|Phoenix|None|None->None",
+      "counts": {
+        "kb": 24,
+        "after_nonbudget": 6,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 6,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 86.0,
+        "slot_cap": 41.9921875,
+        "reserve": 15.967249999999998
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 22.099999999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 18.784999999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 15.967249999999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d3|slot:lunch|seg:None|Phoenix|None|None->None",
+        "city": "Phoenix",
+        "city_bundle": [
+          "Phoenix"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 24,
+          "after_nonbudget": 6,
+          "after_budget": 0,
+          "budget_removed": 6,
+          "nonbudget_removed": 18,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 86.0,
+          "slot_cap": 41.9921875,
+          "reserve": 15.967249999999998,
+          "min_cost_nonbudget": 50.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "c6eb3033cf23",
+      "phase": "daily",
+      "slot_fp": "meal|d3|slot:lunch|seg:None|Phoenix|None|None->None",
+      "bundle_fp": "cc2c021fa6cd"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "c6eb3033cf23",
+        "phase": "daily",
+        "slot_fp": "meal|d3|slot:lunch|seg:None|Phoenix|None|None->None",
+        "bundle_fp": "cc2c021fa6cd"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "c6eb3033cf23",
+        "phase": "daily",
+        "slot_fp": "meal|d3|slot:lunch|seg:None|Phoenix|None|None->None",
+        "bundle_fp": "cc2c021fa6cd"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "c6eb3033cf23",
+        "phase": "daily",
+        "slot_fp": "meal|d3|slot:lunch|seg:None|Phoenix|None|None->None",
+        "bundle_fp": "cc2c021fa6cd"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.9499640419999196
+}

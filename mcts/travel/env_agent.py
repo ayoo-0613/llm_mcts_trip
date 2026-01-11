@@ -601,6 +601,135 @@ class TravelEnv:
         valid_actions = self.get_valid_actions()
         return obs, valid_actions
 
+    # ----------------------------
+    # Preview helpers (side-effect-free)
+    # ----------------------------
+    def estimate_next_action_count(self, action: str) -> int:
+        """
+        Estimate the branching factor after taking ``action`` from the current state.
+
+        This is used for heuristic priors (e.g., prefer cheaper actions that keep more options).
+        It must not permanently mutate relaxation/budget knobs inside the retrieval agent.
+        """
+        if not action:
+            return 0
+        payload = (self.action_payloads or {}).get(action)
+        if not payload:
+            return 0
+        kind = payload[0]
+        if kind == "finish":
+            return 0
+
+        preview = self.state.clone()
+        try:
+            self._apply_preview_payload(preview, payload)
+        except Exception:
+            return 0
+
+        try:
+            preview.cost = self._estimate_cost(preview)
+        except Exception:
+            pass
+        try:
+            self._advance_phase_if_ready(preview)
+        except Exception:
+            pass
+        try:
+            slot = self._next_slot(preview)
+        except Exception:
+            slot = None
+        if slot is None:
+            return 0
+
+        # Snapshot & restore relaxation state to keep compute() side-effect-free.
+        ra = getattr(self, "retrieval_agent", None)
+        if ra is None:
+            return 0
+        try:
+            saved_reserve = dict(getattr(ra, "_reserve_scales", {}) or {})
+            saved_caps = dict(getattr(ra, "_cap_multipliers", {}) or {})
+            saved_revision = int(getattr(ra, "_budget_revision", 0) or 0)
+        except Exception:
+            saved_reserve = {}
+            saved_caps = {}
+            saved_revision = 0
+        try:
+            result = ra.compute(self.goal_parsed, preview, slot, user_query=self.user_query)
+            actions = list(getattr(result, "actions", []) or [])
+            return len(actions)
+        finally:
+            try:
+                reserve_scales = getattr(ra, "_reserve_scales", None)
+                if isinstance(reserve_scales, dict):
+                    reserve_scales.clear()
+                    reserve_scales.update(saved_reserve)
+            except Exception:
+                pass
+            try:
+                cap_multipliers = getattr(ra, "_cap_multipliers", None)
+                if isinstance(cap_multipliers, dict):
+                    cap_multipliers.clear()
+                    cap_multipliers.update(saved_caps)
+            except Exception:
+                pass
+            try:
+                setattr(ra, "_budget_revision", saved_revision)
+            except Exception:
+                pass
+
+    def _apply_preview_payload(self, state: TravelState, payload: Tuple) -> None:
+        """Apply an action payload to a cloned state (no logging/reward)."""
+        if not payload:
+            return
+        kind = payload[0]
+        if kind == "choose_city":
+            _, city = payload
+            if city and city not in state.city_sequence:
+                state.city_sequence.append(city)
+                state.day_to_city = {}
+                state.segment_modes = {}
+                state.outbound_flight = None
+                state.return_flight = None
+        elif kind == "segment_mode":
+            _, seg_idx, mode, detail = payload
+            state.segment_modes[int(seg_idx)] = {"mode": mode, "detail": detail}
+            segments = self._segments(state)
+            last_idx = segments[-1][0] if segments else None
+            if str(mode).lower() == "flight":
+                if int(seg_idx) == 0:
+                    state.outbound_flight = detail
+                return_required = self._return_required()
+                if return_required and last_idx is not None and int(seg_idx) == int(last_idx):
+                    state.return_flight = detail
+            else:
+                require_flight = self._require_flight()
+                return_required = self._return_required()
+                if require_flight and (int(seg_idx) == 0 or (return_required and last_idx is not None and int(seg_idx) == int(last_idx))):
+                    self._ensure_violation(state, "missing_flight")
+        elif kind == "stay_city":
+            _, city, stay = payload
+            if city and state.city_stays.get(city) is None:
+                state.city_stays[city] = stay
+            state.accommodation = None
+        elif kind == "choose_city_bundle":
+            seq = payload[1] if len(payload) >= 2 else []
+            # Reuse the canonical initializer so downstream slots are consistent.
+            self._apply_city_bundle(state, list(seq or []))
+        elif kind == "meal":
+            _, day, slot, rest = payload
+            try:
+                if rest and state.meals[int(day)][str(slot)] is None:
+                    state.meals[int(day)][str(slot)] = rest
+            except Exception:
+                pass
+        elif kind == "attraction":
+            _, day, slot, attr = payload
+            try:
+                if attr and state.attractions[int(day)][str(slot)] is None:
+                    state.attractions[int(day)][str(slot)] = attr
+            except Exception:
+                pass
+
     def set_failure_memory(self, failure_memory: Any) -> None:
         self.failure_memory = failure_memory
         if hasattr(self.retrieval_agent, "set_failure_memory"):

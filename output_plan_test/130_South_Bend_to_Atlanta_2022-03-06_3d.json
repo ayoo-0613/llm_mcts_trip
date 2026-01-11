@@ -1,0 +1,292 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 452.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you help me craft a 3-day travel plan for two people, starting from South Bend and ending in Atlanta, from March 6th to March 8th, 2022? Our budget is $1,500. We require accommodations that allow parties and we're interested in tasting local Mediterranean, American, Chinese, and Indian cuisines. Additionally, we are not planning on driving ourselves.",
+  "parsed": {
+    "org": "South Bend",
+    "dest": "Atlanta",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-06",
+      "2022-03-07",
+      "2022-03-08"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "parties",
+      "cuisine": [
+        "Mediterranean",
+        "American",
+        "Chinese",
+        "Indian"
+      ],
+      "room type": null,
+      "transportation": "no self-driving"
+    },
+    "budget": 1500,
+    "origin": "South Bend",
+    "destination": "Atlanta",
+    "duration_days": 3,
+    "start_date": "2022-03-06",
+    "preferences": [
+      "Mediterranean",
+      "American",
+      "Chinese",
+      "Indian",
+      "parties"
+    ],
+    "transport_forbid": [
+      "self-driving"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Atlanta"
+    ],
+    "transportation_dates": [
+      "2022-03-06",
+      "2022-03-08"
+    ],
+    "transportation_methods": [
+      "Flight F1160116, from South Bend to Atlanta, Departure Time: 12:07, Arrival Time: 13:51, cost: 113.0",
+      "Flight F3207423, from Atlanta to South Bend, Departure Time: 09:50, Arrival Time: 11:26, cost: 113.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Atlanta"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from South Bend to Atlanta",
+      "transportation": "Flight Number: F1160116, from South Bend to Atlanta, Departure Time: 12:07, Arrival Time: 13:51",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Atlanta",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Atlanta to South Bend",
+      "transportation": "Flight Number: F3207423, from Atlanta to South Bend, Departure Time: 09:50, Arrival Time: 11:26",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Atlanta|None|None->None",
+      "counts": {
+        "kb": 7,
+        "after_nonbudget": 4,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 4,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1048.0,
+        "slot_cap": 767.578125,
+        "reserve": 143.70524999999998
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 198.9,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 169.06499999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 143.70524999999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Atlanta|None|None->None",
+        "city": "Atlanta",
+        "city_bundle": [
+          "Atlanta"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 7,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1048.0,
+          "slot_cap": 767.578125,
+          "reserve": 143.70524999999998,
+          "min_cost_nonbudget": 874.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "ab16c64612ef",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Atlanta|None|None->None",
+      "bundle_fp": "ad79179a4e71"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "ab16c64612ef",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Atlanta|None|None->None",
+        "bundle_fp": "ad79179a4e71"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "ab16c64612ef",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Atlanta|None|None->None",
+        "bundle_fp": "ad79179a4e71"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "ab16c64612ef",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Atlanta|None|None->None",
+        "bundle_fp": "ad79179a4e71"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.06508729200004382
+}

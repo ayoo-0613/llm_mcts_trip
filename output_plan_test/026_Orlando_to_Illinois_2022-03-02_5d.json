@@ -1,0 +1,314 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 2040.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you construct a 5-day travel itinerary for a solo traveler starting in Orlando and visiting 2 cities in Illinois, spanning the dates from March 2nd to March 6th, 2022? The budget for the trip is set to $2,700.",
+  "parsed": {
+    "org": "Orlando",
+    "dest": "Illinois",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-02",
+      "2022-03-03",
+      "2022-03-04",
+      "2022-03-05",
+      "2022-03-06"
+    ],
+    "people_number": 1,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 2700,
+    "origin": "Orlando",
+    "destination": "Illinois",
+    "duration_days": 5,
+    "start_date": "2022-03-02",
+    "preferences": [],
+    "candidate_cities": [
+      "Moline",
+      "Belleville",
+      "Bloomington",
+      "Champaign",
+      "Chicago",
+      "Rockford",
+      "Peoria"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Chicago",
+      "Peoria"
+    ],
+    "transportation_dates": [
+      "2022-03-02",
+      "2022-03-04",
+      "2022-03-06"
+    ],
+    "transportation_methods": [
+      "Flight F0096609, from Orlando to Chicago, Departure Time: 06:20, Arrival Time: 07:53, cost: 198.0",
+      "Flight F3037961, from Chicago to Peoria, Departure Time: 18:06, Arrival Time: 18:47, cost: 26.0",
+      "taxi, from Peoria to Orlando, cost: 1816.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Chicago",
+      "missing, Peoria"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Orlando to Chicago",
+      "transportation": "Flight Number: F0096609, from Orlando to Chicago, Departure Time: 06:20, Arrival Time: 07:53",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Chicago",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Chicago to Peoria",
+      "transportation": "Flight Number: F3037961, from Chicago to Peoria, Departure Time: 18:06, Arrival Time: 18:47",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Peoria",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Peoria to Orlando",
+      "transportation": "Taxi, from Peoria to Orlando, Cost: 1816",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+      "counts": {
+        "kb": 14,
+        "after_nonbudget": 4,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 4,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 660.0,
+        "slot_cap": 241.69921875,
+        "reserve": 195.90587499999998
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 271.15,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 230.47749999999996,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 195.90587499999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "city": "Chicago",
+        "city_bundle": [
+          "Chicago",
+          "Peoria"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 660.0,
+          "slot_cap": 241.69921875,
+          "reserve": 195.90587499999998,
+          "min_cost_nonbudget": 781.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "8edcce42284e",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+      "bundle_fp": "3f7f664de1b7"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "8edcce42284e",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "3f7f664de1b7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "8edcce42284e",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "3f7f664de1b7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "8edcce42284e",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "3f7f664de1b7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.34078362500000026
+}

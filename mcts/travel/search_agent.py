@@ -30,6 +30,10 @@ class SearchAgent:
             model=getattr(args, "local_model", None),
             debug=getattr(args, "debug", False),
             use_llm_prior=getattr(args, "use_llm_prior", "all"),
+            prior_mode=getattr(args, "prior_mode", "uniform"),
+            prior_cost_weight=getattr(args, "prior_cost_weight", 1.0),
+            prior_branch_weight=getattr(args, "prior_branch_weight", 1.0),
+            soft_penalty_tau=getattr(args, "soft_penalty_tau", 0.7),
         )
         self.agent = MCTSAgent(
             mcts_args,

@@ -1,0 +1,250 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 10824.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you create a 5-day travel itinerary for me? We are a group of 8 starting from Salt Lake City and intend to visit 2 cities in Texas from March 14th to March 18th, 2022. Our budget has been updated to $12,000. We require our accommodations to have a visitors-friendly house rule.",
+  "parsed": {
+    "org": "Salt Lake City",
+    "dest": "Texas",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-14",
+      "2022-03-15",
+      "2022-03-16",
+      "2022-03-17",
+      "2022-03-18"
+    ],
+    "people_number": 8,
+    "local_constraint": {
+      "house rule": "visitors",
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 12000,
+    "origin": "Salt Lake City",
+    "destination": "Texas",
+    "duration_days": 5,
+    "start_date": "2022-03-14",
+    "preferences": [
+      "visitors"
+    ],
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "San Antonio",
+      "Amarillo"
+    ],
+    "transportation_dates": [
+      "2022-03-14",
+      "2022-03-16",
+      "2022-03-18"
+    ],
+    "transportation_methods": [
+      "Flight F2065342, from Salt Lake City to San Antonio, Departure Time: 21:02, Arrival Time: 00:36, cost: 218.0",
+      "taxi, from San Antonio to Amarillo, cost: 802.0",
+      "taxi, from Amarillo to Salt Lake City, cost: 1419.0"
+    ],
+    "restaurants": [
+      "Barbeque Nation, San Antonio",
+      "Super Cake Shop, San Antonio",
+      "Shri Balaji, San Antonio"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "Large apt in prime carol gardens, San Antonio",
+      "Gramercy Park restful, cozy, sun-filled home, Amarillo"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Salt Lake City to San Antonio",
+      "transportation": "Flight Number: F2065342, from Salt Lake City to San Antonio, Departure Time: 21:02, Arrival Time: 00:36",
+      "breakfast": "Barbeque Nation, San Antonio",
+      "attraction": "-",
+      "lunch": "Super Cake Shop, San Antonio",
+      "dinner": "Shri Balaji, San Antonio",
+      "accommodation": "Large apt in prime carol gardens, San Antonio"
+    },
+    {
+      "days": 2,
+      "current_city": "San Antonio",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Large apt in prime carol gardens, San Antonio"
+    },
+    {
+      "days": 3,
+      "current_city": "from San Antonio to Amarillo",
+      "transportation": "Taxi, from San Antonio to Amarillo, Cost: 802",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Gramercy Park restful, cozy, sun-filled home, Amarillo"
+    },
+    {
+      "days": 4,
+      "current_city": "Amarillo",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Gramercy Park restful, cozy, sun-filled home, Amarillo"
+    },
+    {
+      "days": 5,
+      "current_city": "from Amarillo to Salt Lake City",
+      "transportation": "Taxi, from Amarillo to Salt Lake City, Cost: 1419",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d2|slot:breakfast|seg:None|San Antonio|None|None->None",
+      "counts": {
+        "kb": 28,
+        "after_nonbudget": 28,
+        "after_budget": 2,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 26,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1176.0,
+        "slot_cap": 12.25,
+        "reserve": 1048.0
+      },
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d2|slot:breakfast|seg:None|San Antonio|None|None->None",
+        "city": "San Antonio",
+        "city_bundle": [
+          "San Antonio",
+          "Amarillo"
+        ],
+        "reason": "duplication",
+        "counts": {
+          "kb": 28,
+          "after_nonbudget": 28,
+          "after_budget": 2,
+          "budget_removed": 26,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1176.0,
+          "slot_cap": 12.25,
+          "reserve": 1048.0,
+          "min_cost_nonbudget": 16.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "17f4e60af3ad",
+      "phase": "daily",
+      "slot_fp": "meal|d2|slot:breakfast|seg:None|San Antonio|None|None->None",
+      "bundle_fp": "17260fba1580"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "17f4e60af3ad",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:breakfast|seg:None|San Antonio|None|None->None",
+        "bundle_fp": "17260fba1580"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "17f4e60af3ad",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:breakfast|seg:None|San Antonio|None|None->None",
+        "bundle_fp": "17260fba1580"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "17f4e60af3ad",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:breakfast|seg:None|San Antonio|None|None->None",
+        "bundle_fp": "17260fba1580"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.6857813750000332
+}

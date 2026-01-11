@@ -113,6 +113,12 @@ class MCTSAgent:
             self.llm_prior_mode = "all"
         self.prior_logs = []
         self.soft_penalty_tau = float(getattr(args, "soft_penalty_tau", 0.7) or 0.7)
+        self.prior_mode = str(getattr(args, "prior_mode", "uniform") or "uniform").lower().strip()
+        if self.prior_mode not in ("uniform", "cost", "cost_branch"):
+            self.prior_mode = "uniform"
+        self.prior_cost_weight = float(getattr(args, "prior_cost_weight", 1.0) or 1.0)
+        self.prior_branch_weight = float(getattr(args, "prior_branch_weight", 1.0) or 1.0)
+        self._branch_count_cache = {}
 
     # ----------------------------
     # Utility
@@ -484,6 +490,145 @@ class MCTSAgent:
             return np.ones((len(actions),)) / len(actions)
         return np.array([s / score_sum for s in scores], dtype=np.float32)
 
+    def _score_actions_with_cost_branch(self, actions, payloads):
+        if not actions:
+            return np.array([])
+
+        env = getattr(self, "env", None)
+        people = 1
+        if env is not None:
+            parsed = getattr(env, "goal_parsed", None)
+            if isinstance(parsed, dict) and parsed.get("people_number") is not None:
+                try:
+                    people = int(parsed.get("people_number") or 1)
+                except Exception:
+                    people = 1
+        people = max(1, int(people))
+
+        def _action_cost(action: str):
+            if not payloads or action not in payloads:
+                return None
+            payload = payloads.get(action)
+            kind = payload[0] if payload else None
+            if kind == "segment_mode":
+                mode = str(payload[2] if len(payload) > 2 else "").lower()
+                detail = payload[3] if len(payload) > 3 else {}
+                if not isinstance(detail, dict):
+                    return None
+                base = detail.get("price")
+                if base is None:
+                    base = detail.get("cost")
+                try:
+                    base_f = float(base) if base is not None else None
+                except Exception:
+                    base_f = None
+                if base_f is None:
+                    return None
+                if mode == "flight":
+                    return base_f * people
+                if mode == "taxi":
+                    return base_f * max(1, math.ceil(people / 4.0))
+                if mode == "self-driving":
+                    return base_f * max(1, math.ceil(people / 5.0))
+                return base_f
+            if kind == "stay_city":
+                detail = payload[2] if len(payload) > 2 else {}
+                if isinstance(detail, dict) and detail.get("price") is not None:
+                    try:
+                        return float(detail.get("price"))
+                    except Exception:
+                        return None
+                return None
+            if kind == "meal":
+                detail = payload[3] if len(payload) > 3 else {}
+                if isinstance(detail, dict) and detail.get("cost") is not None:
+                    try:
+                        return float(detail.get("cost")) * people
+                    except Exception:
+                        return None
+                return None
+            if kind == "attraction":
+                return 0.0
+            return None
+
+        known = []
+        for i, a in enumerate(actions):
+            c = _action_cost(a)
+            if c is None:
+                continue
+            try:
+                c_f = float(c)
+            except Exception:
+                continue
+            if math.isnan(c_f):
+                continue
+            known.append((i, c_f))
+
+        # Rank-based cost score in [0, 1], cheaper -> higher.
+        cost_score = [0.5] * len(actions)
+        if known:
+            known_sorted = sorted(known, key=lambda t: t[1])
+            denom = max(1, len(known_sorted))
+            for rank, (idx, _) in enumerate(known_sorted):
+                cost_score[idx] = float(len(known_sorted) - rank) / float(denom)
+
+        # Branching score in [0, 1], more options -> higher.
+        branch_counts = [0] * len(actions)
+        if env is not None and hasattr(env, "estimate_next_action_count"):
+            state_sig = None
+            try:
+                env_state = getattr(env, "state", None)
+                state_sig = env_state.signature() if env_state is not None and hasattr(env_state, "signature") else None
+            except Exception:
+                state_sig = None
+            for i, a in enumerate(actions):
+                cache_key = (state_sig, a)
+                if cache_key in self._branch_count_cache:
+                    branch_counts[i] = int(self._branch_count_cache[cache_key])
+                    continue
+                try:
+                    cnt = int(env.estimate_next_action_count(a) or 0)
+                except Exception:
+                    cnt = 0
+                branch_counts[i] = max(0, cnt)
+                self._branch_count_cache[cache_key] = branch_counts[i]
+
+        max_branch = max(branch_counts) if branch_counts else 0
+        denom = 1.0 + float(max_branch or 0)
+        branch_score = [(1.0 + float(c)) / denom for c in branch_counts]
+
+        w_cost = max(0.0, float(self.prior_cost_weight))
+        w_branch = max(0.0, float(self.prior_branch_weight))
+        scores = []
+        for action, cs, bs in zip(actions, cost_score, branch_score):
+            s = (max(1e-6, float(cs)) ** w_cost) * (max(1e-6, float(bs)) ** w_branch)
+            penalty = None
+            if payloads and action in payloads:
+                payload = payloads.get(action)
+                kind = payload[0] if payload else None
+                if kind == "segment_mode":
+                    detail = payload[3] if len(payload) > 3 else {}
+                    if isinstance(detail, dict):
+                        penalty = detail.get("soft_penalty")
+                elif kind == "stay_city":
+                    detail = payload[2] if len(payload) > 2 else {}
+                    if isinstance(detail, dict):
+                        penalty = detail.get("soft_penalty")
+                elif kind == "meal":
+                    detail = payload[3] if len(payload) > 3 else {}
+                    if isinstance(detail, dict):
+                        penalty = detail.get("soft_penalty")
+            if penalty is not None:
+                try:
+                    s *= math.exp(-self.soft_penalty_tau * float(penalty))
+                except Exception:
+                    pass
+            scores.append(s)
+        score_sum = float(sum(scores))
+        if score_sum <= 0:
+            return np.ones((len(actions),)) / len(actions)
+        return np.array([s / score_sum for s in scores], dtype=np.float32)
+
     # ----------------------------
     # Build / Rebuild State
     # ----------------------------
@@ -516,7 +661,11 @@ class MCTSAgent:
             if not state.valid_actions:
                 probs_full = np.array([])
             else:
-                if self.llm_prior_mode == "none":
+                if self.prior_mode == "cost":
+                    probs_full = self._score_actions_with_budget(state.valid_actions, payloads)
+                elif self.prior_mode == "cost_branch":
+                    probs_full = self._score_actions_with_cost_branch(state.valid_actions, payloads)
+                elif self.llm_prior_mode == "none":
                     probs_full = self._score_actions_with_budget(state.valid_actions, payloads)
                 else:
                     probs_full = np.ones((len(state.valid_actions),)) / len(state.valid_actions)
@@ -529,9 +678,6 @@ class MCTSAgent:
                 payloads=payloads,
                 state_signature=state_signature,
             )
-            probs_full = self._apply_failure_gradient_prior(slot, state.valid_actions, probs_full, payloads)
-        if not use_llm:
-            probs_full = self._apply_failure_gradient_prior(slot, state.valid_actions, probs_full, payloads)
 
         self.state_dict[state.id] = state
         state.children = []
@@ -622,7 +768,12 @@ class MCTSAgent:
             if not state.valid_actions:
                 probs_full = np.array([])
             else:
-                probs_full = np.ones((len(state.valid_actions),)) / len(state.valid_actions)
+                if self.prior_mode == "cost":
+                    probs_full = self._score_actions_with_budget(state.valid_actions, payloads)
+                elif self.prior_mode == "cost_branch":
+                    probs_full = self._score_actions_with_cost_branch(state.valid_actions, payloads)
+                else:
+                    probs_full = np.ones((len(state.valid_actions),)) / len(state.valid_actions)
         else:
             probs_full, state.predicted_reward = self._score_actions_with_policy(
                 history,
@@ -632,6 +783,9 @@ class MCTSAgent:
                 payloads=payloads,
                 state_signature=state_signature,
             )
+            probs_full = self._apply_failure_gradient_prior(slot, state.valid_actions, probs_full, payloads)
+        if not use_llm:
+            probs_full = self._apply_failure_gradient_prior(slot, state.valid_actions, probs_full, payloads)
 
         self.state_dict[state.id] = state
         state.children = []
