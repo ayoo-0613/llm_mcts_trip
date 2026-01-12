@@ -5,6 +5,7 @@ import os
 import sys
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 from tqdm import tqdm
+from datasets import load_dataset
 
 # Make local evaluation modules importable regardless of CWD.
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -60,217 +61,14 @@ def paper_term_mapping(commonsense_constraint_record, hard_constraint_record):
     return remap_commonsense_constraint_record, remap_hard_constraint_record
 
 
-def _safe_eval_obj(obj: Any) -> Any:
-    if isinstance(obj, str):
-        try:
-            return ast.literal_eval(obj)
-        except Exception:
-            return obj
-    return obj
-
-
-def _normalize_question(q: Dict[str, Any]) -> Dict[str, Any]:
-    q = dict(q or {})
-    q = _safe_eval_obj(q)
-    if isinstance(q, str):
-        q = _safe_eval_obj(q)
-    if isinstance(q, dict):
-        if isinstance(q.get("local_constraint"), str):
-            q["local_constraint"] = _safe_eval_obj(q["local_constraint"])
-    return q
-
-
-def _load_questions_from_jsonl(path: str) -> List[Dict[str, Any]]:
-    items: List[Dict[str, Any]] = []
-    with open(path, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            items.append(_normalize_question(json.loads(line)))
-    return items
-
-
-def _load_questions_from_json(path: str) -> List[Dict[str, Any]]:
-    with open(path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    if isinstance(data, list):
-        return [_normalize_question(x) for x in data]
-    if isinstance(data, dict):
-        return [_normalize_question(data)]
-    raise ValueError("Unsupported questions JSON format")
-
-
-def _load_questions_from_datasets(set_type: str, dataset_id: str, offline: bool = True) -> List[Dict[str, Any]]:
-    if offline:
-        os.environ.setdefault("HF_DATASETS_OFFLINE", "1")
-        os.environ.setdefault("HF_HUB_OFFLINE", "1")
-    try:
-        from datasets import load_dataset  # type: ignore
-    except Exception as e:
-        raise RuntimeError("datasets is required for --set-type loading; pass --questions-file instead") from e
-
-    if set_type not in ("train", "validation", "test"):
-        raise ValueError("--set-type must be train/validation/test")
-    # TravelPlanner uses configs named by split.
-    ds = load_dataset(dataset_id, set_type, split=set_type, download_mode="reuse_cache_if_exists")
-    return [_normalize_question(x) for x in ds]
-
-
-def _iter_plan_records(path: str) -> Iterable[Dict[str, Any]]:
-    def _iter_jsonl(fp) -> Iterable[Dict[str, Any]]:
-        for line in fp:
-            line = line.strip()
-            if not line:
-                continue
-            yield json.loads(line)
-
-    # Prefer extension hint.
-    if path.endswith(".jsonl"):
-        with open(path, "r", encoding="utf-8") as f:
-            yield from _iter_jsonl(f)
-        return
-
-    # Heuristic: many users save JSONL with a .json extension.
-    # Detect multiple JSON objects separated by newlines and fall back to JSONL parsing.
-    with open(path, "r", encoding="utf-8") as f:
-        head = f.read(4096)
-        f.seek(0)
-        head_lines = [ln.strip() for ln in head.splitlines() if ln.strip()]
-        looks_like_jsonl = (
-            len(head_lines) >= 2
-            and head_lines[0].startswith("{")
-            and head_lines[1].startswith("{")
-        )
-        if looks_like_jsonl:
-            yield from _iter_jsonl(f)
-            return
-        try:
-            data = json.load(f)
-        except json.JSONDecodeError:
-            # Last resort: try JSONL anyway (gives clearer per-line errors).
-            f.seek(0)
-            yield from _iter_jsonl(f)
-            return
-    if isinstance(data, list):
-        for item in data:
-            if isinstance(item, dict):
-                yield item
-        return
-    if isinstance(data, dict):
-        yield data
-        return
-    raise ValueError("Unsupported plans format; expected JSONL or JSON object/list")
-
-
-def _constraint_pass(info_box: Optional[Dict[str, Tuple[Any, Any]]]) -> bool:
-    if not info_box:
-        return False
-    for key, pair in info_box.items():
-        if not pair:
-            continue
-        ok = pair[0]
-        if ok is not None and ok is False:
-            return False
-    return True
-
-
-def eval_local(
-    *,
-    plans_path: str,
-    questions: List[Dict[str, Any]],
-    idx_base: int = 1,
-    limit: Optional[int] = None,
-    only_idxs: Optional[List[int]] = None,
-    verbose: bool = False,
-) -> Dict[str, Any]:
-    total = 0
-    delivered = 0
-    commonsense_pass = 0
-    hard_pass = 0
-    final_pass = 0
-
-    per_sample: List[Dict[str, Any]] = []
-
-    for rec in _iter_plan_records(plans_path):
-        if limit is not None and total >= limit:
-            break
-        if not isinstance(rec, dict):
-            continue
-        idx = rec.get("idx")
-        if idx is None:
-            continue
-        try:
-            idx_int = int(idx)
-        except Exception:
-            continue
-        if only_idxs and idx_int not in only_idxs:
-            continue
-
-        q_idx = idx_int - idx_base
-        if q_idx < 0 or q_idx >= len(questions):
-            if verbose:
-                print(f"[WARN] idx={idx_int} out of range for questions (idx_base={idx_base})")
-            continue
-        q = questions[q_idx]
-        plan = rec.get("plan") or []
-
-        total += 1
-        has_plan = bool(plan)
-        if has_plan:
-            delivered += 1
-            commonsense_info = commonsense_eval(q, plan)
-        else:
-            commonsense_info = None
-
-        hard_info = None
-        if commonsense_info and commonsense_info.get("is_not_absent", (False,))[0] and commonsense_info.get(
-            "is_valid_information_in_sandbox", (False,)
-        )[0]:
-            hard_info = hard_eval(q, plan)
-
-        c_pass = _constraint_pass(commonsense_info)
-        h_pass = _constraint_pass(hard_info)
-        f_pass = c_pass and h_pass
-
-        commonsense_pass += int(c_pass)
-        hard_pass += int(h_pass)
-        final_pass += int(f_pass)
-
-        per_sample.append(
-            {
-                "idx": idx_int,
-                "delivery": has_plan,
-                "commonsense_pass": c_pass,
-                "hard_pass": h_pass,
-                "final_pass": f_pass,
-            }
-        )
-
-        if verbose:
-            print(
-                f"idx={idx_int} delivery={has_plan} commonsense={c_pass} hard={h_pass} final={f_pass}"
-            )
-
-    summary = {
-        "total": total,
-        "delivery_rate": (delivered / total) if total else 0.0,
-        "commonsense_pass_rate": (commonsense_pass / total) if total else 0.0,
-        "hard_pass_rate": (hard_pass / total) if total else 0.0,
-        "final_pass_rate": (final_pass / total) if total else 0.0,
-        "per_sample": per_sample,
-    }
-    return summary
-
-
 def eval_score(set_type: str, file_path: str):
 
-    # Legacy batch eval (HF download); kept for compatibility.
-    from datasets import load_dataset  # type: ignore
     if set_type == 'train':
-        query_data_list  = load_dataset('osunlp/TravelPlanner','train',download_mode="reuse_cache_if_exists")['train']
+        query_data_list  = load_dataset('osunlp/TravelPlanner','train',download_mode="force_redownload")['train']
     elif set_type == 'validation':
-        query_data_list  = load_dataset('osunlp/TravelPlanner','validation',download_mode="reuse_cache_if_exists")['validation']
+        query_data_list  = load_dataset('osunlp/TravelPlanner','validation',download_mode="force_redownload")['validation']
+    elif set_type == 'test':
+        query_data_list  = load_dataset('osunlp/TravelPlanner','test',download_mode="force_redownload")['test']
 
     
     query_data_list = [x for x in query_data_list]
@@ -424,44 +222,15 @@ def eval_score(set_type: str, file_path: str):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--plans", type=str, default=None, help="Submission JSONL/JSON path with {idx, query, plan}.")
-    parser.add_argument("--questions-file", type=str, default=None, help="Local questions JSON/JSONL (dataset entries).")
-    parser.add_argument("--set-type", type=str, default="validation", choices=["train", "validation", "test"])
-    parser.add_argument("--dataset-id", type=str, default="osunlp/TravelPlanner")
-    parser.add_argument("--offline", action="store_true", help="Load dataset from local HF cache only.")
-    parser.add_argument("--idx-base", type=int, default=1, help="Idx base in plan file (1 for your submission, 0 for some baselines).")
-    parser.add_argument("--idx", type=int, action="append", default=None, help="Evaluate only these idx values (repeatable).")
-    parser.add_argument("--limit", type=int, default=None)
-    parser.add_argument("--verbose", action="store_true")
-    parser.add_argument("--legacy-eval-file", type=str, default=None, help="Use legacy eval_score() on full split (network/cache).")
+    parser.add_argument("--set_type", type=str, default="validation")
+    parser.add_argument("--evaluation_file_path", type=str, default="./")
     args = parser.parse_args()
 
-    if args.legacy_eval_file:
-        scores, detailed_scores = eval_score(args.set_type, file_path=args.legacy_eval_file)
-        for key in scores:
-            print(f"{key}: {scores[key]*100}%")
-        print("------------------")
-        print(detailed_scores)
-        print("------------------")
-        raise SystemExit(0)
+    scores, detailed_scores = eval_score(args.set_type, file_path=args.evaluation_file_path)
 
-    if not args.plans:
-        raise SystemExit("Missing --plans. Provide a submission JSONL/JSON file.")
-
-    if args.questions_file:
-        if args.questions_file.endswith(".jsonl"):
-            questions = _load_questions_from_jsonl(args.questions_file)
-        else:
-            questions = _load_questions_from_json(args.questions_file)
-    else:
-        questions = _load_questions_from_datasets(args.set_type, args.dataset_id, offline=args.offline)
-
-    summary = eval_local(
-        plans_path=args.plans,
-        questions=questions,
-        idx_base=args.idx_base,
-        limit=args.limit,
-        only_idxs=args.idx,
-        verbose=args.verbose,
-    )
-    print(json.dumps({k: v for k, v in summary.items() if k != "per_sample"}, ensure_ascii=False, indent=2))
+    for key in scores:
+        print(f"{key}: {scores[key]*100}%")
+    
+    print("------------------")
+    print(detailed_scores)
+    print("------------------")
