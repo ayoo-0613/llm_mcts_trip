@@ -118,7 +118,11 @@ class MCTSAgent:
             self.prior_mode = "uniform"
         self.prior_cost_weight = float(getattr(args, "prior_cost_weight", 1.0) or 1.0)
         self.prior_branch_weight = float(getattr(args, "prior_branch_weight", 1.0) or 1.0)
-        self._branch_count_cache = {}
+        self.prior_branch_horizon = int(getattr(args, "prior_branch_horizon", 1) or 1)
+        self.prior_branch_rollouts = int(getattr(args, "prior_branch_rollouts", 4) or 4)
+        self.prior_branch_width = int(getattr(args, "prior_branch_width", 3) or 3)
+        self.prior_branch_max_depth = int(getattr(args, "prior_branch_max_depth", 1) or 1)
+        self._branch_value_cache = {}
 
     # ----------------------------
     # Utility
@@ -490,7 +494,7 @@ class MCTSAgent:
             return np.ones((len(actions),)) / len(actions)
         return np.array([s / score_sum for s in scores], dtype=np.float32)
 
-    def _score_actions_with_cost_branch(self, actions, payloads):
+    def _score_actions_with_cost_branch(self, actions, payloads, history=None):
         if not actions:
             return np.array([])
 
@@ -572,9 +576,19 @@ class MCTSAgent:
             for rank, (idx, _) in enumerate(known_sorted):
                 cost_score[idx] = float(len(known_sorted) - rank) / float(denom)
 
-        # Branching score in [0, 1], more options -> higher.
-        branch_counts = [0] * len(actions)
-        if env is not None and hasattr(env, "estimate_next_action_count"):
+        # Branching score in [0, 1], more future options -> higher.
+        depth = 0
+        if history is not None:
+            try:
+                depth = len(history)
+            except Exception:
+                depth = 0
+        horizon = 1
+        if depth < max(1, int(self.prior_branch_max_depth)):
+            horizon = max(1, int(self.prior_branch_horizon))
+
+        branch_values = [0.0] * len(actions)
+        if env is not None:
             state_sig = None
             try:
                 env_state = getattr(env, "state", None)
@@ -582,20 +596,38 @@ class MCTSAgent:
             except Exception:
                 state_sig = None
             for i, a in enumerate(actions):
-                cache_key = (state_sig, a)
-                if cache_key in self._branch_count_cache:
-                    branch_counts[i] = int(self._branch_count_cache[cache_key])
-                    continue
-                try:
-                    cnt = int(env.estimate_next_action_count(a) or 0)
-                except Exception:
-                    cnt = 0
-                branch_counts[i] = max(0, cnt)
-                self._branch_count_cache[cache_key] = branch_counts[i]
+                cache_key = (state_sig, a, horizon, int(self.prior_branch_rollouts), int(self.prior_branch_width))
+                if cache_key in self._branch_value_cache:
+                    try:
+                        branch_values[i] = float(self._branch_value_cache[cache_key])
+                        continue
+                    except Exception:
+                        pass
+                val = 0.0
+                if horizon <= 1 and hasattr(env, "estimate_next_action_count"):
+                    try:
+                        val = float(env.estimate_next_action_count(a) or 0)
+                    except Exception:
+                        val = 0.0
+                elif hasattr(env, "estimate_future_action_space"):
+                    try:
+                        val = float(
+                            env.estimate_future_action_space(
+                                a,
+                                horizon=horizon,
+                                rollouts=self.prior_branch_rollouts,
+                                branch_width=self.prior_branch_width,
+                            )
+                            or 0.0
+                        )
+                    except Exception:
+                        val = 0.0
+                branch_values[i] = max(0.0, float(val))
+                self._branch_value_cache[cache_key] = branch_values[i]
 
-        max_branch = max(branch_counts) if branch_counts else 0
-        denom = 1.0 + float(max_branch or 0)
-        branch_score = [(1.0 + float(c)) / denom for c in branch_counts]
+        max_branch = max(branch_values) if branch_values else 0.0
+        denom = 1.0 + float(max_branch or 0.0)
+        branch_score = [(1.0 + float(v)) / denom for v in branch_values]
 
         w_cost = max(0.0, float(self.prior_cost_weight))
         w_branch = max(0.0, float(self.prior_branch_weight))
@@ -664,7 +696,7 @@ class MCTSAgent:
                 if self.prior_mode == "cost":
                     probs_full = self._score_actions_with_budget(state.valid_actions, payloads)
                 elif self.prior_mode == "cost_branch":
-                    probs_full = self._score_actions_with_cost_branch(state.valid_actions, payloads)
+                    probs_full = self._score_actions_with_cost_branch(state.valid_actions, payloads, history=history)
                 elif self.llm_prior_mode == "none":
                     probs_full = self._score_actions_with_budget(state.valid_actions, payloads)
                 else:
@@ -771,7 +803,7 @@ class MCTSAgent:
                 if self.prior_mode == "cost":
                     probs_full = self._score_actions_with_budget(state.valid_actions, payloads)
                 elif self.prior_mode == "cost_branch":
-                    probs_full = self._score_actions_with_cost_branch(state.valid_actions, payloads)
+                    probs_full = self._score_actions_with_cost_branch(state.valid_actions, payloads, history=history)
                 else:
                     probs_full = np.ones((len(state.valid_actions),)) / len(state.valid_actions)
         else:

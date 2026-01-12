@@ -470,49 +470,42 @@ class TravelEnv:
         return TravelState(meals=meals, attractions=attractions)
 
     def _ensure_destination_required(self) -> None:
-        """Only build candidate cities when destination is a state; leave city untouched."""
+        """
+        Only build candidate cities from a state when:
+          - duration_days > 3, and
+          - visiting_city_number > 1
+
+        Otherwise, treat `destination` as a city string and do not auto-seed candidate_cities.
+        """
         dest = self._parsed_get("destination", "dest", default=None)
         if not dest:
             return
         days = self._parsed_int("duration_days", "days", default=None)
-        dest_norm = self.kb._normalize_city(dest)
-        dest_is_city = bool(dest_norm and dest_norm in getattr(self.kb, "city_set_norm", {}))
-        prefer_city = bool(dest_is_city and days == 3)
-        if prefer_city:
-            return
+        city_target = self._parsed_int("visiting_city_number", default=1) or 1
 
-        # Destination is a state → seed candidate_cities from that state.
-        if self.kb.is_state(dest) and days and days > 3:
+        # Destination is a state → seed candidate_cities from that state ONLY for multi-city long trips.
+        if self.kb.is_state(dest) and days and days > 3 and city_target > 1:
             dest_cities = self.kb.cities_in_state(dest)
-            city_target = self._parsed_int("visiting_city_number", default=1) or 1
             cap = max(self.top_k * 3, city_target * 10)
             self.goal_parsed["candidate_cities"] = dest_cities[:cap]
             return
 
-        # Destination is a city: do not build candidate_cities. If multi-city requested, raise.
-        city_target = self._parsed_int("visiting_city_number", default=1) or 1
-        if city_target > 1:
+        # Otherwise: do not build candidate_cities. If multi-city requested, require explicit candidate list/state.
+        if city_target > 1 and (not days or days <= 3 or not self.kb.is_state(dest)):
             raise ValueError(
-                f"Destination '{dest}' is a city but visiting_city_number={city_target}. "
-                "No candidate_cities will be built automatically; please provide candidate_city list "
-                "or change destination to a state."
+                f"visiting_city_number={city_target} requires a state destination for days>3; got destination='{dest}'. "
+                "Please change destination to a state (e.g., 'Washington') or provide candidate_city list."
             )
 
     def _expand_state_locations(self) -> None:
-        """Only expand when destination is a state; city destinations stay untouched."""
+        """Expand destination->candidate cities only for multi-city long trips (days>3 && visiting_city_number>1)."""
         dest = self._parsed_get("destination", "dest", default=None)
-        if not dest or not self.kb.is_state(dest):
-            return
         days = self._parsed_int("duration_days", "days", default=None)
-        dest_norm = self.kb._normalize_city(dest)
-        dest_is_city = bool(dest_norm and dest_norm in getattr(self.kb, "city_set_norm", {}))
-        if dest_is_city and days == 3:
-            return
-        if not days or days <= 3:
+        city_target = self._parsed_int("visiting_city_number", default=1) or 1
+        if not dest or not self.kb.is_state(dest) or not days or days <= 3 or city_target <= 1:
             return
 
         cities = self.kb.cities_in_state(dest)
-        city_target = self._parsed_int("visiting_city_number", default=1) or 1
         cap = max(self.top_k * 3, city_target * 10)
         self.goal_parsed["candidate_cities"] = cities[:cap]
 
@@ -541,7 +534,7 @@ class TravelEnv:
             return
 
         # 2) 单城市 & destination 是明确城市 → 直接锁定城市，跳过 CITY
-        if city_target == 1 and destination and dest_is_city and not dest_is_state:
+        if city_target == 1 and destination:
             state.city_sequence = [destination]
             state.phase = Phase.SEGMENT
             return
@@ -665,6 +658,169 @@ class TravelEnv:
                     reserve_scales.update(saved_reserve)
             except Exception:
                 pass
+
+    def estimate_future_action_space(
+        self,
+        action: str,
+        *,
+        horizon: int = 1,
+        rollouts: int = 4,
+        branch_width: int = 3,
+    ) -> float:
+        """
+        Approximate multi-step feasible space after taking ``action``.
+
+        Returns an averaged log-volume score:
+          E[ sum_{t=1..horizon} log(1 + |A_t|) ]
+
+        where A_t is the valid action set at step t under a sampled rollout policy.
+        This is stable (avoids huge products) and monotonic w.r.t. action-set sizes.
+        """
+        if not action:
+            return 0.0
+        payload0 = (self.action_payloads or {}).get(action)
+        if not payload0:
+            return 0.0
+        if payload0 and payload0[0] == "finish":
+            return 0.0
+
+        horizon_i = max(0, int(horizon))
+        if horizon_i <= 0:
+            return 0.0
+        rollouts_i = max(1, int(rollouts))
+        width_i = max(1, int(branch_width))
+
+        base_state = self.state.clone()
+        try:
+            self._apply_preview_payload(base_state, payload0)
+        except Exception:
+            return 0.0
+        try:
+            base_state.cost = self._estimate_cost(base_state)
+        except Exception:
+            pass
+        try:
+            self._advance_phase_if_ready(base_state)
+        except Exception:
+            pass
+
+        ra = getattr(self, "retrieval_agent", None)
+        if ra is None:
+            return 0.0
+
+        # Snapshot & restore relaxation state once so multi-step preview is side-effect-free,
+        # but still allows relaxation dynamics to persist *within* the preview rollout.
+        try:
+            saved_reserve = dict(getattr(ra, "_reserve_scales", {}) or {})
+            saved_caps = dict(getattr(ra, "_cap_multipliers", {}) or {})
+            saved_revision = int(getattr(ra, "_budget_revision", 0) or 0)
+        except Exception:
+            saved_reserve = {}
+            saved_caps = {}
+            saved_revision = 0
+
+        def _restore_relax_state() -> None:
+            try:
+                reserve_scales = getattr(ra, "_reserve_scales", None)
+                if isinstance(reserve_scales, dict):
+                    reserve_scales.clear()
+                    reserve_scales.update(saved_reserve)
+            except Exception:
+                pass
+            try:
+                cap_multipliers = getattr(ra, "_cap_multipliers", None)
+                if isinstance(cap_multipliers, dict):
+                    cap_multipliers.clear()
+                    cap_multipliers.update(saved_caps)
+            except Exception:
+                pass
+            try:
+                setattr(ra, "_budget_revision", saved_revision)
+            except Exception:
+                pass
+
+        try:
+            import hashlib
+            import math as _math
+
+            def _preview_actions(state: TravelState, slot: Optional[Slot]):
+                if slot is None:
+                    return [], {}
+                result = ra.compute(self.goal_parsed, state, slot, user_query=self.user_query)
+                actions = list(getattr(result, "actions", []) or [])
+                payloads = copy.deepcopy(getattr(result, "payloads", {}) or {})
+                actions, payloads = self._filter_actions_by_constraints(actions, payloads, state)
+                if self.failure_gradient_store is not None and actions:
+                    try:
+                        from mcts.travel.failure_gradient import fingerprint_goal, phase_key
+                    except Exception:
+                        fingerprint_goal = None
+                        phase_key = None
+                    if fingerprint_goal is not None and phase_key is not None:
+                        try:
+                            goal_fp = fingerprint_goal(self.goal_parsed)
+                            slot_fp = slot.signature() if hasattr(slot, "signature") else str(slot)
+                            ph = phase_key(getattr(slot, "type", None))
+                            grad = self.failure_gradient_store.query(goal_fp=goal_fp, phase=ph, slot_fp=slot_fp)
+                            hard = (grad or {}).get("hard_exclusions") or []
+                            if isinstance(hard, list) and hard:
+                                kept = []
+                                for act in actions:
+                                    pld = payloads.get(act)
+                                    if not self._violates_hard_exclusion(ph, act, pld, hard):
+                                        kept.append(act)
+                                    else:
+                                        payloads.pop(act, None)
+                                actions = kept
+                        except Exception:
+                            pass
+                return actions, payloads
+
+            scores: List[float] = []
+            base_sig = None
+            try:
+                base_sig = base_state.signature()
+            except Exception:
+                base_sig = None
+
+            for r in range(rollouts_i):
+                st = base_state.clone()
+                total = 0.0
+                for t in range(horizon_i):
+                    try:
+                        slot = self._next_slot(st)
+                    except Exception:
+                        slot = None
+                    actions, payloads = _preview_actions(st, slot)
+                    n = len(actions)
+                    if n <= 0:
+                        break
+                    total += _math.log1p(float(n))
+
+                    pick_n = min(width_i, n)
+                    seed_src = f"{base_sig}|{action}|r{r}|t{t}|{slot.signature() if slot and hasattr(slot,'signature') else str(slot)}"
+                    seed = int(hashlib.md5(seed_src.encode("utf-8")).hexdigest(), 16)
+                    idx = int(seed % int(pick_n))
+                    next_action = actions[idx]
+                    next_payload = payloads.get(next_action)
+                    if not next_payload:
+                        break
+                    try:
+                        self._apply_preview_payload(st, next_payload)
+                    except Exception:
+                        break
+                    try:
+                        st.cost = self._estimate_cost(st)
+                    except Exception:
+                        pass
+                    try:
+                        self._advance_phase_if_ready(st)
+                    except Exception:
+                        pass
+                scores.append(float(total))
+            return float(sum(scores) / float(len(scores) or 1))
+        finally:
+            _restore_relax_state()
             try:
                 cap_multipliers = getattr(ra, "_cap_multipliers", None)
                 if isinstance(cap_multipliers, dict):

@@ -82,6 +82,71 @@ def _load_queries_from_csv(path: str) -> List[Dict[str, Any]]:
     return entries
 
 
+def _load_queries_from_jsonl(path: str) -> List[Dict[str, Any]]:
+    entries: List[Dict[str, Any]] = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            s = (line or "").strip()
+            if not s:
+                continue
+            try:
+                obj = json.loads(s)
+            except Exception:
+                entries.append({"query": s})
+                continue
+
+            if isinstance(obj, str):
+                entries.append({"query": obj})
+                continue
+
+            if isinstance(obj, dict):
+                q = obj.get("query") or obj.get("instruction") or obj.get("prompt") or obj.get("text") or ""
+                entry: Dict[str, Any] = {"query": str(q)}
+                if obj.get("idx") is not None:
+                    try:
+                        entry["idx"] = int(obj.get("idx"))
+                    except Exception:
+                        pass
+                if obj.get("parsed") is not None and isinstance(obj.get("parsed"), dict):
+                    entry["parsed"] = dict(obj.get("parsed") or {})
+                entries.append(entry)
+                continue
+    return entries
+
+
+def _load_indices(args) -> List[int]:
+    indices: List[int] = []
+    if getattr(args, "indices", None):
+        raw = str(args.indices)
+        for part in raw.split(","):
+            p = part.strip()
+            if not p:
+                continue
+            try:
+                indices.append(int(p))
+            except Exception:
+                continue
+    if getattr(args, "indices_file", None):
+        with open(args.indices_file, "r", encoding="utf-8") as f:
+            for line in f:
+                s = (line or "").strip()
+                if not s:
+                    continue
+                try:
+                    indices.append(int(s))
+                except Exception:
+                    continue
+    # unique, keep stable order
+    seen = set()
+    out: List[int] = []
+    for i in indices:
+        if i in seen:
+            continue
+        seen.add(i)
+        out.append(i)
+    return out
+
+
 def _merge_args_into_parsed(parsed: Dict[str, Any], args) -> Dict[str, Any]:
     out = dict(parsed or {})
     if out.get("origin") is None and getattr(args, "origin", None):
@@ -376,6 +441,9 @@ def parse_args():
                         help="HF dataset split to load.")
     parser.add_argument("--dataset-id", default="osunlp/TravelPlanner", help="HF dataset id to load queries from.")
     parser.add_argument("--query-csv", default=None, help="Local CSV file with structured TravelPlanner fields.")
+    parser.add_argument("--queries-jsonl", default=None, help="Local JSONL file with entries containing at least `query`.")
+    parser.add_argument("--indices", default=None, help="Comma-separated 1-based indices to run (e.g., 10,11,16).")
+    parser.add_argument("--indices-file", default=None, help="Text file with one 1-based index per line.")
     parser.add_argument("--origin", default=None, help="Override origin city for all queries.")
     parser.add_argument("--destination", default=None, help="Override destination city/state for all queries.")
     parser.add_argument("--start-date", default=None)
@@ -437,6 +505,10 @@ def parse_args():
     )
     parser.add_argument("--prior-cost-weight", type=float, default=1.0)
     parser.add_argument("--prior-branch-weight", type=float, default=1.0)
+    parser.add_argument("--prior-branch-horizon", type=int, default=1)
+    parser.add_argument("--prior-branch-rollouts", type=int, default=4)
+    parser.add_argument("--prior-branch-width", type=int, default=3)
+    parser.add_argument("--prior-branch-max-depth", type=int, default=1)
     parser.add_argument(
         "--soft-penalty-tau",
         type=float,
@@ -497,16 +569,43 @@ def parse_args():
 def main():
     args = parse_args()
     csv_entries: Optional[List[Dict[str, Any]]] = None
+    jsonl_entries: Optional[List[Dict[str, Any]]] = None
     if args.query_csv:
         csv_entries = _load_queries_from_csv(args.query_csv)
         if not csv_entries:
             raise RuntimeError("No queries loaded from CSV. Check file path/content.")
-        subset = csv_entries[args.start_index: args.start_index + args.limit]
+        entries = csv_entries
     else:
-        queries = load_queries(args)
-        if not queries:
-            raise RuntimeError("No queries loaded. Check dataset path or network.")
-        subset = queries[args.start_index: args.start_index + args.limit]
+        if args.queries_jsonl:
+            jsonl_entries = _load_queries_from_jsonl(args.queries_jsonl)
+            if not jsonl_entries:
+                raise RuntimeError("No queries loaded from JSONL. Check file path/content.")
+            entries = jsonl_entries
+        else:
+            queries = load_queries(args)
+            if not queries:
+                raise RuntimeError("No queries loaded. Check dataset path or network.")
+            entries = queries
+
+    indices = _load_indices(args)
+    if indices:
+        wanted = set(int(x) for x in indices)
+        subset: List[Any] = []
+        for pos, entry in enumerate(entries, start=1):
+            entry_idx = pos
+            if isinstance(entry, dict) and entry.get("idx") is not None:
+                try:
+                    entry_idx = int(entry.get("idx"))
+                except Exception:
+                    entry_idx = pos
+            if entry_idx in wanted:
+                subset.append(entry)
+        # keep stable order by indices list if we can map quickly
+        if subset and isinstance(subset[0], dict) and any(isinstance(x, dict) and x.get("idx") is not None for x in subset):
+            order = {int(v): i for i, v in enumerate(indices)}
+            subset.sort(key=lambda e: order.get(int(e.get("idx") or 0), 10**9) if isinstance(e, dict) else 10**9)
+    else:
+        subset = entries[args.start_index: args.start_index + args.limit]
 
     parser_model = args.parser_model or args.local_model or "deepseek-r1:14b"
     kb = TravelKnowledgeBase(args.database_root)
@@ -533,7 +632,13 @@ def main():
         mode = "w" if args.submission_overwrite else "a"
         submission_fp = open(submission_path, mode, encoding="utf-8")
 
-    for idx, entry in enumerate(subset, start=args.start_index + 1):
+    for offset, entry in enumerate(subset, start=1):
+        idx = offset
+        if isinstance(entry, dict) and entry.get("idx") is not None:
+            try:
+                idx = int(entry.get("idx"))
+            except Exception:
+                idx = offset
         q = entry if isinstance(entry, str) else str(entry.get("query") or "")
         # 先输出原始 query，方便观察
         print(f"\n=== Query {idx} (raw) === {q}")

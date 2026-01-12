@@ -33,6 +33,10 @@ class SearchAgent:
             prior_mode=getattr(args, "prior_mode", "uniform"),
             prior_cost_weight=getattr(args, "prior_cost_weight", 1.0),
             prior_branch_weight=getattr(args, "prior_branch_weight", 1.0),
+            prior_branch_horizon=getattr(args, "prior_branch_horizon", 1),
+            prior_branch_rollouts=getattr(args, "prior_branch_rollouts", 4),
+            prior_branch_width=getattr(args, "prior_branch_width", 3),
+            prior_branch_max_depth=getattr(args, "prior_branch_max_depth", 1),
             soft_penalty_tau=getattr(args, "soft_penalty_tau", 0.7),
         )
         self.agent = MCTSAgent(

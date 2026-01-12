@@ -108,6 +108,38 @@ class TestEnvSpec(unittest.TestCase):
         self.assertFalse(ok)
         self.assertTrue(any("goal.destination" in e for e in errors))
 
+    def test_destination_state_suffix_seeds_candidate_cities(self):
+        goal_parsed = {
+            "origin": "Sacramento",
+            "destination": "Washington state",
+            "duration_days": 5,
+            "visiting_city_number": 2,
+            "start_date": "2022-03-22",
+            "budget": 3600,
+            "people_number": 3,
+        }
+        self.assertTrue(self.kb.is_state(goal_parsed["destination"]))
+        env = TravelEnv(self.kb, goal_parsed=goal_parsed)
+        candidates = env.goal_parsed.get("candidate_cities") or []
+        self.assertIsInstance(candidates, list)
+        self.assertGreater(len(candidates), 0)
+
+    def test_destination_state_suffix_not_expanded_for_single_city(self):
+        goal_parsed = {
+            "origin": "Sacramento",
+            "destination": "Washington state",
+            "duration_days": 5,
+            "visiting_city_number": 1,
+            "start_date": "2022-03-22",
+            "budget": 3600,
+            "people_number": 3,
+        }
+        env = TravelEnv(self.kb, goal_parsed=goal_parsed)
+        self.assertIn("destination", env.goal_parsed)
+        self.assertTrue(env.goal_parsed["destination"].lower().startswith("washington"))
+        self.assertFalse(bool(env.goal_parsed.get("candidate_cities")))
+        self.assertEqual(env.state.city_sequence, ["Washington state"])
+
 
 if __name__ == "__main__":
     unittest.main()

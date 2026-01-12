@@ -415,6 +415,10 @@ def parse_args():
     )
     parser.add_argument("--prior-cost-weight", type=float, default=1.0)
     parser.add_argument("--prior-branch-weight", type=float, default=1.0)
+    parser.add_argument("--prior-branch-horizon", type=int, default=1)
+    parser.add_argument("--prior-branch-rollouts", type=int, default=4)
+    parser.add_argument("--prior-branch-width", type=int, default=3)
+    parser.add_argument("--prior-branch-max-depth", type=int, default=1)
     parser.add_argument(
         "--soft-penalty-tau",
         type=float,
@@ -525,6 +529,10 @@ def main():
         prior_mode=args.prior_mode,
         prior_cost_weight=args.prior_cost_weight,
         prior_branch_weight=args.prior_branch_weight,
+        prior_branch_horizon=args.prior_branch_horizon,
+        prior_branch_rollouts=args.prior_branch_rollouts,
+        prior_branch_width=args.prior_branch_width,
+        prior_branch_max_depth=args.prior_branch_max_depth,
         soft_penalty_tau=args.soft_penalty_tau,
     )
     agent = MCTSAgent(

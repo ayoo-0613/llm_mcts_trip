@@ -32,14 +32,46 @@ class TravelKnowledgeBase:
     # ----------------------------
     # State / city helpers
     # ----------------------------
+    @staticmethod
+    def _normalize_state_alias(norm: str) -> str:
+        """
+        Normalize common state-name variants produced by NL parsers.
+
+        Examples:
+          - "washington state" -> "washington"
+          - "state of washington" -> "washington"
+        """
+        s = str(norm or "").strip().lower()
+        if not s:
+            return ""
+        if s.startswith("state of "):
+            s = s[len("state of ") :].strip()
+        # Strip a trailing "state" token (optionally preceded by punctuation/whitespace).
+        if s.endswith(" state"):
+            s = s[: -len(" state")].strip()
+        return s
+
+    def resolve_state(self, name: str) -> Optional[str]:
+        """Return canonical state name (original casing) if resolvable, else None."""
+        norm = self._normalize_city(name)
+        canonical = getattr(self, "state_norm_map", {}).get(norm)
+        if canonical:
+            return canonical
+        alias = self._normalize_state_alias(norm)
+        if alias and alias != norm:
+            return getattr(self, "state_norm_map", {}).get(alias)
+        return None
+
     def is_state(self, name: str) -> bool:
         """Return True if the given name matches a known state."""
-        norm = self._normalize_city(name)
-        return bool(norm and norm in getattr(self, "state_norm_map", {}))
+        return self.resolve_state(name) is not None
 
     def cities_in_state(self, state_name: str) -> List[str]:
         """Return all cities recorded for a given state (original casing)."""
-        norm = self._normalize_city(state_name)
+        canonical = self.resolve_state(state_name)
+        if not canonical:
+            return []
+        norm = self._normalize_city(canonical)
         return list(getattr(self, "state_to_cities_norm", {}).get(norm, []))
 
     def _load_csv(self, relative_path: str) -> pd.DataFrame:
@@ -325,8 +357,7 @@ class TravelKnowledgeBase:
 
     def get_cities_for_state(self, state: str) -> List[str]:
         """Return all cities recorded for a given state."""
-        norm = self._normalize_city(state)
-        canonical = self.state_norm_map.get(norm)
+        canonical = self.resolve_state(state)
         if not canonical:
             return []
         return list(self.state_to_cities.get(canonical, []))
@@ -377,7 +408,7 @@ class TravelKnowledgeBase:
         state_hint = None
         if destination_hint:
             # If the hint is a state or maps to one through the background sets, remember it.
-            state_hint = self.state_norm_map.get(dest_norm) or self.city_to_state_norm.get(dest_norm)
+            state_hint = self.resolve_state(destination_hint) or self.city_to_state_norm.get(dest_norm)
 
         def _add_unique(src: List[str], acc: List[str], seen: set) -> None:
             for city in src:
