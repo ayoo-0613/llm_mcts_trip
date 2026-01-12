@@ -248,6 +248,7 @@ def fallback_parse(nl_query: str) -> Dict[str, Any]:
     patterns = [
         r"from\s+([A-Za-z .'-]+)\s+to\s+([A-Za-z .'-]+)",
         r"beginning in\s+([A-Za-z .'-]+)\s+and heading to\s+([A-Za-z .'-]+)",
+        r"starting in\s+([A-Za-z .'-]+?)\s+(?:and|to)\s+(?:ending in|heading to|going to)\s+([A-Za-z .'-]+)",
     ]
     for pat in patterns:
         m = re.search(pat, text, flags=re.IGNORECASE)
@@ -255,6 +256,20 @@ def fallback_parse(nl_query: str) -> Dict[str, Any]:
             out["origin"] = m.group(1).strip()
             out["destination"] = m.group(2).strip()
             break
+
+    # Template: "starting in X ... covering/visiting N cities in Y (state) ..."
+    if not out.get("origin"):
+        m = re.search(r"(?:starting|beginning|departing)\s+(?:in|from)\s+([A-Za-z .'-]+?)(?:\s+and|\s+to|,|\.)", text, flags=re.IGNORECASE)
+        if m:
+            out["origin"] = m.group(1).strip()
+    if not out.get("destination"):
+        m = re.search(
+            r"(?:covering|visiting|exploring)\s+(?:\d+\s+)?cities\s+in\s+([A-Za-z .'-]+?)(?:\s+from|\s+for|\s+on|,|\.|$)",
+            text,
+            flags=re.IGNORECASE,
+        )
+        if m:
+            out["destination"] = m.group(1).strip()
 
     # budget
     m = re.search(r"budget[^$]*\$?([\d,\.]+)", text, flags=re.IGNORECASE)

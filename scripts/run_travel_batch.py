@@ -539,6 +539,11 @@ def parse_args():
         choices=["legacy", "envspec"],
         help="Parsing route for NL queries: legacy (goal JSON) or envspec (EnvSpec contract).",
     )
+    parser.add_argument(
+        "--strict-llm-parse",
+        action="store_true",
+        help="Only use LLM parsing via parse_nl_query(); disable regex fallback_parse().",
+    )
     parser.add_argument("--parser-model", default=None, help="Parser model (defaults to --local-model).")
     parser.add_argument("--parser-timeout", type=float, default=180.0)
     parser.add_argument("--llm-timeout", type=float, default=180.0,
@@ -608,6 +613,8 @@ def main():
         subset = entries[args.start_index: args.start_index + args.limit]
 
     parser_model = args.parser_model or args.local_model or "deepseek-r1:14b"
+    if args.strict_llm_parse and args.parser_mode != "legacy":
+        raise ValueError("--strict-llm-parse requires --parser-mode legacy (parse_nl_query prompt only).")
     kb = TravelKnowledgeBase(args.database_root)
     semantic = SemanticAgent()
     policy = semantic.build_policy(args) if args.use_llm_prior != "none" else None
@@ -633,12 +640,21 @@ def main():
         submission_fp = open(submission_path, mode, encoding="utf-8")
 
     for offset, entry in enumerate(subset, start=1):
-        idx = offset
+        # Prefer explicit per-entry idx if present; otherwise fall back to the selected indices
+        # (when --indices/--indices-file is used), else compute a stable global idx from start_index.
+        idx = None
         if isinstance(entry, dict) and entry.get("idx") is not None:
             try:
                 idx = int(entry.get("idx"))
             except Exception:
-                idx = offset
+                idx = None
+        if idx is None and indices:
+            try:
+                idx = int(indices[offset - 1])
+            except Exception:
+                idx = None
+        if idx is None:
+            idx = int(args.start_index) + int(offset)
         q = entry if isinstance(entry, str) else str(entry.get("query") or "")
         # 先输出原始 query，方便观察
         print(f"\n=== Query {idx} (raw) === {q}")
@@ -676,7 +692,7 @@ def main():
             else:
                 parsed = parse_nl_query(q, args.local_base, parser_model, timeout=args.parser_timeout)
                 print(f"LLM parsed JSON: {json.dumps(parsed, ensure_ascii=False)}")
-                if not parsed.get("origin") or not parsed.get("destination"):
+                if (not parsed.get("origin") or not parsed.get("destination")) and (not args.strict_llm_parse):
                     fallback = fallback_parse(q)
                     parsed = {**fallback, **parsed}
                 if not parsed.get("origin") or not parsed.get("destination"):
