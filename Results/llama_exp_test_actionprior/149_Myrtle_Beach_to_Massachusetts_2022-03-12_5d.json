@@ -1,0 +1,1036 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 3502.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you provide a travel plan for our group of 3 from Myrtle Beach to Massachusetts, visiting 2 cities over five days, from March 12th to March 16th, 2022? We have a budget of $3,800. We would like to stay in entire rooms where smoking is allowed. Additionally, we are interested in Indian, Mexican, American, and Mediterranean cuisines.",
+  "parsed": {
+    "org": "Myrtle Beach",
+    "dest": "Massachusetts",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-12",
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15",
+      "2022-03-16"
+    ],
+    "people_number": 3,
+    "local_constraint": {
+      "house rule": "smoking",
+      "cuisine": [
+        "Indian",
+        "Mexican",
+        "American",
+        "Mediterranean"
+      ],
+      "room type": "entire room",
+      "transportation": null
+    },
+    "budget": 3800,
+    "origin": "Myrtle Beach",
+    "destination": "Massachusetts",
+    "duration_days": 5,
+    "start_date": "2022-03-12",
+    "preferences": [
+      "Indian",
+      "Mexican",
+      "American",
+      "Mediterranean",
+      "smoking",
+      "entire room"
+    ],
+    "candidate_cities": [
+      "Martha's Vineyard",
+      "Hyannis",
+      "Boston",
+      "Nantucket"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Myrtle Beach->Hyannis 1464km cost 1464",
+    "move:seg1:taxi:Hyannis->Boston 114km cost 114",
+    "move:seg2:flight:F2594564 Boston->Myrtle Beach $148 11:06-13:23",
+    "stay:Hyannis:1384 Super Chill Studio Entire home/apt $418",
+    "stay:Boston:294 New Private studio-apartment Entire home/apt $256",
+    "eat:d1:breakfast:946 Cafe Grub Up BBQ, Seafood $19 rating 3.8",
+    "eat:d1:lunch:8036 Thirsty Scholar Cafe Desserts, Tea, Pizza, Chinese, American, Seafood $25 rating 3.2"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Hyannis",
+      "Boston"
+    ],
+    "transportation_dates": [
+      "2022-03-12",
+      "2022-03-14",
+      "2022-03-16"
+    ],
+    "transportation_methods": [
+      "taxi, from Myrtle Beach to Hyannis, cost: 1464.0",
+      "taxi, from Hyannis to Boston, cost: 114.0",
+      "Flight F2594564, from Boston to Myrtle Beach, Departure Time: 11:06, Arrival Time: 13:23, cost: 148.0"
+    ],
+    "restaurants": [
+      "Cafe Grub Up, Hyannis",
+      "Thirsty Scholar Cafe, Hyannis"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "Super Chill Studio, Hyannis",
+      "New Private studio-apartment, Boston"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Myrtle Beach to Hyannis",
+      "transportation": "Taxi, from Myrtle Beach to Hyannis, Cost: 1464",
+      "breakfast": "Cafe Grub Up, Hyannis",
+      "attraction": "-",
+      "lunch": "Thirsty Scholar Cafe, Hyannis",
+      "dinner": "-",
+      "accommodation": "Super Chill Studio, Hyannis"
+    },
+    {
+      "days": 2,
+      "current_city": "Hyannis",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Super Chill Studio, Hyannis"
+    },
+    {
+      "days": 3,
+      "current_city": "from Hyannis to Boston",
+      "transportation": "Taxi, from Hyannis to Boston, Cost: 114",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "New Private studio-apartment, Boston"
+    },
+    {
+      "days": 4,
+      "current_city": "Boston",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "New Private studio-apartment, Boston"
+    },
+    {
+      "days": 5,
+      "current_city": "from Boston to Myrtle Beach",
+      "transportation": "Flight Number: F2594564, from Boston to Myrtle Beach, Departure Time: 11:06, Arrival Time: 13:23",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:lunch|seg:None|Hyannis|None|None->None",
+      "counts": {
+        "kb": 33,
+        "after_nonbudget": 33,
+        "after_budget": 4,
+        "returned": 3,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 29,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 373.0,
+        "slot_cap": 17.34561011904762,
+        "reserve": 287.41049999999996
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 397.8,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 338.12999999999994,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 287.41049999999996,
+          "kept": 4
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:dinner|seg:None|Hyannis|None|None->None",
+      "counts": {
+        "kb": 33,
+        "after_nonbudget": 33,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 32,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 298.0,
+        "slot_cap": 14.923878205128206,
+        "reserve": 265.30199999999996
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 367.2,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 312.11999999999995,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 265.30199999999996,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d1|slot:dinner|seg:None|Hyannis|None|None->None",
+        "city": "Hyannis",
+        "city_bundle": [
+          "Hyannis",
+          "Boston"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 33,
+          "after_nonbudget": 33,
+          "after_budget": 0,
+          "budget_removed": 33,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 298.0,
+          "slot_cap": 14.923878205128206,
+          "reserve": 265.30199999999996,
+          "min_cost_nonbudget": 12.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Hyannis",
+          "Boston"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 444.0,
+          "bundle_lb_cost": 3222.0,
+          "stay_lb_cost": 426.0,
+          "meal_lb_cost": 774.0,
+          "transport_lb_cost": 2022.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "myrtle beach",
+              "hyannis"
+            ],
+            [
+              "hyannis",
+              "boston"
+            ],
+            [
+              "boston",
+              "myrtle beach"
+            ]
+          ],
+          "bundle_key": [
+            "boston",
+            "hyannis"
+          ],
+          "bundle_key_set": [
+            "boston",
+            "hyannis"
+          ],
+          "bundle_key_seq": [
+            "hyannis",
+            "boston"
+          ],
+          "city_features": {
+            "Hyannis": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 111.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 13,
+              "min_meal_cost": 25.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 7,
+              "hotel_slack": 0
+            },
+            "Boston": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 102.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 19,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 10,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Myrtle Beach->Hyannis": {
+              "min_cost": 1464.0,
+              "blocked": false
+            },
+            "Hyannis->Boston": {
+              "min_cost": 114.0,
+              "blocked": false
+            },
+            "Boston->Myrtle Beach": {
+              "min_cost": 444.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 7,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 111.0,
+            "bottleneck_city_meal": "Hyannis",
+            "bottleneck_city_hotel": "Hyannis",
+            "bottleneck_edge": "Myrtle Beach->Hyannis"
+          },
+          "min_bundle_cost": 2448.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 7,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 111.0,
+          "bottleneck_city_meal": "Hyannis",
+          "bottleneck_city_hotel": "Hyannis",
+          "bottleneck_edge": "Myrtle Beach->Hyannis"
+        },
+        "budget_context": {
+          "remaining": 298.0,
+          "slot_cap": 14.923878205128206,
+          "reserve": 265.30199999999996,
+          "min_cost_nonbudget": 12.0
+        },
+        "counts": {
+          "kb": 33,
+          "after_nonbudget": 33,
+          "after_budget": 0,
+          "budget_removed": 33,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Hyannis",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 33,
+          "after_nonbudget": 33,
+          "after_budget": 0,
+          "budget_removed": 33,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 298.0,
+          "slot_cap": 14.923878205128206,
+          "reserve": 265.30199999999996,
+          "min_cost_nonbudget": 12.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 33,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3800,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": [
+              "Indian",
+              "Mexican",
+              "American",
+              "Mediterranean"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Boston",
+        "Hyannis"
+      ],
+      "reason": "Avoiding dead_end_city for meal/stay failures",
+      "raw": "{\n  \"candidate_id\": 2,\n  \"reason\": \"Avoiding dead_end_city for meal/stay failures\",\n  \"confidence\": 0.5,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"meal\", \"rule\": \"AVOID_CITY\", \"ttl\": 1, \"city\": \"Hyannis\"}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "Avoiding dead_end_city for meal/stay failures",
+        "confidence": 0.5,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "meal",
+              "rule": "AVOID_CITY",
+              "ttl": 1,
+              "city": "Hyannis"
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "meal",
+            "rule": "AVOID_CITY",
+            "ttl": 1,
+            "city": "Hyannis"
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Boston",
+          "Hyannis"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1473.0,
+          "bundle_lb_cost": 3348.0,
+          "stay_lb_cost": 426.0,
+          "meal_lb_cost": 891.0,
+          "transport_lb_cost": 2031.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "myrtle beach",
+              "boston"
+            ],
+            [
+              "boston",
+              "hyannis"
+            ],
+            [
+              "hyannis",
+              "myrtle beach"
+            ]
+          ],
+          "bundle_key": [
+            "boston",
+            "hyannis"
+          ],
+          "bundle_key_set": [
+            "boston",
+            "hyannis"
+          ],
+          "bundle_key_seq": [
+            "boston",
+            "hyannis"
+          ],
+          "city_features": {
+            "Boston": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 102.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 19,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 13,
+              "hotel_slack": 1
+            },
+            "Hyannis": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 111.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 13,
+              "min_meal_cost": 25.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 4,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Myrtle Beach->Boston": {
+              "min_cost": 444.0,
+              "blocked": false
+            },
+            "Boston->Hyannis": {
+              "min_cost": 114.0,
+              "blocked": false
+            },
+            "Hyannis->Myrtle Beach": {
+              "min_cost": 1473.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 4,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 111.0,
+            "bottleneck_city_meal": "Hyannis",
+            "bottleneck_city_hotel": "Hyannis",
+            "bottleneck_edge": "Hyannis->Myrtle Beach"
+          },
+          "min_bundle_cost": 2457.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 4,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 111.0,
+          "bottleneck_city_meal": "Hyannis",
+          "bottleneck_city_hotel": "Hyannis",
+          "bottleneck_edge": "Hyannis->Myrtle Beach"
+        },
+        "budget_context": {
+          "remaining": 244.0,
+          "slot_cap": 14.44128787878788,
+          "reserve": 221.08499999999998,
+          "min_cost_nonbudget": 12.0
+        },
+        "counts": {
+          "kb": 35,
+          "after_nonbudget": 35,
+          "after_budget": 0,
+          "budget_removed": 35,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Boston",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 35,
+          "after_nonbudget": 35,
+          "after_budget": 0,
+          "budget_removed": 35,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 244.0,
+          "slot_cap": 14.44128787878788,
+          "reserve": 221.08499999999998,
+          "min_cost_nonbudget": 12.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 35,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3800,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": [
+              "Indian",
+              "Mexican",
+              "American",
+              "Mediterranean"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Boston",
+        "Nantucket"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n    \"candidate_id\": 1,\n    \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n    \"confidence\": 0.8,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            {\"phase\": \"meal\", \"rule\": \"NO_FLIGHT\", \"ttl\": 100}\n        ],\n        \"soft_penalties\": [\n            {\"phase\": \"meal\", \"feature\": \"budget_risk\", \"delta\": -0.2},\n            {\"phase\": \"attraction\", \"feature\": \"cost_ratio\", \"delta\": -0.3}\n        ]\n    }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "meal",
+              "rule": "NO_FLIGHT",
+              "ttl": 100
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "meal",
+              "feature": "budget_risk",
+              "delta": -0.2
+            },
+            {
+              "phase": "attraction",
+              "feature": "cost_ratio",
+              "delta": -0.3
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "meal",
+            "rule": "NO_FLIGHT",
+            "ttl": 100
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "meal",
+            "feature": "budget_risk",
+            "delta": -0.2
+          },
+          {
+            "phase": "attraction",
+            "feature": "cost_ratio",
+            "delta": -0.3
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Boston",
+          "Nantucket"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1524.0,
+          "bundle_lb_cost": 3278.0,
+          "stay_lb_cost": 770.0,
+          "meal_lb_cost": 486.0,
+          "transport_lb_cost": 2022.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "myrtle beach",
+              "boston"
+            ],
+            [
+              "boston",
+              "nantucket"
+            ],
+            [
+              "nantucket",
+              "myrtle beach"
+            ]
+          ],
+          "bundle_key": [
+            "boston",
+            "nantucket"
+          ],
+          "bundle_key_set": [
+            "boston",
+            "nantucket"
+          ],
+          "bundle_key_seq": [
+            "boston",
+            "nantucket"
+          ],
+          "city_features": {
+            "Boston": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 102.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 19,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 13,
+              "hotel_slack": 1
+            },
+            "Nantucket": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 283.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 18,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 9,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Myrtle Beach->Boston": {
+              "min_cost": 444.0,
+              "blocked": false
+            },
+            "Boston->Nantucket": {
+              "min_cost": 54.0,
+              "blocked": false
+            },
+            "Nantucket->Myrtle Beach": {
+              "min_cost": 1524.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 9,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 283.0,
+            "bottleneck_city_meal": "Nantucket",
+            "bottleneck_city_hotel": "Nantucket",
+            "bottleneck_edge": "Nantucket->Myrtle Beach"
+          },
+          "min_bundle_cost": 2792.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 9,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 283.0,
+          "bottleneck_city_meal": "Nantucket",
+          "bottleneck_city_hotel": "Nantucket",
+          "bottleneck_edge": "Nantucket->Myrtle Beach"
+        },
+        "budget_context": {
+          "remaining": 46.0,
+          "slot_cap": 15.333333333333334,
+          "reserve": 0.0,
+          "min_cost_nonbudget": 10.0
+        },
+        "counts": {
+          "kb": 32,
+          "after_nonbudget": 32,
+          "after_budget": 6,
+          "budget_removed": 26,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Nantucket",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 32,
+          "after_nonbudget": 32,
+          "after_budget": 6,
+          "budget_removed": 26,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 46.0,
+          "slot_cap": 15.333333333333334,
+          "reserve": 0.0,
+          "min_cost_nonbudget": 10.0
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 32,
+        "dead_end_after_budget": 6,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3800,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": [
+              "Indian",
+              "Mexican",
+              "American",
+              "Mediterranean"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Hyannis",
+        "Boston"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"meal\", \"rule\": \"AVOID_CITY\", \"ttl\": 10, \"city\": \"Nantucket\"}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "meal",
+              "rule": "AVOID_CITY",
+              "ttl": 10,
+              "city": "Nantucket"
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "meal",
+            "rule": "AVOID_CITY",
+            "ttl": 10,
+            "city": "Nantucket"
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "051916e5872f",
+      "phase": "daily",
+      "slot_fp": "meal|d1|slot:dinner|seg:None|Hyannis|None|None->None",
+      "bundle_fp": "29fc2e8ea850"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "051916e5872f",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Hyannis|None|None->None",
+        "bundle_fp": "29fc2e8ea850"
+      },
+      "confidence": 0.5,
+      "hard_exclusions": [
+        {
+          "phase": "daily",
+          "rule": "AVOID_CITY",
+          "ttl": 1,
+          "city": "Hyannis"
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Boston",
+        "Hyannis"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "051916e5872f",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:lunch|seg:None|Boston|None|None->None",
+        "bundle_fp": "a5357eddddc4"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "051916e5872f",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:lunch|seg:None|Boston|None|None->None",
+        "bundle_fp": "a5357eddddc4"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "daily",
+          "rule": "NO_FLIGHT",
+          "ttl": 100
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "daily",
+          "feature": "budget_risk",
+          "delta": -0.2
+        },
+        {
+          "phase": "daily",
+          "feature": "cost_ratio",
+          "delta": -0.3
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Boston",
+        "Nantucket"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "051916e5872f",
+        "phase": "daily",
+        "slot_fp": "meal|d5|slot:dinner|seg:None|Nantucket|None|None->None",
+        "bundle_fp": "6b7af70c826c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "051916e5872f",
+        "phase": "daily",
+        "slot_fp": "meal|d5|slot:dinner|seg:None|Nantucket|None|None->None",
+        "bundle_fp": "6b7af70c826c"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "daily",
+          "rule": "AVOID_CITY",
+          "ttl": 10,
+          "city": "Nantucket"
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Hyannis",
+        "Boston"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "051916e5872f",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Hyannis|None|None->None",
+        "bundle_fp": "29fc2e8ea850"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 17.710283904802054
+}

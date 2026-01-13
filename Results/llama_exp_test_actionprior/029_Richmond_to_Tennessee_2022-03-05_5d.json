@@ -1,0 +1,1018 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1320.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you assist in crafting a travel schedule departing from Richmond and traveling to 2 cities in Tennessee? The journey will last 5 days, starting on March 5th and concluding on March 9th, 2022. The travel budget is set at $2,600.",
+  "parsed": {
+    "org": "Richmond",
+    "dest": "Tennessee",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-05",
+      "2022-03-06",
+      "2022-03-07",
+      "2022-03-08",
+      "2022-03-09"
+    ],
+    "people_number": null,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 2600,
+    "origin": "Richmond",
+    "destination": "Tennessee",
+    "duration_days": 5,
+    "start_date": "2022-03-05",
+    "preferences": [],
+    "candidate_cities": [
+      "Nashville",
+      "Bristol",
+      "Knoxville",
+      "Chattanooga",
+      "Memphis"
+    ]
+  },
+  "actions": [
+    "move:seg0:flight:F2101111 Richmond->Nashville $105 17:51-18:46",
+    "move:seg1:taxi:Nashville->Chattanooga 214km cost 214",
+    "move:seg2:taxi:Chattanooga->Richmond 879km cost 879",
+    "stay:Nashville:1763 Lovely room in heart of Williamsburg Private room $61"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Nashville",
+      "Chattanooga"
+    ],
+    "transportation_dates": [
+      "2022-03-05",
+      "2022-03-07",
+      "2022-03-09"
+    ],
+    "transportation_methods": [
+      "Flight F2101111, from Richmond to Nashville, Departure Time: 17:51, Arrival Time: 18:46, cost: 105.0",
+      "taxi, from Nashville to Chattanooga, cost: 214.0",
+      "taxi, from Chattanooga to Richmond, cost: 879.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Lovely room in heart of Williamsburg, Nashville",
+      "missing, Chattanooga"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Richmond to Nashville",
+      "transportation": "Flight Number: F2101111, from Richmond to Nashville, Departure Time: 17:51, Arrival Time: 18:46",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Lovely room in heart of Williamsburg, Nashville"
+    },
+    {
+      "days": 2,
+      "current_city": "Nashville",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Lovely room in heart of Williamsburg, Nashville"
+    },
+    {
+      "days": 3,
+      "current_city": "from Nashville to Chattanooga",
+      "transportation": "Taxi, from Nashville to Chattanooga, Cost: 214",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Chattanooga",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Chattanooga to Richmond",
+      "transportation": "Taxi, from Chattanooga to Richmond, Cost: 879",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Nashville|None|None->None",
+      "counts": {
+        "kb": 8,
+        "after_nonbudget": 5,
+        "after_budget": 2,
+        "returned": 2,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 2,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1402.0,
+        "slot_cap": 262.875,
+        "reserve": 424.0
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Chattanooga|None|None->None",
+      "counts": {
+        "kb": 16,
+        "after_nonbudget": 5,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 5,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1280.0,
+        "slot_cap": 937.5,
+        "reserve": 125.28149999999998
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 173.4,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 147.39,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 125.28149999999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Chattanooga|None|None->None",
+        "city": "Chattanooga",
+        "city_bundle": [
+          "Nashville",
+          "Chattanooga"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 16,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 11,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1280.0,
+          "slot_cap": 937.5,
+          "reserve": 125.28149999999998,
+          "min_cost_nonbudget": 722.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "outbound"
+        ],
+        "city_bundle": [
+          "Knoxville",
+          "Nashville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 107.0,
+          "bundle_lb_cost": 1680.0,
+          "stay_lb_cost": 386.0,
+          "meal_lb_cost": 195.0,
+          "transport_lb_cost": 1099.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "richmond",
+              "knoxville"
+            ],
+            [
+              "knoxville",
+              "nashville"
+            ],
+            [
+              "nashville",
+              "richmond"
+            ]
+          ],
+          "bundle_key": [
+            "knoxville",
+            "nashville"
+          ],
+          "bundle_key_set": [
+            "knoxville",
+            "nashville"
+          ],
+          "bundle_key_seq": [
+            "knoxville",
+            "nashville"
+          ],
+          "city_features": {
+            "Knoxville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 132.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 17,
+              "hotel_slack": 1
+            },
+            "Nashville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 61.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 14,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Richmond->Knoxville": {
+              "min_cost": 702.0,
+              "blocked": false
+            },
+            "Knoxville->Nashville": {
+              "min_cost": 290.0,
+              "blocked": false
+            },
+            "Nashville->Richmond": {
+              "min_cost": 107.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 14,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 132.0,
+            "bottleneck_city_meal": "Nashville",
+            "bottleneck_city_hotel": "Knoxville",
+            "bottleneck_edge": "Richmond->Knoxville"
+          },
+          "min_bundle_cost": 1485.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 14,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 132.0,
+          "bottleneck_city_meal": "Nashville",
+          "bottleneck_city_hotel": "Knoxville",
+          "bottleneck_edge": "Richmond->Knoxville"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 2600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Nashville",
+        "Chattanooga"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 1,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"flight\", \"rule\": \"NO_FLIGHT\", \"ttl\": 10, \"city\": null, \"edge\": null}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"segment\", \"feature\": \"budget_risk\", \"delta\": -0.2},\n      {\"phase\": \"stay\", \"feature\": \"hotel_price\", \"delta\": -0.1}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "flight",
+              "rule": "NO_FLIGHT",
+              "ttl": 10,
+              "city": null,
+              "edge": null
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "budget_risk",
+              "delta": -0.2
+            },
+            {
+              "phase": "stay",
+              "feature": "hotel_price",
+              "delta": -0.1
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "flight",
+            "rule": "NO_FLIGHT",
+            "ttl": 10,
+            "city": null,
+            "edge": null
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "budget_risk",
+            "delta": -0.2
+          },
+          {
+            "phase": "stay",
+            "feature": "hotel_price",
+            "delta": -0.1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Nashville",
+          "Chattanooga"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 879.0,
+          "bundle_lb_cost": 1744.0,
+          "stay_lb_cost": 342.0,
+          "meal_lb_cost": 204.0,
+          "transport_lb_cost": 1198.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "richmond",
+              "nashville"
+            ],
+            [
+              "nashville",
+              "chattanooga"
+            ],
+            [
+              "chattanooga",
+              "richmond"
+            ]
+          ],
+          "bundle_key": [
+            "chattanooga",
+            "nashville"
+          ],
+          "bundle_key_set": [
+            "chattanooga",
+            "nashville"
+          ],
+          "bundle_key_seq": [
+            "nashville",
+            "chattanooga"
+          ],
+          "city_features": {
+            "Nashville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 61.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 17,
+              "hotel_slack": 1
+            },
+            "Chattanooga": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 110.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 39,
+              "min_meal_cost": 14.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 30,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Richmond->Nashville": {
+              "min_cost": 105.0,
+              "blocked": false
+            },
+            "Nashville->Chattanooga": {
+              "min_cost": 214.0,
+              "blocked": false
+            },
+            "Chattanooga->Richmond": {
+              "min_cost": 879.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 17,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 110.0,
+            "bottleneck_city_meal": "Nashville",
+            "bottleneck_city_hotel": "Chattanooga",
+            "bottleneck_edge": "Chattanooga->Richmond"
+          },
+          "min_bundle_cost": 1540.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 17,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 110.0,
+          "bottleneck_city_meal": "Nashville",
+          "bottleneck_city_hotel": "Chattanooga",
+          "bottleneck_edge": "Chattanooga->Richmond"
+        },
+        "budget_context": {
+          "remaining": 1280.0,
+          "slot_cap": 937.5,
+          "reserve": 125.28149999999998,
+          "min_cost_nonbudget": 722.0
+        },
+        "counts": {
+          "kb": 16,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 11,
+          "topk": 0
+        },
+        "dead_end_city": "Chattanooga",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 16,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 11,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1280.0,
+          "slot_cap": 937.5,
+          "reserve": 125.28149999999998,
+          "min_cost_nonbudget": 722.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 5,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Nashville",
+        "Knoxville"
+      ],
+      "reason": "preference",
+      "raw": "```\n{\n    \"candidate_id\": 0,\n    \"reason\": \"preference\",\n    \"confidence\": 1.0,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            [\"hotel\", \"NO_FLIGHT\", 10, true]\n        ],\n        \"soft_penalties\": [\n            [\"hotel\", \"budget_risk\", -200],\n            [\"segment\", \"edge_cost\", 100]\n        ]\n    }\n}\n```",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "preference",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "hotel",
+              "NO_FLIGHT",
+              10,
+              true
+            ]
+          ],
+          "soft_penalties": [
+            [
+              "hotel",
+              "budget_risk",
+              -200
+            ],
+            [
+              "segment",
+              "edge_cost",
+              100
+            ]
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "hotel",
+            "NO_FLIGHT",
+            10,
+            true
+          ]
+        ],
+        "soft_penalties": [
+          [
+            "hotel",
+            "budget_risk",
+            -200
+          ],
+          [
+            "segment",
+            "edge_cost",
+            100
+          ]
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "return"
+        ],
+        "city_bundle": [
+          "Nashville",
+          "Knoxville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 701.0,
+          "bundle_lb_cost": 1677.0,
+          "stay_lb_cost": 386.0,
+          "meal_lb_cost": 195.0,
+          "transport_lb_cost": 1096.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "richmond",
+              "nashville"
+            ],
+            [
+              "nashville",
+              "knoxville"
+            ],
+            [
+              "knoxville",
+              "richmond"
+            ]
+          ],
+          "bundle_key": [
+            "knoxville",
+            "nashville"
+          ],
+          "bundle_key_set": [
+            "knoxville",
+            "nashville"
+          ],
+          "bundle_key_seq": [
+            "nashville",
+            "knoxville"
+          ],
+          "city_features": {
+            "Nashville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 61.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 17,
+              "hotel_slack": 1
+            },
+            "Knoxville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 132.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 14,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Richmond->Nashville": {
+              "min_cost": 105.0,
+              "blocked": false
+            },
+            "Nashville->Knoxville": {
+              "min_cost": 290.0,
+              "blocked": false
+            },
+            "Knoxville->Richmond": {
+              "min_cost": 701.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 14,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 132.0,
+            "bottleneck_city_meal": "Knoxville",
+            "bottleneck_city_hotel": "Knoxville",
+            "bottleneck_edge": "Knoxville->Richmond"
+          },
+          "min_bundle_cost": 1482.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 14,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 132.0,
+          "bottleneck_city_meal": "Knoxville",
+          "bottleneck_city_hotel": "Knoxville",
+          "bottleneck_edge": "Knoxville->Richmond"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 2600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Nashville",
+        "Chattanooga"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n    \"candidate_id\": 1,\n    \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n    \"confidence\": 0.8,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            {\"phase\": \"flight\", \"rule\": \"NO_FLIGHT\", \"ttl\": 100, \"city\": null, \"edge\": null}\n        ],\n        \"soft_penalties\": [\n            {\"phase\": \"hotel\", \"feature\": \"hotel_price\", \"delta\": -10.0}\n        ]\n    }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "flight",
+              "rule": "NO_FLIGHT",
+              "ttl": 100,
+              "city": null,
+              "edge": null
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "hotel",
+              "feature": "hotel_price",
+              "delta": -10.0
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "flight",
+            "rule": "NO_FLIGHT",
+            "ttl": 100,
+            "city": null,
+            "edge": null
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "hotel",
+            "feature": "hotel_price",
+            "delta": -10.0
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "39fe3d06af56",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Chattanooga|None|None->None",
+      "bundle_fp": "e440dd71d72a"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "39fe3d06af56",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "687c7778d30c"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "NO_FLIGHT",
+          "ttl": 10,
+          "city": null,
+          "edge": null
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": -0.2
+        },
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": -0.1
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Nashville",
+        "Chattanooga"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "39fe3d06af56",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chattanooga|None|None->None",
+        "bundle_fp": "e440dd71d72a"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "39fe3d06af56",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chattanooga|None|None->None",
+        "bundle_fp": "e440dd71d72a"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Nashville",
+        "Knoxville"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "39fe3d06af56",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "a3be090adf3c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "39fe3d06af56",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "a3be090adf3c"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "NO_FLIGHT",
+          "ttl": 100,
+          "city": null,
+          "edge": null
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": -10.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Nashville",
+        "Chattanooga"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "39fe3d06af56",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chattanooga|None|None->None",
+        "bundle_fp": "e440dd71d72a"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 37.83819696493447
+}

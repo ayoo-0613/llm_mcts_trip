@@ -1,0 +1,1098 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 2046.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you create a 5-day travel itinerary for two people, leaving from Chicago and visiting 2 cities in North Carolina from March 5th to March 9th, 2022? Our budget is $3,600. We require non-shared accommodations that are pet-friendly because we will be bringing our pets. We'll not be flying and will presumably drive to the destination.",
+  "parsed": {
+    "org": "Chicago",
+    "dest": "North Carolina",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-05",
+      "2022-03-06",
+      "2022-03-07",
+      "2022-03-08",
+      "2022-03-09"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "pets",
+      "cuisine": null,
+      "room type": "not shared room",
+      "transportation": "no flight"
+    },
+    "budget": 3600,
+    "origin": "Chicago",
+    "destination": "North Carolina",
+    "duration_days": 5,
+    "start_date": "2022-03-05",
+    "preferences": [
+      "pets",
+      "not shared room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Greensboro",
+      "Wilmington",
+      "New Bern",
+      "Charlotte",
+      "Raleigh",
+      "Asheville",
+      "Fayetteville"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Chicago->Wilmington 1505km cost 1505",
+    "move:seg1:taxi:Wilmington->Asheville 541km cost 541"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Wilmington",
+      "Asheville"
+    ],
+    "transportation_dates": [
+      "2022-03-05",
+      "2022-03-07",
+      "2022-03-09"
+    ],
+    "transportation_methods": [
+      "taxi, from Chicago to Wilmington, cost: 1505.0",
+      "taxi, from Wilmington to Asheville, cost: 541.0",
+      "Asheville->Chicago missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Wilmington",
+      "missing, Asheville"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Chicago to Wilmington",
+      "transportation": "Taxi, from Chicago to Wilmington, Cost: 1505",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Wilmington",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Wilmington to Asheville",
+      "transportation": "Taxi, from Wilmington to Asheville, Cost: 541",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Asheville",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Asheville",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:1|None|2022-03-05|Wilmington->Asheville",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 2095.0,
+        "slot_cap": 192.96052631578942,
+        "reserve": 832.0
+      },
+      "segment_role": "intercity",
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-05|Asheville->Chicago",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1554.0,
+        "slot_cap": 559.1077302631577,
+        "reserve": 510.95199999999994
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 707.1999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 601.1199999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 510.95199999999994,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-05|Asheville->Chicago",
+        "city": "Chicago",
+        "city_bundle": [
+          "Wilmington",
+          "Asheville"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1554.0,
+          "slot_cap": 559.1077302631577,
+          "reserve": 510.95199999999994,
+          "min_cost_nonbudget": 525.5
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Fayetteville",
+          "Asheville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1051.0,
+          "bundle_lb_cost": 3682.0,
+          "stay_lb_cost": 554.0,
+          "meal_lb_cost": 330.0,
+          "transport_lb_cost": 2798.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "chicago",
+              "fayetteville"
+            ],
+            [
+              "fayetteville",
+              "asheville"
+            ],
+            [
+              "asheville",
+              "chicago"
+            ]
+          ],
+          "bundle_key": [
+            "asheville",
+            "fayetteville"
+          ],
+          "bundle_key_set": [
+            "asheville",
+            "fayetteville"
+          ],
+          "bundle_key_seq": [
+            "fayetteville",
+            "asheville"
+          ],
+          "city_features": {
+            "Fayetteville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 214.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            },
+            "Asheville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 63.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 20,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 11,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Chicago->Fayetteville": {
+              "min_cost": 1323.0,
+              "blocked": false
+            },
+            "Fayetteville->Asheville": {
+              "min_cost": 424.0,
+              "blocked": false
+            },
+            "Asheville->Chicago": {
+              "min_cost": 1051.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 11,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 214.0,
+            "bottleneck_city_meal": "Asheville",
+            "bottleneck_city_hotel": "Fayetteville",
+            "bottleneck_edge": "Chicago->Fayetteville"
+          },
+          "min_bundle_cost": 3352.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 11,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 214.0,
+          "bottleneck_city_meal": "Asheville",
+          "bottleneck_city_hotel": "Fayetteville",
+          "bottleneck_edge": "Chicago->Fayetteville"
+        },
+        "budget_context": {
+          "remaining": 374.0,
+          "slot_cap": 273.92578125,
+          "reserve": 202.66124999999997,
+          "min_cost_nonbudget": 150.0
+        },
+        "counts": {
+          "kb": 8,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_city": "Asheville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 8,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 374.0,
+          "slot_cap": 273.92578125,
+          "reserve": 202.66124999999997,
+          "min_cost_nonbudget": 150.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 5,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": null,
+            "room type": "not shared room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Wilmington",
+        "Asheville"
+      ],
+      "reason": "lowest bundle lb cost",
+      "raw": "{\n  \"candidate_id\": 1,\n  \"reason\": \"lowest bundle lb cost\",\n  \"confidence\": 0.7,\n  \"gradient\": {\n    \"hard_exclusions\": [{\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\"}],\n    \"soft_penalties\": [{\"phase\": \"meal\", \"feature\": \"cost_ratio\", \"delta\": -0.2}],\n    \"retrieval_patches\": [{\"phase\": \"transport\", \"patch\": \"block_edge\", \"ttl\": 10}]\n  }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "lowest bundle lb cost",
+        "confidence": 0.7,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "meal",
+              "feature": "cost_ratio",
+              "delta": -0.2
+            }
+          ],
+          "retrieval_patches": [
+            {
+              "phase": "transport",
+              "patch": "block_edge",
+              "ttl": 10
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "meal",
+            "feature": "cost_ratio",
+            "delta": -0.2
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "transport",
+            "patch": "block_edge",
+            "ttl": 10
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Wilmington",
+          "Asheville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1051.0,
+          "bundle_lb_cost": 3929.0,
+          "stay_lb_cost": 334.0,
+          "meal_lb_cost": 498.0,
+          "transport_lb_cost": 3097.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "chicago",
+              "wilmington"
+            ],
+            [
+              "wilmington",
+              "asheville"
+            ],
+            [
+              "asheville",
+              "chicago"
+            ]
+          ],
+          "bundle_key": [
+            "asheville",
+            "wilmington"
+          ],
+          "bundle_key_set": [
+            "asheville",
+            "wilmington"
+          ],
+          "bundle_key_seq": [
+            "wilmington",
+            "asheville"
+          ],
+          "city_features": {
+            "Wilmington": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 104.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 21,
+              "min_meal_cost": 25.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 15,
+              "hotel_slack": 1
+            },
+            "Asheville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 63.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 20,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 11,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Chicago->Wilmington": {
+              "min_cost": 1505.0,
+              "blocked": false
+            },
+            "Wilmington->Asheville": {
+              "min_cost": 541.0,
+              "blocked": false
+            },
+            "Asheville->Chicago": {
+              "min_cost": 1051.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 11,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 104.0,
+            "bottleneck_city_meal": "Asheville",
+            "bottleneck_city_hotel": "Wilmington",
+            "bottleneck_edge": "Chicago->Wilmington"
+          },
+          "min_bundle_cost": 3431.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 11,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 104.0,
+          "bottleneck_city_meal": "Asheville",
+          "bottleneck_city_hotel": "Wilmington",
+          "bottleneck_edge": "Chicago->Wilmington"
+        },
+        "budget_context": {
+          "remaining": 1554.0,
+          "slot_cap": 559.1077302631577,
+          "reserve": 510.95199999999994,
+          "min_cost_nonbudget": 525.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Chicago",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1554.0,
+          "slot_cap": 559.1077302631577,
+          "reserve": 510.95199999999994,
+          "min_cost_nonbudget": 525.5
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": null,
+            "room type": "not shared room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Asheville",
+        "Wilmington"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 2,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.9,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"segment\", \"rule\": \"NO_FLIGHT\", \"ttl\": 10, \"city\": null, \"edge\": \"Wilmington->Chicago\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"hotel\", \"feature\": \"budget_risk\", \"delta\": 0.5},\n      {\"phase\": \"meal\", \"feature\": \"cost_ratio\", \"delta\": 0.2}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.9,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "NO_FLIGHT",
+              "ttl": 10,
+              "city": null,
+              "edge": "Wilmington->Chicago"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "hotel",
+              "feature": "budget_risk",
+              "delta": 0.5
+            },
+            {
+              "phase": "meal",
+              "feature": "cost_ratio",
+              "delta": 0.2
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "NO_FLIGHT",
+            "ttl": 10,
+            "city": null,
+            "edge": "Wilmington->Chicago"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "hotel",
+            "feature": "budget_risk",
+            "delta": 0.5
+          },
+          {
+            "phase": "meal",
+            "feature": "cost_ratio",
+            "delta": 0.2
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Asheville",
+          "Wilmington"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1504.0,
+          "bundle_lb_cost": 4012.0,
+          "stay_lb_cost": 334.0,
+          "meal_lb_cost": 582.0,
+          "transport_lb_cost": 3096.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "chicago",
+              "asheville"
+            ],
+            [
+              "asheville",
+              "wilmington"
+            ],
+            [
+              "wilmington",
+              "chicago"
+            ]
+          ],
+          "bundle_key": [
+            "asheville",
+            "wilmington"
+          ],
+          "bundle_key_set": [
+            "asheville",
+            "wilmington"
+          ],
+          "bundle_key_seq": [
+            "asheville",
+            "wilmington"
+          ],
+          "city_features": {
+            "Asheville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 63.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 20,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 14,
+              "hotel_slack": 1
+            },
+            "Wilmington": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 104.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 21,
+              "min_meal_cost": 25.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 12,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Chicago->Asheville": {
+              "min_cost": 1053.0,
+              "blocked": false
+            },
+            "Asheville->Wilmington": {
+              "min_cost": 539.0,
+              "blocked": false
+            },
+            "Wilmington->Chicago": {
+              "min_cost": 1504.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 12,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 104.0,
+            "bottleneck_city_meal": "Wilmington",
+            "bottleneck_city_hotel": "Wilmington",
+            "bottleneck_edge": "Wilmington->Chicago"
+          },
+          "min_bundle_cost": 3430.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 12,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 104.0,
+          "bottleneck_city_meal": "Wilmington",
+          "bottleneck_city_hotel": "Wilmington",
+          "bottleneck_edge": "Wilmington->Chicago"
+        },
+        "budget_context": {
+          "remaining": 2008.0,
+          "slot_cap": 722.4506578947368,
+          "reserve": 562.5384999999999,
+          "min_cost_nonbudget": 752.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Chicago",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 2008.0,
+          "slot_cap": 722.4506578947368,
+          "reserve": 562.5384999999999,
+          "min_cost_nonbudget": 752.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": null,
+            "room type": "not shared room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Wilmington",
+        "Asheville"
+      ],
+      "reason": "Bundle risk is lower than the others",
+      "raw": "{\n  \"candidate_id\": 2,\n  \"reason\": \"Bundle risk is lower than the others\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"segment\", \"AVOID_CITY\", 10, \"Chicago\"],\n      [\"flight\", \"NO_FLIGHT\", 5]\n    ],\n    \"soft_penalties\": [\n      [\"segment\", \"budget_risk\", -1],\n      [\"hotel/stay\", \"cost_ratio\", 0.9]\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "Bundle risk is lower than the others",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "segment",
+              "AVOID_CITY",
+              10,
+              "Chicago"
+            ],
+            [
+              "flight",
+              "NO_FLIGHT",
+              5
+            ]
+          ],
+          "soft_penalties": [
+            [
+              "segment",
+              "budget_risk",
+              -1
+            ],
+            [
+              "hotel/stay",
+              "cost_ratio",
+              0.9
+            ]
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "segment",
+            "AVOID_CITY",
+            10,
+            "Chicago"
+          ],
+          [
+            "flight",
+            "NO_FLIGHT",
+            5
+          ]
+        ],
+        "soft_penalties": [
+          [
+            "segment",
+            "budget_risk",
+            -1
+          ],
+          [
+            "hotel/stay",
+            "cost_ratio",
+            0.9
+          ]
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "dbec2a224560",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-05|Asheville->Chicago",
+      "bundle_fp": "ba144c70f4eb"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "dbec2a224560",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Asheville|None|None->None",
+        "bundle_fp": "767eb1b438f8"
+      },
+      "confidence": 0.7,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "daily",
+          "feature": "cost_ratio",
+          "delta": -0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Wilmington",
+        "Asheville"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "dbec2a224560",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-05|Asheville->Chicago",
+        "bundle_fp": "ba144c70f4eb"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "dbec2a224560",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-05|Asheville->Chicago",
+        "bundle_fp": "ba144c70f4eb"
+      },
+      "confidence": 0.9,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "NO_FLIGHT",
+          "ttl": 10,
+          "city": null,
+          "edge": "Wilmington->Chicago"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "budget_risk",
+          "delta": 0.5
+        },
+        {
+          "phase": "daily",
+          "feature": "cost_ratio",
+          "delta": 0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Asheville",
+        "Wilmington"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "dbec2a224560",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-05|Wilmington->Chicago",
+        "bundle_fp": "ec8521d27a01"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "dbec2a224560",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-05|Wilmington->Chicago",
+        "bundle_fp": "ec8521d27a01"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Wilmington",
+        "Asheville"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "dbec2a224560",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-05|Asheville->Chicago",
+        "bundle_fp": "ba144c70f4eb"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 5.86854006908834
+}

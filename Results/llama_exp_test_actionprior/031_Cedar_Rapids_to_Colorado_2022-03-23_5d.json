@@ -1,0 +1,828 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 3598.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you help me devise a 5-day travel plan starting from Cedar Rapids and covering 2 cities in Colorado from March 23rd to March 27th, 2022? This journey is for one person with a budget of $4,300.",
+  "parsed": {
+    "org": "Cedar Rapids",
+    "dest": "Colorado",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-23",
+      "2022-03-24",
+      "2022-03-25",
+      "2022-03-26",
+      "2022-03-27"
+    ],
+    "people_number": 1,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": "no self-driving"
+    },
+    "budget": 4300,
+    "origin": "Cedar Rapids",
+    "destination": "Colorado",
+    "duration_days": 5,
+    "start_date": "2022-03-23",
+    "preferences": [],
+    "transport_forbid": [
+      "self-driving"
+    ],
+    "candidate_cities": [
+      "Alamosa",
+      "Grand Junction",
+      "Durango",
+      "Colorado Springs",
+      "Gunnison",
+      "Denver"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Cedar Rapids->Durango 1817km cost 1817",
+    "move:seg1:taxi:Durango->Alamosa 240km cost 240",
+    "move:seg2:taxi:Alamosa->Cedar Rapids 1541km cost 1541"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Durango",
+      "Alamosa"
+    ],
+    "transportation_dates": [
+      "2022-03-23",
+      "2022-03-25",
+      "2022-03-27"
+    ],
+    "transportation_methods": [
+      "taxi, from Cedar Rapids to Durango, cost: 1817.0",
+      "taxi, from Durango to Alamosa, cost: 240.0",
+      "taxi, from Alamosa to Cedar Rapids, cost: 1541.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Durango",
+      "missing, Alamosa"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Cedar Rapids to Durango",
+      "transportation": "Taxi, from Cedar Rapids to Durango, Cost: 1817",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Durango",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Durango to Alamosa",
+      "transportation": "Taxi, from Durango to Alamosa, Cost: 240",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Alamosa",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Alamosa to Cedar Rapids",
+      "transportation": "Taxi, from Alamosa to Cedar Rapids, Cost: 1541",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-23|Alamosa->Cedar Rapids",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 2243.0,
+        "slot_cap": 826.3684210526314,
+        "reserve": 430.0
+      },
+      "segment_role": "return",
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+      "counts": {
+        "kb": 12,
+        "after_nonbudget": 5,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 5,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 702.0,
+        "slot_cap": 257.080078125,
+        "reserve": 178.09624999999997
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 246.5,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 209.52499999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 178.09624999999997,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+        "city": "Durango",
+        "city_bundle": [
+          "Durango",
+          "Alamosa"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 12,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 702.0,
+          "slot_cap": 257.080078125,
+          "reserve": 178.09624999999997,
+          "min_cost_nonbudget": 663.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "outbound"
+        ],
+        "city_bundle": [
+          "Colorado Springs",
+          "Denver"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 138.0,
+          "bundle_lb_cost": 2650.0,
+          "stay_lb_cost": 904.0,
+          "meal_lb_cost": 198.0,
+          "transport_lb_cost": 1548.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "cedar rapids",
+              "colorado springs"
+            ],
+            [
+              "colorado springs",
+              "denver"
+            ],
+            [
+              "denver",
+              "cedar rapids"
+            ]
+          ],
+          "bundle_key": [
+            "colorado springs",
+            "denver"
+          ],
+          "bundle_key_set": [
+            "colorado springs",
+            "denver"
+          ],
+          "bundle_key_seq": [
+            "colorado springs",
+            "denver"
+          ],
+          "city_features": {
+            "Colorado Springs": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 62.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 15.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 24,
+              "hotel_slack": 1
+            },
+            "Denver": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 390.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 22,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 13,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Cedar Rapids->Colorado Springs": {
+              "min_cost": 1396.0,
+              "blocked": false
+            },
+            "Colorado Springs->Denver": {
+              "min_cost": 14.0,
+              "blocked": false
+            },
+            "Denver->Cedar Rapids": {
+              "min_cost": 138.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 13,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 390.0,
+            "bottleneck_city_meal": "Denver",
+            "bottleneck_city_hotel": "Denver",
+            "bottleneck_edge": "Cedar Rapids->Colorado Springs"
+          },
+          "min_bundle_cost": 2452.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 13,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 390.0,
+          "bottleneck_city_meal": "Denver",
+          "bottleneck_city_hotel": "Denver",
+          "bottleneck_edge": "Cedar Rapids->Colorado Springs"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 4300,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": "no self-driving"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Denver",
+        "Alamosa"
+      ],
+      "reason": null,
+      "raw": "This appears to be a JSON data dump from a machine learning model's output. It contains information about various candidate bundles and their associated costs, feasibility metrics, and confidence levels.\n\nHere are some insights I was able to gather:\n\n1. **Candidate Bundles**: There are 15 different bundle combinations listed, each with its own set of attributes.\n2. **Cost Metrics**:\n\t* `transport_lb_cost`: The lower bound cost for transportation between cities.\n\t* `stay_lb_cost`: The lower bound cost for accommodations in each city.\n\t* `meal_lb_cost`: The lower bound cost for meals in each city.\n\t* `bundle_lb_cost`: The total lower bound cost for the bundle, which is a weighted sum of the individual costs.\n3. **Feasibility Metrics**:\n\t* `return_leg_exists`: A boolean indicating whether there's a return leg (i.e., transportation from the last city back to Cedar Rapids).\n\t* `hotel_feasible_all`: A boolean indicating whether all cities have feasible hotel options.\n4. **Confidence Levels**: The output includes a confidence level for each bundle, ranging from 0 to 1.\n\nTo analyze this data further, you might want to:\n\n1. Plot the bundle costs and feasibility metrics against each other to identify patterns or correlations.\n2. Filter the bundles based on specific criteria (e.g., only consider bundles with high confidence levels).\n3. Investigate individual cities' hotel options and transportation networks to better understand the feasibility of each bundle.\n\nIf you have a specific question about this data, feel free to ask!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "return"
+        ],
+        "city_bundle": [
+          "Denver",
+          "Alamosa"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1541.0,
+          "bundle_lb_cost": 2792.0,
+          "stay_lb_cost": 914.0,
+          "meal_lb_cost": 162.0,
+          "transport_lb_cost": 1716.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "cedar rapids",
+              "denver"
+            ],
+            [
+              "denver",
+              "alamosa"
+            ],
+            [
+              "alamosa",
+              "cedar rapids"
+            ]
+          ],
+          "bundle_key": [
+            "alamosa",
+            "denver"
+          ],
+          "bundle_key_set": [
+            "alamosa",
+            "denver"
+          ],
+          "bundle_key_seq": [
+            "denver",
+            "alamosa"
+          ],
+          "city_features": {
+            "Denver": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 390.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 22,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 16,
+              "hotel_slack": 1
+            },
+            "Alamosa": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 67.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 12,
+              "meal_count": 30,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 9,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Cedar Rapids->Denver": {
+              "min_cost": 139.0,
+              "blocked": false
+            },
+            "Denver->Alamosa": {
+              "min_cost": 36.0,
+              "blocked": false
+            },
+            "Alamosa->Cedar Rapids": {
+              "min_cost": 1541.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 16,
+            "bottleneck_attr_slack": 9,
+            "bottleneck_hotel_price": 390.0,
+            "bottleneck_city_meal": "Denver",
+            "bottleneck_city_hotel": "Denver",
+            "bottleneck_edge": "Alamosa->Cedar Rapids"
+          },
+          "min_bundle_cost": 2630.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 16,
+          "bottleneck_attr_slack": 9,
+          "bottleneck_hotel_price": 390.0,
+          "bottleneck_city_meal": "Denver",
+          "bottleneck_city_hotel": "Denver",
+          "bottleneck_edge": "Alamosa->Cedar Rapids"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 4300,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": "no self-driving"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Colorado Springs",
+        "Denver"
+      ],
+      "reason": null,
+      "raw": "This is a JSON data dump from a machine learning model, specifically a ranking algorithm. It appears to be outputting candidate IDs with various attributes and metrics.\n\nHere's a breakdown of the structure:\n\n* `output_schema`: This defines the format of the output data. It contains information about the fields that will be present in each object, including:\n\t+ `candidate_id`: An integer ID for each candidate.\n\t+ `reason`: A short string explaining why each candidate was selected (e.g., \"top-scoring model\").\n\t+ `confidence`: A floating-point value between 0 and 1 indicating the model's confidence in its ranking of each candidate.\n\t+ `gradient`: An object containing various metrics that contribute to the overall ranking. These include:\n\t\t- `hard_exclusions`: A list of rules that exclude certain candidates from consideration (e.g., \"phase: exploration\").\n\t\t- `soft_penalties`: A list of features or characteristics that penalize certain candidates (e.g., \"feature: price, delta: -0.5\").\n\t\t- `retrieval_patches`: A list of patches or modifications applied to the candidate data (e.g., \"patch: price, ttl: 30 days\").\n* `bundle_list`: This contains a list of objects representing individual bundles or combinations of candidates. Each object in this list has the same structure as described above.\n\nWithout more context about what this data represents or how it's being used, it's difficult to provide specific insights or recommendations for analysis. However, here are some general suggestions:\n\n1. **Examine candidate IDs**: Look for patterns or correlations between candidate IDs and their associated attributes (e.g., reason, confidence).\n2. **Investigate gradient metrics**: Analyze the hard exclusions, soft penalties, and retrieval patches to understand how they contribute to the overall ranking.\n3. **Compare bundle outputs**: Compare the output of individual bundles (candidate combinations) to identify which candidates perform well together or have complementary strengths/weaknesses.\n\nIf you'd like to explore specific aspects of this data further, please let me know what questions or topics you'd like to discuss!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "outbound"
+        ],
+        "city_bundle": [
+          "Colorado Springs",
+          "Denver"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 138.0,
+          "bundle_lb_cost": 2650.0,
+          "stay_lb_cost": 904.0,
+          "meal_lb_cost": 198.0,
+          "transport_lb_cost": 1548.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "cedar rapids",
+              "colorado springs"
+            ],
+            [
+              "colorado springs",
+              "denver"
+            ],
+            [
+              "denver",
+              "cedar rapids"
+            ]
+          ],
+          "bundle_key": [
+            "colorado springs",
+            "denver"
+          ],
+          "bundle_key_set": [
+            "colorado springs",
+            "denver"
+          ],
+          "bundle_key_seq": [
+            "colorado springs",
+            "denver"
+          ],
+          "city_features": {
+            "Colorado Springs": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 62.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 15.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 24,
+              "hotel_slack": 1
+            },
+            "Denver": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 390.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 22,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 13,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Cedar Rapids->Colorado Springs": {
+              "min_cost": 1396.0,
+              "blocked": false
+            },
+            "Colorado Springs->Denver": {
+              "min_cost": 14.0,
+              "blocked": false
+            },
+            "Denver->Cedar Rapids": {
+              "min_cost": 138.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 13,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 390.0,
+            "bottleneck_city_meal": "Denver",
+            "bottleneck_city_hotel": "Denver",
+            "bottleneck_edge": "Cedar Rapids->Colorado Springs"
+          },
+          "min_bundle_cost": 2452.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 13,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 390.0,
+          "bottleneck_city_meal": "Denver",
+          "bottleneck_city_hotel": "Denver",
+          "bottleneck_edge": "Cedar Rapids->Colorado Springs"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 4300,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": "no self-driving"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Durango",
+        "Alamosa"
+      ],
+      "reason": null,
+      "raw": "This appears to be a JSON output from a recommendation system or optimizer that provides the results of some optimization process.\n\nHere's a brief summary of what this output might represent:\n\n* The `output` field contains an array of candidate solutions, each represented by an object with several fields:\n\t+ `id`: a unique identifier for the solution (e.g., \"15\")\n\t+ `bundle`: the set of locations or entities that are part of this solution\n\t+ `feasibility`: an object indicating whether the solution is feasible and why (e.g., `\"return_leg_exists\": true`)\n\t+ `lb_costs`: an object with four fields (`transport_lb_cost`, `stay_lb_cost`, `meal_lb_cost`, and `bundle_lb_cost`) representing the estimated costs of this solution\n* The `output_schema` field provides information about the structure and interpretation of the output, including:\n\t+ The data types of each field (e.g., \"int\" for integer fields)\n\t+ A description of what each field represents\n\t+ Additional metadata about the output format\n\nWithout more context or information about the specific optimization problem being solved, it's difficult to provide a more detailed interpretation of this output. However, here are some possible ways you could use this data:\n\n1. **Evaluate candidate solutions**: You can compare the costs and feasibility of each candidate solution to determine which one is most desirable.\n2. **Identify key factors influencing the outcome**: By examining the `lb_costs` and `feasibility` fields, you may be able to identify which factors (e.g., transportation costs, accommodation costs) have the greatest impact on the overall cost or feasibility of a solution.\n3. **Analyze the optimization process**: The `output_schema` field provides information about the structure of the output, which can help you understand how the optimizer arrived at these solutions.\n\nIf you have specific questions about this data or would like more guidance on interpreting it, feel free to ask!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "45d1ffaef32f",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+      "bundle_fp": "e811cdcffa81"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "45d1ffaef32f",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "341fc2a3c2c1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Denver",
+        "Alamosa"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "45d1ffaef32f",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "474dfb024c81"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "45d1ffaef32f",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "474dfb024c81"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Colorado Springs",
+        "Denver"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "45d1ffaef32f",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "341fc2a3c2c1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "45d1ffaef32f",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "341fc2a3c2c1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Durango",
+        "Alamosa"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "45d1ffaef32f",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+        "bundle_fp": "e811cdcffa81"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 64.1032322938554
+}

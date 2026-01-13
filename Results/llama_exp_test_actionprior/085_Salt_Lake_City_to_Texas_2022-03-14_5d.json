@@ -1,0 +1,984 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 10492.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you create a 5-day travel itinerary for me? We are a group of 8 starting from Salt Lake City and intend to visit 2 cities in Texas from March 14th to March 18th, 2022. Our budget has been updated to $12,000. We require our accommodations to have a visitors-friendly house rule.",
+  "parsed": {
+    "org": "Salt Lake City",
+    "dest": "Texas",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-14",
+      "2022-03-15",
+      "2022-03-16",
+      "2022-03-17",
+      "2022-03-18"
+    ],
+    "people_number": 8,
+    "local_constraint": {
+      "house rule": "visitors",
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 12000,
+    "origin": "Salt Lake City",
+    "destination": "Texas",
+    "duration_days": 5,
+    "start_date": "2022-03-14",
+    "preferences": [
+      "visitors"
+    ],
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Salt Lake City->Lubbock 1473km cost 1473",
+    "move:seg1:taxi:Lubbock->San Antonio 621km cost 621",
+    "move:seg2:flight:F3383530 San Antonio->Salt Lake City $217 18:40-20:31",
+    "stay:Lubbock:3468 The Perfect Queens Getaway! Entire home/apt $1029",
+    "stay:San Antonio:2390 Large apt in prime carol gardens Entire home/apt $1155",
+    "eat:d1:breakfast:8959 Handi Desserts, Tea, Pizza, French, Cafe $10 rating 2.9",
+    "eat:d1:lunch:4480 Punjabi Chaap Corner Pizza, Italian, BBQ, Fast Food, Chinese, Seafood $15 rating 2.9"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Lubbock",
+      "San Antonio"
+    ],
+    "transportation_dates": [
+      "2022-03-14",
+      "2022-03-16",
+      "2022-03-18"
+    ],
+    "transportation_methods": [
+      "taxi, from Salt Lake City to Lubbock, cost: 1473.0",
+      "taxi, from Lubbock to San Antonio, cost: 621.0",
+      "Flight F3383530, from San Antonio to Salt Lake City, Departure Time: 18:40, Arrival Time: 20:31, cost: 217.0"
+    ],
+    "restaurants": [
+      "Handi, Lubbock",
+      "Punjabi Chaap Corner, Lubbock"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "The Perfect Queens Getaway!, Lubbock",
+      "Large apt in prime carol gardens, San Antonio"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Salt Lake City to Lubbock",
+      "transportation": "Taxi, from Salt Lake City to Lubbock, Cost: 1473",
+      "breakfast": "Handi, Lubbock",
+      "attraction": "-",
+      "lunch": "Punjabi Chaap Corner, Lubbock",
+      "dinner": "-",
+      "accommodation": "The Perfect Queens Getaway!, Lubbock"
+    },
+    {
+      "days": 2,
+      "current_city": "Lubbock",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "The Perfect Queens Getaway!, Lubbock"
+    },
+    {
+      "days": 3,
+      "current_city": "from Lubbock to San Antonio",
+      "transportation": "Taxi, from Lubbock to San Antonio, Cost: 621",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Large apt in prime carol gardens, San Antonio"
+    },
+    {
+      "days": 4,
+      "current_city": "San Antonio",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Large apt in prime carol gardens, San Antonio"
+    },
+    {
+      "days": 5,
+      "current_city": "from San Antonio to Salt Lake City",
+      "transportation": "Flight Number: F3383530, from San Antonio to Salt Lake City, Departure Time: 18:40, Arrival Time: 20:31",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:lunch|seg:None|Lubbock|None|None->None",
+      "counts": {
+        "kb": 21,
+        "after_nonbudget": 21,
+        "after_budget": 2,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 19,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1628.0,
+        "slot_cap": 14.535714285714286,
+        "reserve": 1472.0
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:dinner|seg:None|Lubbock|None|None->None",
+      "counts": {
+        "kb": 21,
+        "after_nonbudget": 21,
+        "after_budget": 1,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 20,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1508.0,
+        "slot_cap": 14.5,
+        "reserve": 1392.0
+      },
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d1|slot:dinner|seg:None|Lubbock|None|None->None",
+        "city": "Lubbock",
+        "city_bundle": [
+          "Lubbock",
+          "San Antonio"
+        ],
+        "reason": "duplication",
+        "counts": {
+          "kb": 21,
+          "after_nonbudget": 21,
+          "after_budget": 1,
+          "budget_removed": 20,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1508.0,
+          "slot_cap": 14.5,
+          "reserve": 1392.0,
+          "min_cost_nonbudget": 10.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Amarillo",
+          "San Antonio"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1736.0,
+          "bundle_lb_cost": 12000.0,
+          "stay_lb_cost": 4110.0,
+          "meal_lb_cost": 1680.0,
+          "transport_lb_cost": 6210.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "salt lake city",
+              "amarillo"
+            ],
+            [
+              "amarillo",
+              "san antonio"
+            ],
+            [
+              "san antonio",
+              "salt lake city"
+            ]
+          ],
+          "bundle_key": [
+            "amarillo",
+            "san antonio"
+          ],
+          "bundle_key_set": [
+            "amarillo",
+            "san antonio"
+          ],
+          "bundle_key_seq": [
+            "amarillo",
+            "san antonio"
+          ],
+          "city_features": {
+            "Amarillo": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 900.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 24,
+              "hotel_slack": 0
+            },
+            "San Antonio": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1155.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 28,
+              "min_meal_cost": 16.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 19,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Salt Lake City->Amarillo": {
+              "min_cost": 2840.0,
+              "blocked": false
+            },
+            "Amarillo->San Antonio": {
+              "min_cost": 1634.0,
+              "blocked": false
+            },
+            "San Antonio->Salt Lake City": {
+              "min_cost": 1736.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 19,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1155.0,
+            "bottleneck_city_meal": "San Antonio",
+            "bottleneck_city_hotel": "San Antonio",
+            "bottleneck_edge": "Salt Lake City->Amarillo"
+          },
+          "min_bundle_cost": 10320.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 19,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1155.0,
+          "bottleneck_city_meal": "San Antonio",
+          "bottleneck_city_hotel": "San Antonio",
+          "bottleneck_edge": "Salt Lake City->Amarillo"
+        },
+        "budget_context": {
+          "remaining": 992.0,
+          "slot_cap": 19.375,
+          "reserve": 832.3199999999999,
+          "min_cost_nonbudget": 11.0
+        },
+        "counts": {
+          "kb": 30,
+          "after_nonbudget": 30,
+          "after_budget": 5,
+          "budget_removed": 25,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Amarillo",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 30,
+          "after_nonbudget": 30,
+          "after_budget": 5,
+          "budget_removed": 25,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 992.0,
+          "slot_cap": 19.375,
+          "reserve": 832.3199999999999,
+          "min_cost_nonbudget": 11.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 30,
+        "dead_end_after_budget": 5,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 12000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "San Antonio",
+        "Lubbock"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n    \"candidate_id\": 2,\n    \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n    \"confidence\": 0.8,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            {\"phase\": \"meal\", \"rule\": \"AVOID_CITY\", \"ttl\": 1, \"city\": \"Amarillo\"}\n        ],\n        \"soft_penalties\": [\n            {\"phase\": \"flight\", \"feature\": \"cost_ratio\", \"delta\": -0.2}\n        ],\n        \"retrieval_patches\": []\n    }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "meal",
+              "rule": "AVOID_CITY",
+              "ttl": 1,
+              "city": "Amarillo"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "flight",
+              "feature": "cost_ratio",
+              "delta": -0.2
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "meal",
+            "rule": "AVOID_CITY",
+            "ttl": 1,
+            "city": "Amarillo"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "flight",
+            "feature": "cost_ratio",
+            "delta": -0.2
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "San Antonio",
+          "Lubbock"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 2946.0,
+          "bundle_lb_cost": 11784.0,
+          "stay_lb_cost": 4368.0,
+          "meal_lb_cost": 1488.0,
+          "transport_lb_cost": 5928.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "salt lake city",
+              "san antonio"
+            ],
+            [
+              "san antonio",
+              "lubbock"
+            ],
+            [
+              "lubbock",
+              "salt lake city"
+            ]
+          ],
+          "bundle_key": [
+            "lubbock",
+            "san antonio"
+          ],
+          "bundle_key_set": [
+            "lubbock",
+            "san antonio"
+          ],
+          "bundle_key_seq": [
+            "san antonio",
+            "lubbock"
+          ],
+          "city_features": {
+            "San Antonio": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1155.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 28,
+              "min_meal_cost": 16.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 22,
+              "hotel_slack": 1
+            },
+            "Lubbock": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1029.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 21,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 12,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Salt Lake City->San Antonio": {
+              "min_cost": 1744.0,
+              "blocked": false
+            },
+            "San Antonio->Lubbock": {
+              "min_cost": 1238.0,
+              "blocked": false
+            },
+            "Lubbock->Salt Lake City": {
+              "min_cost": 2946.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 12,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1155.0,
+            "bottleneck_city_meal": "Lubbock",
+            "bottleneck_city_hotel": "San Antonio",
+            "bottleneck_edge": "Lubbock->Salt Lake City"
+          },
+          "min_bundle_cost": 10296.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 12,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1155.0,
+          "bottleneck_city_meal": "Lubbock",
+          "bottleneck_city_hotel": "San Antonio",
+          "bottleneck_edge": "Lubbock->Salt Lake City"
+        },
+        "budget_context": {
+          "remaining": 488.0,
+          "slot_cap": 10.166666666666666,
+          "reserve": 400.0,
+          "min_cost_nonbudget": 10.0
+        },
+        "counts": {
+          "kb": 21,
+          "after_nonbudget": 21,
+          "after_budget": 1,
+          "budget_removed": 20,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Lubbock",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 21,
+          "after_nonbudget": 21,
+          "after_budget": 1,
+          "budget_removed": 20,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 488.0,
+          "slot_cap": 10.166666666666666,
+          "reserve": 400.0,
+          "min_cost_nonbudget": 10.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 21,
+        "dead_end_after_budget": 1,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 12000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Lubbock",
+        "Amarillo"
+      ],
+      "reason": "Avoiding dead_end_city for hotel/stay failures if feasible.",
+      "raw": "{\n  \"candidate_id\": 1,\n  \"reason\": \"Avoiding dead_end_city for hotel/stay failures if feasible.\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"meal\", \"AVOID_CITY\", 10, true, false]\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "Avoiding dead_end_city for hotel/stay failures if feasible.",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "meal",
+              "AVOID_CITY",
+              10,
+              true,
+              false
+            ]
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "meal",
+            "AVOID_CITY",
+            10,
+            true,
+            false
+          ]
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Lubbock",
+          "Amarillo"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 2838.0,
+          "bundle_lb_cost": 11308.0,
+          "stay_lb_cost": 3858.0,
+          "meal_lb_cost": 1272.0,
+          "transport_lb_cost": 6178.0,
+          "hotel_min_nights_min": 2,
+          "edges": [
+            [
+              "salt lake city",
+              "lubbock"
+            ],
+            [
+              "lubbock",
+              "amarillo"
+            ],
+            [
+              "amarillo",
+              "salt lake city"
+            ]
+          ],
+          "bundle_key": [
+            "amarillo",
+            "lubbock"
+          ],
+          "bundle_key_set": [
+            "amarillo",
+            "lubbock"
+          ],
+          "bundle_key_seq": [
+            "lubbock",
+            "amarillo"
+          ],
+          "city_features": {
+            "Lubbock": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1029.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 21,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 15,
+              "hotel_slack": 0
+            },
+            "Amarillo": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 900.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 21,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Salt Lake City->Lubbock": {
+              "min_cost": 2946.0,
+              "blocked": false
+            },
+            "Lubbock->Amarillo": {
+              "min_cost": 394.0,
+              "blocked": false
+            },
+            "Amarillo->Salt Lake City": {
+              "min_cost": 2838.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 15,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1029.0,
+            "bottleneck_city_meal": "Lubbock",
+            "bottleneck_city_hotel": "Lubbock",
+            "bottleneck_edge": "Salt Lake City->Lubbock"
+          },
+          "min_bundle_cost": 10036.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 15,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1029.0,
+          "bottleneck_city_meal": "Lubbock",
+          "bottleneck_city_hotel": "Lubbock",
+          "bottleneck_edge": "Salt Lake City->Lubbock"
+        },
+        "budget_context": {
+          "remaining": 716.0,
+          "slot_cap": 11.1875,
+          "reserve": 616.0,
+          "min_cost_nonbudget": 11.0
+        },
+        "counts": {
+          "kb": 30,
+          "after_nonbudget": 30,
+          "after_budget": 1,
+          "budget_removed": 29,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Amarillo",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 30,
+          "after_nonbudget": 30,
+          "after_budget": 1,
+          "budget_removed": 29,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 716.0,
+          "slot_cap": 11.1875,
+          "reserve": 616.0,
+          "min_cost_nonbudget": 11.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 30,
+        "dead_end_after_budget": 1,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 12000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Lubbock",
+        "San Antonio"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary",
+      "raw": "{\n    \"candidate_id\": 3,\n    \"reason\": \"bundle_risk + city_summary + edge_summary\",\n    \"confidence\": 0.8,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            {\"phase\": \"meal\", \"rule\": \"AVOID_CITY\", \"ttl\": 10, \"city\": \"Amarillo\"}\n        ],\n        \"soft_penalties\": [\n            {\"phase\": \"segment\", \"feature\": \"cost_ratio\", \"delta\": 0.2}\n        ],\n        \"retrieval_patches\": []\n    }\n}",
+      "parsed": {
+        "candidate_id": 3,
+        "reason": "bundle_risk + city_summary + edge_summary",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "meal",
+              "rule": "AVOID_CITY",
+              "ttl": 10,
+              "city": "Amarillo"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "cost_ratio",
+              "delta": 0.2
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "meal",
+            "rule": "AVOID_CITY",
+            "ttl": 10,
+            "city": "Amarillo"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.2
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "17f4e60af3ad",
+      "phase": "daily",
+      "slot_fp": "meal|d1|slot:dinner|seg:None|Lubbock|None|None->None",
+      "bundle_fp": "65d6dfa25f7c"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "17f4e60af3ad",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:dinner|seg:None|Amarillo|None|None->None",
+        "bundle_fp": "affc2bfc704e"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "daily",
+          "rule": "AVOID_CITY",
+          "ttl": 1,
+          "city": "Amarillo"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": -0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "San Antonio",
+        "Lubbock"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "17f4e60af3ad",
+        "phase": "daily",
+        "slot_fp": "meal|d4|slot:breakfast|seg:None|Lubbock|None|None->None",
+        "bundle_fp": "139deb225510"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "17f4e60af3ad",
+        "phase": "daily",
+        "slot_fp": "meal|d4|slot:breakfast|seg:None|Lubbock|None|None->None",
+        "bundle_fp": "139deb225510"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Lubbock",
+        "Amarillo"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "17f4e60af3ad",
+        "phase": "daily",
+        "slot_fp": "meal|d3|slot:lunch|seg:None|Amarillo|None|None->None",
+        "bundle_fp": "9ceb911b1401"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "17f4e60af3ad",
+        "phase": "daily",
+        "slot_fp": "meal|d3|slot:lunch|seg:None|Amarillo|None|None->None",
+        "bundle_fp": "9ceb911b1401"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "daily",
+          "rule": "AVOID_CITY",
+          "ttl": 10,
+          "city": "Amarillo"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Lubbock",
+        "San Antonio"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "17f4e60af3ad",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Lubbock|None|None->None",
+        "bundle_fp": "65d6dfa25f7c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 16.283901625778526
+}

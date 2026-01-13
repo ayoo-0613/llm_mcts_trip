@@ -1,0 +1,1095 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 2248.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you construct a 5-day travel itinerary for a solo traveler starting in Orlando and visiting 2 cities in Illinois, spanning the dates from March 2nd to March 6th, 2022? The budget for the trip is set to $2,700.",
+  "parsed": {
+    "org": "Orlando",
+    "dest": "Illinois",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-02",
+      "2022-03-03",
+      "2022-03-04",
+      "2022-03-05",
+      "2022-03-06"
+    ],
+    "people_number": 1,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 2700,
+    "origin": "Orlando",
+    "destination": "Illinois",
+    "duration_days": 5,
+    "start_date": "2022-03-02",
+    "preferences": [],
+    "candidate_cities": [
+      "Moline",
+      "Belleville",
+      "Bloomington",
+      "Champaign",
+      "Chicago",
+      "Rockford",
+      "Peoria"
+    ]
+  },
+  "actions": [
+    "move:seg0:flight:F0096609 Orlando->Chicago $198 06:20-07:53",
+    "move:seg1:taxi:Chicago->Belleville 474km cost 474",
+    "move:seg2:taxi:Belleville->Orlando 1576km cost 1576"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Chicago",
+      "Belleville"
+    ],
+    "transportation_dates": [
+      "2022-03-02",
+      "2022-03-04",
+      "2022-03-06"
+    ],
+    "transportation_methods": [
+      "Flight F0096609, from Orlando to Chicago, Departure Time: 06:20, Arrival Time: 07:53, cost: 198.0",
+      "taxi, from Chicago to Belleville, cost: 474.0",
+      "taxi, from Belleville to Orlando, cost: 1576.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Chicago",
+      "missing, Belleville"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Orlando to Chicago",
+      "transportation": "Flight Number: F0096609, from Orlando to Chicago, Departure Time: 06:20, Arrival Time: 07:53",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Chicago",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Chicago to Belleville",
+      "transportation": "Taxi, from Chicago to Belleville, Cost: 474",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Belleville",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Belleville to Orlando",
+      "transportation": "Taxi, from Belleville to Orlando, Cost: 1576",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-02|Belleville->Orlando",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 2028.0,
+        "slot_cap": 933.9473684210525,
+        "reserve": 444.55
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 444.55,
+          "kept": 1
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+      "counts": {
+        "kb": 14,
+        "after_nonbudget": 4,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 4,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 452.0,
+        "slot_cap": 165.52734375,
+        "reserve": 187.308125
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 259.25,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 220.36249999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 187.308125,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "city": "Chicago",
+        "city_bundle": [
+          "Chicago",
+          "Belleville"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 452.0,
+          "slot_cap": 165.52734375,
+          "reserve": 187.308125,
+          "min_cost_nonbudget": 781.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Chicago",
+          "Belleville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1576.0,
+          "bundle_lb_cost": 2771.0,
+          "stay_lb_cost": 364.0,
+          "meal_lb_cost": 159.0,
+          "transport_lb_cost": 2248.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "orlando",
+              "chicago"
+            ],
+            [
+              "chicago",
+              "belleville"
+            ],
+            [
+              "belleville",
+              "orlando"
+            ]
+          ],
+          "bundle_key": [
+            "belleville",
+            "chicago"
+          ],
+          "bundle_key_set": [
+            "belleville",
+            "chicago"
+          ],
+          "bundle_key_seq": [
+            "chicago",
+            "belleville"
+          ],
+          "city_features": {
+            "Chicago": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 109.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 24,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 18,
+              "hotel_slack": 0
+            },
+            "Belleville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 73.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 27,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 18,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Orlando->Chicago": {
+              "min_cost": 198.0,
+              "blocked": false
+            },
+            "Chicago->Belleville": {
+              "min_cost": 474.0,
+              "blocked": false
+            },
+            "Belleville->Orlando": {
+              "min_cost": 1576.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 18,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 109.0,
+            "bottleneck_city_meal": "Chicago",
+            "bottleneck_city_hotel": "Chicago",
+            "bottleneck_edge": "Belleville->Orlando"
+          },
+          "min_bundle_cost": 2612.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 18,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 109.0,
+          "bottleneck_city_meal": "Chicago",
+          "bottleneck_city_hotel": "Chicago",
+          "bottleneck_edge": "Belleville->Orlando"
+        },
+        "budget_context": {
+          "remaining": 452.0,
+          "slot_cap": 165.52734375,
+          "reserve": 187.308125,
+          "min_cost_nonbudget": 781.0
+        },
+        "counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dead_end_city": "Chicago",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 452.0,
+          "slot_cap": 165.52734375,
+          "reserve": 187.308125,
+          "min_cost_nonbudget": 781.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 4,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2700,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Chicago",
+        "Peoria"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n    \"candidate_id\": 1,\n    \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n    \"confidence\": 0.8,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 10, \"city\": \"\"},\n            {\"phase\": \"segment\", \"rule\": \"AVOID_CITY\", \"ttl\": 5, \"edge\": \"Belleville->Orlando\"}\n        ],\n        \"soft_penalties\": [\n            {\"phase\": \"flight\", \"feature\": \"cost_ratio\", \"delta\": -0.2}\n        ]\n    }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 10,
+              "city": ""
+            },
+            {
+              "phase": "segment",
+              "rule": "AVOID_CITY",
+              "ttl": 5,
+              "edge": "Belleville->Orlando"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "flight",
+              "feature": "cost_ratio",
+              "delta": -0.2
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 10,
+            "city": ""
+          },
+          {
+            "phase": "segment",
+            "rule": "AVOID_CITY",
+            "ttl": 5,
+            "edge": "Belleville->Orlando"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "flight",
+            "feature": "cost_ratio",
+            "delta": -0.2
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Chicago",
+          "Peoria"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1816.0,
+          "bundle_lb_cost": 2577.0,
+          "stay_lb_cost": 342.0,
+          "meal_lb_cost": 195.0,
+          "transport_lb_cost": 2040.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "orlando",
+              "chicago"
+            ],
+            [
+              "chicago",
+              "peoria"
+            ],
+            [
+              "peoria",
+              "orlando"
+            ]
+          ],
+          "bundle_key": [
+            "chicago",
+            "peoria"
+          ],
+          "bundle_key_set": [
+            "chicago",
+            "peoria"
+          ],
+          "bundle_key_seq": [
+            "chicago",
+            "peoria"
+          ],
+          "city_features": {
+            "Chicago": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 109.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 24,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 18,
+              "hotel_slack": 0
+            },
+            "Peoria": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 62.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 31,
+              "min_meal_cost": 15.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 22,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Orlando->Chicago": {
+              "min_cost": 198.0,
+              "blocked": false
+            },
+            "Chicago->Peoria": {
+              "min_cost": 26.0,
+              "blocked": false
+            },
+            "Peoria->Orlando": {
+              "min_cost": 1816.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 18,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 109.0,
+            "bottleneck_city_meal": "Chicago",
+            "bottleneck_city_hotel": "Chicago",
+            "bottleneck_edge": "Peoria->Orlando"
+          },
+          "min_bundle_cost": 2382.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 18,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 109.0,
+          "bottleneck_city_meal": "Chicago",
+          "bottleneck_city_hotel": "Chicago",
+          "bottleneck_edge": "Peoria->Orlando"
+        },
+        "budget_context": {
+          "remaining": 660.0,
+          "slot_cap": 241.69921875,
+          "reserve": 195.90587499999998,
+          "min_cost_nonbudget": 781.0
+        },
+        "counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dead_end_city": "Chicago",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 14,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 10,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 660.0,
+          "slot_cap": 241.69921875,
+          "reserve": 195.90587499999998,
+          "min_cost_nonbudget": 781.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 4,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2700,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Peoria",
+        "Chicago"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 1, \"city\": \"Chicago\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"transport\", \"feature\": \"budget_risk\", \"delta\": -0.5}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 1,
+              "city": "Chicago"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "transport",
+              "feature": "budget_risk",
+              "delta": -0.5
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 1,
+            "city": "Chicago"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "transport",
+            "feature": "budget_risk",
+            "delta": -0.5
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Peoria",
+          "Chicago"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 198.0,
+          "bundle_lb_cost": 2562.0,
+          "stay_lb_cost": 342.0,
+          "meal_lb_cost": 180.0,
+          "transport_lb_cost": 2040.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "orlando",
+              "peoria"
+            ],
+            [
+              "peoria",
+              "chicago"
+            ],
+            [
+              "chicago",
+              "orlando"
+            ]
+          ],
+          "bundle_key": [
+            "chicago",
+            "peoria"
+          ],
+          "bundle_key_set": [
+            "chicago",
+            "peoria"
+          ],
+          "bundle_key_seq": [
+            "peoria",
+            "chicago"
+          ],
+          "city_features": {
+            "Peoria": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 62.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 31,
+              "min_meal_cost": 15.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 25,
+              "hotel_slack": 1
+            },
+            "Chicago": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 109.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 24,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 15,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Orlando->Peoria": {
+              "min_cost": 1816.0,
+              "blocked": false
+            },
+            "Peoria->Chicago": {
+              "min_cost": 26.0,
+              "blocked": false
+            },
+            "Chicago->Orlando": {
+              "min_cost": 198.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 15,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 109.0,
+            "bottleneck_city_meal": "Chicago",
+            "bottleneck_city_hotel": "Chicago",
+            "bottleneck_edge": "Orlando->Peoria"
+          },
+          "min_bundle_cost": 2382.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 15,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 109.0,
+          "bottleneck_city_meal": "Chicago",
+          "bottleneck_city_hotel": "Chicago",
+          "bottleneck_edge": "Orlando->Peoria"
+        },
+        "budget_context": {
+          "remaining": 660.0,
+          "slot_cap": 241.69921875,
+          "reserve": 244.42174999999997,
+          "min_cost_nonbudget": 217.0
+        },
+        "counts": {
+          "kb": 12,
+          "after_nonbudget": 7,
+          "after_budget": 0,
+          "budget_removed": 7,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dead_end_city": "Peoria",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 12,
+          "after_nonbudget": 7,
+          "after_budget": 0,
+          "budget_removed": 7,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 660.0,
+          "slot_cap": 241.69921875,
+          "reserve": 244.42174999999997,
+          "min_cost_nonbudget": 217.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 7,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2700,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Chicago",
+        "Belleville"
+      ],
+      "reason": "avoiding dead_end_city for hotel/stay failures",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"avoiding dead_end_city for hotel/stay failures\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"hotel\", \"AVOID_CITY\", 10, \"Peoria\"],\n      [\"stay\", \"BLOCK_EDGE\", 5, \"Chicago->Orlando\"]\n    ],\n    \"soft_penalties\": [\n      [\"budget_risk\", -1.2],\n      [\"cost_ratio\", 0.9]\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "avoiding dead_end_city for hotel/stay failures",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "hotel",
+              "AVOID_CITY",
+              10,
+              "Peoria"
+            ],
+            [
+              "stay",
+              "BLOCK_EDGE",
+              5,
+              "Chicago->Orlando"
+            ]
+          ],
+          "soft_penalties": [
+            [
+              "budget_risk",
+              -1.2
+            ],
+            [
+              "cost_ratio",
+              0.9
+            ]
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "hotel",
+            "AVOID_CITY",
+            10,
+            "Peoria"
+          ],
+          [
+            "stay",
+            "BLOCK_EDGE",
+            5,
+            "Chicago->Orlando"
+          ]
+        ],
+        "soft_penalties": [
+          [
+            "budget_risk",
+            -1.2
+          ],
+          [
+            "cost_ratio",
+            0.9
+          ]
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "8edcce42284e",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+      "bundle_fp": "1d267f0d5695"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "8edcce42284e",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "1d267f0d5695"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 10,
+          "city": ""
+        },
+        {
+          "phase": "segment",
+          "rule": "AVOID_CITY",
+          "ttl": 5,
+          "edge": "Belleville->Orlando"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": -0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Chicago",
+        "Peoria"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "8edcce42284e",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "3f7f664de1b7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "8edcce42284e",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "3f7f664de1b7"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 1,
+          "city": "Chicago"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "transport",
+          "feature": "budget_risk",
+          "delta": -0.5
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Peoria",
+        "Chicago"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "8edcce42284e",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Peoria|None|None->None",
+        "bundle_fp": "e14d229d6439"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "8edcce42284e",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Peoria|None|None->None",
+        "bundle_fp": "e14d229d6439"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Chicago",
+        "Belleville"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "8edcce42284e",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Chicago|None|None->None",
+        "bundle_fp": "1d267f0d5695"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 6.366088076028973
+}

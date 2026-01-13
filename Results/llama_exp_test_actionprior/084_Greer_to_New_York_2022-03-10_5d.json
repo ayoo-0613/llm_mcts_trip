@@ -1,0 +1,1107 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 2800.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you assist with a 5-day travel plan for two people, going from Greer to New York, covering 2 cities in the state from March 10th to March 14th, 2022? Our budget is set at $3,400. We require accommodations that could be private rooms.",
+  "parsed": {
+    "org": "Greer",
+    "dest": "New York",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-10",
+      "2022-03-11",
+      "2022-03-12",
+      "2022-03-13",
+      "2022-03-14"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": "private room",
+      "transportation": null
+    },
+    "budget": 3400,
+    "origin": "Greer",
+    "destination": "New York",
+    "duration_days": 5,
+    "start_date": "2022-03-10",
+    "preferences": [
+      "private room"
+    ],
+    "candidate_cities": [
+      "Buffalo",
+      "Manhattan",
+      "Niagara Falls",
+      "Islip",
+      "New York",
+      "Watertown",
+      "Newburgh",
+      "Syracuse",
+      "Plattsburgh",
+      "Ogdensburg",
+      "Ithaca",
+      "Elmira",
+      "White Plains",
+      "Albany",
+      "Binghamton",
+      "Rochester"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Greer->Niagara Falls 1230km cost 1230",
+    "move:seg1:taxi:Niagara Falls->Binghamton 378km cost 378",
+    "move:seg2:taxi:Binghamton->Greer 1192km cost 1192"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Niagara Falls",
+      "Binghamton"
+    ],
+    "transportation_dates": [
+      "2022-03-10",
+      "2022-03-12",
+      "2022-03-14"
+    ],
+    "transportation_methods": [
+      "taxi, from Greer to Niagara Falls, cost: 1230.0",
+      "taxi, from Niagara Falls to Binghamton, cost: 378.0",
+      "taxi, from Binghamton to Greer, cost: 1192.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Niagara Falls",
+      "missing, Binghamton"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Greer to Niagara Falls",
+      "transportation": "Taxi, from Greer to Niagara Falls, Cost: 1230",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Niagara Falls",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Niagara Falls to Binghamton",
+      "transportation": "Taxi, from Niagara Falls to Binghamton, Cost: 378",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Binghamton",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Binghamton to Greer",
+      "transportation": "Taxi, from Binghamton to Greer, Cost: 1192",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-10|Binghamton->Greer",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 1792.0,
+        "slot_cap": 515.7894736842104,
+        "reserve": 549.0999999999999
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 646.0,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 549.0999999999999,
+          "kept": 1
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Niagara Falls|None|None->None",
+      "counts": {
+        "kb": 4,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 600.0,
+        "slot_cap": 219.7265625,
+        "reserve": 394.26824999999997
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 545.6999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 463.84499999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 394.26824999999997,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Niagara Falls|None|None->None",
+        "city": "Niagara Falls",
+        "city_bundle": [
+          "Niagara Falls",
+          "Binghamton"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 4,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 600.0,
+          "slot_cap": 219.7265625,
+          "reserve": 394.26824999999997,
+          "min_cost_nonbudget": 244.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Binghamton",
+          "Niagara Falls"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1228.0,
+          "bundle_lb_cost": 3565.0,
+          "stay_lb_cost": 448.0,
+          "meal_lb_cost": 318.0,
+          "transport_lb_cost": 2799.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "greer",
+              "binghamton"
+            ],
+            [
+              "binghamton",
+              "niagara falls"
+            ],
+            [
+              "niagara falls",
+              "greer"
+            ]
+          ],
+          "bundle_key": [
+            "binghamton",
+            "niagara falls"
+          ],
+          "bundle_key_set": [
+            "binghamton",
+            "niagara falls"
+          ],
+          "bundle_key_seq": [
+            "binghamton",
+            "niagara falls"
+          ],
+          "city_features": {
+            "Binghamton": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 165.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 15,
+              "meal_count": 33,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 13,
+              "meal_slack": 27,
+              "hotel_slack": 0
+            },
+            "Niagara Falls": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 59.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 36,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 27,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Greer->Binghamton": {
+              "min_cost": 1194.0,
+              "blocked": false
+            },
+            "Binghamton->Niagara Falls": {
+              "min_cost": 377.0,
+              "blocked": false
+            },
+            "Niagara Falls->Greer": {
+              "min_cost": 1228.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 27,
+            "bottleneck_attr_slack": 13,
+            "bottleneck_hotel_price": 165.0,
+            "bottleneck_city_meal": "Binghamton",
+            "bottleneck_city_hotel": "Binghamton",
+            "bottleneck_edge": "Niagara Falls->Greer"
+          },
+          "min_bundle_cost": 3247.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 27,
+          "bottleneck_attr_slack": 13,
+          "bottleneck_hotel_price": 165.0,
+          "bottleneck_city_meal": "Binghamton",
+          "bottleneck_city_hotel": "Binghamton",
+          "bottleneck_edge": "Niagara Falls->Greer"
+        },
+        "budget_context": {
+          "remaining": 271.0,
+          "slot_cap": 198.486328125,
+          "reserve": 195.29174999999998,
+          "min_cost_nonbudget": 244.0
+        },
+        "counts": {
+          "kb": 4,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_city": "Niagara Falls",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 4,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 271.0,
+          "slot_cap": 198.486328125,
+          "reserve": 195.29174999999998,
+          "min_cost_nonbudget": 244.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3400,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Watertown",
+        "Binghamton"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 24, \"city\": \"Niagara Falls\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"flight\", \"feature\": \"edge_cost\", \"delta\": -100.0},\n      {\"phase\": \"hotel\", \"feature\": \"cost_ratio\", \"delta\": -0.5}\n    ],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 24,
+              "city": "Niagara Falls"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "flight",
+              "feature": "edge_cost",
+              "delta": -100.0
+            },
+            {
+              "phase": "hotel",
+              "feature": "cost_ratio",
+              "delta": -0.5
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 24,
+            "city": "Niagara Falls"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "flight",
+            "feature": "edge_cost",
+            "delta": -100.0
+          },
+          {
+            "phase": "hotel",
+            "feature": "cost_ratio",
+            "delta": -0.5
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Watertown",
+          "Binghamton"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1192.0,
+          "bundle_lb_cost": 3634.0,
+          "stay_lb_cost": 492.0,
+          "meal_lb_cost": 300.0,
+          "transport_lb_cost": 2842.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "greer",
+              "watertown"
+            ],
+            [
+              "watertown",
+              "binghamton"
+            ],
+            [
+              "binghamton",
+              "greer"
+            ]
+          ],
+          "bundle_key": [
+            "binghamton",
+            "watertown"
+          ],
+          "bundle_key_set": [
+            "binghamton",
+            "watertown"
+          ],
+          "bundle_key_seq": [
+            "watertown",
+            "binghamton"
+          ],
+          "city_features": {
+            "Watertown": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 81.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 15,
+              "meal_count": 32,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 13,
+              "meal_slack": 26,
+              "hotel_slack": 1
+            },
+            "Binghamton": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 165.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 15,
+              "meal_count": 33,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 12,
+              "meal_slack": 24,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Greer->Watertown": {
+              "min_cost": 1419.0,
+              "blocked": false
+            },
+            "Watertown->Binghamton": {
+              "min_cost": 231.0,
+              "blocked": false
+            },
+            "Binghamton->Greer": {
+              "min_cost": 1192.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 24,
+            "bottleneck_attr_slack": 12,
+            "bottleneck_hotel_price": 165.0,
+            "bottleneck_city_meal": "Binghamton",
+            "bottleneck_city_hotel": "Binghamton",
+            "bottleneck_edge": "Greer->Watertown"
+          },
+          "min_bundle_cost": 3334.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 24,
+          "bottleneck_attr_slack": 12,
+          "bottleneck_hotel_price": 165.0,
+          "bottleneck_city_meal": "Binghamton",
+          "bottleneck_city_hotel": "Binghamton",
+          "bottleneck_edge": "Greer->Watertown"
+        },
+        "budget_context": {
+          "remaining": 396.0,
+          "slot_cap": 290.0390625,
+          "reserve": 184.23749999999998,
+          "min_cost_nonbudget": 165.0
+        },
+        "counts": {
+          "kb": 5,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_city": "Binghamton",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 5,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 396.0,
+          "slot_cap": 290.0390625,
+          "reserve": 184.23749999999998,
+          "min_cost_nonbudget": 165.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 3,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3400,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Watertown",
+        "Niagara Falls"
+      ],
+      "reason": "bundle_risk and lb_costs favor id=1",
+      "raw": "{\n  \"candidate_id\": 1,\n  \"reason\": \"bundle_risk and lb_costs favor id=1\",\n  \"confidence\": 0.9,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 10, \"city\": \"Binghamton\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"flight\", \"feature\": \"cost_ratio\", \"delta\": -0.1}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "bundle_risk and lb_costs favor id=1",
+        "confidence": 0.9,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 10,
+              "city": "Binghamton"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "flight",
+              "feature": "cost_ratio",
+              "delta": -0.1
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 10,
+            "city": "Binghamton"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "flight",
+            "feature": "cost_ratio",
+            "delta": -0.1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Watertown",
+          "Niagara Falls"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1228.0,
+          "bundle_lb_cost": 3607.0,
+          "stay_lb_cost": 280.0,
+          "meal_lb_cost": 318.0,
+          "transport_lb_cost": 3009.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "greer",
+              "watertown"
+            ],
+            [
+              "watertown",
+              "niagara falls"
+            ],
+            [
+              "niagara falls",
+              "greer"
+            ]
+          ],
+          "bundle_key": [
+            "niagara falls",
+            "watertown"
+          ],
+          "bundle_key_set": [
+            "niagara falls",
+            "watertown"
+          ],
+          "bundle_key_seq": [
+            "watertown",
+            "niagara falls"
+          ],
+          "city_features": {
+            "Watertown": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 81.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 15,
+              "meal_count": 32,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 13,
+              "meal_slack": 26,
+              "hotel_slack": 1
+            },
+            "Niagara Falls": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 59.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 36,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 27,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Greer->Watertown": {
+              "min_cost": 1419.0,
+              "blocked": false
+            },
+            "Watertown->Niagara Falls": {
+              "min_cost": 362.0,
+              "blocked": false
+            },
+            "Niagara Falls->Greer": {
+              "min_cost": 1228.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 26,
+            "bottleneck_attr_slack": 13,
+            "bottleneck_hotel_price": 81.0,
+            "bottleneck_city_meal": "Watertown",
+            "bottleneck_city_hotel": "Watertown",
+            "bottleneck_edge": "Greer->Watertown"
+          },
+          "min_bundle_cost": 3289.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 26,
+          "bottleneck_attr_slack": 13,
+          "bottleneck_hotel_price": 81.0,
+          "bottleneck_city_meal": "Watertown",
+          "bottleneck_city_hotel": "Watertown",
+          "bottleneck_edge": "Greer->Watertown"
+        },
+        "budget_context": {
+          "remaining": 391.0,
+          "slot_cap": 143.1884765625,
+          "reserve": 267.75849999999997,
+          "min_cost_nonbudget": 81.0
+        },
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Watertown",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 3,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 391.0,
+          "slot_cap": 143.1884765625,
+          "reserve": 267.75849999999997,
+          "min_cost_nonbudget": 81.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 3,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3400,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Niagara Falls",
+        "Binghamton"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 120, \"city\": \"Watertown\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"segment\", \"feature\": \"cost_ratio\", \"delta\": -0.2}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 120,
+              "city": "Watertown"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "cost_ratio",
+              "delta": -0.2
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 120,
+            "city": "Watertown"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": -0.2
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "b2181ca18948",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Niagara Falls|None|None->None",
+      "bundle_fp": "aab83b308920"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "b2181ca18948",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Niagara Falls|None|None->None",
+        "bundle_fp": "c2d5f7f0550e"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 24,
+          "city": "Niagara Falls"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "edge_cost",
+          "delta": -100.0
+        },
+        {
+          "phase": "stay",
+          "feature": "cost_ratio",
+          "delta": -0.5
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Watertown",
+        "Binghamton"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "b2181ca18948",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Binghamton|None|None->None",
+        "bundle_fp": "c5a8aecc4511"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "b2181ca18948",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Binghamton|None|None->None",
+        "bundle_fp": "c5a8aecc4511"
+      },
+      "confidence": 0.9,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 10,
+          "city": "Binghamton"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": -0.1
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Watertown",
+        "Niagara Falls"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "b2181ca18948",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Watertown|None|None->None",
+        "bundle_fp": "bba75f4e1cc3"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "b2181ca18948",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Watertown|None|None->None",
+        "bundle_fp": "bba75f4e1cc3"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 120,
+          "city": "Watertown"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": -0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Niagara Falls",
+        "Binghamton"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "b2181ca18948",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Niagara Falls|None|None->None",
+        "bundle_fp": "aab83b308920"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 6.177042411174625
+}

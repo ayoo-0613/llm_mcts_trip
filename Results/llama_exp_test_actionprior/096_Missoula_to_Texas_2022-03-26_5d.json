@@ -1,0 +1,1077 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 2956.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you help plan a 5-day trip for a group of 5 people, starting from Missoula and covering 2 cities in Texas from March 26th to March 30th, 2022? Our travel budget is $7,200. We'd particularly enjoy having access to both authentic Italian and French cuisines during our trip.",
+  "parsed": {
+    "org": "Missoula",
+    "dest": "Texas",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-26",
+      "2022-03-27",
+      "2022-03-28",
+      "2022-03-29",
+      "2022-03-30"
+    ],
+    "people_number": 5,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": [
+        "Italian",
+        "French"
+      ],
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 7200,
+    "origin": "Missoula",
+    "destination": "Texas",
+    "duration_days": 5,
+    "start_date": "2022-03-26",
+    "preferences": [
+      "Italian",
+      "French"
+    ],
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas"
+    ]
+  },
+  "actions": [
+    "move:seg0:self-driving:Missoula->Abilene 2562km cost 2562",
+    "move:seg1:self-driving:Abilene->San Antonio 394km cost 394"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Abilene",
+      "San Antonio"
+    ],
+    "transportation_dates": [
+      "2022-03-26",
+      "2022-03-28",
+      "2022-03-30"
+    ],
+    "transportation_methods": [
+      "self-driving, from Missoula to Abilene, cost: 2562.0",
+      "self-driving, from Abilene to San Antonio, cost: 394.0",
+      "San Antonio->Missoula missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Abilene",
+      "missing, San Antonio"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Missoula to Abilene",
+      "transportation": "Self-driving, from Missoula to Abilene, Cost: 2562",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Abilene",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Abilene to San Antonio",
+      "transportation": "Self-driving, from Abilene to San Antonio, Cost: 394",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "San Antonio",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "San Antonio",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:1|None|2022-03-26|Abilene->San Antonio",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 4638.0,
+        "slot_cap": 170.87368421052628,
+        "reserve": 3514.0
+      },
+      "segment_role": "intercity",
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-26|San Antonio->Missoula",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 4244.0,
+        "slot_cap": 610.7730263157894,
+        "reserve": 2158.03525
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 2986.9,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 2538.865,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 2158.03525,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-26|San Antonio->Missoula",
+        "city": "Missoula",
+        "city_bundle": [
+          "Abilene",
+          "San Antonio"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 4244.0,
+          "slot_cap": 610.7730263157894,
+          "reserve": 2158.03525,
+          "min_cost_nonbudget": 584.8
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Amarillo",
+          "San Antonio"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 2924.0,
+          "bundle_lb_cost": 9332.0,
+          "stay_lb_cost": 2304.0,
+          "meal_lb_cost": 1185.0,
+          "transport_lb_cost": 5843.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "missoula",
+              "amarillo"
+            ],
+            [
+              "amarillo",
+              "san antonio"
+            ],
+            [
+              "san antonio",
+              "missoula"
+            ]
+          ],
+          "bundle_key": [
+            "amarillo",
+            "san antonio"
+          ],
+          "bundle_key_set": [
+            "amarillo",
+            "san antonio"
+          ],
+          "bundle_key_seq": [
+            "amarillo",
+            "san antonio"
+          ],
+          "city_features": {
+            "Amarillo": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 510.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 8,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 2,
+              "hotel_slack": 0
+            },
+            "San Antonio": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 642.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 9,
+              "min_meal_cost": 19.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 0,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Missoula->Amarillo": {
+              "min_cost": 2102.0,
+              "blocked": false
+            },
+            "Amarillo->San Antonio": {
+              "min_cost": 817.0,
+              "blocked": false
+            },
+            "San Antonio->Missoula": {
+              "min_cost": 2924.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 0,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 642.0,
+            "bottleneck_city_meal": "San Antonio",
+            "bottleneck_city_hotel": "San Antonio",
+            "bottleneck_edge": "San Antonio->Missoula"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 0,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 642.0,
+          "bottleneck_city_meal": "San Antonio",
+          "bottleneck_city_hotel": "San Antonio",
+          "bottleneck_edge": "San Antonio->Missoula"
+        },
+        "budget_context": {
+          "remaining": 4281.0,
+          "slot_cap": 616.0978618421051,
+          "reserve": 2059.7752499999997,
+          "min_cost_nonbudget": 584.8
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Missoula",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 4281.0,
+          "slot_cap": 616.0978618421051,
+          "reserve": 2059.7752499999997,
+          "min_cost_nonbudget": 584.8
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 7200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Italian",
+              "French"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Abilene",
+        "San Antonio"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object representing the output of a machine learning model. It appears to be a candidate selection algorithm that recommends bundles of cities for some purpose.\n\nHere's a breakdown of the structure:\n\n* `bundle`: an array of 16 objects, each representing a bundle of two cities.\n* Each bundle object has the following properties:\n\t+ `id`: a unique integer identifier for the bundle.\n\t+ `bundle_risk`: an object with three properties:\n\t\t- `bottleneck_meal_slack`: an integer value indicating the meal slack in the bottleneck city.\n\t\t- `bottleneck_attr_slack`: an integer value indicating the attribute slack in the bottleneck city.\n\t\t- `bottleneck_hotel_price`: a floating-point value representing the hotel price in the bottleneck city.\n\t+ `city_summary`: an object with two properties:\n\t\t- `Longview`/`Brownsville`/...: an object with three properties for each city:\n\t\t\t- `days`: an integer value indicating the number of days spent in the city.\n\t\t\t- `nights`: an integer value indicating the number of nights spent in the city.\n\t\t\t- `hotel_min_price`: a floating-point value representing the minimum hotel price in the city.\n\t+ `edge_summary`: an object with three properties:\n\t\t- `Missoula->Corpus Christi`: an object with two properties:\n\t\t\t- `min_cost`: a floating-point value representing the minimum cost of traveling from Missoula to Corpus Christi.\n\t\t\t- `blocked`: a boolean value indicating whether the route is blocked (true) or not (false).\n\t\t- Similarly for other edges.\n* `output_schema`: an object defining the output schema, which includes the following properties:\n\t+ `candidate_id`: a unique integer identifier for each candidate bundle.\n\t+ `reason`: a short string explaining why the bundle was recommended.\n\t+ `confidence`: a floating-point value between 0 and 1 indicating the confidence in the recommendation.\n\t+ `gradient`: an object with three properties:\n\t\t- `hard_exclusions`: a list of phase, rule, ttl, city?, edge? tuples that are hard-excluded from consideration.\n\t\t- `soft_penalties`: a list of phase, feature, delta triples representing soft penalties for each bundle.\n\t\t- `retrieval_patches`: a list of phase, patch, ttl tuples representing retrieval patches applied to each bundle.\n\nOverall, this output schema seems to be designed for evaluating and selecting candidate bundles based on their risk, cost, and other factors.",
+      "parsed": null,
+      "error": "invalid_candidate_id",
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Abilene",
+          "San Antonio"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 2924.0,
+          "bundle_lb_cost": 9529.0,
+          "stay_lb_cost": 2464.0,
+          "meal_lb_cost": 1185.0,
+          "transport_lb_cost": 5880.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "missoula",
+              "abilene"
+            ],
+            [
+              "abilene",
+              "san antonio"
+            ],
+            [
+              "san antonio",
+              "missoula"
+            ]
+          ],
+          "bundle_key": [
+            "abilene",
+            "san antonio"
+          ],
+          "bundle_key_set": [
+            "abilene",
+            "san antonio"
+          ],
+          "bundle_key_seq": [
+            "abilene",
+            "san antonio"
+          ],
+          "city_features": {
+            "Abilene": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 590.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 7,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 1,
+              "hotel_slack": 1
+            },
+            "San Antonio": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 642.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 9,
+              "min_meal_cost": 19.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 0,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Missoula->Abilene": {
+              "min_cost": 2562.0,
+              "blocked": false
+            },
+            "Abilene->San Antonio": {
+              "min_cost": 394.0,
+              "blocked": false
+            },
+            "San Antonio->Missoula": {
+              "min_cost": 2924.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 0,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 642.0,
+            "bottleneck_city_meal": "San Antonio",
+            "bottleneck_city_hotel": "San Antonio",
+            "bottleneck_edge": "San Antonio->Missoula"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 0,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 642.0,
+          "bottleneck_city_meal": "San Antonio",
+          "bottleneck_city_hotel": "San Antonio",
+          "bottleneck_edge": "San Antonio->Missoula"
+        },
+        "budget_context": {
+          "remaining": 4244.0,
+          "slot_cap": 610.7730263157894,
+          "reserve": 2158.03525,
+          "min_cost_nonbudget": 584.8
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Missoula",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 4244.0,
+          "slot_cap": 610.7730263157894,
+          "reserve": 2158.03525,
+          "min_cost_nonbudget": 584.8
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 7200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Italian",
+              "French"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Amarillo",
+        "San Antonio"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that represents the output of a recommendation system. It contains a list of candidate IDs, each associated with a reason, confidence score, and a gradient object that provides additional information about the prediction.\n\nHere's a breakdown of the structure:\n\n* `bundle_recommendations`: an array of objects representing candidate bundles\n* `output_schema`: an object that defines the schema of the output\n\nEach bundle recommendation contains the following properties:\n\n* `id`: the ID of the bundle (integer)\n* `reason`: a short string explaining why this bundle is recommended\n* `confidence`: a float value between 0 and 1 indicating the confidence in the recommendation\n* `gradient`: an object with three sub-properties:\n\t+ `hard_exclusions`: a list of tuples containing phase, rule, TTL, city, and edge information (not entirely clear what these fields represent)\n\t+ `soft_penalties`: a list of tuples containing phase, feature, and delta values (again, not entirely clear what these fields represent)\n\t+ `retrieval_patches`: a list of tuples containing phase, patch, and TTL information (similarly unclear)\n\nThe `output_schema` object defines the structure of the output. It contains three properties:\n\n* `candidate_id`: an integer representing the ID of the candidate bundle\n* `reason`: a short string explaining why this bundle is recommended\n* `confidence`: a float value between 0 and 1 indicating the confidence in the recommendation\n* `gradient`: an object with the same sub-properties as mentioned earlier\n\nTo provide more insight, I'd need to know more about the context in which this output was generated. What system is producing this output? What are the inputs and objectives of this system?\n\nIf you have a specific question or need further clarification on any aspect of this output, feel free to ask!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Amarillo",
+          "San Antonio"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 2924.0,
+          "bundle_lb_cost": 9332.0,
+          "stay_lb_cost": 2304.0,
+          "meal_lb_cost": 1185.0,
+          "transport_lb_cost": 5843.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "missoula",
+              "amarillo"
+            ],
+            [
+              "amarillo",
+              "san antonio"
+            ],
+            [
+              "san antonio",
+              "missoula"
+            ]
+          ],
+          "bundle_key": [
+            "amarillo",
+            "san antonio"
+          ],
+          "bundle_key_set": [
+            "amarillo",
+            "san antonio"
+          ],
+          "bundle_key_seq": [
+            "amarillo",
+            "san antonio"
+          ],
+          "city_features": {
+            "Amarillo": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 510.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 8,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 2,
+              "hotel_slack": 0
+            },
+            "San Antonio": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 642.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 9,
+              "min_meal_cost": 19.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 0,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Missoula->Amarillo": {
+              "min_cost": 2102.0,
+              "blocked": false
+            },
+            "Amarillo->San Antonio": {
+              "min_cost": 817.0,
+              "blocked": false
+            },
+            "San Antonio->Missoula": {
+              "min_cost": 2924.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 0,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 642.0,
+            "bottleneck_city_meal": "San Antonio",
+            "bottleneck_city_hotel": "San Antonio",
+            "bottleneck_edge": "San Antonio->Missoula"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 0,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 642.0,
+          "bottleneck_city_meal": "San Antonio",
+          "bottleneck_city_hotel": "San Antonio",
+          "bottleneck_edge": "San Antonio->Missoula"
+        },
+        "budget_context": {
+          "remaining": 4281.0,
+          "slot_cap": 616.0978618421051,
+          "reserve": 2059.7752499999997,
+          "min_cost_nonbudget": 584.8
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Missoula",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 4281.0,
+          "slot_cap": 616.0978618421051,
+          "reserve": 2059.7752499999997,
+          "min_cost_nonbudget": 584.8
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 7200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Italian",
+              "French"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Abilene",
+        "San Antonio"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that represents the output of a machine learning model. It contains a list of candidate solutions to an optimization problem, along with various metadata and metrics.\n\nHere's a breakdown of the structure:\n\n* `output_schema`: This defines the schema of the output data. It includes information about the columns and their data types.\n* `candidates`: This is a list of dictionaries, each representing a candidate solution to the optimization problem.\n\t+ Each dictionary has several keys:\n\t\t- `id`: A unique identifier for the candidate (integer)\n\t\t- `reason`: A short string explaining why this candidate was generated\n\t\t- `confidence`: A float value between 0 and 1 indicating how confident the model is in this solution\n\t\t- `gradient`: An object containing three types of information:\n\t\t\t* `hard_exclusions`: A list of rules that were hard-excluded from consideration (phase, rule, TTL, city?, edge?)\n\t\t\t* `soft_penalties`: A list of features with soft penalties (phase, feature, delta)\n\t\t\t* `retrieval_patches`: A list of patches applied during retrieval (phase, patch, TTL)\n\nThis is a quite complex data structure, and without more context about the specific problem being solved or the model used to generate this output, it's difficult to provide further insights.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "558fd7dd9e13",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-26|San Antonio->Missoula",
+      "bundle_fp": "906a5ffb5987"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "558fd7dd9e13",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-26|San Antonio->Missoula",
+        "bundle_fp": "affc2bfc704e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Abilene",
+        "San Antonio"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "558fd7dd9e13",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-26|San Antonio->Missoula",
+        "bundle_fp": "906a5ffb5987"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "558fd7dd9e13",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-26|San Antonio->Missoula",
+        "bundle_fp": "906a5ffb5987"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Amarillo",
+        "San Antonio"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "558fd7dd9e13",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-26|San Antonio->Missoula",
+        "bundle_fp": "affc2bfc704e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "558fd7dd9e13",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-26|San Antonio->Missoula",
+        "bundle_fp": "affc2bfc704e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Abilene",
+        "San Antonio"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "558fd7dd9e13",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-26|San Antonio->Missoula",
+        "bundle_fp": "906a5ffb5987"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 16.905308256857097
+}

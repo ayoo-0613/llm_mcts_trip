@@ -1,0 +1,1261 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 3246.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "I am looking for a 7-day travel plan for two people from Harrisburg to Texas, visiting 3 cities between March 8th and March 14th, 2022. The budget for this trip is $4,100. We have a preference for Italian and French cuisines throughout the trip.",
+  "parsed": {
+    "org": "Harrisburg",
+    "dest": "Texas",
+    "days": 7,
+    "visiting_city_number": 3,
+    "date": [
+      "2022-03-08",
+      "2022-03-09",
+      "2022-03-10",
+      "2022-03-11",
+      "2022-03-12",
+      "2022-03-13",
+      "2022-03-14"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": [
+        "Italian",
+        "French"
+      ],
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 4100,
+    "origin": "Harrisburg",
+    "destination": "Texas",
+    "duration_days": 7,
+    "start_date": "2022-03-08",
+    "preferences": [
+      "Italian",
+      "French"
+    ],
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas",
+      "Killeen",
+      "Laredo",
+      "Texarkana"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Harrisburg->Abilene 2515km cost 2515",
+    "move:seg1:taxi:Abilene->San Angelo 145km cost 145",
+    "move:seg2:flight:F2126482 San Angelo->Dallas $45 19:04-20:06",
+    "move:seg3:flight:F1897842 Dallas->Harrisburg $248 18:51-22:49"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Abilene",
+      "San Angelo",
+      "Dallas"
+    ],
+    "transportation_dates": [
+      "2022-03-08",
+      "2022-03-10",
+      "2022-03-12",
+      "2022-03-14"
+    ],
+    "transportation_methods": [
+      "taxi, from Harrisburg to Abilene, cost: 2515.0",
+      "taxi, from Abilene to San Angelo, cost: 145.0",
+      "Flight F2126482, from San Angelo to Dallas, Departure Time: 19:04, Arrival Time: 20:06, cost: 45.0",
+      "Flight F1897842, from Dallas to Harrisburg, Departure Time: 18:51, Arrival Time: 22:49, cost: 248.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Abilene",
+      "missing, San Angelo",
+      "missing, Dallas"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Harrisburg to Abilene",
+      "transportation": "Taxi, from Harrisburg to Abilene, Cost: 2515",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Abilene",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Abilene to San Angelo",
+      "transportation": "Taxi, from Abilene to San Angelo, Cost: 145",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "San Angelo",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from San Angelo to Dallas",
+      "transportation": "Flight Number: F2126482, from San Angelo to Dallas, Departure Time: 19:04, Arrival Time: 20:06",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "Dallas",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 7,
+      "current_city": "from Dallas to Harrisburg",
+      "transportation": "Flight Number: F1897842, from Dallas to Harrisburg, Departure Time: 18:51, Arrival Time: 22:49",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-08|Dallas->Harrisburg",
+      "counts": {
+        "kb": 196,
+        "after_nonbudget": 196,
+        "after_budget": 24,
+        "returned": 24,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 171,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1350.0,
+        "slot_cap": 388.5690789473684,
+        "reserve": 754.29
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 887.4,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 754.29,
+          "kept": 24
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+      "counts": {
+        "kb": 11,
+        "after_nonbudget": 6,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 3,
+        "violate_reserve": 3,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 852.0,
+        "slot_cap": 208.0078125,
+        "reserve": 539.20175
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 746.3,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 634.3549999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 539.20175,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "city": "Abilene",
+        "city_bundle": [
+          "Abilene",
+          "San Angelo",
+          "Dallas"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 11,
+          "after_nonbudget": 6,
+          "after_budget": 0,
+          "budget_removed": 6,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 852.0,
+          "slot_cap": 208.0078125,
+          "reserve": 539.20175,
+          "min_cost_nonbudget": 295.0
+        }
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+      "counts": {
+        "kb": 11,
+        "after_nonbudget": 6,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 3,
+        "violate_reserve": 3,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 854.0,
+        "slot_cap": 208.49609375,
+        "reserve": 539.20175
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 746.3,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 634.3549999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 539.20175,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "city": "Abilene",
+        "city_bundle": [
+          "Abilene",
+          "San Angelo",
+          "Dallas"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 11,
+          "after_nonbudget": 6,
+          "after_budget": 0,
+          "budget_removed": 6,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 854.0,
+          "slot_cap": 208.49609375,
+          "reserve": 539.20175,
+          "min_cost_nonbudget": 295.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Lubbock",
+          "Austin",
+          "Dallas"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 496.0,
+          "bundle_lb_cost": 4312.0,
+          "stay_lb_cost": 442.0,
+          "meal_lb_cost": 546.0,
+          "transport_lb_cost": 3324.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "harrisburg",
+              "lubbock"
+            ],
+            [
+              "lubbock",
+              "austin"
+            ],
+            [
+              "austin",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "harrisburg"
+            ]
+          ],
+          "bundle_key": [
+            "austin",
+            "dallas",
+            "lubbock"
+          ],
+          "bundle_key_set": [
+            "austin",
+            "dallas",
+            "lubbock"
+          ],
+          "bundle_key_seq": [
+            "lubbock",
+            "austin",
+            "dallas"
+          ],
+          "city_features": {
+            "Lubbock": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 80.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 8,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 2,
+              "hotel_slack": 1
+            },
+            "Austin": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 68.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 8,
+              "min_meal_cost": 19.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 2,
+              "hotel_slack": 1
+            },
+            "Dallas": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 73.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 19,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 10,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Harrisburg->Lubbock": {
+              "min_cost": 2618.0,
+              "blocked": false
+            },
+            "Lubbock->Austin": {
+              "min_cost": 136.0,
+              "blocked": false
+            },
+            "Austin->Dallas": {
+              "min_cost": 74.0,
+              "blocked": false
+            },
+            "Dallas->Harrisburg": {
+              "min_cost": 496.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 2,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 80.0,
+            "bottleneck_city_meal": "Lubbock",
+            "bottleneck_city_hotel": "Lubbock",
+            "bottleneck_edge": "Harrisburg->Lubbock"
+          },
+          "min_bundle_cost": 3766.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 2,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 80.0,
+          "bottleneck_city_meal": "Lubbock",
+          "bottleneck_city_hotel": "Lubbock",
+          "bottleneck_edge": "Harrisburg->Lubbock"
+        },
+        "budget_context": {
+          "remaining": 776.0,
+          "slot_cap": 189.453125,
+          "reserve": 456.90899999999993,
+          "min_cost_nonbudget": 313.0
+        },
+        "counts": {
+          "kb": 12,
+          "after_nonbudget": 7,
+          "after_budget": 0,
+          "budget_removed": 7,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dead_end_city": "Lubbock",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 12,
+          "after_nonbudget": 7,
+          "after_budget": 0,
+          "budget_removed": 7,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 776.0,
+          "slot_cap": 189.453125,
+          "reserve": 456.90899999999993,
+          "min_cost_nonbudget": 313.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 7,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Italian",
+              "French"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Abilene",
+        "San Angelo",
+        "Dallas"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object representing the output of a machine learning model. The object contains an array of candidate IDs, each with associated attributes.\n\nHere's a breakdown of the structure:\n\n* `output_schema`: This is an object that defines the schema of the output data.\n\t+ `candidate_id`: An integer ID for each candidate.\n\t+ `reason`: A short string describing why this candidate was generated.\n\t+ `confidence`: A float value between 0 and 1 representing how confident the model is in its prediction.\n\t+ `gradient`: An object that contains three lists:\n\t\t- `hard_exclusions`: A list of rules that exclude certain candidates (e.g., \"phase, rule, ttl, city?, edge?\").\n\t\t- `soft_penalties`: A list of features with associated penalties (e.g., \"phase, feature, delta\").\n\t\t- `retrieval_patches`: A list of patches to apply during retrieval (e.g., \"phase, patch, ttl\").\n\nThe main data is an array of objects, each representing a candidate ID. The attributes for each candidate include:\n\n* `candidate_id`: An integer ID.\n* `reason`: A short string describing why this candidate was generated.\n* `confidence`: A float value between 0 and 1 representing how confident the model is in its prediction.\n* `gradient`: An object with three lists (as described above).\n\nTo extract specific information from this data, you can use a JSON parser or library to access the attributes of each candidate. For example, if you want to get the confidence for each candidate, you could use:\n\n```javascript\nconst output = // assume this is the JSON object provided\n\noutput.forEach((candidate) => {\n  console.log(candidate.confidence);\n});\n```\n\nSimilarly, you can access other attributes like `reason`, `gradient`, etc.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "stay",
+            "feature": "hotel_price",
+            "delta": 0.6
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "stay",
+            "patch": {
+              "topk": 50,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Abilene",
+          "San Angelo",
+          "Dallas"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 496.0,
+          "bundle_lb_cost": 4290.0,
+          "stay_lb_cost": 558.0,
+          "meal_lb_cost": 486.0,
+          "transport_lb_cost": 3246.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "harrisburg",
+              "abilene"
+            ],
+            [
+              "abilene",
+              "san angelo"
+            ],
+            [
+              "san angelo",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "harrisburg"
+            ]
+          ],
+          "bundle_key": [
+            "abilene",
+            "dallas",
+            "san angelo"
+          ],
+          "bundle_key_set": [
+            "abilene",
+            "dallas",
+            "san angelo"
+          ],
+          "bundle_key_seq": [
+            "abilene",
+            "san angelo",
+            "dallas"
+          ],
+          "city_features": {
+            "Abilene": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 83.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 7,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 1,
+              "hotel_slack": 1
+            },
+            "San Angelo": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 123.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 7,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 1,
+              "hotel_slack": 1
+            },
+            "Dallas": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 73.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 19,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 10,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Harrisburg->Abilene": {
+              "min_cost": 2515.0,
+              "blocked": false
+            },
+            "Abilene->San Angelo": {
+              "min_cost": 145.0,
+              "blocked": false
+            },
+            "San Angelo->Dallas": {
+              "min_cost": 90.0,
+              "blocked": false
+            },
+            "Dallas->Harrisburg": {
+              "min_cost": 496.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 1,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 123.0,
+            "bottleneck_city_meal": "Abilene",
+            "bottleneck_city_hotel": "San Angelo",
+            "bottleneck_edge": "Harrisburg->Abilene"
+          },
+          "min_bundle_cost": 3804.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 1,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 123.0,
+          "bottleneck_city_meal": "Abilene",
+          "bottleneck_city_hotel": "San Angelo",
+          "bottleneck_edge": "Harrisburg->Abilene"
+        },
+        "budget_context": {
+          "remaining": 854.0,
+          "slot_cap": 208.49609375,
+          "reserve": 539.20175,
+          "min_cost_nonbudget": 295.0
+        },
+        "counts": {
+          "kb": 11,
+          "after_nonbudget": 6,
+          "after_budget": 0,
+          "budget_removed": 6,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dead_end_city": "Abilene",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 11,
+          "after_nonbudget": 6,
+          "after_budget": 0,
+          "budget_removed": 6,
+          "nonbudget_removed": 5,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 854.0,
+          "slot_cap": 208.49609375,
+          "reserve": 539.20175,
+          "min_cost_nonbudget": 295.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 6,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Italian",
+              "French"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Lubbock",
+        "San Angelo",
+        "Dallas"
+      ],
+      "reason": null,
+      "raw": "This is a JSON response that appears to be the output of a machine learning model or an optimization algorithm. It contains multiple candidate solutions, each represented by an `id` and various attributes.\n\nHere's a breakdown of the structure:\n\n1. **Output**: The outermost key-value pair.\n2. **candidate_id**: An array of integers representing the IDs of candidate solutions.\n3. **output_schema**: A dictionary describing the schema of the output data.\n\nThe `output_schema` dictionary contains three keys: `candidate_id`, `reason`, and `confidence`. These correspond to columns in a hypothetical table that would represent the output data.\n\n**candidate_id**: An integer representing the ID of each candidate solution.\n**reason**: A short string explaining why each candidate is valid or invalid (not used here).\n**confidence**: A float between 0 and 1 indicating the confidence level of each candidate.\n\nThe `gradient` dictionary contains three lists:\n\n1. **hard_exclusions**: A list of tuples, where each tuple represents a hard exclusion rule.\n\t* **phase**: An integer representing the phase of the algorithm (not used here).\n\t* **rule**: A string representing the rule (e.g., \"city\" or \"edge\").\n\t* **ttl**: A TTL value (time to live) for the rule (not used here).\n\t* **city?**: A boolean flag indicating whether the rule is applied to cities (not used here).\n\t* **edge?**: A boolean flag indicating whether the rule is applied to edges (not used here).\n2. **soft_penalties**: A list of tuples, where each tuple represents a soft penalty.\n\t* **phase**: An integer representing the phase of the algorithm (not used here).\n\t* **feature**: A string representing the feature being penalized (e.g., \"hotel_price\").\n\t* **delta**: The amount by which the candidate is penalized for this feature (not used here).\n3. **retrieval_patches**: A list of tuples, where each tuple represents a retrieval patch.\n\t* **phase**: An integer representing the phase of the algorithm (not used here).\n\t* **patch**: A string representing the patch being applied (e.g., \"hotel_price\").\n\t* **ttl**: The TTL value for the patch (not used here).\n\nThe data in this response appears to be a set of candidate solutions, each with its own confidence level and associated attributes.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "stay",
+            "feature": "hotel_price",
+            "delta": 0.6
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "stay",
+            "patch": {
+              "topk": 50,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Lubbock",
+          "San Angelo",
+          "Dallas"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 496.0,
+          "bundle_lb_cost": 4525.0,
+          "stay_lb_cost": 552.0,
+          "meal_lb_cost": 474.0,
+          "transport_lb_cost": 3499.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "harrisburg",
+              "lubbock"
+            ],
+            [
+              "lubbock",
+              "san angelo"
+            ],
+            [
+              "san angelo",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "harrisburg"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "lubbock",
+            "san angelo"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "lubbock",
+            "san angelo"
+          ],
+          "bundle_key_seq": [
+            "lubbock",
+            "san angelo",
+            "dallas"
+          ],
+          "city_features": {
+            "Lubbock": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 80.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 8,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 2,
+              "hotel_slack": 1
+            },
+            "San Angelo": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 123.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 7,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 1,
+              "hotel_slack": 1
+            },
+            "Dallas": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 73.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 19,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 10,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Harrisburg->Lubbock": {
+              "min_cost": 2618.0,
+              "blocked": false
+            },
+            "Lubbock->San Angelo": {
+              "min_cost": 295.0,
+              "blocked": false
+            },
+            "San Angelo->Dallas": {
+              "min_cost": 90.0,
+              "blocked": false
+            },
+            "Dallas->Harrisburg": {
+              "min_cost": 496.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 1,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 123.0,
+            "bottleneck_city_meal": "San Angelo",
+            "bottleneck_city_hotel": "San Angelo",
+            "bottleneck_edge": "Harrisburg->Lubbock"
+          },
+          "min_bundle_cost": 4051.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 1,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 123.0,
+          "bottleneck_city_meal": "San Angelo",
+          "bottleneck_city_hotel": "San Angelo",
+          "bottleneck_edge": "Harrisburg->Lubbock"
+        },
+        "budget_context": {
+          "remaining": 1097.0,
+          "slot_cap": 394.6854440789473,
+          "reserve": 630.0922499999999,
+          "min_cost_nonbudget": 248.0
+        },
+        "counts": {
+          "kb": 196,
+          "after_nonbudget": 196,
+          "after_budget": 0,
+          "budget_removed": 196,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Harrisburg",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 196,
+          "after_nonbudget": 196,
+          "after_budget": 0,
+          "budget_removed": 196,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1097.0,
+          "slot_cap": 394.6854440789473,
+          "reserve": 630.0922499999999,
+          "min_cost_nonbudget": 248.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 196,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Italian",
+              "French"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Abilene",
+        "San Angelo",
+        "Dallas"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object representing a dataset of travel bundles with various attributes and relationships between them. Here's a breakdown of the structure:\n\n**Main Object**\n\n* `bundles`: An array of objects, each representing a travel bundle.\n* `output_schema`: An object describing the format of the output data.\n\n**Bundle Objects**\n\nEach bundle object has the following properties:\n\n* `id`: A unique identifier for the bundle (integer).\n* `bundle_risk`: An object with various risk attributes:\n\t+ `bottleneck_meal_slack`: The meal slack value for the bottleneck city.\n\t+ `bottleneck_attr_slack`: The attribute slack value for the bottleneck city.\n\t+ `bottleneck_hotel_price`: The hotel price for the bottleneck city.\n\t+ `bottleneck_city_meal`: The meal cost for the bottleneck city.\n\t+ `bottleneck_city_hotel`: The hotel name for the bottleneck city.\n\t+ `bottleneck_edge`: The edge (route) between cities that is the bottleneck.\n* `city_summary`: An object with summaries of each city in the bundle:\n\t+ Key: City name (string).\n\t+ Value: Object with attributes like `days`, `nights`, `hotel_min_price`, etc.\n* `edge_summary`: An object with summaries of each edge in the bundle:\n\t+ Key: Edge ID (string).\n\t+ Value: Object with attributes like `min_cost` and `blocked`.\n* `lb_costs`: An object with costs associated with the bundle:\n\t+ `transport_lb_cost`: The lower bound cost for transportation.\n\t+ `stay_lb_cost`: The lower bound cost for stay.\n\t+ `meal_lb_cost`: The lower bound cost for meals.\n\t+ `bundle_lb_cost`: The lower bound cost for the entire bundle.\n* `feasibility`: An object indicating whether the bundle is feasible:\n\t+ `return_leg_exists`: A boolean indicating whether a return leg exists.\n\t+ `hotel_feasible_all`: A boolean indicating whether hotels are available for all cities.\n\n**Output Schema**\n\nThe output schema describes the format of the output data. It has two parts:\n\n* `candidate_id`: An integer identifier for each candidate bundle.\n* `reason`: A short string describing why a particular bundle was selected (e.g., \"low cost\").\n* `confidence`: A floating-point value between 0 and 1 indicating the confidence in the selection of a bundle.\n\nThe gradient object within the output schema has three parts:\n\n* `hard_exclusions`: A list of tuples containing phase, rule, TTL, city, and edge information.\n* `soft_penalties`: A list of tuples containing phase, feature, and delta values.\n* `retrieval_patches`: A list of tuples containing phase, patch, and TTL information.\n\nPlease let me know if you'd like me to explain any specific part of the data in more detail!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "a01dd5797e5a",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+      "bundle_fp": "d54a246a7c12"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "a01dd5797e5a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Lubbock|None|None->None",
+        "bundle_fp": "3f2bbf2f8777"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Abilene",
+        "San Angelo",
+        "Dallas"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "a01dd5797e5a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "bundle_fp": "d54a246a7c12"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "a01dd5797e5a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "bundle_fp": "d54a246a7c12"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Lubbock",
+        "San Angelo",
+        "Dallas"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "a01dd5797e5a",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-08|Dallas->Harrisburg",
+        "bundle_fp": "6eebb7e6b48d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "a01dd5797e5a",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-08|Dallas->Harrisburg",
+        "bundle_fp": "6eebb7e6b48d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Abilene",
+        "San Angelo",
+        "Dallas"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "a01dd5797e5a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "bundle_fp": "d54a246a7c12"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 22.02467190520838
+}
