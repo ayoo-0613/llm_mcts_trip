@@ -1,0 +1,1059 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1705.3,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "We're planning a week-long trip for two people. We will depart from Jacksonville with Pennsylvania as our destination. Our trip is intended to cover three distinct cities in Pennsylvania from March 12th to March 18th, 2022. Our total budget for the trip is $2,700. For our dining preferences, we'd like to try some local Mediterranean and American cuisines.",
+  "parsed": {
+    "org": "Jacksonville",
+    "dest": "Pennsylvania",
+    "days": 7,
+    "visiting_city_number": 3,
+    "date": [
+      "2022-03-12",
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15",
+      "2022-03-16",
+      "2022-03-17",
+      "2022-03-18"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": [
+        "Mediterranean",
+        "American"
+      ],
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 2700,
+    "origin": "Jacksonville",
+    "destination": "Pennsylvania",
+    "duration_days": 7,
+    "start_date": "2022-03-12",
+    "preferences": [
+      "Mediterranean",
+      "American"
+    ],
+    "candidate_cities": [
+      "State College",
+      "Johnstown",
+      "Harrisburg",
+      "Erie",
+      "Pittsburgh",
+      "Latrobe",
+      "Philadelphia",
+      "Lewisburg",
+      "Scranton"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Jacksonville->Johnstown 1388km cost 1388",
+    "move:seg1:taxi:Johnstown->Latrobe 53km cost 53",
+    "move:seg2:taxi:Latrobe->Erie 264km cost 264"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Johnstown",
+      "Latrobe",
+      "Erie"
+    ],
+    "transportation_dates": [
+      "2022-03-12",
+      "2022-03-14",
+      "2022-03-16",
+      "2022-03-18"
+    ],
+    "transportation_methods": [
+      "taxi, from Jacksonville to Johnstown, cost: 1388.0",
+      "taxi, from Johnstown to Latrobe, cost: 53.3",
+      "taxi, from Latrobe to Erie, cost: 264.0",
+      "Erie->Jacksonville missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Johnstown",
+      "missing, Latrobe",
+      "missing, Erie"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Jacksonville to Johnstown",
+      "transportation": "Taxi, from Jacksonville to Johnstown, Cost: 1388",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Johnstown",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Johnstown to Latrobe",
+      "transportation": "Taxi, from Johnstown to Latrobe, Cost: 53",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Latrobe",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Latrobe to Erie",
+      "transportation": "Taxi, from Latrobe to Erie, Cost: 264",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "Erie",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 7,
+      "current_city": "Erie",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-12|Latrobe->Erie",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 1258.7,
+        "slot_cap": 115.93289473684209,
+        "reserve": 854.0
+      },
+      "segment_role": "intercity",
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-12|Erie->Jacksonville",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 994.7,
+        "slot_cap": 357.87931743421046,
+        "reserve": 524.4627499999999
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 725.9,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 617.015,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 524.4627499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-12|Erie->Jacksonville",
+        "city": "Jacksonville",
+        "city_bundle": [
+          "Johnstown",
+          "Latrobe",
+          "Erie"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 994.7,
+          "slot_cap": 357.87931743421046,
+          "reserve": 524.4627499999999,
+          "min_cost_nonbudget": 764.5
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Latrobe",
+          "State College",
+          "Harrisburg"
+        ],
+        "current_bundle_features": {},
+        "current_bottleneck": null,
+        "budget_context": {
+          "remaining": 1068.0,
+          "slot_cap": 384.251644736842,
+          "reserve": 829.0687499999999,
+          "min_cost_nonbudget": 658.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Jacksonville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1068.0,
+          "slot_cap": 384.251644736842,
+          "reserve": 829.0687499999999,
+          "min_cost_nonbudget": 658.5
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2700,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Mediterranean",
+              "American"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "State College",
+        "Latrobe",
+        "Harrisburg"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that represents the output of a machine learning model or a data processing pipeline. It contains a list of candidate IDs along with their associated attributes and scores.\n\nHere's a breakdown of the structure:\n\n* `output_schema`: This is an object that defines the schema of the output. It includes information about the columns, their data types, and ranges.\n* `bundle_candidates`: This is a list of objects, each representing a candidate bundle. Each object has several attributes:\n\t+ `id`: A unique identifier for the bundle (integer).\n\t+ `lb_costs`: An object containing the lower bound costs for transportation, stay, meal, and overall bundle cost (floats).\n\t+ `feasibility`: An object with two boolean values: `return_leg_exists` and `hotel_feasible_all`.\n\t+ `bundle_risk`: An object with four attributes:\n\t\t- `bottleneck_meal_slack`: The bottleneck meal slack value (integer).\n\t\t- `bottleneck_attr_slack`: The bottleneck attribute slack value (integer).\n\t\t- `bottleneck_hotel_price`: The bottleneck hotel price (float).\n\t\t- `bottleneck_city_meal`, `bottleneck_city_hotel`, and `bottleneck_edge`: These are the cities, edges, or meal/meal/hotel prices associated with the bottlenecks.\n\t+ `city_summary`: An object containing information about each city in the bundle:\n\t\t- `days` and `nights`: The number of days and nights spent in the city (integers).\n\t\t- `hotel_min_price`, `meal_slack`, and `min_meal_cost`: Hotel price, meal slack value, and minimum meal cost for the city (floats or integers).\n\t+ `edge_summary`: An object containing information about each edge in the bundle:\n\t\t- `min_cost` and `blocked`: The minimum cost and blocked status of the edge (floats and booleans).\n\nThis structure suggests that this output is from a multi-objective optimization problem, where multiple bundles are generated based on different criteria such as transportation costs, stay costs, meal costs, hotel prices, and feasibility. The `bundle_risk` attribute provides information about potential bottlenecks in each bundle.\n\nIf you'd like to extract specific information or perform calculations with this data, please let me know what you need help with!",
+      "parsed": null,
+      "error": "invalid_candidate_id",
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "State College",
+          "Latrobe",
+          "Harrisburg"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1317.0,
+          "bundle_lb_cost": 4732.0,
+          "stay_lb_cost": 894.0,
+          "meal_lb_cost": 618.0,
+          "transport_lb_cost": 3220.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "jacksonville",
+              "state college"
+            ],
+            [
+              "state college",
+              "latrobe"
+            ],
+            [
+              "latrobe",
+              "harrisburg"
+            ],
+            [
+              "harrisburg",
+              "jacksonville"
+            ]
+          ],
+          "bundle_key": [
+            "harrisburg",
+            "latrobe",
+            "state college"
+          ],
+          "bundle_key_set": [
+            "harrisburg",
+            "latrobe",
+            "state college"
+          ],
+          "bundle_key_seq": [
+            "state college",
+            "latrobe",
+            "harrisburg"
+          ],
+          "city_features": {
+            "State College": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 210.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 9,
+              "min_meal_cost": 15.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 3,
+              "hotel_slack": 1
+            },
+            "Latrobe": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 67.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 9,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 3,
+              "hotel_slack": 1
+            },
+            "Harrisburg": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 170.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 14,
+              "min_meal_cost": 15.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 5,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Jacksonville->State College": {
+              "min_cost": 1469.0,
+              "blocked": false
+            },
+            "State College->Latrobe": {
+              "min_cost": 183.0,
+              "blocked": false
+            },
+            "Latrobe->Harrisburg": {
+              "min_cost": 251.0,
+              "blocked": false
+            },
+            "Harrisburg->Jacksonville": {
+              "min_cost": 1317.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 3,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 210.0,
+            "bottleneck_city_meal": "State College",
+            "bottleneck_city_hotel": "State College",
+            "bottleneck_edge": "Jacksonville->State College"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 3,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 210.0,
+          "bottleneck_city_meal": "State College",
+          "bottleneck_city_hotel": "State College",
+          "bottleneck_edge": "Jacksonville->State College"
+        },
+        "budget_context": {
+          "remaining": 1048.0,
+          "slot_cap": 188.52796052631575,
+          "reserve": 829.0687499999999,
+          "min_cost_nonbudget": 125.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Harrisburg",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1048.0,
+          "slot_cap": 188.52796052631575,
+          "reserve": 829.0687499999999,
+          "min_cost_nonbudget": 125.5
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2700,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Mediterranean",
+              "American"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Johnstown",
+        "Latrobe",
+        "Harrisburg"
+      ],
+      "reason": null,
+      "raw": "This is a JSON output from a machine learning or optimization model. Here's a breakdown of the structure and content:\n\n**Top-level object**: The output consists of an array of objects, each representing a candidate solution.\n\n**Candidate object**: Each candidate object has several key-value pairs:\n\n* `id`: A unique identifier for the candidate (e.g., \"1\", \"2\", etc.).\n* `bundle`: An array of cities or locations that are part of this candidate's bundle.\n* `risk`: An object containing various risk metrics, such as:\n\t+ `bottleneck_meal_slack`: The meal slack (i.e., the difference between the required meal cost and the available budget) for each city in the bundle.\n\t+ `bottleneck_attr_slack`: The attribute slack (e.g., hotel price) for each city in the bundle.\n\t+ `bottleneck_hotel_price`: The highest hotel price among all cities in the bundle.\n* `city_summary`: An object containing summary statistics for each city in the bundle, including:\n\t+ `days`: The number of days spent in each city.\n\t+ `nights`: The number of nights spent in each city.\n\t+ `hotel_min_price`: The minimum hotel price for each city.\n\t+ `meal_slack`: The meal slack for each city (same as above).\n\t+ `attr_slack`: The attribute slack (e.g., hotel price) for each city (same as above).\n* `edge_summary`: An object containing summary statistics for each edge between cities in the bundle, including:\n\t+ `min_cost`: The minimum cost of traveling from one city to another.\n\t+ `blocked`: A boolean indicating whether the edge is blocked or not.\n* `lb_costs`: An object containing various lower-bound costs, such as:\n\t+ `transport_lb_cost`: The lower-bound cost for transportation between cities.\n\t+ `stay_lb_cost`: The lower-bound cost for staying in each city.\n\t+ `meal_lb_cost`: The lower-bound cost for meals at each city.\n* `feasibility`: An object indicating whether the candidate solution is feasible or not, including:\n\t+ `return_leg_exists`: A boolean indicating whether a return leg exists (i.e., a path from one city back to the starting point).\n\t+ `hotel_feasible_all`: A boolean indicating whether hotel prices are feasible for all cities in the bundle.\n\n**Output schema**: The output schema is an object that defines the structure of the output data. It contains several key-value pairs, including:\n\n* `candidate_id`: The type of the candidate ID (integer).\n* `reason`: The type of the reason field (short string).\n* `confidence`: The type of the confidence field (float in [0,1]).\n* `gradient`: An object containing three sub-objects:\n\t+ `hard_exclusions`: A list of objects with phase, rule, TTL, city?, and edge? attributes.\n\t+ `soft_penalties`: A list of objects with phase, feature, and delta attributes.\n\t+ `retrieval_patches`: A list of objects with phase, patch, and TTL attributes.\n\nOverall, this output suggests that the model has generated candidate solutions for a travel planning problem, each consisting of a bundle of cities with associated risk metrics, summary statistics, and lower-bound costs. The output schema provides information on the structure and type of each field in the output data.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Johnstown",
+          "Latrobe",
+          "Harrisburg"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1317.0,
+          "bundle_lb_cost": 4443.3,
+          "stay_lb_cost": 576.0,
+          "meal_lb_cost": 858.0,
+          "transport_lb_cost": 3009.3,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "jacksonville",
+              "johnstown"
+            ],
+            [
+              "johnstown",
+              "latrobe"
+            ],
+            [
+              "latrobe",
+              "harrisburg"
+            ],
+            [
+              "harrisburg",
+              "jacksonville"
+            ]
+          ],
+          "bundle_key": [
+            "harrisburg",
+            "johnstown",
+            "latrobe"
+          ],
+          "bundle_key_set": [
+            "harrisburg",
+            "johnstown",
+            "latrobe"
+          ],
+          "bundle_key_seq": [
+            "johnstown",
+            "latrobe",
+            "harrisburg"
+          ],
+          "city_features": {
+            "Johnstown": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 51.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 18,
+              "meal_count": 6,
+              "min_meal_cost": 35.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 16,
+              "meal_slack": 0,
+              "hotel_slack": 1
+            },
+            "Latrobe": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 67.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 9,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 3,
+              "hotel_slack": 1
+            },
+            "Harrisburg": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 170.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 14,
+              "min_meal_cost": 15.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 5,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Jacksonville->Johnstown": {
+              "min_cost": 1388.0,
+              "blocked": false
+            },
+            "Johnstown->Latrobe": {
+              "min_cost": 53.3,
+              "blocked": false
+            },
+            "Latrobe->Harrisburg": {
+              "min_cost": 251.0,
+              "blocked": false
+            },
+            "Harrisburg->Jacksonville": {
+              "min_cost": 1317.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 0,
+            "bottleneck_attr_slack": 16,
+            "bottleneck_hotel_price": 170.0,
+            "bottleneck_city_meal": "Johnstown",
+            "bottleneck_city_hotel": "Harrisburg",
+            "bottleneck_edge": "Jacksonville->Johnstown"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 0,
+          "bottleneck_attr_slack": 16,
+          "bottleneck_hotel_price": 170.0,
+          "bottleneck_city_meal": "Johnstown",
+          "bottleneck_city_hotel": "Harrisburg",
+          "bottleneck_edge": "Jacksonville->Johnstown"
+        },
+        "budget_context": {
+          "remaining": 1007.7,
+          "slot_cap": 362.5565378289473,
+          "reserve": 633.7769999999999,
+          "min_cost_nonbudget": 658.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Jacksonville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1007.7,
+          "slot_cap": 362.5565378289473,
+          "reserve": 633.7769999999999,
+          "min_cost_nonbudget": 658.5
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2700,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "Mediterranean",
+              "American"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Johnstown",
+        "Latrobe",
+        "Erie"
+      ],
+      "reason": null,
+      "raw": "This is a JSON output from a machine learning model or a data analysis tool. It appears to be related to candidate ID selection and ranking, with associated reasons, confidence levels, and gradient information.\n\nHere's a breakdown of the structure:\n\n1. `output_schema`: This defines the schema for the output, which includes:\n\t* `candidate_id`: an integer identifier\n\t* `reason`: a short string explaining why a particular candidate was selected or rejected\n\t* `confidence`: a float value between 0 and 1 indicating the model's confidence in its selection\n\t* `gradient`: a dictionary containing three lists:\n\t\t+ `hard_exclusions`: a list of tuples describing excluded phases, rules, TTLs (time-to-live), cities, and edges\n\t\t+ `soft_penalties`: a list of tuples describing soft penalties for specific features and their associated delta values\n\t\t+ `retrieval_patches`: a list of tuples describing retrieval patches with phase, patch, and TTL information\n2. The `output` field contains an array of objects, each representing a candidate ID selection:\n\t* Each object has the following fields:\n\t\t+ `id`: the integer identifier for this candidate ID selection\n\t\t+ `candidate_id`: the selected candidate ID (integer)\n\t\t+ `reason`: a short string explaining why this candidate was selected\n\t\t+ `confidence`: the model's confidence in its selection (float between 0 and 1)\n\nThis JSON output seems to be related to a machine learning or data analysis task, such as:\n\n* Candidate ID selection: The model is selecting the most promising candidate IDs from a set of possibilities.\n* Ranking: The model is ranking candidate IDs based on their predicted performance or suitability.\n\nTo provide more context or insights about this output, it would be helpful to know what specific problem or task this data is related to. If you have any additional information or questions about this JSON output, please let me know!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "8f09a4130fb6",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-12|Erie->Jacksonville",
+      "bundle_fp": "93aa0c285b6e"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "8f09a4130fb6",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-12|Harrisburg->Jacksonville",
+        "bundle_fp": "f52e3389ff79"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "State College",
+        "Latrobe",
+        "Harrisburg"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "8f09a4130fb6",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-12|Latrobe->Harrisburg",
+        "bundle_fp": "0c18b67acb6a"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "8f09a4130fb6",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-12|Latrobe->Harrisburg",
+        "bundle_fp": "0c18b67acb6a"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Johnstown",
+        "Latrobe",
+        "Harrisburg"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "8f09a4130fb6",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-12|Harrisburg->Jacksonville",
+        "bundle_fp": "729a3a6c58f2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "8f09a4130fb6",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-12|Harrisburg->Jacksonville",
+        "bundle_fp": "729a3a6c58f2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Johnstown",
+        "Latrobe",
+        "Erie"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "8f09a4130fb6",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-12|Erie->Jacksonville",
+        "bundle_fp": "93aa0c285b6e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 21.795995684340596
+}

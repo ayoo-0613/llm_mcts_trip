@@ -1,0 +1,157 @@
+{
+  "parser_mode": "legacy",
+  "success": true,
+  "cost": 1656.0,
+  "violations": [],
+  "query": "Could you create a travel itinerary for 2 people, departing from Denver to Great Falls, with a visit to 1 city, covering the dates from March 26th to March 28th, 2022? We have a budget of $1,800. We'll not be self-driving, so alternative transportation needs to be arranged. When it comes to dining, we would like to seek out Indian, Mexican, French, and Mediterranean cuisines. We require accommodations that allow visitors.",
+  "parsed": {
+    "org": "Denver",
+    "dest": "Great Falls",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-26",
+      "2022-03-27",
+      "2022-03-28"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "visitors",
+      "cuisine": [
+        "Indian",
+        "Mexican",
+        "French",
+        "Mediterranean"
+      ],
+      "room type": null,
+      "transportation": "no self-driving"
+    },
+    "budget": 1800,
+    "origin": "Denver",
+    "destination": "Great Falls",
+    "duration_days": 3,
+    "start_date": "2022-03-26",
+    "preferences": [
+      "Indian",
+      "Mexican",
+      "French",
+      "Mediterranean",
+      "visitors"
+    ],
+    "transport_forbid": [
+      "self-driving"
+    ]
+  },
+  "actions": [
+    "move:seg0:flight:F1789419 Denver->Great Falls $124 13:15-15:11",
+    "move:seg1:flight:F1142181 Great Falls->Denver $124 06:53-08:40",
+    "stay:Great Falls:1607 Jazz it Up in Brooklyn Private room $226",
+    "eat:d1:breakfast:5376 Mahara Hotel Tea, French, Fast Food, Cafe, Seafood $27 rating 2.9",
+    "eat:d1:lunch:4044 Finger Licious Pizza, Mexican, Bakery, Fast Food, Cafe $32 rating 3.2",
+    "eat:d1:dinner:4717 Syall Kotian Da Dhaba Tea, Bakery, Mediterranean, Fast Food $40 rating 3.0",
+    "eat:d2:breakfast:860 Barbeque Nation Tea, BBQ, Fast Food $46 rating 4.4",
+    "eat:d2:lunch:2346 Taruveda Bistro Chinese, Pizza, BBQ, Seafood $27 rating 4.2",
+    "eat:d2:dinner:9179 Kaveri Restaurant And Caterers Desserts, Bakery, BBQ, Fast Food, Chinese $41 rating 4.0",
+    "eat:d3:breakfast:4750 F 2 Pastry Shop Tea, Pizza, Indian, Desserts $49 rating 3.3",
+    "eat:d3:lunch:8451 Paddy's Cafe Chinese, Desserts, Seafood $16 rating 3.7",
+    "eat:d3:dinner:596 SpiceKlub Tea, Pizza, Indian, Fast Food, Cafe, American $76 rating 4.4",
+    "visit:d1:spot:4539 C. M. Russell Museum @ Great Falls",
+    "visit:d2:spot:4540 The Lewis and Clark Interpretive Center @ Great Falls",
+    "visit:d3:spot:4541 Children's Museum of Montana @ Great Falls"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Great Falls"
+    ],
+    "transportation_dates": [
+      "2022-03-26",
+      "2022-03-28"
+    ],
+    "transportation_methods": [
+      "Flight F1789419, from Denver to Great Falls, Departure Time: 13:15, Arrival Time: 15:11, cost: 124.0",
+      "Flight F1142181, from Great Falls to Denver, Departure Time: 06:53, Arrival Time: 08:40, cost: 124.0"
+    ],
+    "restaurants": [
+      "Mahara Hotel, Great Falls",
+      "Finger Licious, Great Falls",
+      "Syall Kotian Da Dhaba, Great Falls",
+      "Barbeque Nation, Great Falls",
+      "Taruveda Bistro, Great Falls",
+      "Kaveri Restaurant And Caterers, Great Falls",
+      "F 2 Pastry Shop, Great Falls",
+      "Paddy's Cafe, Great Falls",
+      "SpiceKlub, Great Falls"
+    ],
+    "attractions": [
+      "C. M. Russell Museum, Great Falls",
+      "The Lewis and Clark Interpretive Center, Great Falls",
+      "Children's Museum of Montana, Great Falls"
+    ],
+    "accommodations": [
+      "Jazz it Up in Brooklyn, Great Falls"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Denver to Great Falls",
+      "transportation": "Flight Number: F1789419, from Denver to Great Falls, Departure Time: 13:15, Arrival Time: 15:11",
+      "breakfast": "Mahara Hotel, Great Falls",
+      "attraction": "C. M. Russell Museum, Great Falls;",
+      "lunch": "Finger Licious, Great Falls",
+      "dinner": "Syall Kotian Da Dhaba, Great Falls",
+      "accommodation": "Jazz it Up in Brooklyn, Great Falls"
+    },
+    {
+      "days": 2,
+      "current_city": "Great Falls",
+      "transportation": "-",
+      "breakfast": "Barbeque Nation, Great Falls",
+      "attraction": "The Lewis and Clark Interpretive Center, Great Falls;",
+      "lunch": "Taruveda Bistro, Great Falls",
+      "dinner": "Kaveri Restaurant And Caterers, Great Falls",
+      "accommodation": "Jazz it Up in Brooklyn, Great Falls"
+    },
+    {
+      "days": 3,
+      "current_city": "from Great Falls to Denver",
+      "transportation": "Flight Number: F1142181, from Great Falls to Denver, Departure Time: 06:53, Arrival Time: 08:40",
+      "breakfast": "F 2 Pastry Shop, Great Falls",
+      "attraction": "Children's Museum of Montana, Great Falls;",
+      "lunch": "Paddy's Cafe, Great Falls",
+      "dinner": "SpiceKlub, Great Falls",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "attraction",
+      "slot_id": "attraction|d3|slot:spot|seg:None|Great Falls|None|None->None",
+      "counts": {
+        "kb": 20,
+        "after_nonbudget": 20,
+        "after_budget": 20,
+        "returned": 5,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 144.0,
+        "slot_cap": null,
+        "reserve": 0.0
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": null,
+  "failure_gradients": [],
+  "elapsed_seconds": 6.1091522430069745
+}

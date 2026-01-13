@@ -1,0 +1,1091 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1127.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you help devise a 5-day travel plan for 2 people, starting in Pittsburgh and visiting 2 cities in Michigan from March 3rd to March 7th, 2022? Our budget is $1,500. We require accommodations that allow children under 10 and private rooms. In terms of cuisine, we want to try American, Italian, Indian, and Mediterranean food.",
+  "parsed": {
+    "org": "Pittsburgh",
+    "dest": "Michigan",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-03",
+      "2022-03-04",
+      "2022-03-05",
+      "2022-03-06",
+      "2022-03-07"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "children under 10",
+      "cuisine": [
+        "American",
+        "Italian",
+        "Indian",
+        "Mediterranean"
+      ],
+      "room type": "private room",
+      "transportation": null
+    },
+    "budget": 1500,
+    "origin": "Pittsburgh",
+    "destination": "Michigan",
+    "duration_days": 5,
+    "start_date": "2022-03-03",
+    "preferences": [
+      "American",
+      "Italian",
+      "Indian",
+      "Mediterranean",
+      "children under 10",
+      "private room"
+    ],
+    "candidate_cities": [
+      "Pellston",
+      "Traverse City",
+      "Alpena",
+      "Iron Mountain",
+      "Kalamazoo",
+      "Saginaw",
+      "Grand Rapids",
+      "Lansing",
+      "Muskegon",
+      "Hancock",
+      "Detroit",
+      "Escanaba"
+    ]
+  },
+  "actions": [
+    "move:seg0:flight:F0620168 Pittsburgh->Detroit $40 17:10-18:03",
+    "move:seg1:flight:F3398836 Detroit->Alpena $39 10:06-11:10",
+    "move:seg2:taxi:Alpena->Pittsburgh 831km cost 831",
+    "stay:Detroit:1907 Lovely, charming and clean bedroom in Manhattan. Private room $69"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Detroit",
+      "Alpena"
+    ],
+    "transportation_dates": [
+      "2022-03-03",
+      "2022-03-05",
+      "2022-03-07"
+    ],
+    "transportation_methods": [
+      "Flight F0620168, from Pittsburgh to Detroit, Departure Time: 17:10, Arrival Time: 18:03, cost: 40.0",
+      "Flight F3398836, from Detroit to Alpena, Departure Time: 10:06, Arrival Time: 11:10, cost: 39.0",
+      "taxi, from Alpena to Pittsburgh, cost: 831.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Lovely, charming and clean bedroom in Manhattan., Detroit",
+      "missing, Alpena"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Pittsburgh to Detroit",
+      "transportation": "Flight Number: F0620168, from Pittsburgh to Detroit, Departure Time: 17:10, Arrival Time: 18:03",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Lovely, charming and clean bedroom in Manhattan., Detroit"
+    },
+    {
+      "days": 2,
+      "current_city": "Detroit",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Lovely, charming and clean bedroom in Manhattan., Detroit"
+    },
+    {
+      "days": 3,
+      "current_city": "from Detroit to Alpena",
+      "transportation": "Flight Number: F3398836, from Detroit to Alpena, Departure Time: 10:06, Arrival Time: 11:10",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Alpena",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Alpena to Pittsburgh",
+      "transportation": "Taxi, from Alpena to Pittsburgh, Cost: 831",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Detroit|None|None->None",
+      "counts": {
+        "kb": 2,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 511.0,
+        "slot_cap": 149.70703125,
+        "reserve": 365.585
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 430.09999999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 365.585,
+          "kept": 1
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Alpena|None|None->None",
+      "counts": {
+        "kb": 6,
+        "after_nonbudget": 4,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 3,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 373.0,
+        "slot_cap": 273.193359375,
+        "reserve": 202.66124999999997
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 280.5,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 238.42499999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 202.66124999999997,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Alpena|None|None->None",
+        "city": "Alpena",
+        "city_bundle": [
+          "Detroit",
+          "Alpena"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 6,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 373.0,
+          "slot_cap": 273.193359375,
+          "reserve": 202.66124999999997,
+          "min_cost_nonbudget": 88.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Kalamazoo",
+          "Detroit"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 80.0,
+          "bundle_lb_cost": 1572.0,
+          "stay_lb_cost": 442.0,
+          "meal_lb_cost": 402.0,
+          "transport_lb_cost": 728.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "pittsburgh",
+              "kalamazoo"
+            ],
+            [
+              "kalamazoo",
+              "detroit"
+            ],
+            [
+              "detroit",
+              "pittsburgh"
+            ]
+          ],
+          "bundle_key": [
+            "detroit",
+            "kalamazoo"
+          ],
+          "bundle_key_set": [
+            "detroit",
+            "kalamazoo"
+          ],
+          "bundle_key_seq": [
+            "kalamazoo",
+            "detroit"
+          ],
+          "city_features": {
+            "Kalamazoo": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 152.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 11,
+              "meal_count": 13,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 9,
+              "meal_slack": 7,
+              "hotel_slack": 0
+            },
+            "Detroit": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 69.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 15,
+              "min_meal_cost": 15.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 6,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Pittsburgh->Kalamazoo": {
+              "min_cost": 604.0,
+              "blocked": false
+            },
+            "Kalamazoo->Detroit": {
+              "min_cost": 44.0,
+              "blocked": false
+            },
+            "Detroit->Pittsburgh": {
+              "min_cost": 80.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 6,
+            "bottleneck_attr_slack": 9,
+            "bottleneck_hotel_price": 152.0,
+            "bottleneck_city_meal": "Detroit",
+            "bottleneck_city_hotel": "Kalamazoo",
+            "bottleneck_edge": "Pittsburgh->Kalamazoo"
+          },
+          "min_bundle_cost": 1170.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 6,
+          "bottleneck_attr_slack": 9,
+          "bottleneck_hotel_price": 152.0,
+          "bottleneck_city_meal": "Detroit",
+          "bottleneck_city_hotel": "Kalamazoo",
+          "bottleneck_edge": "Pittsburgh->Kalamazoo"
+        },
+        "budget_context": {
+          "remaining": 286.0,
+          "slot_cap": 11.0,
+          "reserve": 264.0,
+          "min_cost_nonbudget": 11.0
+        },
+        "counts": {
+          "kb": 22,
+          "after_nonbudget": 22,
+          "after_budget": 2,
+          "budget_removed": 20,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Kalamazoo",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 22,
+          "after_nonbudget": 22,
+          "after_budget": 2,
+          "budget_removed": 20,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 286.0,
+          "slot_cap": 11.0,
+          "reserve": 264.0,
+          "min_cost_nonbudget": 11.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 22,
+        "dead_end_after_budget": 2,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1500,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "children under 10",
+            "cuisine": [
+              "American",
+              "Italian",
+              "Indian",
+              "Mediterranean"
+            ],
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Detroit",
+        "Kalamazoo"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n    \"candidate_id\": 0,\n    \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n    \"confidence\": 0.8,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            {\"phase\": \"meal\", \"rule\": \"AVOID_CITY\", \"ttl\": 10, \"city\": \"Kalamazoo\"}\n        ],\n        \"soft_penalties\": [\n            {\"phase\": \"segment\", \"feature\": \"budget_risk\", \"delta\": -20}\n        ]\n    }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "meal",
+              "rule": "AVOID_CITY",
+              "ttl": 10,
+              "city": "Kalamazoo"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "budget_risk",
+              "delta": -20
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "meal",
+            "rule": "AVOID_CITY",
+            "ttl": 10,
+            "city": "Kalamazoo"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "budget_risk",
+            "delta": -20
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Detroit",
+          "Kalamazoo"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 603.0,
+          "bundle_lb_cost": 1547.0,
+          "stay_lb_cost": 442.0,
+          "meal_lb_cost": 378.0,
+          "transport_lb_cost": 727.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "pittsburgh",
+              "detroit"
+            ],
+            [
+              "detroit",
+              "kalamazoo"
+            ],
+            [
+              "kalamazoo",
+              "pittsburgh"
+            ]
+          ],
+          "bundle_key": [
+            "detroit",
+            "kalamazoo"
+          ],
+          "bundle_key_set": [
+            "detroit",
+            "kalamazoo"
+          ],
+          "bundle_key_seq": [
+            "detroit",
+            "kalamazoo"
+          ],
+          "city_features": {
+            "Detroit": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 69.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 15,
+              "min_meal_cost": 15.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 9,
+              "hotel_slack": 1
+            },
+            "Kalamazoo": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 152.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 11,
+              "meal_count": 13,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 8,
+              "meal_slack": 4,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Pittsburgh->Detroit": {
+              "min_cost": 80.0,
+              "blocked": false
+            },
+            "Detroit->Kalamazoo": {
+              "min_cost": 44.0,
+              "blocked": false
+            },
+            "Kalamazoo->Pittsburgh": {
+              "min_cost": 603.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 4,
+            "bottleneck_attr_slack": 8,
+            "bottleneck_hotel_price": 152.0,
+            "bottleneck_city_meal": "Kalamazoo",
+            "bottleneck_city_hotel": "Kalamazoo",
+            "bottleneck_edge": "Kalamazoo->Pittsburgh"
+          },
+          "min_bundle_cost": 1169.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 4,
+          "bottleneck_attr_slack": 8,
+          "bottleneck_hotel_price": 152.0,
+          "bottleneck_city_meal": "Kalamazoo",
+          "bottleneck_city_hotel": "Kalamazoo",
+          "bottleneck_edge": "Kalamazoo->Pittsburgh"
+        },
+        "budget_context": {
+          "remaining": 309.0,
+          "slot_cap": 11.035714285714286,
+          "reserve": 286.0,
+          "min_cost_nonbudget": 11.0
+        },
+        "counts": {
+          "kb": 28,
+          "after_nonbudget": 28,
+          "after_budget": 1,
+          "budget_removed": 27,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Detroit",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 28,
+          "after_nonbudget": 28,
+          "after_budget": 1,
+          "budget_removed": 27,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 309.0,
+          "slot_cap": 11.035714285714286,
+          "reserve": 286.0,
+          "min_cost_nonbudget": 11.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 28,
+        "dead_end_after_budget": 1,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1500,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "children under 10",
+            "cuisine": [
+              "American",
+              "Italian",
+              "Indian",
+              "Mediterranean"
+            ],
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Alpena",
+        "Detroit"
+      ],
+      "reason": "Avoid dead_end_city for hotel/stay failures if feasible.",
+      "raw": "{\n  \"candidate_id\": 2,\n  \"reason\": \"Avoid dead_end_city for hotel/stay failures if feasible.\",\n  \"confidence\": 0.5,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"meal\", \"rule\": \"AVOID_CITY\", \"ttl\": 10, \"city\": \"Detroit\"}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "Avoid dead_end_city for hotel/stay failures if feasible.",
+        "confidence": 0.5,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "meal",
+              "rule": "AVOID_CITY",
+              "ttl": 10,
+              "city": "Detroit"
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "meal",
+            "rule": "AVOID_CITY",
+            "ttl": 10,
+            "city": "Detroit"
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Alpena",
+          "Detroit"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 80.0,
+          "bundle_lb_cost": 1705.0,
+          "stay_lb_cost": 314.0,
+          "meal_lb_cost": 402.0,
+          "transport_lb_cost": 989.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "pittsburgh",
+              "alpena"
+            ],
+            [
+              "alpena",
+              "detroit"
+            ],
+            [
+              "detroit",
+              "pittsburgh"
+            ]
+          ],
+          "bundle_key": [
+            "alpena",
+            "detroit"
+          ],
+          "bundle_key_set": [
+            "alpena",
+            "detroit"
+          ],
+          "bundle_key_seq": [
+            "alpena",
+            "detroit"
+          ],
+          "city_features": {
+            "Alpena": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 88.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 14,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 8,
+              "hotel_slack": 1
+            },
+            "Detroit": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 69.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 15,
+              "min_meal_cost": 15.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 6,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Pittsburgh->Alpena": {
+              "min_cost": 831.0,
+              "blocked": false
+            },
+            "Alpena->Detroit": {
+              "min_cost": 78.0,
+              "blocked": false
+            },
+            "Detroit->Pittsburgh": {
+              "min_cost": 80.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 6,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 88.0,
+            "bottleneck_city_meal": "Detroit",
+            "bottleneck_city_hotel": "Alpena",
+            "bottleneck_edge": "Pittsburgh->Alpena"
+          },
+          "min_bundle_cost": 1303.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 6,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 88.0,
+          "bottleneck_city_meal": "Detroit",
+          "bottleneck_city_hotel": "Alpena",
+          "bottleneck_edge": "Pittsburgh->Alpena"
+        },
+        "budget_context": {
+          "remaining": 335.0,
+          "slot_cap": 245.361328125,
+          "reserve": 202.66124999999997,
+          "min_cost_nonbudget": 69.0
+        },
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_city": "Detroit",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 2,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 335.0,
+          "slot_cap": 245.361328125,
+          "reserve": 202.66124999999997,
+          "min_cost_nonbudget": 69.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1500,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "children under 10",
+            "cuisine": [
+              "American",
+              "Italian",
+              "Indian",
+              "Mediterranean"
+            ],
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Detroit",
+        "Alpena"
+      ],
+      "reason": "prefer avoiding dead_end_city for hotel/stay failures if feasible",
+      "raw": "{\n  \"candidate_id\": 2,\n  \"reason\": \"prefer avoiding dead_end_city for hotel/stay failures if feasible\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"hotel\", \"AVOID_CITY\", 360, true],\n      [\"stay\", \"BLOCK_EDGE\", 720, false]\n    ],\n    \"soft_penalties\": [\n      [\"hotel\", \"cost_ratio\", -0.1],\n      [\"stay\", \"budget_risk\", 0.05]\n    ],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "prefer avoiding dead_end_city for hotel/stay failures if feasible",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "hotel",
+              "AVOID_CITY",
+              360,
+              true
+            ],
+            [
+              "stay",
+              "BLOCK_EDGE",
+              720,
+              false
+            ]
+          ],
+          "soft_penalties": [
+            [
+              "hotel",
+              "cost_ratio",
+              -0.1
+            ],
+            [
+              "stay",
+              "budget_risk",
+              0.05
+            ]
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "hotel",
+            "AVOID_CITY",
+            360,
+            true
+          ],
+          [
+            "stay",
+            "BLOCK_EDGE",
+            720,
+            false
+          ]
+        ],
+        "soft_penalties": [
+          [
+            "hotel",
+            "cost_ratio",
+            -0.1
+          ],
+          [
+            "stay",
+            "budget_risk",
+            0.05
+          ]
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "0bb6c4b5765d",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Alpena|None|None->None",
+      "bundle_fp": "6f2379f20da6"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "0bb6c4b5765d",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Kalamazoo|None|None->None",
+        "bundle_fp": "12cb1b4478b2"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "daily",
+          "rule": "AVOID_CITY",
+          "ttl": 10,
+          "city": "Kalamazoo"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": -20.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Detroit",
+        "Kalamazoo"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "0bb6c4b5765d",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:lunch|seg:None|Detroit|None|None->None",
+        "bundle_fp": "3c3226fcae71"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "0bb6c4b5765d",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:lunch|seg:None|Detroit|None|None->None",
+        "bundle_fp": "3c3226fcae71"
+      },
+      "confidence": 0.5,
+      "hard_exclusions": [
+        {
+          "phase": "daily",
+          "rule": "AVOID_CITY",
+          "ttl": 10,
+          "city": "Detroit"
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Alpena",
+        "Detroit"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "0bb6c4b5765d",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Detroit|None|None->None",
+        "bundle_fp": "e6ccbfc6be2f"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "0bb6c4b5765d",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Detroit|None|None->None",
+        "bundle_fp": "e6ccbfc6be2f"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Detroit",
+        "Alpena"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "0bb6c4b5765d",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Alpena|None|None->None",
+        "bundle_fp": "6f2379f20da6"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 9.181429705116898
+}

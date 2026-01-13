@@ -1,0 +1,285 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 3339.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you create a 3-day travel plan for a group of 7, leaving from St. Petersburg and heading to Appleton from March 19th to March 21st, 2022? We have a budget of $13,200 and we require accommodations to be pet-friendly as we will be traveling with our pets.",
+  "parsed": {
+    "org": "St. Petersburg",
+    "dest": "Appleton",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-19",
+      "2022-03-20",
+      "2022-03-21"
+    ],
+    "people_number": 7,
+    "local_constraint": {
+      "house rule": "pets",
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 13200,
+    "origin": "St. Petersburg",
+    "destination": "Appleton",
+    "duration_days": 3,
+    "start_date": "2022-03-19",
+    "preferences": [
+      "pets"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Appleton"
+    ],
+    "transportation_dates": [
+      "2022-03-19",
+      "2022-03-21"
+    ],
+    "transportation_methods": [
+      "Flight F1344851, from St. Petersburg to Appleton, Departure Time: 12:10, Arrival Time: 14:31, cost: 243.0",
+      "Flight F0377983, from Appleton to St. Petersburg, Departure Time: 18:26, Arrival Time: 22:04, cost: 234.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Appleton"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from St. Petersburg to Appleton",
+      "transportation": "Flight Number: F1344851, from St. Petersburg to Appleton, Departure Time: 12:10, Arrival Time: 14:31",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Appleton",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Appleton to St. Petersburg",
+      "transportation": "Flight Number: F0377983, from Appleton to St. Petersburg, Departure Time: 18:26, Arrival Time: 22:04",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Appleton|None|None->None",
+      "counts": {
+        "kb": 3,
+        "after_nonbudget": 0,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 9861.0,
+        "slot_cap": 3697.875,
+        "reserve": 819.0
+      },
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Appleton|None|None->None",
+        "city": "Appleton",
+        "city_bundle": [
+          "Appleton"
+        ],
+        "reason": "scarcity",
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 0,
+          "after_budget": 0,
+          "budget_removed": 0,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": "min_nights",
+        "budget_context": {
+          "remaining": 9861.0,
+          "slot_cap": 3697.875,
+          "reserve": 819.0,
+          "min_cost_nonbudget": null
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "6ff85c7b904c",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Appleton|None|None->None",
+      "bundle_fp": "5b5786c6c1fb"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [
+      {
+        "phase": "stay",
+        "rule": "AVOID_CITY",
+        "city": "Appleton",
+        "ttl": 1
+      }
+    ],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "6ff85c7b904c",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Appleton|None|None->None",
+        "bundle_fp": "5b5786c6c1fb"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Appleton",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "6ff85c7b904c",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Appleton|None|None->None",
+        "bundle_fp": "5b5786c6c1fb"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Appleton",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "6ff85c7b904c",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Appleton|None|None->None",
+        "bundle_fp": "5b5786c6c1fb"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Appleton",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.13578095473349094
+}

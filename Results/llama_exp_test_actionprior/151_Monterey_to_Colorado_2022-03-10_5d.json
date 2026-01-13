@@ -1,0 +1,1059 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1871.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you assist in creating a travel itinerary for a 5-day solo trip, commencing from Monterey and including two cities in Colorado from March 10th to March 14th, 2022? The estimated budget for this journey is $3,000.",
+  "parsed": {
+    "org": "Monterey",
+    "dest": "Colorado",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-10",
+      "2022-03-11",
+      "2022-03-12",
+      "2022-03-13",
+      "2022-03-14"
+    ],
+    "people_number": 1,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 3000,
+    "origin": "Monterey",
+    "destination": "Colorado",
+    "duration_days": 5,
+    "start_date": "2022-03-10",
+    "preferences": [],
+    "candidate_cities": [
+      "Alamosa",
+      "Grand Junction",
+      "Durango",
+      "Colorado Springs",
+      "Gunnison",
+      "Denver"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Monterey->Durango 1629km cost 1629",
+    "move:seg1:flight:F2366179 Durango->Denver $50 18:44-19:50",
+    "move:seg2:flight:F1157970 Denver->Monterey $192 20:46-22:36"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Durango",
+      "Denver"
+    ],
+    "transportation_dates": [
+      "2022-03-10",
+      "2022-03-12",
+      "2022-03-14"
+    ],
+    "transportation_methods": [
+      "taxi, from Monterey to Durango, cost: 1629.0",
+      "Flight F2366179, from Durango to Denver, Departure Time: 18:44, Arrival Time: 19:50, cost: 50.0",
+      "Flight F1157970, from Denver to Monterey, Departure Time: 20:46, Arrival Time: 22:36, cost: 192.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Durango",
+      "missing, Denver"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Monterey to Durango",
+      "transportation": "Taxi, from Monterey to Durango, Cost: 1629",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Durango",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Durango to Denver",
+      "transportation": "Flight Number: F2366179, from Durango to Denver, Departure Time: 18:44, Arrival Time: 19:50",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Denver",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Denver to Monterey",
+      "transportation": "Flight Number: F1157970, from Denver to Monterey, Departure Time: 20:46, Arrival Time: 22:36",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-10|Denver->Monterey",
+      "counts": {
+        "kb": 263,
+        "after_nonbudget": 263,
+        "after_budget": 32,
+        "returned": 5,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 230,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1321.0,
+        "slot_cap": 486.68421052631567,
+        "reserve": 1094.0
+      },
+      "segment_role": "return",
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+      "counts": {
+        "kb": 12,
+        "after_nonbudget": 5,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 5,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1124.0,
+        "slot_cap": 411.62109375,
+        "reserve": 585.8752499999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 810.9,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 689.2649999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 585.8752499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+        "city": "Durango",
+        "city_bundle": [
+          "Durango",
+          "Denver"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 12,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1124.0,
+          "slot_cap": 411.62109375,
+          "reserve": 585.8752499999999,
+          "min_cost_nonbudget": 663.0
+        }
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+      "counts": {
+        "kb": 12,
+        "after_nonbudget": 5,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 5,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1129.0,
+        "slot_cap": 413.4521484375,
+        "reserve": 585.8752499999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 810.9,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 689.2649999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 585.8752499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+        "city": "Durango",
+        "city_bundle": [
+          "Durango",
+          "Denver"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 12,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1129.0,
+          "slot_cap": 413.4521484375,
+          "reserve": 585.8752499999999,
+          "min_cost_nonbudget": 663.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Denver",
+          "Durango"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1627.0,
+          "bundle_lb_cost": 2960.0,
+          "stay_lb_cost": 920.0,
+          "meal_lb_cost": 171.0,
+          "transport_lb_cost": 1869.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "monterey",
+              "denver"
+            ],
+            [
+              "denver",
+              "durango"
+            ],
+            [
+              "durango",
+              "monterey"
+            ]
+          ],
+          "bundle_key": [
+            "denver",
+            "durango"
+          ],
+          "bundle_key_set": [
+            "denver",
+            "durango"
+          ],
+          "bundle_key_seq": [
+            "denver",
+            "durango"
+          ],
+          "city_features": {
+            "Denver": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 390.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 22,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 16,
+              "hotel_slack": 1
+            },
+            "Durango": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 70.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Monterey->Denver": {
+              "min_cost": 192.0,
+              "blocked": false
+            },
+            "Denver->Durango": {
+              "min_cost": 50.0,
+              "blocked": false
+            },
+            "Durango->Monterey": {
+              "min_cost": 1627.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 16,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 390.0,
+            "bottleneck_city_meal": "Denver",
+            "bottleneck_city_hotel": "Denver",
+            "bottleneck_edge": "Durango->Monterey"
+          },
+          "min_bundle_cost": 2789.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 16,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 390.0,
+          "bottleneck_city_meal": "Denver",
+          "bottleneck_city_hotel": "Denver",
+          "bottleneck_edge": "Durango->Monterey"
+        },
+        "budget_context": {
+          "remaining": 303.0,
+          "slot_cap": 221.923828125,
+          "reserve": 105.01537499999999,
+          "min_cost_nonbudget": 663.0
+        },
+        "counts": {
+          "kb": 12,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_city": "Durango",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 12,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 303.0,
+          "slot_cap": 221.923828125,
+          "reserve": 105.01537499999999,
+          "min_cost_nonbudget": 663.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 5,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Durango",
+        "Denver"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\"}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT"
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT"
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Durango",
+          "Denver"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 192.0,
+          "bundle_lb_cost": 2965.0,
+          "stay_lb_cost": 920.0,
+          "meal_lb_cost": 174.0,
+          "transport_lb_cost": 1871.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "monterey",
+              "durango"
+            ],
+            [
+              "durango",
+              "denver"
+            ],
+            [
+              "denver",
+              "monterey"
+            ]
+          ],
+          "bundle_key": [
+            "denver",
+            "durango"
+          ],
+          "bundle_key_set": [
+            "denver",
+            "durango"
+          ],
+          "bundle_key_seq": [
+            "durango",
+            "denver"
+          ],
+          "city_features": {
+            "Durango": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 70.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 24,
+              "hotel_slack": 1
+            },
+            "Denver": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 390.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 22,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 13,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Monterey->Durango": {
+              "min_cost": 1629.0,
+              "blocked": false
+            },
+            "Durango->Denver": {
+              "min_cost": 50.0,
+              "blocked": false
+            },
+            "Denver->Monterey": {
+              "min_cost": 192.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 13,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 390.0,
+            "bottleneck_city_meal": "Denver",
+            "bottleneck_city_hotel": "Denver",
+            "bottleneck_edge": "Monterey->Durango"
+          },
+          "min_bundle_cost": 2791.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 13,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 390.0,
+          "bottleneck_city_meal": "Denver",
+          "bottleneck_city_hotel": "Denver",
+          "bottleneck_edge": "Monterey->Durango"
+        },
+        "budget_context": {
+          "remaining": 1129.0,
+          "slot_cap": 413.4521484375,
+          "reserve": 585.8752499999999,
+          "min_cost_nonbudget": 663.0
+        },
+        "counts": {
+          "kb": 12,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_city": "Durango",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 12,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1129.0,
+          "slot_cap": 413.4521484375,
+          "reserve": 585.8752499999999,
+          "min_cost_nonbudget": 663.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 5,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Denver",
+        "Durango"
+      ],
+      "reason": "no reason given",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"no reason given\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "no reason given",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Denver",
+          "Durango"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1627.0,
+          "bundle_lb_cost": 2960.0,
+          "stay_lb_cost": 920.0,
+          "meal_lb_cost": 171.0,
+          "transport_lb_cost": 1869.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "monterey",
+              "denver"
+            ],
+            [
+              "denver",
+              "durango"
+            ],
+            [
+              "durango",
+              "monterey"
+            ]
+          ],
+          "bundle_key": [
+            "denver",
+            "durango"
+          ],
+          "bundle_key_set": [
+            "denver",
+            "durango"
+          ],
+          "bundle_key_seq": [
+            "denver",
+            "durango"
+          ],
+          "city_features": {
+            "Denver": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 390.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 22,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 16,
+              "hotel_slack": 1
+            },
+            "Durango": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 70.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Monterey->Denver": {
+              "min_cost": 192.0,
+              "blocked": false
+            },
+            "Denver->Durango": {
+              "min_cost": 50.0,
+              "blocked": false
+            },
+            "Durango->Monterey": {
+              "min_cost": 1627.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 16,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 390.0,
+            "bottleneck_city_meal": "Denver",
+            "bottleneck_city_hotel": "Denver",
+            "bottleneck_edge": "Durango->Monterey"
+          },
+          "min_bundle_cost": 2789.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 16,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 390.0,
+          "bottleneck_city_meal": "Denver",
+          "bottleneck_city_hotel": "Denver",
+          "bottleneck_edge": "Durango->Monterey"
+        },
+        "budget_context": {
+          "remaining": 303.0,
+          "slot_cap": 221.923828125,
+          "reserve": 105.01537499999999,
+          "min_cost_nonbudget": 663.0
+        },
+        "counts": {
+          "kb": 12,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_city": "Durango",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 12,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 303.0,
+          "slot_cap": 221.923828125,
+          "reserve": 105.01537499999999,
+          "min_cost_nonbudget": 663.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 5,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Durango",
+        "Denver"
+      ],
+      "reason": "hard gate",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"hard gate\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 12, \"city\": \"Durango\"}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "hard gate",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 12,
+              "city": "Durango"
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 12,
+            "city": "Durango"
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "528f0fb24f04",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+      "bundle_fp": "6ce53e8ca1fe"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "528f0fb24f04",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+        "bundle_fp": "657dbea6c802"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Durango",
+        "Denver"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "528f0fb24f04",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+        "bundle_fp": "6ce53e8ca1fe"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "528f0fb24f04",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+        "bundle_fp": "6ce53e8ca1fe"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Denver",
+        "Durango"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "528f0fb24f04",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+        "bundle_fp": "657dbea6c802"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "528f0fb24f04",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+        "bundle_fp": "657dbea6c802"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 12,
+          "city": "Durango"
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Durango",
+        "Denver"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "528f0fb24f04",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Durango|None|None->None",
+        "bundle_fp": "6ce53e8ca1fe"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 4.523450592998415
+}

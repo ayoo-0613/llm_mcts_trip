@@ -1,0 +1,1089 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 10676.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you help me with a 5-day travel itinerary for a group of 7, departing from New York and heading to California with an intention to explore 2 cities from March 11th to March 15th, 2022? Our budget is $21,600. We have children under 10 so accommodations should be suitable for them. We are keen to have entire rooms and would prefer other transport options as we are not planning for self-driving.",
+  "parsed": {
+    "org": "New York",
+    "dest": "California",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-11",
+      "2022-03-12",
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15"
+    ],
+    "people_number": 7,
+    "local_constraint": {
+      "house rule": "children under 10",
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": "no self-driving"
+    },
+    "budget": 21600,
+    "origin": "New York",
+    "destination": "California",
+    "duration_days": 5,
+    "start_date": "2022-03-11",
+    "preferences": [
+      "children under 10",
+      "entire room"
+    ],
+    "transport_forbid": [
+      "self-driving"
+    ],
+    "candidate_cities": [
+      "San Diego",
+      "Redding",
+      "Sacramento",
+      "Fresno",
+      "San Luis Obispo",
+      "Oakland",
+      "Santa Barbara",
+      "Stockton",
+      "Santa Rosa",
+      "Bakersfield",
+      "Santa Ana",
+      "Santa Maria",
+      "San Jose",
+      "Burbank",
+      "Arcata",
+      "Butte",
+      "Palm Springs",
+      "Los Angeles",
+      "Long Beach",
+      "San Francisco"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:New York->Redding 4633km cost 4633",
+    "move:seg1:taxi:Redding->Bakersfield 705km cost 705"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Redding",
+      "Bakersfield"
+    ],
+    "transportation_dates": [
+      "2022-03-11",
+      "2022-03-13",
+      "2022-03-15"
+    ],
+    "transportation_methods": [
+      "taxi, from New York to Redding, cost: 4633.0",
+      "taxi, from Redding to Bakersfield, cost: 705.0",
+      "Bakersfield->New York missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Redding",
+      "missing, Bakersfield"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from New York to Redding",
+      "transportation": "Taxi, from New York to Redding, Cost: 4633",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Redding",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Redding to Bakersfield",
+      "transportation": "Taxi, from Redding to Bakersfield, Cost: 705",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Bakersfield",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Bakersfield",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:1|None|2022-03-11|Redding->Bakersfield",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 12334.0,
+        "slot_cap": 324.578947368421,
+        "reserve": 5230.0
+      },
+      "segment_role": "intercity",
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-11|Bakersfield->New York",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 10924.0,
+        "slot_cap": 1122.944078947368,
+        "reserve": 3211.8737499999997
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 4445.5,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 3778.6749999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 3211.8737499999997,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-11|Bakersfield->New York",
+        "city": "New York",
+        "city_bundle": [
+          "Redding",
+          "Bakersfield"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 10924.0,
+          "slot_cap": 1122.944078947368,
+          "reserve": 3211.8737499999997,
+          "min_cost_nonbudget": 1290.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Long Beach",
+          "Bakersfield"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 9030.0,
+          "bundle_lb_cost": 23340.0,
+          "stay_lb_cost": 3808.0,
+          "meal_lb_cost": 1092.0,
+          "transport_lb_cost": 18440.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "new york",
+              "long beach"
+            ],
+            [
+              "long beach",
+              "bakersfield"
+            ],
+            [
+              "bakersfield",
+              "new york"
+            ]
+          ],
+          "bundle_key": [
+            "bakersfield",
+            "long beach"
+          ],
+          "bundle_key_set": [
+            "bakersfield",
+            "long beach"
+          ],
+          "bundle_key_seq": [
+            "long beach",
+            "bakersfield"
+          ],
+          "city_features": {
+            "Long Beach": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 847.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 33,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 27,
+              "hotel_slack": 1
+            },
+            "Bakersfield": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1057.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "New York->Long Beach": {
+              "min_cost": 8976.0,
+              "blocked": false
+            },
+            "Long Beach->Bakersfield": {
+              "min_cost": 434.0,
+              "blocked": false
+            },
+            "Bakersfield->New York": {
+              "min_cost": 9030.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 21,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1057.0,
+            "bottleneck_city_meal": "Bakersfield",
+            "bottleneck_city_hotel": "Bakersfield",
+            "bottleneck_edge": "Bakersfield->New York"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 21,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1057.0,
+          "bottleneck_city_meal": "Bakersfield",
+          "bottleneck_city_hotel": "Bakersfield",
+          "bottleneck_edge": "Bakersfield->New York"
+        },
+        "budget_context": {
+          "remaining": 3160.0,
+          "slot_cap": 1157.2265625,
+          "reserve": 1968.8847499999997,
+          "min_cost_nonbudget": 1023.0
+        },
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_city": "Long Beach",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 2,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 3160.0,
+          "slot_cap": 1157.2265625,
+          "reserve": 1968.8847499999997,
+          "min_cost_nonbudget": 1023.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 21600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "children under 10",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": "no self-driving"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Redding",
+        "Bakersfield"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs prefer candidate with least risk",
+      "raw": "```json\n{\n  \"candidate_id\": 2,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs prefer candidate with least risk\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"hotel\", \"AVOID_CITY\", 10, \"Long Beach\"],\n      [\"segment\", \"BLOCK_EDGE\", 5, \"Bakersfield->New York\"]\n    ],\n    \"soft_penalties\": [\n      [\"hotel\", \"cost_ratio\", -0.1],\n      [\"segment\", \"edge_cost\", -500]\n    ],\n    \"retrieval_patches\": []\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs prefer candidate with least risk",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "hotel",
+              "AVOID_CITY",
+              10,
+              "Long Beach"
+            ],
+            [
+              "segment",
+              "BLOCK_EDGE",
+              5,
+              "Bakersfield->New York"
+            ]
+          ],
+          "soft_penalties": [
+            [
+              "hotel",
+              "cost_ratio",
+              -0.1
+            ],
+            [
+              "segment",
+              "edge_cost",
+              -500
+            ]
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "hotel",
+            "AVOID_CITY",
+            10,
+            "Long Beach"
+          ],
+          [
+            "segment",
+            "BLOCK_EDGE",
+            5,
+            "Bakersfield->New York"
+          ]
+        ],
+        "soft_penalties": [
+          [
+            "hotel",
+            "cost_ratio",
+            -0.1
+          ],
+          [
+            "segment",
+            "edge_cost",
+            -500
+          ]
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Redding",
+          "Bakersfield"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 9030.0,
+          "bundle_lb_cost": 24936.0,
+          "stay_lb_cost": 4180.0,
+          "meal_lb_cost": 1050.0,
+          "transport_lb_cost": 19706.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "new york",
+              "redding"
+            ],
+            [
+              "redding",
+              "bakersfield"
+            ],
+            [
+              "bakersfield",
+              "new york"
+            ]
+          ],
+          "bundle_key": [
+            "bakersfield",
+            "redding"
+          ],
+          "bundle_key_set": [
+            "bakersfield",
+            "redding"
+          ],
+          "bundle_key_seq": [
+            "redding",
+            "bakersfield"
+          ],
+          "city_features": {
+            "Redding": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1033.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 36,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 30,
+              "hotel_slack": 0
+            },
+            "Bakersfield": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1057.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "New York->Redding": {
+              "min_cost": 9266.0,
+              "blocked": false
+            },
+            "Redding->Bakersfield": {
+              "min_cost": 1410.0,
+              "blocked": false
+            },
+            "Bakersfield->New York": {
+              "min_cost": 9030.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 21,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1057.0,
+            "bottleneck_city_meal": "Bakersfield",
+            "bottleneck_city_hotel": "Bakersfield",
+            "bottleneck_edge": "New York->Redding"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 21,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1057.0,
+          "bottleneck_city_meal": "Bakersfield",
+          "bottleneck_city_hotel": "Bakersfield",
+          "bottleneck_edge": "New York->Redding"
+        },
+        "budget_context": {
+          "remaining": 10924.0,
+          "slot_cap": 1122.944078947368,
+          "reserve": 3211.8737499999997,
+          "min_cost_nonbudget": 1290.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "New York",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 10924.0,
+          "slot_cap": 1122.944078947368,
+          "reserve": 3211.8737499999997,
+          "min_cost_nonbudget": 1290.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 21600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "children under 10",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": "no self-driving"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Long Beach",
+        "Bakersfield"
+      ],
+      "reason": null,
+      "raw": "This is a JSON output from a machine learning model or an optimization algorithm. It contains a list of candidate solutions (represented by objects with keys `candidate_id`, `reason`, `confidence`, and `gradient`) for a given problem.\n\nHere's a breakdown of the fields:\n\n* **Candidate ID**: A unique identifier for each candidate solution.\n* **Reason**: A short string explaining why this candidate was selected.\n* **Confidence**: A float value between 0 and 1 indicating how confident the model is in its recommendation.\n* **Gradient**: An object containing three lists:\n\t+ **Hard Exclusions**: A list of tuples, where each tuple contains information about a hard exclusion (e.g., a rule that cannot be satisfied).\n\t+ **Soft Penalties**: A list of tuples, where each tuple contains information about a soft penalty (e.g., a feature that has a negative impact on the solution).\n\t+ **Retrieval Patches**: A list of tuples, where each tuple contains information about a patch to be applied to the retrieval process.\n\nThe output schema is also provided as an object with field names and data types. This schema defines the structure of the output data.\n\nTo extract insights from this output, you would need to:\n\n1. Inspect the candidate solutions and their corresponding reasons, confidence values, and gradients.\n2. Analyze the hard exclusions, soft penalties, and retrieval patches to understand the constraints and trade-offs involved in each solution.\n3. Evaluate the model's performance using metrics such as accuracy, precision, recall, or F1-score.\n\nWithout more context about the problem being solved, it's difficult to provide specific insights or recommendations. If you have any further questions or need help with a particular aspect of this output, feel free to ask!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Long Beach",
+          "Bakersfield"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 9030.0,
+          "bundle_lb_cost": 23340.0,
+          "stay_lb_cost": 3808.0,
+          "meal_lb_cost": 1092.0,
+          "transport_lb_cost": 18440.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "new york",
+              "long beach"
+            ],
+            [
+              "long beach",
+              "bakersfield"
+            ],
+            [
+              "bakersfield",
+              "new york"
+            ]
+          ],
+          "bundle_key": [
+            "bakersfield",
+            "long beach"
+          ],
+          "bundle_key_set": [
+            "bakersfield",
+            "long beach"
+          ],
+          "bundle_key_seq": [
+            "long beach",
+            "bakersfield"
+          ],
+          "city_features": {
+            "Long Beach": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 847.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 33,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 27,
+              "hotel_slack": 1
+            },
+            "Bakersfield": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1057.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "New York->Long Beach": {
+              "min_cost": 8976.0,
+              "blocked": false
+            },
+            "Long Beach->Bakersfield": {
+              "min_cost": 434.0,
+              "blocked": false
+            },
+            "Bakersfield->New York": {
+              "min_cost": 9030.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 21,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1057.0,
+            "bottleneck_city_meal": "Bakersfield",
+            "bottleneck_city_hotel": "Bakersfield",
+            "bottleneck_edge": "Bakersfield->New York"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 21,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1057.0,
+          "bottleneck_city_meal": "Bakersfield",
+          "bottleneck_city_hotel": "Bakersfield",
+          "bottleneck_edge": "Bakersfield->New York"
+        },
+        "budget_context": {
+          "remaining": 3160.0,
+          "slot_cap": 1157.2265625,
+          "reserve": 1968.8847499999997,
+          "min_cost_nonbudget": 1023.0
+        },
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_city": "Long Beach",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 2,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 3160.0,
+          "slot_cap": 1157.2265625,
+          "reserve": 1968.8847499999997,
+          "min_cost_nonbudget": 1023.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 21600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "children under 10",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": "no self-driving"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Redding",
+        "Bakersfield"
+      ],
+      "reason": "hotel/stay failure avoidance",
+      "raw": "{\n  \"candidate_id\": 2,\n  \"reason\": \"hotel/stay failure avoidance\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 10, \"city\": \"Long Beach\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"segment\", \"feature\": \"edge_cost\", \"delta\": -1.0}\n    ],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "hotel/stay failure avoidance",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 10,
+              "city": "Long Beach"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "edge_cost",
+              "delta": -1.0
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 10,
+            "city": "Long Beach"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "edge_cost",
+            "delta": -1.0
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "6d172512a1ae",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-11|Bakersfield->New York",
+      "bundle_fp": "afc5853b19ef"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "6d172512a1ae",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Long Beach|None|None->None",
+        "bundle_fp": "401ab9f3c657"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Redding",
+        "Bakersfield"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "6d172512a1ae",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-11|Bakersfield->New York",
+        "bundle_fp": "afc5853b19ef"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "6d172512a1ae",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-11|Bakersfield->New York",
+        "bundle_fp": "afc5853b19ef"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Long Beach",
+        "Bakersfield"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "6d172512a1ae",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Long Beach|None|None->None",
+        "bundle_fp": "401ab9f3c657"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "6d172512a1ae",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Long Beach|None|None->None",
+        "bundle_fp": "401ab9f3c657"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 10,
+          "city": "Long Beach"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "edge_cost",
+          "delta": -1.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Redding",
+        "Bakersfield"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "6d172512a1ae",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-11|Bakersfield->New York",
+        "bundle_fp": "afc5853b19ef"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 10.279466166161
+}

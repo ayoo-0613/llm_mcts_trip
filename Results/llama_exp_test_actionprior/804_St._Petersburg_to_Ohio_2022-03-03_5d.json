@@ -1,0 +1,1101 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1018.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "I need help creating a travel itinerary for a 5-day trip. We are a party of 2 and we will be departing from St. Petersburg to visit 2 cities in Ohio, from March 3rd to March 7th, 2022. We have reset our budget to $3,300 for this trip. Regarding accommodations, we require private rooms in establishments that are friendly towards children under 10. When it comes to food, we are looking to experience a variety of cuisines such as Mediterranean, Indian, Chinese, and Italian.",
+  "parsed": {
+    "org": "St. Petersburg",
+    "dest": "Ohio",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-03",
+      "2022-03-04",
+      "2022-03-05",
+      "2022-03-06",
+      "2022-03-07"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "children under 10",
+      "cuisine": [
+        "Mediterranean",
+        "Indian",
+        "Chinese",
+        "Italian"
+      ],
+      "room type": "private room",
+      "transportation": null
+    },
+    "budget": 3300,
+    "origin": "St. Petersburg",
+    "destination": "Ohio",
+    "duration_days": 5,
+    "start_date": "2022-03-03",
+    "preferences": [
+      "Mediterranean",
+      "Indian",
+      "Chinese",
+      "Italian",
+      "children under 10",
+      "private room"
+    ],
+    "candidate_cities": [
+      "Toledo",
+      "Cleveland",
+      "Dayton",
+      "Columbus",
+      "Akron",
+      "Cincinnati"
+    ]
+  },
+  "actions": [
+    "move:seg0:flight:F1342087 St. Petersburg->Cincinnati $155 18:08-20:12",
+    "move:seg1:taxi:Cincinnati->Toledo 326km cost 326",
+    "move:seg2:flight:F1346308 Toledo->St. Petersburg $191 16:01-18:20"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Cincinnati",
+      "Toledo"
+    ],
+    "transportation_dates": [
+      "2022-03-03",
+      "2022-03-05",
+      "2022-03-07"
+    ],
+    "transportation_methods": [
+      "Flight F1342087, from St. Petersburg to Cincinnati, Departure Time: 18:08, Arrival Time: 20:12, cost: 155.0",
+      "taxi, from Cincinnati to Toledo, cost: 326.0",
+      "Flight F1346308, from Toledo to St. Petersburg, Departure Time: 16:01, Arrival Time: 18:20, cost: 191.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Cincinnati",
+      "missing, Toledo"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from St. Petersburg to Cincinnati",
+      "transportation": "Flight Number: F1342087, from St. Petersburg to Cincinnati, Departure Time: 18:08, Arrival Time: 20:12",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Cincinnati",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Cincinnati to Toledo",
+      "transportation": "Taxi, from Cincinnati to Toledo, Cost: 326",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Toledo",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Toledo to St. Petersburg",
+      "transportation": "Flight Number: F1346308, from Toledo to St. Petersburg, Departure Time: 16:01, Arrival Time: 18:20",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-03|Toledo->St. Petersburg",
+      "counts": {
+        "kb": 71,
+        "after_nonbudget": 71,
+        "after_budget": 71,
+        "returned": 5,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 2664.0,
+        "slot_cap": 490.73684210526307,
+        "reserve": 1080.0
+      },
+      "segment_role": "return",
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+      "counts": {
+        "kb": 4,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 2282.0,
+        "slot_cap": 835.693359375,
+        "reserve": 529.3757499999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 732.6999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 622.795,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 529.3757499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+        "city": "Cincinnati",
+        "city_bundle": [
+          "Cincinnati",
+          "Toledo"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 4,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 2282.0,
+          "slot_cap": 835.693359375,
+          "reserve": 529.3757499999999,
+          "min_cost_nonbudget": 1172.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Toledo",
+          "Cincinnati"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 318.0,
+          "bundle_lb_cost": 2190.0,
+          "stay_lb_cost": 666.0,
+          "meal_lb_cost": 492.0,
+          "transport_lb_cost": 1032.0,
+          "hotel_min_nights_min": 2,
+          "edges": [
+            [
+              "st. petersburg",
+              "toledo"
+            ],
+            [
+              "toledo",
+              "cincinnati"
+            ],
+            [
+              "cincinnati",
+              "st. petersburg"
+            ]
+          ],
+          "bundle_key": [
+            "cincinnati",
+            "toledo"
+          ],
+          "bundle_key_set": [
+            "cincinnati",
+            "toledo"
+          ],
+          "bundle_key_seq": [
+            "toledo",
+            "cincinnati"
+          ],
+          "city_features": {
+            "Toledo": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 224.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 17,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 11,
+              "hotel_slack": 0
+            },
+            "Cincinnati": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 109.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 11,
+              "min_meal_cost": 20.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 2,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "St. Petersburg->Toledo": {
+              "min_cost": 388.0,
+              "blocked": false
+            },
+            "Toledo->Cincinnati": {
+              "min_cost": 326.0,
+              "blocked": false
+            },
+            "Cincinnati->St. Petersburg": {
+              "min_cost": 318.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 2,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 224.0,
+            "bottleneck_city_meal": "Cincinnati",
+            "bottleneck_city_hotel": "Toledo",
+            "bottleneck_edge": "St. Petersburg->Toledo"
+          },
+          "min_bundle_cost": 1698.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 2,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 224.0,
+          "bottleneck_city_meal": "Cincinnati",
+          "bottleneck_city_hotel": "Toledo",
+          "bottleneck_edge": "St. Petersburg->Toledo"
+        },
+        "budget_context": {
+          "remaining": 1820.0,
+          "slot_cap": 1333.0078125,
+          "reserve": 280.04099999999994,
+          "min_cost_nonbudget": 1172.0
+        },
+        "counts": {
+          "kb": 4,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_city": "Cincinnati",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 4,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1820.0,
+          "slot_cap": 1333.0078125,
+          "reserve": 280.04099999999994,
+          "min_cost_nonbudget": 1172.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3300,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "children under 10",
+            "cuisine": [
+              "Mediterranean",
+              "Indian",
+              "Chinese",
+              "Italian"
+            ],
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Cincinnati",
+        "Toledo"
+      ],
+      "reason": "No reason",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"No reason\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 10, \"city\": \"Cincinnati\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"segment/flight\", \"feature\": \"budget_risk\", \"delta\": 0.5}\n    ],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "No reason",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 10,
+              "city": "Cincinnati"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment/flight",
+              "feature": "budget_risk",
+              "delta": 0.5
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 10,
+            "city": "Cincinnati"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment/flight",
+            "feature": "budget_risk",
+            "delta": 0.5
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Cincinnati",
+          "Toledo"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 382.0,
+          "bundle_lb_cost": 2122.0,
+          "stay_lb_cost": 666.0,
+          "meal_lb_cost": 438.0,
+          "transport_lb_cost": 1018.0,
+          "hotel_min_nights_min": 2,
+          "edges": [
+            [
+              "st. petersburg",
+              "cincinnati"
+            ],
+            [
+              "cincinnati",
+              "toledo"
+            ],
+            [
+              "toledo",
+              "st. petersburg"
+            ]
+          ],
+          "bundle_key": [
+            "cincinnati",
+            "toledo"
+          ],
+          "bundle_key_set": [
+            "cincinnati",
+            "toledo"
+          ],
+          "bundle_key_seq": [
+            "cincinnati",
+            "toledo"
+          ],
+          "city_features": {
+            "Cincinnati": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 109.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 11,
+              "min_meal_cost": 20.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 5,
+              "hotel_slack": 0
+            },
+            "Toledo": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 224.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 17,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 8,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "St. Petersburg->Cincinnati": {
+              "min_cost": 310.0,
+              "blocked": false
+            },
+            "Cincinnati->Toledo": {
+              "min_cost": 326.0,
+              "blocked": false
+            },
+            "Toledo->St. Petersburg": {
+              "min_cost": 382.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 5,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 224.0,
+            "bottleneck_city_meal": "Cincinnati",
+            "bottleneck_city_hotel": "Toledo",
+            "bottleneck_edge": "Toledo->St. Petersburg"
+          },
+          "min_bundle_cost": 1684.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 5,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 224.0,
+          "bottleneck_city_meal": "Cincinnati",
+          "bottleneck_city_hotel": "Toledo",
+          "bottleneck_edge": "Toledo->St. Petersburg"
+        },
+        "budget_context": {
+          "remaining": 2282.0,
+          "slot_cap": 835.693359375,
+          "reserve": 529.3757499999999,
+          "min_cost_nonbudget": 1172.0
+        },
+        "counts": {
+          "kb": 4,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_city": "Cincinnati",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 4,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 2282.0,
+          "slot_cap": 835.693359375,
+          "reserve": 529.3757499999999,
+          "min_cost_nonbudget": 1172.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3300,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "children under 10",
+            "cuisine": [
+              "Mediterranean",
+              "Indian",
+              "Chinese",
+              "Italian"
+            ],
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Toledo",
+        "Cincinnati"
+      ],
+      "reason": "No reason",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"No reason\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [],\n    \"soft_penalties\": [\n      {\"phase\": \"hotel\", \"feature\": \"budget_risk\", \"delta\": -10},\n      {\"phase\": \"segment\", \"feature\": \"edge_cost\", \"delta\": -20}\n    ],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "No reason",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [],
+          "soft_penalties": [
+            {
+              "phase": "hotel",
+              "feature": "budget_risk",
+              "delta": -10
+            },
+            {
+              "phase": "segment",
+              "feature": "edge_cost",
+              "delta": -20
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "hotel",
+            "feature": "budget_risk",
+            "delta": -10
+          },
+          {
+            "phase": "segment",
+            "feature": "edge_cost",
+            "delta": -20
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Toledo",
+          "Cincinnati"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 318.0,
+          "bundle_lb_cost": 2190.0,
+          "stay_lb_cost": 666.0,
+          "meal_lb_cost": 492.0,
+          "transport_lb_cost": 1032.0,
+          "hotel_min_nights_min": 2,
+          "edges": [
+            [
+              "st. petersburg",
+              "toledo"
+            ],
+            [
+              "toledo",
+              "cincinnati"
+            ],
+            [
+              "cincinnati",
+              "st. petersburg"
+            ]
+          ],
+          "bundle_key": [
+            "cincinnati",
+            "toledo"
+          ],
+          "bundle_key_set": [
+            "cincinnati",
+            "toledo"
+          ],
+          "bundle_key_seq": [
+            "toledo",
+            "cincinnati"
+          ],
+          "city_features": {
+            "Toledo": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 224.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 17,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 11,
+              "hotel_slack": 0
+            },
+            "Cincinnati": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 109.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 11,
+              "min_meal_cost": 20.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 2,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "St. Petersburg->Toledo": {
+              "min_cost": 388.0,
+              "blocked": false
+            },
+            "Toledo->Cincinnati": {
+              "min_cost": 326.0,
+              "blocked": false
+            },
+            "Cincinnati->St. Petersburg": {
+              "min_cost": 318.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 2,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 224.0,
+            "bottleneck_city_meal": "Cincinnati",
+            "bottleneck_city_hotel": "Toledo",
+            "bottleneck_edge": "St. Petersburg->Toledo"
+          },
+          "min_bundle_cost": 1698.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 2,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 224.0,
+          "bottleneck_city_meal": "Cincinnati",
+          "bottleneck_city_hotel": "Toledo",
+          "bottleneck_edge": "St. Petersburg->Toledo"
+        },
+        "budget_context": {
+          "remaining": 1820.0,
+          "slot_cap": 1333.0078125,
+          "reserve": 280.04099999999994,
+          "min_cost_nonbudget": 1172.0
+        },
+        "counts": {
+          "kb": 4,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_city": "Cincinnati",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 4,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1820.0,
+          "slot_cap": 1333.0078125,
+          "reserve": 280.04099999999994,
+          "min_cost_nonbudget": 1172.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3300,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "children under 10",
+            "cuisine": [
+              "Mediterranean",
+              "Indian",
+              "Chinese",
+              "Italian"
+            ],
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Cincinnati",
+        "Toledo"
+      ],
+      "reason": "bundle_risk > bundle_lb_cost",
+      "raw": "```json\n{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk > bundle_lb_cost\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": null, \"city\": null, \"edge\": null}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"bundle\", \"feature\": \"cost_ratio\", \"delta\": 0.5},\n      {\"phase\": \"segment\", \"feature\": \"edge_cost\", \"delta\": 100.0}\n    ],\n    \"retrieval_patches\": []\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk > bundle_lb_cost",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": null,
+              "city": null,
+              "edge": null
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "bundle",
+              "feature": "cost_ratio",
+              "delta": 0.5
+            },
+            {
+              "phase": "segment",
+              "feature": "edge_cost",
+              "delta": 100.0
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": null,
+            "city": null,
+            "edge": null
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "bundle",
+            "feature": "cost_ratio",
+            "delta": 0.5
+          },
+          {
+            "phase": "segment",
+            "feature": "edge_cost",
+            "delta": 100.0
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "11dc5546af64",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+      "bundle_fp": "9d1c75494bb2"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "11dc5546af64",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+        "bundle_fp": "d07ecf424fdf"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 10,
+          "city": "Cincinnati"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment/flight",
+          "feature": "budget_risk",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Cincinnati",
+        "Toledo"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "11dc5546af64",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+        "bundle_fp": "9d1c75494bb2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "11dc5546af64",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+        "bundle_fp": "9d1c75494bb2"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "budget_risk",
+          "delta": -10.0
+        },
+        {
+          "phase": "segment",
+          "feature": "edge_cost",
+          "delta": -20.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Toledo",
+        "Cincinnati"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "11dc5546af64",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+        "bundle_fp": "d07ecf424fdf"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "11dc5546af64",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+        "bundle_fp": "d07ecf424fdf"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 1,
+          "city": null,
+          "edge": null
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "bundle",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        },
+        {
+          "phase": "segment",
+          "feature": "edge_cost",
+          "delta": 100.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Cincinnati",
+        "Toledo"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "11dc5546af64",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+        "bundle_fp": "9d1c75494bb2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 6.12999001191929
+}

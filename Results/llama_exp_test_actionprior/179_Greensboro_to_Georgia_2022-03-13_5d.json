@@ -1,0 +1,833 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1789.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you please help create a 5-day travel itinerary? I'll be departing from Greensboro and plan on visiting 2 cities in Georgia. The dates of the trip are from March 13th to March 17th, 2022, and my budget is set at $2,300.",
+  "parsed": {
+    "org": "Greensboro",
+    "dest": "Georgia",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15",
+      "2022-03-16",
+      "2022-03-17"
+    ],
+    "people_number": null,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 2300,
+    "origin": "Greensboro",
+    "destination": "Georgia",
+    "duration_days": 5,
+    "start_date": "2022-03-13",
+    "preferences": [],
+    "candidate_cities": [
+      "Augusta",
+      "Decatur",
+      "Atlanta",
+      "Valdosta",
+      "Savannah"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Greensboro->Decatur 525km cost 525",
+    "move:seg1:taxi:Decatur->Valdosta 369km cost 369",
+    "move:seg2:taxi:Valdosta->Greensboro 757km cost 757",
+    "stay:Decatur:298 Cozy Private Room Private room $69"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Decatur",
+      "Valdosta"
+    ],
+    "transportation_dates": [
+      "2022-03-13",
+      "2022-03-15",
+      "2022-03-17"
+    ],
+    "transportation_methods": [
+      "taxi, from Greensboro to Decatur, cost: 525.0",
+      "taxi, from Decatur to Valdosta, cost: 369.0",
+      "taxi, from Valdosta to Greensboro, cost: 757.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Cozy Private Room, Decatur",
+      "missing, Valdosta"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Greensboro to Decatur",
+      "transportation": "Taxi, from Greensboro to Decatur, Cost: 525",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Cozy Private Room, Decatur"
+    },
+    {
+      "days": 2,
+      "current_city": "Decatur",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Cozy Private Room, Decatur"
+    },
+    {
+      "days": 3,
+      "current_city": "from Decatur to Valdosta",
+      "transportation": "Taxi, from Decatur to Valdosta, Cost: 369",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Valdosta",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Valdosta to Greensboro",
+      "transportation": "Taxi, from Valdosta to Greensboro, Cost: 757",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Decatur|None|None->None",
+      "counts": {
+        "kb": 17,
+        "after_nonbudget": 11,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 9,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 649.0,
+        "slot_cap": 152.109375,
+        "reserve": 494.7
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 494.7,
+          "kept": 1
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Valdosta|None|None->None",
+      "counts": {
+        "kb": 16,
+        "after_nonbudget": 7,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 7,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 511.0,
+        "slot_cap": 374.267578125,
+        "reserve": 103.17299999999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 142.79999999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 121.37999999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 103.17299999999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Valdosta|None|None->None",
+        "city": "Valdosta",
+        "city_bundle": [
+          "Decatur",
+          "Valdosta"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 16,
+          "after_nonbudget": 7,
+          "after_budget": 0,
+          "budget_removed": 7,
+          "nonbudget_removed": 9,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 511.0,
+          "slot_cap": 374.267578125,
+          "reserve": 103.17299999999999,
+          "min_cost_nonbudget": 396.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "outbound"
+        ],
+        "city_bundle": [
+          "Augusta",
+          "Atlanta"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 61.0,
+          "bundle_lb_cost": 1291.0,
+          "stay_lb_cost": 598.0,
+          "meal_lb_cost": 195.0,
+          "transport_lb_cost": 498.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "greensboro",
+              "augusta"
+            ],
+            [
+              "augusta",
+              "atlanta"
+            ],
+            [
+              "atlanta",
+              "greensboro"
+            ]
+          ],
+          "bundle_key": [
+            "atlanta",
+            "augusta"
+          ],
+          "bundle_key_set": [
+            "atlanta",
+            "augusta"
+          ],
+          "bundle_key_seq": [
+            "augusta",
+            "atlanta"
+          ],
+          "city_features": {
+            "Augusta": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 155.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            },
+            "Atlanta": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 144.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 39,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 30,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Greensboro->Augusta": {
+              "min_cost": 409.0,
+              "blocked": false
+            },
+            "Augusta->Atlanta": {
+              "min_cost": 28.0,
+              "blocked": false
+            },
+            "Atlanta->Greensboro": {
+              "min_cost": 61.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 28,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 155.0,
+            "bottleneck_city_meal": "Augusta",
+            "bottleneck_city_hotel": "Augusta",
+            "bottleneck_edge": "Greensboro->Augusta"
+          },
+          "min_bundle_cost": 1096.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 28,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 155.0,
+          "bottleneck_city_meal": "Augusta",
+          "bottleneck_city_hotel": "Augusta",
+          "bottleneck_edge": "Greensboro->Augusta"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 2300,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Decatur",
+        "Atlanta"
+      ],
+      "reason": null,
+      "raw": "This output appears to be a result of an optimization or recommendation algorithm that generated multiple candidate bundles based on different combinations of cities and travel options.\n\nHere are the key components of this output:\n\n1. **Candidates**: The list of 15 candidates, each identified by a unique `id` number (e.g., `id: 11`). Each candidate represents a potential bundle of cities to visit.\n2. **Bundle details**: For each candidate, there is a corresponding `bundle_risk` object that provides additional information about the bundle's characteristics, such as:\n\t* `bottleneck_meal_slack`: The meal slack value for the bottleneck city in the bundle.\n\t* `bottleneck_attr_slack`: The attribute slack value for the bottleneck city in the bundle.\n\t* `bottleneck_hotel_price`: The hotel price for the bottleneck city in the bundle.\n\t* `bottleneck_city_meal`: The meal option for the bottleneck city in the bundle.\n\t* `bottleneck_city_hotel`: The hotel option for the bottleneck city in the bundle.\n\t* `bottleneck_edge`: The edge (travel route) connecting the cities in the bundle.\n3. **City summaries**: For each candidate, there is a corresponding `city_summary` object that provides information about each city in the bundle, such as:\n\t* `days`: The number of days to spend in each city.\n\t* `nights`: The number of nights to stay in each city.\n\t* `hotel_min_price`: The minimum hotel price for each city.\n\t* `meal_slack`: The meal slack value for each city.\n4. **Edge summaries**: For each candidate, there is a corresponding `edge_summary` object that provides information about the travel routes between cities, such as:\n\t* `min_cost`: The minimum cost of traveling between cities.\n5. **LB costs**: Each candidate has an associated set of `lb_costs` (lower bound costs) that provide a lower bound on the total cost of the bundle.\n\nThe output schema provides a description of the fields in each object, including their data types and possible values.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "outbound"
+        ],
+        "city_bundle": [
+          "Decatur",
+          "Atlanta"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 61.0,
+          "bundle_lb_cost": 1202.0,
+          "stay_lb_cost": 426.0,
+          "meal_lb_cost": 177.0,
+          "transport_lb_cost": 599.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "greensboro",
+              "decatur"
+            ],
+            [
+              "decatur",
+              "atlanta"
+            ],
+            [
+              "atlanta",
+              "greensboro"
+            ]
+          ],
+          "bundle_key": [
+            "atlanta",
+            "decatur"
+          ],
+          "bundle_key_set": [
+            "atlanta",
+            "decatur"
+          ],
+          "bundle_key_seq": [
+            "decatur",
+            "atlanta"
+          ],
+          "city_features": {
+            "Decatur": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 69.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            },
+            "Atlanta": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 144.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 39,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 30,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Greensboro->Decatur": {
+              "min_cost": 525.0,
+              "blocked": false
+            },
+            "Decatur->Atlanta": {
+              "min_cost": 13.0,
+              "blocked": false
+            },
+            "Atlanta->Greensboro": {
+              "min_cost": 61.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 28,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 144.0,
+            "bottleneck_city_meal": "Decatur",
+            "bottleneck_city_hotel": "Atlanta",
+            "bottleneck_edge": "Greensboro->Decatur"
+          },
+          "min_bundle_cost": 1025.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 28,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 144.0,
+          "bottleneck_city_meal": "Decatur",
+          "bottleneck_city_hotel": "Atlanta",
+          "bottleneck_edge": "Greensboro->Decatur"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 2300,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Savannah",
+        "Atlanta"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that appears to be the output of a machine learning model or an optimization algorithm. Here's a breakdown of the structure and content:\n\n**Object Structure**\n\nThe outermost object has two properties:\n\n1. `results`: This property contains an array of objects, each representing a candidate solution.\n2. `output_schema`: This property defines the schema of the output data.\n\n**Candidate Solutions (Results)**\n\nEach object in the `results` array represents a candidate solution and has the following properties:\n\n* `id`: A unique identifier for the candidate solution (e.g., 1, 2, 3, etc.).\n* `bundle`: An array of strings representing the cities or locations bundled together.\n* `lb_costs`: An object with four properties: `transport_lb_cost`, `stay_lb_cost`, `meal_lb_cost`, and `bundle_lb_cost`. These values appear to be cost estimates for each candidate solution.\n* `feasibility`: An object with two properties: `return_leg_exists` (a boolean indicating whether a return leg exists) and `hotel_feasible_all` (a boolean indicating whether all hotels are feasible).\n\n**Output Schema**\n\nThe `output_schema` property defines the structure of the output data. It has four properties:\n\n1. `candidate_id`: The type of the candidate ID is an integer (`int`).\n2. `reason`: The type of the reason is a short string.\n3. `confidence`: The type of the confidence is a float between 0 and 1 (`float in [0,1]`).\n4. `gradient`: An object with three properties:\n\t* `hard_exclusions`: A list of objects with four properties: phase, rule, TTL (time to live), city?, and edge?.\n\t* `soft_penalties`: A list of objects with two properties: phase and feature.\n\t* `retrieval_patches`: A list of objects with three properties: phase, patch, and TTL.\n\nThe exact meaning and interpretation of these fields depend on the context in which this JSON object was generated. If you have more information about the system or algorithm that produced this output, I may be able to provide further insights.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "outbound"
+        ],
+        "city_bundle": [
+          "Savannah",
+          "Atlanta"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 61.0,
+          "bundle_lb_cost": 1235.0,
+          "stay_lb_cost": 432.0,
+          "meal_lb_cost": 189.0,
+          "transport_lb_cost": 614.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "greensboro",
+              "savannah"
+            ],
+            [
+              "savannah",
+              "atlanta"
+            ],
+            [
+              "atlanta",
+              "greensboro"
+            ]
+          ],
+          "bundle_key": [
+            "atlanta",
+            "savannah"
+          ],
+          "bundle_key_set": [
+            "atlanta",
+            "savannah"
+          ],
+          "bundle_key_seq": [
+            "savannah",
+            "atlanta"
+          ],
+          "city_features": {
+            "Savannah": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 72.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 17,
+              "hotel_slack": 1
+            },
+            "Atlanta": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 144.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 39,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 30,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Greensboro->Savannah": {
+              "min_cost": 511.0,
+              "blocked": false
+            },
+            "Savannah->Atlanta": {
+              "min_cost": 42.0,
+              "blocked": false
+            },
+            "Atlanta->Greensboro": {
+              "min_cost": 61.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 17,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 144.0,
+            "bottleneck_city_meal": "Savannah",
+            "bottleneck_city_hotel": "Atlanta",
+            "bottleneck_edge": "Greensboro->Savannah"
+          },
+          "min_bundle_cost": 1046.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 17,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 144.0,
+          "bottleneck_city_meal": "Savannah",
+          "bottleneck_city_hotel": "Atlanta",
+          "bottleneck_edge": "Greensboro->Savannah"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 2300,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Decatur",
+        "Valdosta"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that represents a dataset or output of some kind. I'll try to break down the structure and contents for you.\n\n**Overview**\n\nThe object contains an array of 15 objects, each representing a candidate bundle (i.e., a set of routes or flights). Each candidate has several associated properties:\n\n* `bundle_id`: an integer identifier\n* `bundle_risk`: an object with several sub-properties that describe the risks associated with this bundle (e.g., bottleneck meal slack, bottleneck attribute slack)\n* `city_summary` and `edge_summary`: objects containing summary statistics for each city and edge in the bundle, respectively\n\n**Bundle Properties**\n\nEach candidate has several properties:\n\n* `bundle_id`: an integer identifier\n* `bundle_risk`: an object with several sub-properties that describe the risks associated with this bundle (e.g., bottleneck meal slack, bottleneck attribute slack)\n* `city_summary` and `edge_summary`: objects containing summary statistics for each city and edge in the bundle, respectively\n\n**Output Schema**\n\nThe `output_schema` property provides a description of the schema used to generate this output. It defines several fields:\n\n* `candidate_id`: an integer identifier\n* `reason`: a short string\n* `confidence`: a float value between 0 and 1\n* `gradient`: an object with three sub-properties:\n\t+ `hard_exclusions`: a list of objects, each containing properties like `phase`, `rule`, `ttl`, `city?`, and `edge?`\n\t+ `soft_penalties`: a list of objects, each containing properties like `phase` and `feature`\n\t+ `retrieval_patches`: a list of objects, each containing properties like `phase`, `patch`, and `ttl`\n\nThis output schema appears to describe the structure of each candidate bundle in more detail, providing additional metadata about the reasons why certain bundles were generated.\n\nIf you have any specific questions or need further clarification on a particular aspect of this output, feel free to ask!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "74a296cc3468",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Valdosta|None|None->None",
+      "bundle_fp": "ef3bbbf7d4ce"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "74a296cc3468",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "86dde57040f8"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Decatur",
+        "Atlanta"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "74a296cc3468",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "dae586c3a9ed"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "74a296cc3468",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "dae586c3a9ed"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Savannah",
+        "Atlanta"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "74a296cc3468",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "34926e53417c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "74a296cc3468",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "34926e53417c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Decatur",
+        "Valdosta"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "74a296cc3468",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Valdosta|None|None->None",
+        "bundle_fp": "ef3bbbf7d4ce"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 84.59977572318166
+}

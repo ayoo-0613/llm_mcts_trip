@@ -1,0 +1,1024 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 0.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_valid_transportation",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you create a 5-day travel plan for 2 people, starting from San Antonio and visiting 2 cities in Illinois from March 19th to March 23rd, 2022? Our budget is now $3,100, and we require private rooms for accommodations.",
+  "parsed": {
+    "org": "San Antonio",
+    "dest": "Illinois",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-19",
+      "2022-03-20",
+      "2022-03-21",
+      "2022-03-22",
+      "2022-03-23"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": "private room",
+      "transportation": null
+    },
+    "budget": 3100,
+    "origin": "San Antonio",
+    "destination": "Illinois",
+    "duration_days": 5,
+    "start_date": "2022-03-19",
+    "preferences": [
+      "private room"
+    ],
+    "candidate_cities": [
+      "Moline",
+      "Belleville",
+      "Bloomington",
+      "Champaign",
+      "Chicago",
+      "Rockford",
+      "Peoria"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Moline",
+      "Rockford"
+    ],
+    "transportation_dates": [
+      "2022-03-19",
+      "2022-03-21",
+      "2022-03-23"
+    ],
+    "transportation_methods": [
+      "San Antonio->Moline missing mode",
+      "Moline->Rockford missing mode",
+      "Rockford->San Antonio missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Moline",
+      "missing, Rockford"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "Moline",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Moline",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "Rockford",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Rockford",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Rockford",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:0|None|2022-03-19|San Antonio->Moline",
+      "counts": {
+        "kb": 2,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 2,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 3100.0,
+        "slot_cap": 371.77905701754383,
+        "reserve": 1236.84775
+      },
+      "segment_role": "outbound",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 1711.8999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 1455.1149999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 1236.84775,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:0|None|2022-03-19|San Antonio->Moline",
+        "city": "Moline",
+        "city_bundle": [
+          "Moline",
+          "Rockford"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 3100.0,
+          "slot_cap": 371.77905701754383,
+          "reserve": 1236.84775,
+          "min_cost_nonbudget": 946.5
+        }
+      }
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Peoria",
+          "Belleville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1481.0,
+          "bundle_lb_cost": 4342.0,
+          "stay_lb_cost": 492.0,
+          "meal_lb_cost": 378.0,
+          "transport_lb_cost": 3472.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "san antonio",
+              "peoria"
+            ],
+            [
+              "peoria",
+              "belleville"
+            ],
+            [
+              "belleville",
+              "san antonio"
+            ]
+          ],
+          "bundle_key": [
+            "belleville",
+            "peoria"
+          ],
+          "bundle_key_set": [
+            "belleville",
+            "peoria"
+          ],
+          "bundle_key_seq": [
+            "peoria",
+            "belleville"
+          ],
+          "city_features": {
+            "Peoria": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 62.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 31,
+              "min_meal_cost": 15.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 25,
+              "hotel_slack": 1
+            },
+            "Belleville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 184.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 27,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 18,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "San Antonio->Peoria": {
+              "min_cost": 1723.0,
+              "blocked": false
+            },
+            "Peoria->Belleville": {
+              "min_cost": 268.0,
+              "blocked": false
+            },
+            "Belleville->San Antonio": {
+              "min_cost": 1481.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 18,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 184.0,
+            "bottleneck_city_meal": "Belleville",
+            "bottleneck_city_hotel": "Belleville",
+            "bottleneck_edge": "San Antonio->Peoria"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 18,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 184.0,
+          "bottleneck_city_meal": "Belleville",
+          "bottleneck_city_hotel": "Belleville",
+          "bottleneck_edge": "San Antonio->Peoria"
+        },
+        "budget_context": {
+          "remaining": 1109.0,
+          "slot_cap": 399.00287828947364,
+          "reserve": 534.2887499999999,
+          "min_cost_nonbudget": 740.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "San Antonio",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1109.0,
+          "slot_cap": 399.00287828947364,
+          "reserve": 534.2887499999999,
+          "min_cost_nonbudget": 740.5
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Rockford",
+        "Peoria"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that represents the output of an optimization algorithm. It contains information about multiple candidate solutions (bundled travel routes) and their associated costs and feasibility metrics.\n\nHere's a breakdown of the main components:\n\n1. `candidates`: An array of objects, each representing a candidate solution (bundle). Each object has the following properties:\n\t* `id` (int): Unique identifier for this bundle.\n\t* `lb_costs`: An object with the following properties:\n\t\t+ `transport_lb_cost` (float): Estimated transportation cost for this bundle.\n\t\t+ `stay_lb_cost` (float): Estimated stay-over cost for this bundle.\n\t\t+ `meal_lb_cost` (float): Estimated meal cost for this bundle.\n\t\t+ `bundle_lb_cost` (float): Total estimated cost for this bundle.\n\t* `feasibility`: An object with the following properties:\n\t\t+ `return_leg_exists` (bool): Whether a return leg is present in this bundle.\n\t\t+ `hotel_feasible_all` (bool): Whether all hotels in this bundle are feasible.\n2. `output_schema`: A JSON object that defines the structure of the output data. It contains information about the available fields, their data types, and their valid ranges.\n\nTo extract specific information from this data, you can use standard JSON parsing techniques or libraries (e.g., `json.load()` in Python).\n\nSome possible questions to ask based on this data:\n\n* Which bundle has the lowest estimated total cost?\n* What is the feasibility status of each candidate solution?\n* Can I filter the candidates by certain attributes (e.g., return leg presence, hotel feasibility)?\n\nPlease let me know if you'd like me to help with any specific query or extraction!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Rockford",
+          "Peoria"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1723.0,
+          "bundle_lb_cost": 4923.0,
+          "stay_lb_cost": 544.0,
+          "meal_lb_cost": 510.0,
+          "transport_lb_cost": 3869.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "san antonio",
+              "rockford"
+            ],
+            [
+              "rockford",
+              "peoria"
+            ],
+            [
+              "peoria",
+              "san antonio"
+            ]
+          ],
+          "bundle_key": [
+            "peoria",
+            "rockford"
+          ],
+          "bundle_key_set": [
+            "peoria",
+            "rockford"
+          ],
+          "bundle_key_seq": [
+            "rockford",
+            "peoria"
+          ],
+          "city_features": {
+            "Rockford": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 210.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 27,
+              "min_meal_cost": 20.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            },
+            "Peoria": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 62.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 31,
+              "min_meal_cost": 15.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 22,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "San Antonio->Rockford": {
+              "min_cost": 1927.0,
+              "blocked": false
+            },
+            "Rockford->Peoria": {
+              "min_cost": 219.0,
+              "blocked": false
+            },
+            "Peoria->San Antonio": {
+              "min_cost": 1723.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 21,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 210.0,
+            "bottleneck_city_meal": "Rockford",
+            "bottleneck_city_hotel": "Rockford",
+            "bottleneck_edge": "San Antonio->Rockford"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 21,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 210.0,
+          "bottleneck_city_meal": "Rockford",
+          "bottleneck_city_hotel": "Rockford",
+          "bottleneck_edge": "San Antonio->Rockford"
+        },
+        "budget_context": {
+          "remaining": 954.0,
+          "slot_cap": 343.236019736842,
+          "reserve": 647.28775,
+          "min_cost_nonbudget": 861.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "San Antonio",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 954.0,
+          "slot_cap": 343.236019736842,
+          "reserve": 647.28775,
+          "min_cost_nonbudget": 861.5
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Belleville",
+        "Peoria"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object representing the output of an optimization algorithm. It contains various metadata and results.\n\nHere are some key aspects of the object:\n\n1. **`output_schema`**: This section defines the structure of the output data. It specifies that each candidate (represented by an `id`) has attributes such as:\n\t* `reason`: a short string describing why this candidate was selected.\n\t* `confidence`: a float between 0 and 1 representing how confident the algorithm is in its choice.\n\t* `gradient`: an object containing additional information, including:\n\t\t+ `hard_exclusions`: a list of tuples with phase, rule, TTL (time to live), city, and edge information. This suggests that the algorithm has applied some form of constraint satisfaction.\n\t\t+ `soft_penalties`: a list of tuples with phase, feature, and delta values. These might represent penalties or costs associated with certain features or phases in the optimization process.\n\t\t+ `retrieval_patches`: a list of tuples with phase, patch, and TTL information. This could indicate that the algorithm has applied some form of repair or patching to optimize the solution.\n2. **`candidates`**: This section contains an array of objects representing individual candidate solutions. Each object has attributes corresponding to those specified in the `output_schema`, such as:\n\t* `id`: a unique identifier for each candidate.\n\t* `reason`, `confidence`, and `gradient` attributes, which mirror the schema definition.\n\nSome specific observations about this data:\n\n* The candidates seem to be combinations of cities (e.g., \"Peoria\", \"Moline\", \"Belleville\", etc.) paired with other cities. This could represent routes or connections between these locations.\n* Many candidates have high confidence values (>0.9), suggesting that the algorithm is relatively certain about its choices.\n* Some candidates have `reason` strings like \"Bottleneck at Peoria\" or \"Conflict at Belleville\". These might indicate specific challenges or obstacles encountered during optimization.\n\nKeep in mind that without further context, it's difficult to provide a deeper interpretation of this data. If you could provide more information about the problem being solved and the algorithm used, I may be able to offer additional insights.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Belleville",
+          "Peoria"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1723.0,
+          "bundle_lb_cost": 4365.0,
+          "stay_lb_cost": 492.0,
+          "meal_lb_cost": 402.0,
+          "transport_lb_cost": 3471.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "san antonio",
+              "belleville"
+            ],
+            [
+              "belleville",
+              "peoria"
+            ],
+            [
+              "peoria",
+              "san antonio"
+            ]
+          ],
+          "bundle_key": [
+            "belleville",
+            "peoria"
+          ],
+          "bundle_key_set": [
+            "belleville",
+            "peoria"
+          ],
+          "bundle_key_seq": [
+            "belleville",
+            "peoria"
+          ],
+          "city_features": {
+            "Belleville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 184.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 27,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            },
+            "Peoria": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 62.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 31,
+              "min_meal_cost": 15.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 22,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "San Antonio->Belleville": {
+              "min_cost": 1481.0,
+              "blocked": false
+            },
+            "Belleville->Peoria": {
+              "min_cost": 267.0,
+              "blocked": false
+            },
+            "Peoria->San Antonio": {
+              "min_cost": 1723.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 21,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 184.0,
+            "bottleneck_city_meal": "Belleville",
+            "bottleneck_city_hotel": "Belleville",
+            "bottleneck_edge": "Peoria->San Antonio"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 21,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 184.0,
+          "bottleneck_city_meal": "Belleville",
+          "bottleneck_city_hotel": "Belleville",
+          "bottleneck_edge": "Peoria->San Antonio"
+        },
+        "budget_context": {
+          "remaining": 1352.0,
+          "slot_cap": 486.43092105263145,
+          "reserve": 549.02775,
+          "min_cost_nonbudget": 861.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "San Antonio",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1352.0,
+          "slot_cap": 486.43092105263145,
+          "reserve": 549.02775,
+          "min_cost_nonbudget": 861.5
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Moline",
+        "Rockford"
+      ],
+      "reason": null,
+      "raw": "This appears to be a JSON object representing the output of a machine learning model or optimization algorithm. The object contains an array of candidate solutions, each represented as an object with various attributes.\n\nHere's a breakdown of the structure:\n\n* `candidates`: An array of 10 objects, each representing a candidate solution.\n* Each candidate object has the following attributes:\n\t+ `id`: A unique identifier for the candidate (e.g. \"1\", \"2\", etc.)\n\t+ `bundle`: The bundle of cities associated with this candidate (e.g. [\"Chicago\", \"New York\"])\n\t+ `lb_costs`: An object containing various costs associated with this candidate, including:\n\t\t- `transport_lb_cost`\n\t\t- `stay_lb_cost`\n\t\t- `meal_lb_cost`\n\t\t- `bundle_lb_cost`\n\t+ `feasibility`: An object containing two boolean attributes: `return_leg_exists` and `hotel_feasible_all`\n* `output_schema`: An object describing the structure of the output data, including:\n\t+ `candidate_id`: The type of the candidate ID attribute (int)\n\t+ `reason`: The type of the reason attribute (short string)\n\t+ `confidence`: The type of the confidence attribute (float in [0,1])\n\t+ `gradient`: An object describing three sub-attributes: `hard_exclusions`, `soft_penalties`, and `retrieval_patches`\n\nWithout more context about what this data represents or how it was generated, it's difficult to provide further insights or suggestions for analysis. If you could provide more information about the problem domain or the goals of the machine learning model, I may be able to offer more specific guidance on working with this data.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "34ba828f5595",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-19|San Antonio->Moline",
+      "bundle_fp": "a755c9becf6f"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "34ba828f5595",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-19|Belleville->San Antonio",
+        "bundle_fp": "2fb4eaf3b059"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Rockford",
+        "Peoria"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "34ba828f5595",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-19|Peoria->San Antonio",
+        "bundle_fp": "673e06991691"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "34ba828f5595",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-19|Peoria->San Antonio",
+        "bundle_fp": "673e06991691"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Belleville",
+        "Peoria"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "34ba828f5595",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-19|Peoria->San Antonio",
+        "bundle_fp": "d9c40b7a9127"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "34ba828f5595",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-19|Peoria->San Antonio",
+        "bundle_fp": "d9c40b7a9127"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Moline",
+        "Rockford"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "34ba828f5595",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-19|San Antonio->Moline",
+        "bundle_fp": "a755c9becf6f"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 16.596289413049817
+}

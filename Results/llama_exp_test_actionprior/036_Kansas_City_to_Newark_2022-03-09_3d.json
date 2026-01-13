@@ -1,0 +1,283 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 0.0,
+  "violations": [
+    "commonsense:is_valid_transportation",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Please construct a 3-day travel itinerary from Kansas City to Newark, specifically from March 9th to March 11th, 2022. The trip is for one individual and should not exceed a budget of $1,300.",
+  "parsed": {
+    "org": "Kansas City",
+    "dest": "Newark",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-09",
+      "2022-03-10",
+      "2022-03-11"
+    ],
+    "people_number": 1,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": "no flight"
+    },
+    "budget": 1300,
+    "origin": "Kansas City",
+    "destination": "Newark",
+    "duration_days": 3,
+    "start_date": "2022-03-09",
+    "preferences": [],
+    "transport_forbid": [
+      "flight"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Newark"
+    ],
+    "transportation_dates": [
+      "2022-03-09",
+      "2022-03-11"
+    ],
+    "transportation_methods": [
+      "Kansas City->Newark missing mode",
+      "Newark->Kansas City missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Newark"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "Newark",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Newark",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "Newark",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:0|None|2022-03-09|Kansas City->Newark",
+      "counts": {
+        "kb": 2,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 2,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1300.0,
+        "slot_cap": 467.7220394736841,
+        "reserve": 198.9765
+      },
+      "segment_role": "outbound",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 275.4,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 234.08999999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 198.9765,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:0|None|2022-03-09|Kansas City->Newark",
+        "city": "Newark",
+        "city_bundle": [
+          "Newark"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1300.0,
+          "slot_cap": 467.7220394736841,
+          "reserve": 198.9765,
+          "min_cost_nonbudget": 1901.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "ebc5a532f3e7",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-09|Kansas City->Newark",
+      "bundle_fp": "3886588c41be"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "ebc5a532f3e7",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-09|Kansas City->Newark",
+        "bundle_fp": "3886588c41be"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "ebc5a532f3e7",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-09|Kansas City->Newark",
+        "bundle_fp": "3886588c41be"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "ebc5a532f3e7",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-09|Kansas City->Newark",
+        "bundle_fp": "3886588c41be"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.012708846013993025
+}

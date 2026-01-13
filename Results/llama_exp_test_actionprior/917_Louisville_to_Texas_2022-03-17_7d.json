@@ -1,0 +1,1195 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 4475.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "I need a travel itinerary for two persons that starts in Louisville, intending to explore three cities in Texas over a period of 7 days, from March 17th to March 23rd, 2022. Our budget is set at $5,200. For accommodations, we have a preference for private rooms and the house rules have to permit visitors. We do not wish to travel by flight.",
+  "parsed": {
+    "org": "Louisville",
+    "dest": "Texas",
+    "days": 7,
+    "visiting_city_number": 3,
+    "date": [
+      "2022-03-17",
+      "2022-03-18",
+      "2022-03-19",
+      "2022-03-20",
+      "2022-03-21",
+      "2022-03-22",
+      "2022-03-23"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "visitors",
+      "cuisine": null,
+      "room type": "private room",
+      "transportation": "no flight"
+    },
+    "budget": 5200,
+    "origin": "Louisville",
+    "destination": "Texas",
+    "duration_days": 7,
+    "start_date": "2022-03-17",
+    "preferences": [
+      "visitors",
+      "private room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas",
+      "Killeen",
+      "Laredo",
+      "Texarkana"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Louisville->Lubbock 1775km cost 1775",
+    "move:seg1:taxi:Lubbock->San Angelo 295km cost 295",
+    "move:seg2:taxi:San Angelo->Dallas 416km cost 416",
+    "move:seg3:taxi:Dallas->Louisville 1345km cost 1345",
+    "stay:Lubbock:4393 Central park lovely cozy room Private room $322"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Lubbock",
+      "San Angelo",
+      "Dallas"
+    ],
+    "transportation_dates": [
+      "2022-03-17",
+      "2022-03-19",
+      "2022-03-21",
+      "2022-03-23"
+    ],
+    "transportation_methods": [
+      "taxi, from Louisville to Lubbock, cost: 1775.0",
+      "taxi, from Lubbock to San Angelo, cost: 295.0",
+      "taxi, from San Angelo to Dallas, cost: 416.0",
+      "taxi, from Dallas to Louisville, cost: 1345.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Central park lovely cozy room, Lubbock",
+      "missing, San Angelo",
+      "missing, Dallas"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Louisville to Lubbock",
+      "transportation": "Taxi, from Louisville to Lubbock, Cost: 1775",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Central park lovely cozy room, Lubbock"
+    },
+    {
+      "days": 2,
+      "current_city": "Lubbock",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Central park lovely cozy room, Lubbock"
+    },
+    {
+      "days": 3,
+      "current_city": "from Lubbock to San Angelo",
+      "transportation": "Taxi, from Lubbock to San Angelo, Cost: 295",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "San Angelo",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from San Angelo to Dallas",
+      "transportation": "Taxi, from San Angelo to Dallas, Cost: 416",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "Dallas",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 7,
+      "current_city": "from Dallas to Louisville",
+      "transportation": "Taxi, from Dallas to Louisville, Cost: 1345",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Lubbock|None|None->None",
+      "counts": {
+        "kb": 4,
+        "after_nonbudget": 3,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 2,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1369.0,
+        "slot_cap": 267.3828125,
+        "reserve": 625.685
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 736.1,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 625.685,
+          "kept": 1
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|San Angelo|None|None->None",
+      "counts": {
+        "kb": 3,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 725.0,
+        "slot_cap": 265.5029296875,
+        "reserve": 380.75749999999994
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 527.0,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 447.94999999999993,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 380.75749999999994,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|San Angelo|None|None->None",
+        "city": "San Angelo",
+        "city_bundle": [
+          "Lubbock",
+          "San Angelo",
+          "Dallas"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 725.0,
+          "slot_cap": 265.5029296875,
+          "reserve": 380.75749999999994,
+          "min_cost_nonbudget": 274.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Waco",
+          "San Angelo",
+          "Dallas"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1345.0,
+          "bundle_lb_cost": 4861.0,
+          "stay_lb_cost": 728.0,
+          "meal_lb_cost": 534.0,
+          "transport_lb_cost": 3599.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "louisville",
+              "waco"
+            ],
+            [
+              "waco",
+              "san angelo"
+            ],
+            [
+              "san angelo",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "louisville"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "san angelo",
+            "waco"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "san angelo",
+            "waco"
+          ],
+          "bundle_key_seq": [
+            "waco",
+            "san angelo",
+            "dallas"
+          ],
+          "city_features": {
+            "Waco": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 168.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 25,
+              "min_meal_cost": 15.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 19,
+              "hotel_slack": 1
+            },
+            "San Angelo": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 123.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 27,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            },
+            "Dallas": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 73.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 62,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 53,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Louisville->Waco": {
+              "min_cost": 1501.0,
+              "blocked": false
+            },
+            "Waco->San Angelo": {
+              "min_cost": 337.0,
+              "blocked": false
+            },
+            "San Angelo->Dallas": {
+              "min_cost": 416.0,
+              "blocked": false
+            },
+            "Dallas->Louisville": {
+              "min_cost": 1345.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 19,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 168.0,
+            "bottleneck_city_meal": "Waco",
+            "bottleneck_city_hotel": "Waco",
+            "bottleneck_edge": "Louisville->Waco"
+          },
+          "min_bundle_cost": 4327.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 19,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 168.0,
+          "bottleneck_city_meal": "Waco",
+          "bottleneck_city_hotel": "Waco",
+          "bottleneck_edge": "Louisville->Waco"
+        },
+        "budget_context": {
+          "remaining": 1601.0,
+          "slot_cap": 390.869140625,
+          "reserve": 568.6797499999999,
+          "min_cost_nonbudget": 1062.0
+        },
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_city": "Waco",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1601.0,
+          "slot_cap": 390.869140625,
+          "reserve": 568.6797499999999,
+          "min_cost_nonbudget": 1062.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 5200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Amarillo",
+        "Longview",
+        "Dallas"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "After analyzing the input data, I select candidate 5 as the best candidate for the next MCTS attempt. Here is the JSON output:\n\n```json\n{\n    \"candidate_id\": 5,\n    \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n    \"confidence\": 0.8,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 1, \"city\": \"Waco\"}\n        ],\n        \"soft_penalties\": [\n            {\"phase\": \"segment\", \"feature\": \"edge_cost\", \"delta\": -100},\n            {\"phase\": \"meal\", \"feature\": \"soft_penalty\", \"delta\": -50}\n        ],\n        \"retrieval_patches\": []\n    }\n}\n```\n\nIn this output, I have chosen candidate 5 because it has a relatively low bundle risk (20) and reasonable city summary and edge summary scores. The gradient is set to hard-exclude Waco for hotel failures and apply soft penalties on segment and meal phases.\n\nNote that the confidence level of 0.8 indicates that I am somewhat confident in my selection, but there are still other candidates that could potentially be better.",
+      "parsed": {
+        "candidate_id": 5,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 1,
+              "city": "Waco"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "edge_cost",
+              "delta": -100
+            },
+            {
+              "phase": "meal",
+              "feature": "soft_penalty",
+              "delta": -50
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 1,
+            "city": "Waco"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "edge_cost",
+            "delta": -100
+          },
+          {
+            "phase": "meal",
+            "feature": "soft_penalty",
+            "delta": -50
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Amarillo",
+          "Longview",
+          "Dallas"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1345.0,
+          "bundle_lb_cost": 5508.0,
+          "stay_lb_cost": 1056.0,
+          "meal_lb_cost": 474.0,
+          "transport_lb_cost": 3978.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "louisville",
+              "amarillo"
+            ],
+            [
+              "amarillo",
+              "longview"
+            ],
+            [
+              "longview",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "louisville"
+            ]
+          ],
+          "bundle_key": [
+            "amarillo",
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_set": [
+            "amarillo",
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_seq": [
+            "amarillo",
+            "longview",
+            "dallas"
+          ],
+          "city_features": {
+            "Amarillo": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 267.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 24,
+              "hotel_slack": 1
+            },
+            "Longview": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 188.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 13,
+              "meal_count": 26,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 11,
+              "meal_slack": 20,
+              "hotel_slack": 1
+            },
+            "Dallas": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 73.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 62,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 53,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Louisville->Amarillo": {
+              "min_cost": 1636.0,
+              "blocked": false
+            },
+            "Amarillo->Longview": {
+              "min_cost": 789.0,
+              "blocked": false
+            },
+            "Longview->Dallas": {
+              "min_cost": 208.0,
+              "blocked": false
+            },
+            "Dallas->Louisville": {
+              "min_cost": 1345.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 20,
+            "bottleneck_attr_slack": 11,
+            "bottleneck_hotel_price": 267.0,
+            "bottleneck_city_meal": "Longview",
+            "bottleneck_city_hotel": "Amarillo",
+            "bottleneck_edge": "Louisville->Amarillo"
+          },
+          "min_bundle_cost": 5034.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 20,
+          "bottleneck_attr_slack": 11,
+          "bottleneck_hotel_price": 267.0,
+          "bottleneck_city_meal": "Longview",
+          "bottleneck_city_hotel": "Amarillo",
+          "bottleneck_edge": "Louisville->Amarillo"
+        },
+        "budget_context": {
+          "remaining": 688.0,
+          "slot_cap": 251.953125,
+          "reserve": 380.75749999999994,
+          "min_cost_nonbudget": 188.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Longview",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 688.0,
+          "slot_cap": 251.953125,
+          "reserve": 380.75749999999994,
+          "min_cost_nonbudget": 188.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 5200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Waco",
+        "Dallas",
+        "San Angelo"
+      ],
+      "reason": null,
+      "raw": "This is a JSON file containing data about travel itineraries and cost estimates. It appears to be output from some kind of algorithmic tool that's generating candidate itineraries based on certain criteria.\n\nHere are some key features of the data:\n\n1. **Candidate itineraries**: The main section of the file contains an array of objects, each representing a potential travel itinerary. Each object has an `id` property, which is unique to that itinerary.\n2. **Itinerary components**: Each candidate itinerary consists of three parts:\n\t* `bundle`: An array of cities (e.g., \"Waco\", \"Amarillo\") and their corresponding travel costs (`lb_costs`).\n\t* `edge_summary`: An object describing the travel costs and restrictions between each pair of cities.\n\t* `city_summary`: An object summarizing the cost estimates for each city in the itinerary.\n3. **Cost estimates**: The `lb_costs` section provides estimated costs for transportation, accommodations (hotel), meals, and other expenses. These costs are likely calculated based on various factors such as travel dates, departure/arrival times, route options, etc.\n4. **Travel restrictions**: Some itineraries include information about blocked or restricted travel segments, which might be due to issues like high demand, maintenance schedules, construction, or other unforeseen circumstances.\n\nTo analyze this data further, you could:\n\n1. **Summarize the cost estimates**: Calculate total costs for each itinerary and compare them across different candidates.\n2. **Identify trends in travel restrictions**: Look for patterns or common reasons behind blocked travel segments to inform future travel planning decisions.\n3. **Visualize the itineraries**: Plot the cities, edges, and estimated costs on a map to get an intuitive understanding of the candidate itineraries.\n\nIf you'd like me to help with any specific analysis or task, feel free to ask!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "stay",
+            "feature": "hotel_price",
+            "delta": 0.6
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "stay",
+            "patch": {
+              "topk": 50,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Waco",
+          "Dallas",
+          "San Angelo"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1759.0,
+          "bundle_lb_cost": 5102.0,
+          "stay_lb_cost": 728.0,
+          "meal_lb_cost": 546.0,
+          "transport_lb_cost": 3828.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "louisville",
+              "waco"
+            ],
+            [
+              "waco",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "san angelo"
+            ],
+            [
+              "san angelo",
+              "louisville"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "san angelo",
+            "waco"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "san angelo",
+            "waco"
+          ],
+          "bundle_key_seq": [
+            "waco",
+            "dallas",
+            "san angelo"
+          ],
+          "city_features": {
+            "Waco": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 168.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 25,
+              "min_meal_cost": 15.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 19,
+              "hotel_slack": 1
+            },
+            "Dallas": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 73.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 62,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 56,
+              "hotel_slack": 1
+            },
+            "San Angelo": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 123.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 27,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 18,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Louisville->Waco": {
+              "min_cost": 1501.0,
+              "blocked": false
+            },
+            "Waco->Dallas": {
+              "min_cost": 153.0,
+              "blocked": false
+            },
+            "Dallas->San Angelo": {
+              "min_cost": 415.0,
+              "blocked": false
+            },
+            "San Angelo->Louisville": {
+              "min_cost": 1759.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 18,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 168.0,
+            "bottleneck_city_meal": "San Angelo",
+            "bottleneck_city_hotel": "Waco",
+            "bottleneck_edge": "San Angelo->Louisville"
+          },
+          "min_bundle_cost": 4556.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 18,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 168.0,
+          "bottleneck_city_meal": "San Angelo",
+          "bottleneck_city_hotel": "Waco",
+          "bottleneck_edge": "San Angelo->Louisville"
+        },
+        "budget_context": {
+          "remaining": 1372.0,
+          "slot_cap": 334.9609375,
+          "reserve": 576.0492499999999,
+          "min_cost_nonbudget": 1062.0
+        },
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_city": "Waco",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1372.0,
+          "slot_cap": 334.9609375,
+          "reserve": 576.0492499999999,
+          "min_cost_nonbudget": 1062.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 5200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Lubbock",
+        "San Angelo",
+        "Dallas"
+      ],
+      "reason": "preference",
+      "raw": "{\n  \"candidate_id\": 2,\n  \"reason\": \"preference\",\n  \"confidence\": 0.6,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 10, \"city\": \"Waco\"}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "preference",
+        "confidence": 0.6,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 10,
+              "city": "Waco"
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 10,
+            "city": "Waco"
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "f89565880475",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|San Angelo|None|None->None",
+      "bundle_fp": "6eebb7e6b48d"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "f89565880475",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Waco|None|None->None",
+        "bundle_fp": "9404a6949442"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 1,
+          "city": "Waco"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "edge_cost",
+          "delta": -100.0
+        },
+        {
+          "phase": "daily",
+          "feature": "soft_penalty",
+          "delta": -50.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Amarillo",
+        "Longview",
+        "Dallas"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "f89565880475",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Longview|None|None->None",
+        "bundle_fp": "f2acda988157"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "f89565880475",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Longview|None|None->None",
+        "bundle_fp": "f2acda988157"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Waco",
+        "Dallas",
+        "San Angelo"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "f89565880475",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Waco|None|None->None",
+        "bundle_fp": "313669813213"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "f89565880475",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Waco|None|None->None",
+        "bundle_fp": "313669813213"
+      },
+      "confidence": 0.6,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 10,
+          "city": "Waco"
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Lubbock",
+        "San Angelo",
+        "Dallas"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "f89565880475",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|San Angelo|None|None->None",
+        "bundle_fp": "6eebb7e6b48d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 13.596705917734653
+}

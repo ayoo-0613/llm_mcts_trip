@@ -1,0 +1,1051 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1754.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you recommend a 5-day travel itinerary for 2 people starting in Charlotte and visiting 2 different cities in Louisiana from March 9th to March 13th, 2022? Our budget is $4,000. We require accommodations that allow parties and offer private rooms, and we'd prefer not to travel by flight.",
+  "parsed": {
+    "org": "Charlotte",
+    "dest": "Louisiana",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-09",
+      "2022-03-10",
+      "2022-03-11",
+      "2022-03-12",
+      "2022-03-13"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "parties",
+      "cuisine": null,
+      "room type": "private room",
+      "transportation": "no flight"
+    },
+    "budget": 4000,
+    "origin": "Charlotte",
+    "destination": "Louisiana",
+    "duration_days": 5,
+    "start_date": "2022-03-09",
+    "preferences": [
+      "parties",
+      "private room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Lake Charles",
+      "Baton Rouge",
+      "New Orleans",
+      "Shreveport"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Charlotte->Shreveport 1354km cost 1354",
+    "move:seg1:taxi:Shreveport->Baton Rouge 400km cost 400"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Shreveport",
+      "Baton Rouge"
+    ],
+    "transportation_dates": [
+      "2022-03-09",
+      "2022-03-11",
+      "2022-03-13"
+    ],
+    "transportation_methods": [
+      "taxi, from Charlotte to Shreveport, cost: 1354.0",
+      "taxi, from Shreveport to Baton Rouge, cost: 400.0",
+      "Baton Rouge->Charlotte missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Shreveport",
+      "missing, Baton Rouge"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Charlotte to Shreveport",
+      "transportation": "Taxi, from Charlotte to Shreveport, Cost: 1354",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Shreveport",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Shreveport to Baton Rouge",
+      "transportation": "Taxi, from Shreveport to Baton Rouge, Cost: 400",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Baton Rouge",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Baton Rouge",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:1|None|2022-03-09|Shreveport->Baton Rouge",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 2646.0,
+        "slot_cap": 304.63815789473676,
+        "reserve": 2007.7
+      },
+      "segment_role": "intercity",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 2007.7,
+          "kept": 1
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-09|Baton Rouge->Charlotte",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 2246.0,
+        "slot_cap": 808.079769736842,
+        "reserve": 1450.56325
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 2007.7,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 1706.5449999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 1450.56325,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-09|Baton Rouge->Charlotte",
+        "city": "Charlotte",
+        "city_bundle": [
+          "Shreveport",
+          "Baton Rouge"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 2246.0,
+          "slot_cap": 808.079769736842,
+          "reserve": 1450.56325,
+          "min_cost_nonbudget": 620.5
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Baton Rouge",
+          "New Orleans"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1148.0,
+          "bundle_lb_cost": 4610.0,
+          "stay_lb_cost": 1774.0,
+          "meal_lb_cost": 318.0,
+          "transport_lb_cost": 2518.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "charlotte",
+              "baton rouge"
+            ],
+            [
+              "baton rouge",
+              "new orleans"
+            ],
+            [
+              "new orleans",
+              "charlotte"
+            ]
+          ],
+          "bundle_key": [
+            "baton rouge",
+            "new orleans"
+          ],
+          "bundle_key_set": [
+            "baton rouge",
+            "new orleans"
+          ],
+          "bundle_key_seq": [
+            "baton rouge",
+            "new orleans"
+          ],
+          "city_features": {
+            "Baton Rouge": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 474.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 28,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 22,
+              "hotel_slack": 1
+            },
+            "New Orleans": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 413.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Charlotte->Baton Rouge": {
+              "min_cost": 1239.0,
+              "blocked": false
+            },
+            "Baton Rouge->New Orleans": {
+              "min_cost": 131.0,
+              "blocked": false
+            },
+            "New Orleans->Charlotte": {
+              "min_cost": 1148.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 21,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 474.0,
+            "bottleneck_city_meal": "New Orleans",
+            "bottleneck_city_hotel": "Baton Rouge",
+            "bottleneck_edge": "Charlotte->Baton Rouge"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 21,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 474.0,
+          "bottleneck_city_meal": "New Orleans",
+          "bottleneck_city_hotel": "Baton Rouge",
+          "bottleneck_edge": "Charlotte->Baton Rouge"
+        },
+        "budget_context": {
+          "remaining": 1482.0,
+          "slot_cap": 542.724609375,
+          "reserve": 702.5589999999999,
+          "min_cost_nonbudget": 531.0
+        },
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_city": "Baton Rouge",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 2,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1482.0,
+          "slot_cap": 542.724609375,
+          "reserve": 702.5589999999999,
+          "min_cost_nonbudget": 531.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "New Orleans",
+        "Shreveport"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 1,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.85,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"hotel\", \"AVOID_CITY\", 10, \"Baton Rouge\"],\n      [\"flight\", \"BLOCK_EDGE\", 5, \"Charlotte->Shreveport\"]\n    ],\n    \"soft_penalties\": [\n      [\"hotel\", \"cost_ratio\", -0.1],\n      [\"meal\", \"budget_risk\", 20]\n    ],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.85,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "hotel",
+              "AVOID_CITY",
+              10,
+              "Baton Rouge"
+            ],
+            [
+              "flight",
+              "BLOCK_EDGE",
+              5,
+              "Charlotte->Shreveport"
+            ]
+          ],
+          "soft_penalties": [
+            [
+              "hotel",
+              "cost_ratio",
+              -0.1
+            ],
+            [
+              "meal",
+              "budget_risk",
+              20
+            ]
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "hotel",
+            "AVOID_CITY",
+            10,
+            "Baton Rouge"
+          ],
+          [
+            "flight",
+            "BLOCK_EDGE",
+            5,
+            "Charlotte->Shreveport"
+          ]
+        ],
+        "soft_penalties": [
+          [
+            "hotel",
+            "cost_ratio",
+            -0.1
+          ],
+          [
+            "meal",
+            "budget_risk",
+            20
+          ]
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "New Orleans",
+          "Shreveport"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1353.0,
+          "bundle_lb_cost": 5298.0,
+          "stay_lb_cost": 1904.0,
+          "meal_lb_cost": 366.0,
+          "transport_lb_cost": 3028.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "charlotte",
+              "new orleans"
+            ],
+            [
+              "new orleans",
+              "shreveport"
+            ],
+            [
+              "shreveport",
+              "charlotte"
+            ]
+          ],
+          "bundle_key": [
+            "new orleans",
+            "shreveport"
+          ],
+          "bundle_key_set": [
+            "new orleans",
+            "shreveport"
+          ],
+          "bundle_key_seq": [
+            "new orleans",
+            "shreveport"
+          ],
+          "city_features": {
+            "New Orleans": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 413.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 24,
+              "hotel_slack": 1
+            },
+            "Shreveport": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 539.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 37,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Charlotte->New Orleans": {
+              "min_cost": 1149.0,
+              "blocked": false
+            },
+            "New Orleans->Shreveport": {
+              "min_cost": 526.0,
+              "blocked": false
+            },
+            "Shreveport->Charlotte": {
+              "min_cost": 1353.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 24,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 539.0,
+            "bottleneck_city_meal": "New Orleans",
+            "bottleneck_city_hotel": "Shreveport",
+            "bottleneck_edge": "Shreveport->Charlotte"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 24,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 539.0,
+          "bottleneck_city_meal": "New Orleans",
+          "bottleneck_city_hotel": "Shreveport",
+          "bottleneck_edge": "Shreveport->Charlotte"
+        },
+        "budget_context": {
+          "remaining": 2325.0,
+          "slot_cap": 836.5028782894735,
+          "reserve": 1394.0637499999998,
+          "min_cost_nonbudget": 676.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Charlotte",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 2325.0,
+          "slot_cap": 836.5028782894735,
+          "reserve": 1394.0637499999998,
+          "min_cost_nonbudget": 676.5
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "New Orleans",
+        "Baton Rouge"
+      ],
+      "reason": "preference for avoiding dead_end_city for hotel/stay failures",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"preference for avoiding dead_end_city for hotel/stay failures\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [{\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 3600, \"city\": \"Charlotte\"}],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "preference for avoiding dead_end_city for hotel/stay failures",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 3600,
+              "city": "Charlotte"
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 3600,
+            "city": "Charlotte"
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "New Orleans",
+          "Baton Rouge"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1241.0,
+          "bundle_lb_cost": 4607.0,
+          "stay_lb_cost": 1774.0,
+          "meal_lb_cost": 312.0,
+          "transport_lb_cost": 2521.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "charlotte",
+              "new orleans"
+            ],
+            [
+              "new orleans",
+              "baton rouge"
+            ],
+            [
+              "baton rouge",
+              "charlotte"
+            ]
+          ],
+          "bundle_key": [
+            "baton rouge",
+            "new orleans"
+          ],
+          "bundle_key_set": [
+            "baton rouge",
+            "new orleans"
+          ],
+          "bundle_key_seq": [
+            "new orleans",
+            "baton rouge"
+          ],
+          "city_features": {
+            "New Orleans": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 413.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 24,
+              "hotel_slack": 1
+            },
+            "Baton Rouge": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 474.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 28,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 19,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Charlotte->New Orleans": {
+              "min_cost": 1149.0,
+              "blocked": false
+            },
+            "New Orleans->Baton Rouge": {
+              "min_cost": 131.0,
+              "blocked": false
+            },
+            "Baton Rouge->Charlotte": {
+              "min_cost": 1241.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 19,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 474.0,
+            "bottleneck_city_meal": "Baton Rouge",
+            "bottleneck_city_hotel": "Baton Rouge",
+            "bottleneck_edge": "Baton Rouge->Charlotte"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 19,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 474.0,
+          "bottleneck_city_meal": "Baton Rouge",
+          "bottleneck_city_hotel": "Baton Rouge",
+          "bottleneck_edge": "Baton Rouge->Charlotte"
+        },
+        "budget_context": {
+          "remaining": 1479.0,
+          "slot_cap": 541.6259765625,
+          "reserve": 773.7974999999999,
+          "min_cost_nonbudget": 650.0
+        },
+        "counts": {
+          "kb": 4,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_city": "New Orleans",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 4,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1479.0,
+          "slot_cap": 541.6259765625,
+          "reserve": 773.7974999999999,
+          "min_cost_nonbudget": 650.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Shreveport",
+        "Baton Rouge"
+      ],
+      "reason": "preference for avoiding dead_end_city for hotel/stay failures",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"preference for avoiding dead_end_city for hotel/stay failures\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"hotel\", \"AVOID_CITY\", 10, null],\n      [\"stay\", \"BLOCK_EDGE\", 10, null]\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "preference for avoiding dead_end_city for hotel/stay failures",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "hotel",
+              "AVOID_CITY",
+              10,
+              null
+            ],
+            [
+              "stay",
+              "BLOCK_EDGE",
+              10,
+              null
+            ]
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "hotel",
+            "AVOID_CITY",
+            10,
+            null
+          ],
+          [
+            "stay",
+            "BLOCK_EDGE",
+            10,
+            null
+          ]
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "234d35075d16",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-09|Baton Rouge->Charlotte",
+      "bundle_fp": "4e6171e33dc0"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "234d35075d16",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Baton Rouge|None|None->None",
+        "bundle_fp": "68c6526ca8c9"
+      },
+      "confidence": 0.85,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "New Orleans",
+        "Shreveport"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "234d35075d16",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-09|Shreveport->Charlotte",
+        "bundle_fp": "5d1f295be8cb"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "234d35075d16",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-09|Shreveport->Charlotte",
+        "bundle_fp": "5d1f295be8cb"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 3600,
+          "city": "Charlotte"
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "New Orleans",
+        "Baton Rouge"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "234d35075d16",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|New Orleans|None|None->None",
+        "bundle_fp": "ceed65364baa"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "234d35075d16",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|New Orleans|None|None->None",
+        "bundle_fp": "ceed65364baa"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Shreveport",
+        "Baton Rouge"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "234d35075d16",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-09|Baton Rouge->Charlotte",
+        "bundle_fp": "4e6171e33dc0"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 5.504570265766233
+}

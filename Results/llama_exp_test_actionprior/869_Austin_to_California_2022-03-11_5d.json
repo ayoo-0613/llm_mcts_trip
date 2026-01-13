@@ -1,0 +1,848 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 17426.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you organize a 5-day travel plan for a group of 8 traveling from Austin to California? We plan to visit two cities within California from March 11th to March 15th, 2022. Our accommodations should allow visitors and be entire rooms. Our group has a preference for Chinese, Italian, Mediterranean, and Indian cuisines. The budget for the trip is set to $18,400.",
+  "parsed": {
+    "org": "Austin",
+    "dest": "California",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-11",
+      "2022-03-12",
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15"
+    ],
+    "people_number": 8,
+    "local_constraint": {
+      "house rule": "visitors",
+      "cuisine": [
+        "Chinese",
+        "Italian",
+        "Mediterranean",
+        "Indian"
+      ],
+      "room type": "entire room",
+      "transportation": null
+    },
+    "budget": 18400,
+    "origin": "Austin",
+    "destination": "California",
+    "duration_days": 5,
+    "start_date": "2022-03-11",
+    "preferences": [
+      "Chinese",
+      "Italian",
+      "Mediterranean",
+      "Indian",
+      "visitors",
+      "entire room"
+    ],
+    "candidate_cities": [
+      "San Diego",
+      "Redding",
+      "Sacramento",
+      "Fresno",
+      "San Luis Obispo",
+      "Oakland",
+      "Santa Barbara",
+      "Stockton",
+      "Santa Rosa",
+      "Bakersfield",
+      "Santa Ana",
+      "Santa Maria",
+      "San Jose",
+      "Burbank",
+      "Arcata",
+      "Butte",
+      "Palm Springs",
+      "Los Angeles",
+      "Long Beach",
+      "San Francisco"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Austin->Redding 3092km cost 3092",
+    "move:seg1:taxi:Redding->Santa Barbara 842km cost 842",
+    "move:seg2:taxi:Santa Barbara->Austin 2371km cost 2371",
+    "stay:Redding:164 Modern, bright 1 BR Brooklyn apt - Great location! Entire home/apt $1033",
+    "stay:Santa Barbara:5041 Prime Chelsea 1BR Minimalist W16th Entire home/apt $1079",
+    "eat:d1:breakfast:1208 Di Ghent Boulangerie French, Pizza, Mediterranean, Seafood $13 rating 3.9",
+    "eat:d1:lunch:3103 Healthy Routes Tea, Cafe, Pizza $10 rating 4.0",
+    "eat:d1:dinner:6412 Moksha Chinese, Pizza, Seafood $34 rating 3.2",
+    "eat:d2:breakfast:3956 The Junction Tea, Seafood, Bakery, Fast Food $17 rating 3.9"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Redding",
+      "Santa Barbara"
+    ],
+    "transportation_dates": [
+      "2022-03-11",
+      "2022-03-13",
+      "2022-03-15"
+    ],
+    "transportation_methods": [
+      "taxi, from Austin to Redding, cost: 3092.0",
+      "taxi, from Redding to Santa Barbara, cost: 842.0",
+      "taxi, from Santa Barbara to Austin, cost: 2371.0"
+    ],
+    "restaurants": [
+      "Di Ghent Boulangerie, Redding",
+      "Healthy Routes, Redding",
+      "Moksha, Redding",
+      "The Junction, Redding"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "Modern, bright 1 BR Brooklyn apt - Great location!, Redding",
+      "Prime Chelsea 1BR Minimalist W16th, Santa Barbara"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Austin to Redding",
+      "transportation": "Taxi, from Austin to Redding, Cost: 3092",
+      "breakfast": "Di Ghent Boulangerie, Redding",
+      "attraction": "-",
+      "lunch": "Healthy Routes, Redding",
+      "dinner": "Moksha, Redding",
+      "accommodation": "Modern, bright 1 BR Brooklyn apt - Great location!, Redding"
+    },
+    {
+      "days": 2,
+      "current_city": "Redding",
+      "transportation": "-",
+      "breakfast": "The Junction, Redding",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Modern, bright 1 BR Brooklyn apt - Great location!, Redding"
+    },
+    {
+      "days": 3,
+      "current_city": "from Redding to Santa Barbara",
+      "transportation": "Taxi, from Redding to Santa Barbara, Cost: 842",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Prime Chelsea 1BR Minimalist W16th, Santa Barbara"
+    },
+    {
+      "days": 4,
+      "current_city": "Santa Barbara",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Prime Chelsea 1BR Minimalist W16th, Santa Barbara"
+    },
+    {
+      "days": 5,
+      "current_city": "from Santa Barbara to Austin",
+      "transportation": "Taxi, from Santa Barbara to Austin, Cost: 2371",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d2|slot:breakfast|seg:None|Redding|None|None->None",
+      "counts": {
+        "kb": 36,
+        "after_nonbudget": 36,
+        "after_budget": 3,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 33,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1110.0,
+        "slot_cap": 11.5625,
+        "reserve": 952.0
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "meal",
+      "slot_id": "meal|d2|slot:lunch|seg:None|Redding|None|None->None",
+      "counts": {
+        "kb": 36,
+        "after_nonbudget": 36,
+        "after_budget": 1,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 35,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 974.0,
+        "slot_cap": 11.068181818181818,
+        "reserve": 872.0
+      },
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d2|slot:lunch|seg:None|Redding|None|None->None",
+        "city": "Redding",
+        "city_bundle": [
+          "Redding",
+          "Santa Barbara"
+        ],
+        "reason": "duplication",
+        "counts": {
+          "kb": 36,
+          "after_nonbudget": 36,
+          "after_budget": 1,
+          "budget_removed": 35,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 974.0,
+          "slot_cap": 11.068181818181818,
+          "reserve": 872.0,
+          "min_cost_nonbudget": 10.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "outbound",
+          "return"
+        ],
+        "city_bundle": [
+          "Santa Barbara",
+          "Bakersfield"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 4788.0,
+          "bundle_lb_cost": 16148.0,
+          "stay_lb_cost": 4272.0,
+          "meal_lb_cost": 1872.0,
+          "transport_lb_cost": 10004.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "austin",
+              "santa barbara"
+            ],
+            [
+              "santa barbara",
+              "bakersfield"
+            ],
+            [
+              "bakersfield",
+              "austin"
+            ]
+          ],
+          "bundle_key": [
+            "bakersfield",
+            "santa barbara"
+          ],
+          "bundle_key_set": [
+            "bakersfield",
+            "santa barbara"
+          ],
+          "bundle_key_seq": [
+            "santa barbara",
+            "bakersfield"
+          ],
+          "city_features": {
+            "Santa Barbara": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1079.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 14,
+              "min_meal_cost": 21.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 8,
+              "hotel_slack": 0
+            },
+            "Bakersfield": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1057.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 14,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 5,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Austin->Santa Barbara": {
+              "min_cost": 4744.0,
+              "blocked": false
+            },
+            "Santa Barbara->Bakersfield": {
+              "min_cost": 472.0,
+              "blocked": false
+            },
+            "Bakersfield->Austin": {
+              "min_cost": 4788.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 5,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1079.0,
+            "bottleneck_city_meal": "Bakersfield",
+            "bottleneck_city_hotel": "Santa Barbara",
+            "bottleneck_edge": "Bakersfield->Austin"
+          },
+          "min_bundle_cost": 14276.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 5,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1079.0,
+          "bottleneck_city_meal": "Bakersfield",
+          "bottleneck_city_hotel": "Santa Barbara",
+          "bottleneck_edge": "Bakersfield->Austin"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 18400,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "Chinese",
+              "Italian",
+              "Mediterranean",
+              "Indian"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Redding",
+        "Santa Barbara"
+      ],
+      "reason": null,
+      "raw": "This appears to be a JSON output from an algorithmic process. It contains a list of candidate solutions along with various metrics and explanations for each.\n\nTo summarize this data, I'll extract some key information from it:\n\n**Candidate Solutions**\n\nThere are 14 candidate solutions in total. Each solution is represented by a dictionary containing the following keys:\n\n* `id`: A unique identifier for the candidate solution\n* `bundle`: The pair of cities that make up the bundle\n* `bundle_risk`: An object containing various risk metrics for the bundle, including bottleneck meal slack, attraction slack, and hotel price\n\n**Metrics**\n\nEach candidate solution also includes a set of metrics, which are described in the `output_schema` section. These metrics include:\n\n* `confidence`: A float value between 0 and 1 representing the confidence level of the candidate solution\n* `gradient`: An object containing three lists:\n\t+ `hard_exclusions`: A list of tuples describing hard exclusions from certain phases, rules, TTLs, cities, or edges\n\t+ `soft_penalties`: A list of tuples describing soft penalties for certain features and deltas\n\t+ `retrieval_patches`: A list of tuples describing retrieval patches for certain phases, patches, and TTLs\n\n**Other**\n\nThe output also includes a description of the output schema, which provides information about the structure and format of the data.\n\nIf you have specific questions or would like to extract particular information from this data, please let me know!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Redding",
+          "Santa Barbara"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 4742.0,
+          "bundle_lb_cost": 18970.0,
+          "stay_lb_cost": 4224.0,
+          "meal_lb_cost": 2136.0,
+          "transport_lb_cost": 12610.0,
+          "hotel_min_nights_min": 2,
+          "edges": [
+            [
+              "austin",
+              "redding"
+            ],
+            [
+              "redding",
+              "santa barbara"
+            ],
+            [
+              "santa barbara",
+              "austin"
+            ]
+          ],
+          "bundle_key": [
+            "redding",
+            "santa barbara"
+          ],
+          "bundle_key_set": [
+            "redding",
+            "santa barbara"
+          ],
+          "bundle_key_seq": [
+            "redding",
+            "santa barbara"
+          ],
+          "city_features": {
+            "Redding": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1033.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 18,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 12,
+              "hotel_slack": 0
+            },
+            "Santa Barbara": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1079.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 14,
+              "min_meal_cost": 21.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 5,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Austin->Redding": {
+              "min_cost": 6184.0,
+              "blocked": false
+            },
+            "Redding->Santa Barbara": {
+              "min_cost": 1684.0,
+              "blocked": false
+            },
+            "Santa Barbara->Austin": {
+              "min_cost": 4742.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 5,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1079.0,
+            "bottleneck_city_meal": "Santa Barbara",
+            "bottleneck_city_hotel": "Santa Barbara",
+            "bottleneck_edge": "Austin->Redding"
+          },
+          "min_bundle_cost": 16834.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 5,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1079.0,
+          "bottleneck_city_meal": "Santa Barbara",
+          "bottleneck_city_hotel": "Santa Barbara",
+          "bottleneck_edge": "Austin->Redding"
+        },
+        "budget_context": {
+          "remaining": 974.0,
+          "slot_cap": 11.068181818181818,
+          "reserve": 872.0,
+          "min_cost_nonbudget": 10.0
+        },
+        "counts": {
+          "kb": 36,
+          "after_nonbudget": 36,
+          "after_budget": 1,
+          "budget_removed": 35,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Redding",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 36,
+          "after_nonbudget": 36,
+          "after_budget": 1,
+          "budget_removed": 35,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 974.0,
+          "slot_cap": 11.068181818181818,
+          "reserve": 872.0,
+          "min_cost_nonbudget": 10.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 36,
+        "dead_end_after_budget": 1,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 18400,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "Chinese",
+              "Italian",
+              "Mediterranean",
+              "Indian"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Santa Barbara",
+        "Bakersfield"
+      ],
+      "reason": "{reason}, Confidence: {confidence:.2f}\")",
+      "raw": "This is a JSON object representing the output of a machine learning model. It contains a list of candidate IDs with their corresponding scores and reasons.\n\nHere's a breakdown of the structure:\n\n* `output_schema`: This section defines the schema of the output data.\n\t+ `candidate_id`: The ID of each candidate, represented as an integer.\n\t+ `reason`: A short string explaining why each candidate was selected or rejected.\n\t+ `confidence`: A float value between 0 and 1 representing the model's confidence in its prediction.\n\t+ `gradient`: An object containing three lists:\n\t\t- `hard_exclusions`: A list of tuples with four elements: phase, rule, TTL (time to live), city, and edge. Each tuple represents a hard exclusion applied to the candidate.\n\t\t- `soft_penalties`: A list of tuples with three elements: phase, feature, and delta. Each tuple represents a soft penalty applied to the candidate.\n\t\t- `retrieval_patches`: A list of tuples with three elements: phase, patch, and TTL. Each tuple represents a retrieval patch applied to the candidate.\n* `output_data`: This section contains the actual output data, which is a list of objects with the following structure:\n\t+ `candidate_id`\n\t+ `reason`\n\t+ `confidence`\n\t+ `gradient` (with the same three lists as above)\n\nTo parse this data and extract meaningful information, you would need to write code that understands the schema defined in `output_schema`. This could involve using a JSON library to parse the output_data list and then iterating over each object to extract the relevant information.\n\nHere's some sample Python code to get you started:\n```python\nimport json\n\n# Load the output data from the JSON string\noutput_data = json.loads(json_string)['output_data']\n\n# Iterate over each candidate in the output data\nfor candidate in output_data:\n    # Extract the candidate ID, reason, and confidence\n    candidate_id = candidate['candidate_id']\n    reason = candidate['reason']\n    confidence = candidate['confidence']\n\n    # Print out some relevant information about this candidate\n    print(f\"ID: {candidate_id}, Reason: {reason}, Confidence: {confidence:.2f}\")\n```\nThis code assumes you have the `json` library imported and a JSON string containing the output data. You can modify it to suit your specific needs and handle the data in whatever way is most useful for your application.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "outbound",
+          "return"
+        ],
+        "city_bundle": [
+          "Santa Barbara",
+          "Bakersfield"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 4788.0,
+          "bundle_lb_cost": 16148.0,
+          "stay_lb_cost": 4272.0,
+          "meal_lb_cost": 1872.0,
+          "transport_lb_cost": 10004.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "austin",
+              "santa barbara"
+            ],
+            [
+              "santa barbara",
+              "bakersfield"
+            ],
+            [
+              "bakersfield",
+              "austin"
+            ]
+          ],
+          "bundle_key": [
+            "bakersfield",
+            "santa barbara"
+          ],
+          "bundle_key_set": [
+            "bakersfield",
+            "santa barbara"
+          ],
+          "bundle_key_seq": [
+            "santa barbara",
+            "bakersfield"
+          ],
+          "city_features": {
+            "Santa Barbara": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1079.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 14,
+              "min_meal_cost": 21.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 8,
+              "hotel_slack": 0
+            },
+            "Bakersfield": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1057.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 14,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 5,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Austin->Santa Barbara": {
+              "min_cost": 4744.0,
+              "blocked": false
+            },
+            "Santa Barbara->Bakersfield": {
+              "min_cost": 472.0,
+              "blocked": false
+            },
+            "Bakersfield->Austin": {
+              "min_cost": 4788.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 5,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1079.0,
+            "bottleneck_city_meal": "Bakersfield",
+            "bottleneck_city_hotel": "Santa Barbara",
+            "bottleneck_edge": "Bakersfield->Austin"
+          },
+          "min_bundle_cost": 14276.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 5,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1079.0,
+          "bottleneck_city_meal": "Bakersfield",
+          "bottleneck_city_hotel": "Santa Barbara",
+          "bottleneck_edge": "Bakersfield->Austin"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 18400,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "Chinese",
+              "Italian",
+              "Mediterranean",
+              "Indian"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Redding",
+        "Santa Barbara"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that represents the output of some optimization or search algorithm. Here's a breakdown of what I see:\n\n**Array of candidate solutions**\n\nThe top-level structure is an array of 14 objects, each representing a potential solution to the problem.\n\n**Each candidate solution**\n\nEach object in the array has several properties:\n\n1. **`id`:** A unique identifier for this candidate solution.\n2. **`bundle`:** The pair of cities that are being bundled together (e.g., \"Redding\" and \"Santa Rosa\").\n3. **`lb_costs`:** An object with four properties:\n\t* `transport_lb_cost`: The lower bound on the transportation cost.\n\t* `stay_lb_cost`: The lower bound on the stay cost.\n\t* `meal_lb_cost`: The lower bound on the meal cost.\n\t* `bundle_lb_cost`: The lower bound on the total bundle cost.\n4. **`feasibility`:** An object with two properties:\n\t* `return_leg_exists`: A boolean indicating whether a return leg exists (i.e., whether it's possible to travel back from one city to the other).\n\t* `hotel_feasible_all`: A boolean indicating whether all hotels are feasible for this bundle.\n\n**Output schema**\n\nThe final section of the object defines the output schema, which describes the format of the data. It has several properties:\n\n1. **`candidate_id`:** An integer representing the candidate solution's ID.\n2. **`reason`:** A short string explaining why this candidate was generated (not present in the example).\n3. **`confidence`:** A float between 0 and 1 indicating how confident the algorithm is in this solution.\n4. **`gradient`:** An object with three properties:\n\t* `hard_exclusions`: A list of objects describing hard exclusions, each with four properties: phase, rule, TTL (time to live), city?, and edge?.\n\t* `soft_penalties`: A list of objects describing soft penalties, each with three properties: phase, feature, and delta.\n\t* `retrieval_patches`: A list of objects describing retrieval patches, each with three properties: phase, patch, and TTL.\n\nOverall, this object represents the output of a search algorithm that has generated multiple candidate solutions for a particular problem. Each solution is described by its ID, bundle, costs, feasibility, and some metadata about why it was generated.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "f512e189e380",
+      "phase": "daily",
+      "slot_fp": "meal|d2|slot:lunch|seg:None|Redding|None|None->None",
+      "bundle_fp": "be8c4979468f"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "f512e189e380",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "5eb7783d78ae"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Redding",
+        "Santa Barbara"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "f512e189e380",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:lunch|seg:None|Redding|None|None->None",
+        "bundle_fp": "be8c4979468f"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "f512e189e380",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:lunch|seg:None|Redding|None|None->None",
+        "bundle_fp": "be8c4979468f"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Santa Barbara",
+        "Bakersfield"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "f512e189e380",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "5eb7783d78ae"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "f512e189e380",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "5eb7783d78ae"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Redding",
+        "Santa Barbara"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "f512e189e380",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:lunch|seg:None|Redding|None|None->None",
+        "bundle_fp": "be8c4979468f"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 57.69374625990167
+}

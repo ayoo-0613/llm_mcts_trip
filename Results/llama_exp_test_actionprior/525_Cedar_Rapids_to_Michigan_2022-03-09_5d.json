@@ -1,0 +1,1069 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1078.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you assist in creating a 5-day travel plan for two individuals, starting in Cedar Rapids and visiting two distinct cities in Michigan from March 9th to March 13th, 2022? We have a budget of $2,200. In terms of cuisine, we are particularly interested in sampling French and Mexican foods during our journey.",
+  "parsed": {
+    "org": "Cedar Rapids",
+    "dest": "Michigan",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-09",
+      "2022-03-10",
+      "2022-03-11",
+      "2022-03-12",
+      "2022-03-13"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": [
+        "French",
+        "Mexican"
+      ],
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 2200,
+    "origin": "Cedar Rapids",
+    "destination": "Michigan",
+    "duration_days": 5,
+    "start_date": "2022-03-09",
+    "preferences": [
+      "French",
+      "Mexican"
+    ],
+    "candidate_cities": [
+      "Pellston",
+      "Traverse City",
+      "Alpena",
+      "Iron Mountain",
+      "Kalamazoo",
+      "Saginaw",
+      "Grand Rapids",
+      "Lansing",
+      "Muskegon",
+      "Hancock",
+      "Detroit",
+      "Escanaba"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Cedar Rapids->Muskegon 670km cost 670",
+    "move:seg1:taxi:Muskegon->Alpena 408km cost 408"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Muskegon",
+      "Alpena"
+    ],
+    "transportation_dates": [
+      "2022-03-09",
+      "2022-03-11",
+      "2022-03-13"
+    ],
+    "transportation_methods": [
+      "taxi, from Cedar Rapids to Muskegon, cost: 670.0",
+      "taxi, from Muskegon to Alpena, cost: 408.0",
+      "Alpena->Cedar Rapids missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Muskegon",
+      "missing, Alpena"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Cedar Rapids to Muskegon",
+      "transportation": "Taxi, from Cedar Rapids to Muskegon, Cost: 670",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Muskegon",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Muskegon to Alpena",
+      "transportation": "Taxi, from Muskegon to Alpena, Cost: 408",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Alpena",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Alpena",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:1|None|2022-03-09|Muskegon->Alpena",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 1530.0,
+        "slot_cap": 140.92105263157893,
+        "reserve": 642.0
+      },
+      "segment_role": "intercity",
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-09|Alpena->Cedar Rapids",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1122.0,
+        "slot_cap": 403.68009868421046,
+        "reserve": 394.26824999999997
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 545.6999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 463.84499999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 394.26824999999997,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-09|Alpena->Cedar Rapids",
+        "city": "Cedar Rapids",
+        "city_bundle": [
+          "Muskegon",
+          "Alpena"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1122.0,
+          "slot_cap": 403.68009868421046,
+          "reserve": 394.26824999999997,
+          "min_cost_nonbudget": 518.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Muskegon",
+          "Pellston"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 924.0,
+          "bundle_lb_cost": 3676.0,
+          "stay_lb_cost": 1336.0,
+          "meal_lb_cost": 396.0,
+          "transport_lb_cost": 1944.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "cedar rapids",
+              "muskegon"
+            ],
+            [
+              "muskegon",
+              "pellston"
+            ],
+            [
+              "pellston",
+              "cedar rapids"
+            ]
+          ],
+          "bundle_key": [
+            "muskegon",
+            "pellston"
+          ],
+          "bundle_key_set": [
+            "muskegon",
+            "pellston"
+          ],
+          "bundle_key_seq": [
+            "muskegon",
+            "pellston"
+          ],
+          "city_features": {
+            "Muskegon": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 97.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 8,
+              "min_meal_cost": 18.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 2,
+              "hotel_slack": 1
+            },
+            "Pellston": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 571.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 10,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 1,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Cedar Rapids->Muskegon": {
+              "min_cost": 670.0,
+              "blocked": false
+            },
+            "Muskegon->Pellston": {
+              "min_cost": 350.0,
+              "blocked": false
+            },
+            "Pellston->Cedar Rapids": {
+              "min_cost": 924.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 1,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 571.0,
+            "bottleneck_city_meal": "Pellston",
+            "bottleneck_city_hotel": "Pellston",
+            "bottleneck_edge": "Pellston->Cedar Rapids"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 1,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 571.0,
+          "bottleneck_city_meal": "Pellston",
+          "bottleneck_city_hotel": "Pellston",
+          "bottleneck_edge": "Pellston->Cedar Rapids"
+        },
+        "budget_context": {
+          "remaining": 1180.0,
+          "slot_cap": 424.547697368421,
+          "reserve": 1004.7084999999998,
+          "min_cost_nonbudget": 462.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Cedar Rapids",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1180.0,
+          "slot_cap": 424.547697368421,
+          "reserve": 1004.7084999999998,
+          "min_cost_nonbudget": 462.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "French",
+              "Mexican"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Muskegon",
+        "Alpena"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object containing a list of candidate solutions for some kind of optimization problem. Here's a breakdown of the structure:\n\n* The outermost property is `output_schema`, which defines the schema of the output.\n* Inside `output_schema` are definitions for several properties:\n\t+ `candidate_id`: an integer identifier for each candidate solution\n\t+ `reason`: a short string explaining why this candidate was generated\n\t+ `confidence`: a float value between 0 and 1 indicating how confident the system is in this candidate\n\t+ `gradient`: an object containing three lists of objects:\n\t\t- `hard_exclusions`: a list of objects with properties for each hard exclusion, including phase, rule, TTL (time to live), city, and edge\n\t\t- `soft_penalties`: a list of objects with properties for each soft penalty, including phase, feature, and delta\n\t\t- `retrieval_patches`: a list of objects with properties for each retrieval patch, including phase, patch, and TTL\n* The main part of the JSON object is a list of candidate solutions, each represented as an object with the following properties:\n\t+ `id`: an integer identifier for this candidate solution (not to be confused with `candidate_id` in the output schema)\n\t+ `bundle`: a list of city IDs, representing the cities included in this candidate bundle\n\t+ `edge`: an edge ID or a tuple of two city IDs representing the edge between these cities\n\t+ `lb_costs`: an object containing estimated costs for transportation (transport_lb_cost), stay (stay_lb_cost), meal (meal_lb_cost), and bundle (bundle_lb_cost)\n\t+ `feasibility`: an object with two boolean properties: `return_leg_exists` and `hotel_feasible_all`\n\t+ `bundle_risk`: an object with properties describing the risk associated with this candidate bundle, including bottleneck meal slack, attribute slack, hotel price, city of meal, city of hotel, and edge\n\t+ `city_summary`: a list of objects containing summaries for each city in the bundle, including estimated costs and time to travel\n\t+ `edge_summary`: an object containing summary information about the edges between cities in the bundle\n\nThis is likely output from a machine learning model or optimization algorithm that has generated candidate solutions for some kind of travel planning problem. The system estimates costs and feasibility for each candidate solution, along with the risk associated with each solution.\n\nIf you'd like me to help with a specific question about this data, feel free to ask!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Muskegon",
+          "Alpena"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1036.0,
+          "bundle_lb_cost": 3014.0,
+          "stay_lb_cost": 324.0,
+          "meal_lb_cost": 576.0,
+          "transport_lb_cost": 2114.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "cedar rapids",
+              "muskegon"
+            ],
+            [
+              "muskegon",
+              "alpena"
+            ],
+            [
+              "alpena",
+              "cedar rapids"
+            ]
+          ],
+          "bundle_key": [
+            "alpena",
+            "muskegon"
+          ],
+          "bundle_key_set": [
+            "alpena",
+            "muskegon"
+          ],
+          "bundle_key_seq": [
+            "muskegon",
+            "alpena"
+          ],
+          "city_features": {
+            "Muskegon": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 97.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 8,
+              "min_meal_cost": 18.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 2,
+              "hotel_slack": 1
+            },
+            "Alpena": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 65.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 9,
+              "min_meal_cost": 20.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 0,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Cedar Rapids->Muskegon": {
+              "min_cost": 670.0,
+              "blocked": false
+            },
+            "Muskegon->Alpena": {
+              "min_cost": 408.0,
+              "blocked": false
+            },
+            "Alpena->Cedar Rapids": {
+              "min_cost": 1036.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 0,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 97.0,
+            "bottleneck_city_meal": "Alpena",
+            "bottleneck_city_hotel": "Muskegon",
+            "bottleneck_edge": "Alpena->Cedar Rapids"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 0,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 97.0,
+          "bottleneck_city_meal": "Alpena",
+          "bottleneck_city_hotel": "Muskegon",
+          "bottleneck_edge": "Alpena->Cedar Rapids"
+        },
+        "budget_context": {
+          "remaining": 1122.0,
+          "slot_cap": 403.68009868421046,
+          "reserve": 394.26824999999997,
+          "min_cost_nonbudget": 518.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Cedar Rapids",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1122.0,
+          "slot_cap": 403.68009868421046,
+          "reserve": 394.26824999999997,
+          "min_cost_nonbudget": 518.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "French",
+              "Mexican"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Lansing",
+        "Alpena"
+      ],
+      "reason": null,
+      "raw": "This appears to be a JSON output from a machine learning or optimization model. I'll do my best to break it down and identify the key components.\n\n**Overall Structure**\n\nThe output is an array of objects, each representing a candidate solution to an optimization problem. Each object has several properties:\n\n* `candidate_id`: an integer identifier for the candidate\n* `reason`: a short string describing why this candidate was selected (e.g., \"best\" or \"closest\")\n* `confidence`: a float value between 0 and 1 indicating how confident the model is in its selection\n\n**Gradient Object**\n\nEach candidate object has a nested `gradient` property, which contains three lists:\n\n* `hard_exclusions`: a list of objects describing hard exclusions (i.e., rules that must be broken for this candidate to be considered). Each object contains:\n\t+ `phase`: the phase in which the exclusion applies\n\t+ `rule`: the specific rule being excluded\n\t+ `ttl`: a time-to-live value indicating how long the exclusion is valid\n\t+ `city?`: an optional property indicating whether the exclusion applies only to certain cities (or none)\n\t+ `edge?`: an optional property indicating whether the exclusion applies only to certain edges (or none)\n* `soft_penalties`: a list of objects describing soft penalties (i.e., rules that are not hard exclusions, but may affect the candidate's score). Each object contains:\n\t+ `phase`: the phase in which the penalty applies\n\t+ `feature`: the specific feature being penalized\n\t+ `delta`: the magnitude of the penalty\n* `retrieval_patches`: a list of objects describing patches to be applied during retrieval (i.e., modifications to be made to the candidate solution). Each object contains:\n\t+ `phase`: the phase in which the patch applies\n\t+ `patch`: the specific modification to be made\n\t+ `ttl`: a time-to-live value indicating how long the patch is valid\n\n**Other Properties**\n\nEach candidate object also has several other properties:\n\n* `output_schema`: an object describing the output format of the model's predictions. This includes information about the schema of each property (e.g., data type, possible values)\n* `candidate_list`: a list of candidate objects, which can be used to compare and rank different solutions.\n\nLet me know if you have any specific questions or areas of interest within this output!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Lansing",
+          "Alpena"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1036.0,
+          "bundle_lb_cost": 3049.0,
+          "stay_lb_cost": 416.0,
+          "meal_lb_cost": 504.0,
+          "transport_lb_cost": 2129.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "cedar rapids",
+              "lansing"
+            ],
+            [
+              "lansing",
+              "alpena"
+            ],
+            [
+              "alpena",
+              "cedar rapids"
+            ]
+          ],
+          "bundle_key": [
+            "alpena",
+            "lansing"
+          ],
+          "bundle_key_set": [
+            "alpena",
+            "lansing"
+          ],
+          "bundle_key_seq": [
+            "lansing",
+            "alpena"
+          ],
+          "city_features": {
+            "Lansing": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 143.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 8,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 2,
+              "hotel_slack": 1
+            },
+            "Alpena": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 65.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 9,
+              "min_meal_cost": 20.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 0,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Cedar Rapids->Lansing": {
+              "min_cost": 721.0,
+              "blocked": false
+            },
+            "Lansing->Alpena": {
+              "min_cost": 372.0,
+              "blocked": false
+            },
+            "Alpena->Cedar Rapids": {
+              "min_cost": 1036.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 0,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 143.0,
+            "bottleneck_city_meal": "Alpena",
+            "bottleneck_city_hotel": "Lansing",
+            "bottleneck_edge": "Alpena->Cedar Rapids"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 0,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 143.0,
+          "bottleneck_city_meal": "Alpena",
+          "bottleneck_city_hotel": "Lansing",
+          "bottleneck_edge": "Alpena->Cedar Rapids"
+        },
+        "budget_context": {
+          "remaining": 1107.0,
+          "slot_cap": 398.28330592105254,
+          "reserve": 465.50674999999995,
+          "min_cost_nonbudget": 518.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Cedar Rapids",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1107.0,
+          "slot_cap": 398.28330592105254,
+          "reserve": 465.50674999999995,
+          "min_cost_nonbudget": 518.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "French",
+              "Mexican"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Muskegon",
+        "Alpena"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that represents the output of an optimization algorithm. It contains a list of candidate solutions, along with their associated costs and feasibility metrics.\n\nHere's a breakdown of the structure:\n\n* `output_schema`: This section defines the schema for the output data.\n\t+ `candidate_id`: A unique identifier for each candidate solution.\n\t+ `reason`: A short string explaining why this candidate was selected (e.g. \"best solution found\").\n\t+ `confidence`: A float value between 0 and 1 indicating how confident the algorithm is in its selection.\n\t+ `gradient`: An object containing three lists of metrics:\n\t\t- `hard_exclusions`: A list of tuples containing a phase, rule, TTL (time to live), city name, and edge identifier. These represent hard exclusions that cannot be violated.\n\t\t- `soft_penalties`: A list of tuples containing a phase, feature name, and delta value. These represent soft penalties that can be mitigated by adjusting the solution.\n\t\t- `retrieval_patches`: A list of tuples containing a phase, patch identifier, and TTL. These represent patches that can be applied to improve the solution.\n* `candidates`: This section contains the actual candidate solutions.\n\nTo extract meaningful insights from this data, you would typically need to write code to:\n\n1. Parse the JSON object and extract relevant fields for each candidate.\n2. Calculate derived metrics or perform additional analysis on the extracted data (e.g. filtering, sorting, aggregation).\n\nWithout specific questions or tasks, it's difficult to provide more targeted assistance. If you'd like help with a particular aspect of this data, please let me know!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "28bcae8178d8",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-09|Alpena->Cedar Rapids",
+      "bundle_fp": "29a1830471b3"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "28bcae8178d8",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-09|Pellston->Cedar Rapids",
+        "bundle_fp": "617de3cb5e30"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Muskegon",
+        "Alpena"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "28bcae8178d8",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-09|Alpena->Cedar Rapids",
+        "bundle_fp": "29a1830471b3"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "28bcae8178d8",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-09|Alpena->Cedar Rapids",
+        "bundle_fp": "29a1830471b3"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Lansing",
+        "Alpena"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "28bcae8178d8",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-09|Alpena->Cedar Rapids",
+        "bundle_fp": "4298014938b1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "28bcae8178d8",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-09|Alpena->Cedar Rapids",
+        "bundle_fp": "4298014938b1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Muskegon",
+        "Alpena"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "28bcae8178d8",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-09|Alpena->Cedar Rapids",
+        "bundle_fp": "29a1830471b3"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 18.99273306503892
+}

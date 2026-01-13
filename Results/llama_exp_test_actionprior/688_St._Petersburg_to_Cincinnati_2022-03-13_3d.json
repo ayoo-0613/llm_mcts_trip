@@ -1,0 +1,261 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 628.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you create a 3-day travel itinerary for two people departing from St. Petersburg and visiting Cincinnati from March 13th to March 15th, 2022? Our total budget is $1,800. We're interested in accommodations that allow parties and offer non-shared rooms. Also, we do not prefer to drive ourselves.",
+  "parsed": {
+    "org": "St. Petersburg",
+    "dest": "Cincinnati",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "parties",
+      "cuisine": null,
+      "room type": "non-shared room",
+      "transportation": "no self-driving"
+    },
+    "budget": 1800,
+    "origin": "St. Petersburg",
+    "destination": "Cincinnati",
+    "duration_days": 3,
+    "start_date": "2022-03-13",
+    "preferences": [
+      "parties",
+      "non-shared room"
+    ],
+    "transport_forbid": [
+      "self-driving"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Cincinnati"
+    ],
+    "transportation_dates": [
+      "2022-03-13",
+      "2022-03-15"
+    ],
+    "transportation_methods": [
+      "Flight F1342087, from St. Petersburg to Cincinnati, Departure Time: 18:08, Arrival Time: 20:12, cost: 155.0",
+      "Flight F0373355, from Cincinnati to St. Petersburg, Departure Time: 09:08, Arrival Time: 11:06, cost: 159.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Cincinnati"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from St. Petersburg to Cincinnati",
+      "transportation": "Flight Number: F1342087, from St. Petersburg to Cincinnati, Departure Time: 18:08, Arrival Time: 20:12",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Cincinnati",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Cincinnati to St. Petersburg",
+      "transportation": "Flight Number: F0373355, from Cincinnati to St. Petersburg, Departure Time: 09:08, Arrival Time: 11:06",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+      "counts": {
+        "kb": 0,
+        "after_nonbudget": 0,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 1172.0,
+        "slot_cap": 439.5,
+        "reserve": 1173.0
+      },
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+        "city": "Cincinnati",
+        "city_bundle": [
+          "Cincinnati"
+        ],
+        "reason": "constraint_mismatch",
+        "counts": {
+          "kb": 0,
+          "after_nonbudget": 0,
+          "after_budget": 0,
+          "budget_removed": 0,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": "bundle_infeasible",
+        "budget_context": {
+          "remaining": 1172.0,
+          "slot_cap": 439.5,
+          "reserve": 1173.0,
+          "min_cost_nonbudget": null
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "ae516c6e3665",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+      "bundle_fp": "af1d064744d1"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "ae516c6e3665",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+        "bundle_fp": "af1d064744d1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "ae516c6e3665",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+        "bundle_fp": "af1d064744d1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "ae516c6e3665",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Cincinnati|None|None->None",
+        "bundle_fp": "af1d064744d1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.1462891441769898
+}

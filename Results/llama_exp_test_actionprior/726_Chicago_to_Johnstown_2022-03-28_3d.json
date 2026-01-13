@@ -1,0 +1,213 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 708.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you help create a travel plan for two individuals departing from Chicago and traveling to Johnstown? The trip should span from March 28th to March 30th, 2022. Our budget is set at $800. We require accommodations that are not shared with others and should accommodate visitors. Additionally, we are interested in trying Mediterranean, Chinese, French, and American cuisines during our visit.",
+  "parsed": {
+    "org": "Chicago",
+    "dest": "Johnstown",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-28",
+      "2022-03-29",
+      "2022-03-30"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "visitors",
+      "cuisine": [
+        "Mediterranean",
+        "Chinese",
+        "French",
+        "American"
+      ],
+      "room type": "not shared room",
+      "transportation": null
+    },
+    "budget": 800,
+    "origin": "Chicago",
+    "destination": "Johnstown",
+    "duration_days": 3,
+    "start_date": "2022-03-28",
+    "preferences": [
+      "Mediterranean",
+      "Chinese",
+      "French",
+      "American",
+      "visitors",
+      "not shared room"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Johnstown"
+    ],
+    "transportation_dates": [
+      "2022-03-28",
+      "2022-03-30"
+    ],
+    "transportation_methods": [
+      "Flight F3379167, from Chicago to Johnstown, Departure Time: 18:11, Arrival Time: 20:45, cost: 99.0",
+      "Flight F3822325, from Johnstown to Chicago, Departure Time: 11:55, Arrival Time: 13:03, cost: 98.0"
+    ],
+    "restaurants": [
+      "Cafe Coffee Day, Johnstown",
+      "Ashoka's Ice Zone, Johnstown",
+      "Desi Vibes, Johnstown",
+      "Wah Ji Wah, Johnstown",
+      "Lajawab Chinese Food, Johnstown"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "2 Bedroom Apartment East Village Amazing Location, Johnstown"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Chicago to Johnstown",
+      "transportation": "Flight Number: F3379167, from Chicago to Johnstown, Departure Time: 18:11, Arrival Time: 20:45",
+      "breakfast": "Cafe Coffee Day, Johnstown",
+      "attraction": "-",
+      "lunch": "Ashoka's Ice Zone, Johnstown",
+      "dinner": "Desi Vibes, Johnstown",
+      "accommodation": "2 Bedroom Apartment East Village Amazing Location, Johnstown"
+    },
+    {
+      "days": 2,
+      "current_city": "Johnstown",
+      "transportation": "-",
+      "breakfast": "Wah Ji Wah, Johnstown",
+      "attraction": "-",
+      "lunch": "Lajawab Chinese Food, Johnstown",
+      "dinner": "-",
+      "accommodation": "2 Bedroom Apartment East Village Amazing Location, Johnstown"
+    },
+    {
+      "days": 3,
+      "current_city": "from Johnstown to Chicago",
+      "transportation": "Flight Number: F3822325, from Johnstown to Chicago, Departure Time: 11:55, Arrival Time: 13:03",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d2|slot:dinner|seg:None|Johnstown|None|None->None",
+      "counts": {
+        "kb": 28,
+        "after_nonbudget": 28,
+        "after_budget": 2,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 19,
+        "violate_reserve": 7,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 92.0,
+        "slot_cap": 11.5,
+        "reserve": 66.0
+      },
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d2|slot:dinner|seg:None|Johnstown|None|None->None",
+        "city": "Johnstown",
+        "city_bundle": [
+          "Johnstown"
+        ],
+        "reason": "duplication",
+        "counts": {
+          "kb": 28,
+          "after_nonbudget": 28,
+          "after_budget": 2,
+          "budget_removed": 26,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 92.0,
+          "slot_cap": 11.5,
+          "reserve": 66.0,
+          "min_cost_nonbudget": 11.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "ad617700824e",
+      "phase": "daily",
+      "slot_fp": "meal|d2|slot:dinner|seg:None|Johnstown|None|None->None",
+      "bundle_fp": "10a38b832f0e"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "ad617700824e",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:dinner|seg:None|Johnstown|None|None->None",
+        "bundle_fp": "10a38b832f0e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "ad617700824e",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:dinner|seg:None|Johnstown|None|None->None",
+        "bundle_fp": "10a38b832f0e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "ad617700824e",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:dinner|seg:None|Johnstown|None|None->None",
+        "bundle_fp": "10a38b832f0e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 1.5979849761351943
+}

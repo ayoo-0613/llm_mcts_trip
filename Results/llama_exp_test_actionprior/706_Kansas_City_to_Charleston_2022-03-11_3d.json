@@ -1,0 +1,292 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 0.0,
+  "violations": [
+    "commonsense:is_valid_transportation",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you arrange a 3-day trip for 2 people from Kansas City to Charleston scheduled from March 11th to March 13th, 2022? Our budget is set at $1,000. We require accommodations such as non-shared rooms for our stay. Additionally, we're interested in trying Mexican, Chinese, French, and Italian cuisines. Please note that the accommodations must allow parties.",
+  "parsed": {
+    "org": "Kansas City",
+    "dest": "Charleston",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-11",
+      "2022-03-12",
+      "2022-03-13"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "parties",
+      "cuisine": [
+        "Mexican",
+        "Chinese",
+        "French",
+        "Italian"
+      ],
+      "room type": "non-shared room",
+      "transportation": null
+    },
+    "budget": 1000,
+    "origin": "Kansas City",
+    "destination": "Charleston",
+    "duration_days": 3,
+    "start_date": "2022-03-11",
+    "preferences": [
+      "Mexican",
+      "Chinese",
+      "French",
+      "Italian",
+      "parties",
+      "non-shared room"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Charleston"
+    ],
+    "transportation_dates": [
+      "2022-03-11",
+      "2022-03-13"
+    ],
+    "transportation_methods": [
+      "Kansas City->Charleston missing mode",
+      "Charleston->Kansas City missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Charleston"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "Charleston",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Charleston",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "Charleston",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:0|None|2022-03-11|Kansas City->Charleston",
+      "counts": {
+        "kb": 10,
+        "after_nonbudget": 10,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 2,
+        "violate_reserve": 8,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1000.0,
+        "slot_cap": 179.89309210526312,
+        "reserve": 614.739125
+      },
+      "segment_role": "outbound",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 850.85,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 723.2225,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 614.739125,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:0|None|2022-03-11|Kansas City->Charleston",
+        "city": "Charleston",
+        "city_bundle": [
+          "Charleston"
+        ],
+        "reason": "constraint_mismatch",
+        "counts": {
+          "kb": 10,
+          "after_nonbudget": 10,
+          "after_budget": 0,
+          "budget_removed": 10,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": "bundle_infeasible",
+        "budget_context": {
+          "remaining": 1000.0,
+          "slot_cap": 179.89309210526312,
+          "reserve": 614.739125,
+          "min_cost_nonbudget": 217.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "99bb41b7122f",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-11|Kansas City->Charleston",
+      "bundle_fp": "d3c1dba1e467"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "99bb41b7122f",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-11|Kansas City->Charleston",
+        "bundle_fp": "d3c1dba1e467"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "99bb41b7122f",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-11|Kansas City->Charleston",
+        "bundle_fp": "d3c1dba1e467"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "99bb41b7122f",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-11|Kansas City->Charleston",
+        "bundle_fp": "d3c1dba1e467"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.012768805958330631
+}

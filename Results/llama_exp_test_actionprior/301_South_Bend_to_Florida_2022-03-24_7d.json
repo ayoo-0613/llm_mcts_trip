@@ -1,0 +1,1092 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 815.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you help me create a seven-day travel itinerary? The trip should start in South Bend and cover 3 cities within Florida. The trip is from March 24th to March 30th, 2022, and has a budget of $1,600.",
+  "parsed": {
+    "org": "South Bend",
+    "dest": "Florida",
+    "days": 7,
+    "visiting_city_number": 3,
+    "date": [
+      "2022-03-24",
+      "2022-03-25",
+      "2022-03-26",
+      "2022-03-27",
+      "2022-03-28",
+      "2022-03-29",
+      "2022-03-30"
+    ],
+    "people_number": null,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 1600,
+    "origin": "South Bend",
+    "destination": "Florida",
+    "duration_days": 7,
+    "start_date": "2022-03-24",
+    "preferences": [],
+    "candidate_cities": [
+      "Sarasota",
+      "Fort Myers",
+      "Gainesville",
+      "Orlando",
+      "Daytona Beach",
+      "Jacksonville",
+      "Tampa",
+      "Panama City",
+      "Key West",
+      "West Palm Beach",
+      "Miami",
+      "Tallahassee",
+      "Punta Gorda",
+      "Fort Lauderdale",
+      "Pensacola"
+    ]
+  },
+  "actions": [
+    "move:seg0:flight:F0920599 South Bend->Punta Gorda $211 10:24-13:01",
+    "move:seg1:taxi:Punta Gorda->Gainesville 363km cost 363",
+    "move:seg2:taxi:Gainesville->Tallahassee 241km cost 241"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Punta Gorda",
+      "Gainesville",
+      "Tallahassee"
+    ],
+    "transportation_dates": [
+      "2022-03-24",
+      "2022-03-26",
+      "2022-03-28",
+      "2022-03-30"
+    ],
+    "transportation_methods": [
+      "Flight F0920599, from South Bend to Punta Gorda, Departure Time: 10:24, Arrival Time: 13:01, cost: 211.0",
+      "taxi, from Punta Gorda to Gainesville, cost: 363.0",
+      "taxi, from Gainesville to Tallahassee, cost: 241.0",
+      "Tallahassee->South Bend missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Punta Gorda",
+      "missing, Gainesville",
+      "missing, Tallahassee"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from South Bend to Punta Gorda",
+      "transportation": "Flight Number: F0920599, from South Bend to Punta Gorda, Departure Time: 10:24, Arrival Time: 13:01",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Punta Gorda",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Punta Gorda to Gainesville",
+      "transportation": "Taxi, from Punta Gorda to Gainesville, Cost: 363",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Gainesville",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Gainesville to Tallahassee",
+      "transportation": "Taxi, from Gainesville to Tallahassee, Cost: 241",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "Tallahassee",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 7,
+      "current_city": "Tallahassee",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-24|Gainesville->Tallahassee",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 1026.0,
+        "slot_cap": 188.99999999999997,
+        "reserve": 768.0
+      },
+      "segment_role": "intercity",
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-24|Tallahassee->South Bend",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 785.0,
+        "slot_cap": 564.8643092105262,
+        "reserve": 471.6479999999999
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 652.8,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 554.8799999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 471.6479999999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-24|Tallahassee->South Bend",
+        "city": "South Bend",
+        "city_bundle": [
+          "Punta Gorda",
+          "Gainesville",
+          "Tallahassee"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 785.0,
+          "slot_cap": 564.8643092105262,
+          "reserve": 471.6479999999999,
+          "min_cost_nonbudget": 1477.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [],
+        "city_bundle": [
+          "Gainesville",
+          "Orlando",
+          "Punta Gorda"
+        ],
+        "current_bundle_features": {},
+        "current_bottleneck": null,
+        "budget_context": {
+          "remaining": 1600.0,
+          "slot_cap": 287.82894736842104,
+          "reserve": 477.1751249999999,
+          "min_cost_nonbudget": 1620.0
+        },
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Gainesville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1600.0,
+          "slot_cap": 287.82894736842104,
+          "reserve": 477.1751249999999,
+          "min_cost_nonbudget": 1620.0
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Punta Gorda",
+        "Gainesville",
+        "Tallahassee"
+      ],
+      "reason": "Bundle risk is low, and the budget context is favorable.",
+      "raw": "```\n{\n    \"candidate_id\": 2,\n    \"reason\": \"Bundle risk is low, and the budget context is favorable.\",\n    \"confidence\": 0.9,\n    \"gradient\": {\n        \"hard_exclusions\": [{\"phase\": \"segment\", \"rule\": \"AVOID_CITY\", \"ttl\": 1, \"city\": \"Gainesville\"}],\n        \"soft_penalties\": [{\"phase\": \"hotel/stay\", \"feature\": \"hotel_price\", \"delta\": -10}],\n        \"retrieval_patches\": [{\"phase\": \"flight\", \"patch\": \"reroute through Jacksonville\"}, {\"phase\": \"segment\", \"patch\": \"use alternative route to avoid Gainesville\"}]\n    }\n}\n```\n\nThis output is chosen based on the provided rules:\n\n- The failed phase is segment, so we prefer candidates with no blocked edges for segment failures.\n- The dead-end city is Gainesville, which we try to avoid if feasible.\n- We use bundle_risk + city_summary + edge_summary + lb_costs to decide. Candidate 2 has a lower bundle risk and better budget context compared to the other candidates.\n- There are no hard exclusions or soft penalties in this output as per the rules provided.\n\nThe gradient is defined with three components:\n\n1. **Hard Exclusions**: This component defines how to avoid cities that might lead to failure. In this case, we have one exclusion for Gainesville with a TTL (Time To Live) of 1 day.\n2. **Soft Penalties**: This component applies penalties based on certain features during the MCTS (Monte Carlo Tree Search) process. Here, we apply a penalty of -10 to hotel_price in the hotel/stay phase.\n3. **Retrieval Patches**: These are suggested patches or adjustments that can be made during the search process to improve outcomes. In this case, we suggest rerouting through Jacksonville for flights and using an alternative route to avoid Gainesville for segments.\n\nThe confidence level of 0.9 indicates how confident the system is in its choice.",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "Bundle risk is low, and the budget context is favorable.",
+        "confidence": 0.9,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "AVOID_CITY",
+              "ttl": 1,
+              "city": "Gainesville"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "hotel/stay",
+              "feature": "hotel_price",
+              "delta": -10
+            }
+          ],
+          "retrieval_patches": [
+            {
+              "phase": "flight",
+              "patch": "reroute through Jacksonville"
+            },
+            {
+              "phase": "segment",
+              "patch": "use alternative route to avoid Gainesville"
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "AVOID_CITY",
+            "ttl": 1,
+            "city": "Gainesville"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "hotel/stay",
+            "feature": "hotel_price",
+            "delta": -10
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "flight",
+            "patch": "reroute through Jacksonville"
+          },
+          {
+            "phase": "segment",
+            "patch": "use alternative route to avoid Gainesville"
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [],
+        "city_bundle": [
+          "Punta Gorda",
+          "Gainesville",
+          "Tallahassee"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1477.0,
+          "bundle_lb_cost": 3060.0,
+          "stay_lb_cost": 540.0,
+          "meal_lb_cost": 228.0,
+          "transport_lb_cost": 2292.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "south bend",
+              "punta gorda"
+            ],
+            [
+              "punta gorda",
+              "gainesville"
+            ],
+            [
+              "gainesville",
+              "tallahassee"
+            ],
+            [
+              "tallahassee",
+              "south bend"
+            ]
+          ],
+          "bundle_key": [
+            "gainesville",
+            "punta gorda",
+            "tallahassee"
+          ],
+          "bundle_key_set": [
+            "gainesville",
+            "punta gorda",
+            "tallahassee"
+          ],
+          "bundle_key_seq": [
+            "punta gorda",
+            "gainesville",
+            "tallahassee"
+          ],
+          "city_features": {
+            "Punta Gorda": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 79.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 36,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 30,
+              "hotel_slack": 1
+            },
+            "Gainesville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 118.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            },
+            "Tallahassee": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 73.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 14,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "South Bend->Punta Gorda": {
+              "min_cost": 211.0,
+              "blocked": false
+            },
+            "Punta Gorda->Gainesville": {
+              "min_cost": 363.0,
+              "blocked": false
+            },
+            "Gainesville->Tallahassee": {
+              "min_cost": 241.0,
+              "blocked": false
+            },
+            "Tallahassee->South Bend": {
+              "min_cost": 1477.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 14,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 118.0,
+            "bottleneck_city_meal": "Tallahassee",
+            "bottleneck_city_hotel": "Gainesville",
+            "bottleneck_edge": "Tallahassee->South Bend"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 14,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 118.0,
+          "bottleneck_city_meal": "Tallahassee",
+          "bottleneck_city_hotel": "Gainesville",
+          "bottleneck_edge": "Tallahassee->South Bend"
+        },
+        "budget_context": {
+          "remaining": 785.0,
+          "slot_cap": 564.8643092105262,
+          "reserve": 471.6479999999999,
+          "min_cost_nonbudget": 1477.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "South Bend",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 785.0,
+          "slot_cap": 564.8643092105262,
+          "reserve": 471.6479999999999,
+          "min_cost_nonbudget": 1477.0
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Punta Gorda",
+        "Fort Myers",
+        "Orlando"
+      ],
+      "reason": "Bundle risk is lowest for candidate 1",
+      "raw": "{\n    \"candidate_id\": 1,\n    \"reason\": \"Bundle risk is lowest for candidate 1\",\n    \"confidence\": 0.95,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            {\"phase\": \"segment\", \"rule\": \"NO_FLIGHT\", \"ttl\": 10, \"city\": null, \"edge\": null}\n        ],\n        \"soft_penalties\": [\n            {\"phase\": \"segment\", \"feature\": \"budget_risk\", \"delta\": -0.1},\n            {\"phase\": \"stay\", \"feature\": \"cost_ratio\", \"delta\": -0.2}\n        ],\n        \"retrieval_patches\": []\n    }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "Bundle risk is lowest for candidate 1",
+        "confidence": 0.95,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "NO_FLIGHT",
+              "ttl": 10,
+              "city": null,
+              "edge": null
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "budget_risk",
+              "delta": -0.1
+            },
+            {
+              "phase": "stay",
+              "feature": "cost_ratio",
+              "delta": -0.2
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "NO_FLIGHT",
+            "ttl": 10,
+            "city": null,
+            "edge": null
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "budget_risk",
+            "delta": -0.1
+          },
+          {
+            "phase": "stay",
+            "feature": "cost_ratio",
+            "delta": -0.2
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [],
+        "city_bundle": [
+          "Punta Gorda",
+          "Fort Myers",
+          "Orlando"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1792.0,
+          "bundle_lb_cost": 2877.6,
+          "stay_lb_cost": 564.0,
+          "meal_lb_cost": 246.0,
+          "transport_lb_cost": 2067.6,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "south bend",
+              "punta gorda"
+            ],
+            [
+              "punta gorda",
+              "fort myers"
+            ],
+            [
+              "fort myers",
+              "orlando"
+            ],
+            [
+              "orlando",
+              "south bend"
+            ]
+          ],
+          "bundle_key": [
+            "fort myers",
+            "orlando",
+            "punta gorda"
+          ],
+          "bundle_key_set": [
+            "fort myers",
+            "orlando",
+            "punta gorda"
+          ],
+          "bundle_key_seq": [
+            "punta gorda",
+            "fort myers",
+            "orlando"
+          ],
+          "city_features": {
+            "Punta Gorda": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 79.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 36,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 30,
+              "hotel_slack": 1
+            },
+            "Fort Myers": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 133.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 26,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 20,
+              "hotel_slack": 1
+            },
+            "Orlando": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 70.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "South Bend->Punta Gorda": {
+              "min_cost": 211.0,
+              "blocked": false
+            },
+            "Punta Gorda->Fort Myers": {
+              "min_cost": 38.6,
+              "blocked": false
+            },
+            "Fort Myers->Orlando": {
+              "min_cost": 26.0,
+              "blocked": false
+            },
+            "Orlando->South Bend": {
+              "min_cost": 1792.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 20,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 133.0,
+            "bottleneck_city_meal": "Fort Myers",
+            "bottleneck_city_hotel": "Fort Myers",
+            "bottleneck_edge": "Orlando->South Bend"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 20,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 133.0,
+          "bottleneck_city_meal": "Fort Myers",
+          "bottleneck_city_hotel": "Fort Myers",
+          "bottleneck_edge": "Orlando->South Bend"
+        },
+        "budget_context": {
+          "remaining": 1324.4,
+          "slot_cap": 953.001644736842,
+          "reserve": 497.4412499999999,
+          "min_cost_nonbudget": 1792.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "South Bend",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1324.4,
+          "slot_cap": 953.001644736842,
+          "reserve": 497.4412499999999,
+          "min_cost_nonbudget": 1792.0
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1600,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Punta Gorda",
+        "Gainesville",
+        "Tallahassee"
+      ],
+      "reason": "bundle risk",
+      "raw": "{\n  \"candidate_id\": 1,\n  \"reason\": \"bundle risk\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [],\n    \"soft_penalties\": [\n      {\"phase\": \"segment\", \"feature\": \"budget_risk\", \"delta\": 10},\n      {\"phase\": \"stay\", \"feature\": \"cost_ratio\", \"delta\": -5}\n    ],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "bundle risk",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "budget_risk",
+              "delta": 10
+            },
+            {
+              "phase": "stay",
+              "feature": "cost_ratio",
+              "delta": -5
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "budget_risk",
+            "delta": 10
+          },
+          {
+            "phase": "stay",
+            "feature": "cost_ratio",
+            "delta": -5
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "a7d8c7f4e466",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-24|Tallahassee->South Bend",
+      "bundle_fp": "ab2516c0733d"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "a7d8c7f4e466",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-24|South Bend->Gainesville",
+        "bundle_fp": "ed4b1a5f811f"
+      },
+      "confidence": 0.9,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "AVOID_CITY",
+          "ttl": 1,
+          "city": "Gainesville"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "hotel/stay",
+          "feature": "hotel_price",
+          "delta": -10.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Punta Gorda",
+        "Gainesville",
+        "Tallahassee"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "a7d8c7f4e466",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-24|Tallahassee->South Bend",
+        "bundle_fp": "ab2516c0733d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "a7d8c7f4e466",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-24|Tallahassee->South Bend",
+        "bundle_fp": "ab2516c0733d"
+      },
+      "confidence": 0.95,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "NO_FLIGHT",
+          "ttl": 10,
+          "city": null,
+          "edge": null
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": -0.1
+        },
+        {
+          "phase": "stay",
+          "feature": "cost_ratio",
+          "delta": -0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Punta Gorda",
+        "Fort Myers",
+        "Orlando"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "a7d8c7f4e466",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-24|Orlando->South Bend",
+        "bundle_fp": "e7eff7dc0217"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "a7d8c7f4e466",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-24|Orlando->South Bend",
+        "bundle_fp": "e7eff7dc0217"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": 10.0
+        },
+        {
+          "phase": "stay",
+          "feature": "cost_ratio",
+          "delta": -5.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Punta Gorda",
+        "Gainesville",
+        "Tallahassee"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "a7d8c7f4e466",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-24|Tallahassee->South Bend",
+        "bundle_fp": "ab2516c0733d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 10.001207313034683
+}

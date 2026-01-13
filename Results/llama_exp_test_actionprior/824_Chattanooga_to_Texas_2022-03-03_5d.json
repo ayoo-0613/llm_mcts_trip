@@ -1,0 +1,1097 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1778.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you fashion a 5-day travel itinerary for 2 people starting out in Chattanooga and visiting 2 cities in Texas from March 3rd to March 7th, 2022? Our budget is set at $2,200. For lodgings, we require non-shared rooms and the premises must be smoking-friendly. Our cuisine preferences include Indian, Mexican, Chinese, and Italian. We have not yet defined our chosen mode of transportation.",
+  "parsed": {
+    "org": "Chattanooga",
+    "dest": "Texas",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-03",
+      "2022-03-04",
+      "2022-03-05",
+      "2022-03-06",
+      "2022-03-07"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "smoking",
+      "cuisine": [
+        "Indian",
+        "Mexican",
+        "Chinese",
+        "Italian"
+      ],
+      "room type": "not shared room",
+      "transportation": null
+    },
+    "budget": 2200,
+    "origin": "Chattanooga",
+    "destination": "Texas",
+    "duration_days": 5,
+    "start_date": "2022-03-03",
+    "preferences": [
+      "Indian",
+      "Mexican",
+      "Chinese",
+      "Italian",
+      "smoking",
+      "not shared room"
+    ],
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Chattanooga->Longview 1068km cost 1068",
+    "move:seg1:flight:F1374867 Longview->Dallas $28 06:25-07:12",
+    "move:seg2:flight:F2584004 Dallas->Chattanooga $139 20:48-23:43",
+    "stay:Longview:3119 Your home away from home, private cozy room Private room $188"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Longview",
+      "Dallas"
+    ],
+    "transportation_dates": [
+      "2022-03-03",
+      "2022-03-05",
+      "2022-03-07"
+    ],
+    "transportation_methods": [
+      "taxi, from Chattanooga to Longview, cost: 1068.0",
+      "Flight F1374867, from Longview to Dallas, Departure Time: 06:25, Arrival Time: 07:12, cost: 28.0",
+      "Flight F2584004, from Dallas to Chattanooga, Departure Time: 20:48, Arrival Time: 23:43, cost: 139.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Your home away from home, private cozy room, Longview",
+      "missing, Dallas"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Chattanooga to Longview",
+      "transportation": "Taxi, from Chattanooga to Longview, Cost: 1068",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Your home away from home, private cozy room, Longview"
+    },
+    {
+      "days": 2,
+      "current_city": "Longview",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Your home away from home, private cozy room, Longview"
+    },
+    {
+      "days": 3,
+      "current_city": "from Longview to Dallas",
+      "transportation": "Flight Number: F1374867, from Longview to Dallas, Departure Time: 06:25, Arrival Time: 07:12",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Dallas",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Dallas to Chattanooga",
+      "transportation": "Flight Number: F2584004, from Dallas to Chattanooga, Departure Time: 20:48, Arrival Time: 23:43",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Longview|None|None->None",
+      "counts": {
+        "kb": 8,
+        "after_nonbudget": 5,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 4,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 798.0,
+        "slot_cap": 187.03125,
+        "reserve": 414.8
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 414.8,
+          "kept": 1
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+      "counts": {
+        "kb": 16,
+        "after_nonbudget": 10,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 9,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 422.0,
+        "slot_cap": 309.08203125,
+        "reserve": 210.03074999999998
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 290.7,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 247.09499999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 210.03074999999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "city": "Dallas",
+        "city_bundle": [
+          "Longview",
+          "Dallas"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 16,
+          "after_nonbudget": 10,
+          "after_budget": 0,
+          "budget_removed": 10,
+          "nonbudget_removed": 6,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 422.0,
+          "slot_cap": 309.08203125,
+          "reserve": 210.03074999999998,
+          "min_cost_nonbudget": 189.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Dallas",
+          "Longview"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1062.0,
+          "bundle_lb_cost": 2266.0,
+          "stay_lb_cost": 522.0,
+          "meal_lb_cost": 348.0,
+          "transport_lb_cost": 1396.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "chattanooga",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "longview"
+            ],
+            [
+              "longview",
+              "chattanooga"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_seq": [
+            "dallas",
+            "longview"
+          ],
+          "city_features": {
+            "Dallas": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 73.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 28,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 22,
+              "hotel_slack": 1
+            },
+            "Longview": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 188.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 13,
+              "meal_count": 14,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 10,
+              "meal_slack": 5,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Chattanooga->Dallas": {
+              "min_cost": 278.0,
+              "blocked": false
+            },
+            "Dallas->Longview": {
+              "min_cost": 56.0,
+              "blocked": false
+            },
+            "Longview->Chattanooga": {
+              "min_cost": 1062.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 5,
+            "bottleneck_attr_slack": 10,
+            "bottleneck_hotel_price": 188.0,
+            "bottleneck_city_meal": "Longview",
+            "bottleneck_city_hotel": "Longview",
+            "bottleneck_edge": "Longview->Chattanooga"
+          },
+          "min_bundle_cost": 1918.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 5,
+          "bottleneck_attr_slack": 10,
+          "bottleneck_hotel_price": 188.0,
+          "bottleneck_city_meal": "Longview",
+          "bottleneck_city_hotel": "Longview",
+          "bottleneck_edge": "Longview->Chattanooga"
+        },
+        "budget_context": {
+          "remaining": 804.0,
+          "slot_cap": 294.43359375,
+          "reserve": 444.62649999999996,
+          "min_cost_nonbudget": 189.0
+        },
+        "counts": {
+          "kb": 16,
+          "after_nonbudget": 10,
+          "after_budget": 0,
+          "budget_removed": 10,
+          "nonbudget_removed": 6,
+          "topk": 0
+        },
+        "dead_end_city": "Dallas",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 16,
+          "after_nonbudget": 10,
+          "after_budget": 0,
+          "budget_removed": 10,
+          "nonbudget_removed": 6,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 804.0,
+          "slot_cap": 294.43359375,
+          "reserve": 444.62649999999996,
+          "min_cost_nonbudget": 189.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 10,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": [
+              "Indian",
+              "Mexican",
+              "Chinese",
+              "Italian"
+            ],
+            "room type": "not shared room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Longview",
+        "Dallas"
+      ],
+      "reason": "best candidate based on bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"best candidate based on bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 100, \"city\": null, \"edge\": null}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"segment\", \"feature\": \"budget_risk\", \"delta\": -0.5},\n      {\"phase\": \"stay\", \"feature\": \"cost_ratio\", \"delta\": -0.3}\n    ],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "best candidate based on bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 100,
+              "city": null,
+              "edge": null
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "budget_risk",
+              "delta": -0.5
+            },
+            {
+              "phase": "stay",
+              "feature": "cost_ratio",
+              "delta": -0.3
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 100,
+            "city": null,
+            "edge": null
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "budget_risk",
+            "delta": -0.5
+          },
+          {
+            "phase": "stay",
+            "feature": "cost_ratio",
+            "delta": -0.3
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Longview",
+          "Dallas"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 278.0,
+          "bundle_lb_cost": 2266.0,
+          "stay_lb_cost": 522.0,
+          "meal_lb_cost": 342.0,
+          "transport_lb_cost": 1402.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "chattanooga",
+              "longview"
+            ],
+            [
+              "longview",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "chattanooga"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_seq": [
+            "longview",
+            "dallas"
+          ],
+          "city_features": {
+            "Longview": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 188.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 13,
+              "meal_count": 14,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 11,
+              "meal_slack": 8,
+              "hotel_slack": 1
+            },
+            "Dallas": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 73.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 28,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 19,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Chattanooga->Longview": {
+              "min_cost": 1068.0,
+              "blocked": false
+            },
+            "Longview->Dallas": {
+              "min_cost": 56.0,
+              "blocked": false
+            },
+            "Dallas->Chattanooga": {
+              "min_cost": 278.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 8,
+            "bottleneck_attr_slack": 11,
+            "bottleneck_hotel_price": 188.0,
+            "bottleneck_city_meal": "Longview",
+            "bottleneck_city_hotel": "Longview",
+            "bottleneck_edge": "Chattanooga->Longview"
+          },
+          "min_bundle_cost": 1924.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 8,
+          "bottleneck_attr_slack": 11,
+          "bottleneck_hotel_price": 188.0,
+          "bottleneck_city_meal": "Longview",
+          "bottleneck_city_hotel": "Longview",
+          "bottleneck_edge": "Chattanooga->Longview"
+        },
+        "budget_context": {
+          "remaining": 422.0,
+          "slot_cap": 309.08203125,
+          "reserve": 210.03074999999998,
+          "min_cost_nonbudget": 189.0
+        },
+        "counts": {
+          "kb": 16,
+          "after_nonbudget": 10,
+          "after_budget": 0,
+          "budget_removed": 10,
+          "nonbudget_removed": 6,
+          "topk": 0
+        },
+        "dead_end_city": "Dallas",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 16,
+          "after_nonbudget": 10,
+          "after_budget": 0,
+          "budget_removed": 10,
+          "nonbudget_removed": 6,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 422.0,
+          "slot_cap": 309.08203125,
+          "reserve": 210.03074999999998,
+          "min_cost_nonbudget": 189.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 10,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": [
+              "Indian",
+              "Mexican",
+              "Chinese",
+              "Italian"
+            ],
+            "room type": "not shared room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Dallas",
+        "Longview"
+      ],
+      "reason": "no reason",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"no reason\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [],\n    \"soft_penalties\": [\n      {\"phase\": \"hotel\", \"feature\": \"budget_risk\", \"delta\": 1}\n    ],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "no reason",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [],
+          "soft_penalties": [
+            {
+              "phase": "hotel",
+              "feature": "budget_risk",
+              "delta": 1
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "hotel",
+            "feature": "budget_risk",
+            "delta": 1
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Dallas",
+          "Longview"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1062.0,
+          "bundle_lb_cost": 2266.0,
+          "stay_lb_cost": 522.0,
+          "meal_lb_cost": 348.0,
+          "transport_lb_cost": 1396.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "chattanooga",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "longview"
+            ],
+            [
+              "longview",
+              "chattanooga"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_seq": [
+            "dallas",
+            "longview"
+          ],
+          "city_features": {
+            "Dallas": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 73.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 28,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 22,
+              "hotel_slack": 1
+            },
+            "Longview": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 188.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 13,
+              "meal_count": 14,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 10,
+              "meal_slack": 5,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Chattanooga->Dallas": {
+              "min_cost": 278.0,
+              "blocked": false
+            },
+            "Dallas->Longview": {
+              "min_cost": 56.0,
+              "blocked": false
+            },
+            "Longview->Chattanooga": {
+              "min_cost": 1062.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 5,
+            "bottleneck_attr_slack": 10,
+            "bottleneck_hotel_price": 188.0,
+            "bottleneck_city_meal": "Longview",
+            "bottleneck_city_hotel": "Longview",
+            "bottleneck_edge": "Longview->Chattanooga"
+          },
+          "min_bundle_cost": 1918.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 5,
+          "bottleneck_attr_slack": 10,
+          "bottleneck_hotel_price": 188.0,
+          "bottleneck_city_meal": "Longview",
+          "bottleneck_city_hotel": "Longview",
+          "bottleneck_edge": "Longview->Chattanooga"
+        },
+        "budget_context": {
+          "remaining": 804.0,
+          "slot_cap": 294.43359375,
+          "reserve": 444.62649999999996,
+          "min_cost_nonbudget": 189.0
+        },
+        "counts": {
+          "kb": 16,
+          "after_nonbudget": 10,
+          "after_budget": 0,
+          "budget_removed": 10,
+          "nonbudget_removed": 6,
+          "topk": 0
+        },
+        "dead_end_city": "Dallas",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 16,
+          "after_nonbudget": 10,
+          "after_budget": 0,
+          "budget_removed": 10,
+          "nonbudget_removed": 6,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 804.0,
+          "slot_cap": 294.43359375,
+          "reserve": 444.62649999999996,
+          "min_cost_nonbudget": 189.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 10,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 2200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": [
+              "Indian",
+              "Mexican",
+              "Chinese",
+              "Italian"
+            ],
+            "room type": "not shared room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Longview",
+        "Dallas"
+      ],
+      "reason": "dead_end_city",
+      "raw": "{\n    \"candidate_id\": 0,\n    \"reason\": \"dead_end_city\",\n    \"confidence\": 1.0,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 10, \"city\": \"Dallas\"}\n        ],\n        \"soft_penalties\": [],\n        \"retrieval_patches\": []\n    }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "dead_end_city",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 10,
+              "city": "Dallas"
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 10,
+            "city": "Dallas"
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "f2e64948eacb",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+      "bundle_fp": "7ab573f6ac7e"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "f2e64948eacb",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "25d991a8d318"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 100,
+          "city": null,
+          "edge": null
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": -0.5
+        },
+        {
+          "phase": "stay",
+          "feature": "cost_ratio",
+          "delta": -0.3
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Longview",
+        "Dallas"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "f2e64948eacb",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "7ab573f6ac7e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "f2e64948eacb",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "7ab573f6ac7e"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "budget_risk",
+          "delta": 1.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Dallas",
+        "Longview"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "f2e64948eacb",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "25d991a8d318"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "f2e64948eacb",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "25d991a8d318"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 10,
+          "city": "Dallas"
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Longview",
+        "Dallas"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "f2e64948eacb",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+        "bundle_fp": "7ab573f6ac7e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 10.23325353488326
+}

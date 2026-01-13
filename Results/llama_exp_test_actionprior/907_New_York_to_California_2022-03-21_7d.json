@@ -1,0 +1,1102 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 10150.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you assist in creating a week-long travel itinerary for a group of 6, departing from New York and visiting 3 cities in California from March 21st to March 27th, 2022? Our budget is set at $19,200. We require accommodations that allow visitors and should ideally be entire rooms. In terms of dining, we enjoy a range of cuisines including Mediterranean, Italian, Indian, and American.",
+  "parsed": {
+    "org": "New York",
+    "dest": "California",
+    "days": 7,
+    "visiting_city_number": 3,
+    "date": [
+      "2022-03-21",
+      "2022-03-22",
+      "2022-03-23",
+      "2022-03-24",
+      "2022-03-25",
+      "2022-03-26",
+      "2022-03-27"
+    ],
+    "people_number": 6,
+    "local_constraint": {
+      "house rule": "visitors",
+      "cuisine": [
+        "Mediterranean",
+        "Italian",
+        "Indian",
+        "American"
+      ],
+      "room type": "entire room",
+      "transportation": null
+    },
+    "budget": 19200,
+    "origin": "New York",
+    "destination": "California",
+    "duration_days": 7,
+    "start_date": "2022-03-21",
+    "preferences": [
+      "Mediterranean",
+      "Italian",
+      "Indian",
+      "American",
+      "visitors",
+      "entire room"
+    ],
+    "candidate_cities": [
+      "San Diego",
+      "Redding",
+      "Sacramento",
+      "Fresno",
+      "San Luis Obispo",
+      "Oakland",
+      "Santa Barbara",
+      "Stockton",
+      "Santa Rosa",
+      "Bakersfield",
+      "Santa Ana",
+      "Santa Maria",
+      "San Jose",
+      "Burbank",
+      "Arcata",
+      "Butte",
+      "Palm Springs",
+      "Los Angeles",
+      "Long Beach",
+      "San Francisco",
+      "Monterey"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:New York->Redding 4633km cost 4633",
+    "move:seg1:taxi:Redding->Butte 157km cost 157",
+    "move:seg2:taxi:Butte->Santa Rosa 285km cost 285"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Redding",
+      "Butte",
+      "Santa Rosa"
+    ],
+    "transportation_dates": [
+      "2022-03-21",
+      "2022-03-23",
+      "2022-03-25",
+      "2022-03-27"
+    ],
+    "transportation_methods": [
+      "taxi, from New York to Redding, cost: 4633.0",
+      "taxi, from Redding to Butte, cost: 157.0",
+      "taxi, from Butte to Santa Rosa, cost: 285.0",
+      "Santa Rosa->New York missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Redding",
+      "missing, Butte",
+      "missing, Santa Rosa"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from New York to Redding",
+      "transportation": "Taxi, from New York to Redding, Cost: 4633",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Redding",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Redding to Butte",
+      "transportation": "Taxi, from Redding to Butte, Cost: 157",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Butte",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Butte to Santa Rosa",
+      "transportation": "Taxi, from Butte to Santa Rosa, Cost: 285",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "Santa Rosa",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 7,
+      "current_city": "Santa Rosa",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-21|Butte->Santa Rosa",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 9620.0,
+        "slot_cap": 295.3508771929824,
+        "reserve": 7552.0
+      },
+      "segment_role": "intercity",
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-21|Santa Rosa->New York",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 9050.0,
+        "slot_cap": 1085.3549890350876,
+        "reserve": 4637.871999999999
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 6419.2,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 5456.32,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 4637.871999999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-21|Santa Rosa->New York",
+        "city": "New York",
+        "city_bundle": [
+          "Redding",
+          "Butte",
+          "Santa Rosa"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 9050.0,
+          "slot_cap": 1085.3549890350876,
+          "reserve": 4637.871999999999,
+          "min_cost_nonbudget": 1564.3333333333333
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Bakersfield",
+          "Santa Maria",
+          "Long Beach"
+        ],
+        "current_bundle_features": {},
+        "current_bottleneck": null,
+        "budget_context": {
+          "remaining": 9208.0,
+          "slot_cap": 1104.3037280701753,
+          "reserve": 4290.277249999999,
+          "min_cost_nonbudget": 1505.3333333333333
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "New York",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 9208.0,
+          "slot_cap": 1104.3037280701753,
+          "reserve": 4290.277249999999,
+          "min_cost_nonbudget": 1505.3333333333333
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 19200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "Mediterranean",
+              "Italian",
+              "Indian",
+              "American"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Redding",
+        "Stockton",
+        "Santa Rosa"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "```\n{\n  \"candidate_id\": 1,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"segment\", \"rule\": \"AVOID_CITY\", \"ttl\": 2, \"city\": \"New York\"},\n      {\"phase\": \"hotel/stay\", \"rule\": \"BLOCK_EDGE\", \"ttl\": 1, \"edge\": \"Redding->Santa Maria\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"segment\", \"feature\": \"cost_ratio\", \"delta\": -0.2},\n      {\"phase\": \"hotel/stay\", \"feature\": \"hotel_price\", \"delta\": -50}\n    ]\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "AVOID_CITY",
+              "ttl": 2,
+              "city": "New York"
+            },
+            {
+              "phase": "hotel/stay",
+              "rule": "BLOCK_EDGE",
+              "ttl": 1,
+              "edge": "Redding->Santa Maria"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "cost_ratio",
+              "delta": -0.2
+            },
+            {
+              "phase": "hotel/stay",
+              "feature": "hotel_price",
+              "delta": -50
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "AVOID_CITY",
+            "ttl": 2,
+            "city": "New York"
+          },
+          {
+            "phase": "hotel/stay",
+            "rule": "BLOCK_EDGE",
+            "ttl": 1,
+            "edge": "Redding->Santa Maria"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": -0.2
+          },
+          {
+            "phase": "hotel/stay",
+            "feature": "hotel_price",
+            "delta": -50
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Redding",
+          "Stockton",
+          "Santa Rosa"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 9386.0,
+          "bundle_lb_cost": 26478.0,
+          "stay_lb_cost": 5106.0,
+          "meal_lb_cost": 1692.0,
+          "transport_lb_cost": 19680.0,
+          "hotel_min_nights_min": 2,
+          "edges": [
+            [
+              "new york",
+              "redding"
+            ],
+            [
+              "redding",
+              "stockton"
+            ],
+            [
+              "stockton",
+              "santa rosa"
+            ],
+            [
+              "santa rosa",
+              "new york"
+            ]
+          ],
+          "bundle_key": [
+            "redding",
+            "santa rosa",
+            "stockton"
+          ],
+          "bundle_key_set": [
+            "redding",
+            "santa rosa",
+            "stockton"
+          ],
+          "bundle_key_seq": [
+            "redding",
+            "stockton",
+            "santa rosa"
+          ],
+          "city_features": {
+            "Redding": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1033.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 20,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 14,
+              "hotel_slack": 0
+            },
+            "Stockton": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 607.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 18,
+              "min_meal_cost": 16.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 12,
+              "hotel_slack": 0
+            },
+            "Santa Rosa": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 913.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 19,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 10,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "New York->Redding": {
+              "min_cost": 9266.0,
+              "blocked": false
+            },
+            "Redding->Stockton": {
+              "min_cost": 672.0,
+              "blocked": false
+            },
+            "Stockton->Santa Rosa": {
+              "min_cost": 356.0,
+              "blocked": false
+            },
+            "Santa Rosa->New York": {
+              "min_cost": 9386.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 10,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1033.0,
+            "bottleneck_city_meal": "Santa Rosa",
+            "bottleneck_city_hotel": "Redding",
+            "bottleneck_edge": "Santa Rosa->New York"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 10,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1033.0,
+          "bottleneck_city_meal": "Santa Rosa",
+          "bottleneck_city_hotel": "Redding",
+          "bottleneck_edge": "Santa Rosa->New York"
+        },
+        "budget_context": {
+          "remaining": 8906.0,
+          "slot_cap": 1068.0852521929821,
+          "reserve": 4108.496249999999,
+          "min_cost_nonbudget": 1564.3333333333333
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "New York",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 8906.0,
+          "slot_cap": 1068.0852521929821,
+          "reserve": 4108.496249999999,
+          "min_cost_nonbudget": 1564.3333333333333
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 19200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "Mediterranean",
+              "Italian",
+              "Indian",
+              "American"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Redding",
+        "Butte",
+        "Stockton"
+      ],
+      "reason": "segment failure with least risk",
+      "raw": "{\n  \"candidate_id\": 2,\n  \"reason\": \"segment failure with least risk\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"segment\", \"rule\": \"NO_FLIGHT\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"hotel/stay\", \"feature\": \"budget_risk\", \"delta\": 100}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "segment failure with least risk",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "NO_FLIGHT"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "hotel/stay",
+              "feature": "budget_risk",
+              "delta": 100
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "NO_FLIGHT"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "hotel/stay",
+            "feature": "budget_risk",
+            "delta": 100
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Redding",
+          "Butte",
+          "Stockton"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 9228.0,
+          "bundle_lb_cost": 26782.0,
+          "stay_lb_cost": 5392.0,
+          "meal_lb_cost": 2160.0,
+          "transport_lb_cost": 19230.0,
+          "hotel_min_nights_min": 2,
+          "edges": [
+            [
+              "new york",
+              "redding"
+            ],
+            [
+              "redding",
+              "butte"
+            ],
+            [
+              "butte",
+              "stockton"
+            ],
+            [
+              "stockton",
+              "new york"
+            ]
+          ],
+          "bundle_key": [
+            "butte",
+            "redding",
+            "stockton"
+          ],
+          "bundle_key_set": [
+            "butte",
+            "redding",
+            "stockton"
+          ],
+          "bundle_key_seq": [
+            "redding",
+            "butte",
+            "stockton"
+          ],
+          "city_features": {
+            "Redding": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1033.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 20,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 14,
+              "hotel_slack": 0
+            },
+            "Butte": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1056.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 9,
+              "min_meal_cost": 23.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 3,
+              "hotel_slack": 0
+            },
+            "Stockton": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 607.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 18,
+              "min_meal_cost": 16.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 9,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "New York->Redding": {
+              "min_cost": 9266.0,
+              "blocked": false
+            },
+            "Redding->Butte": {
+              "min_cost": 314.0,
+              "blocked": false
+            },
+            "Butte->Stockton": {
+              "min_cost": 422.0,
+              "blocked": false
+            },
+            "Stockton->New York": {
+              "min_cost": 9228.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 3,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1056.0,
+            "bottleneck_city_meal": "Butte",
+            "bottleneck_city_hotel": "Butte",
+            "bottleneck_edge": "New York->Redding"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 3,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1056.0,
+          "bottleneck_city_meal": "Butte",
+          "bottleneck_city_hotel": "Butte",
+          "bottleneck_edge": "New York->Redding"
+        },
+        "budget_context": {
+          "remaining": 9198.0,
+          "slot_cap": 1103.1044407894735,
+          "reserve": 4394.678499999999,
+          "min_cost_nonbudget": 1538.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "New York",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 9198.0,
+          "slot_cap": 1103.1044407894735,
+          "reserve": 4394.678499999999,
+          "min_cost_nonbudget": 1538.0
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 19200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "Mediterranean",
+              "Italian",
+              "Indian",
+              "American"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Redding",
+        "Butte",
+        "Santa Rosa"
+      ],
+      "reason": "avoid dead_end_city for hotel/stay failures if feasible",
+      "raw": "```json\n{\n  \"candidate_id\": 3,\n  \"reason\": \"avoid dead_end_city for hotel/stay failures if feasible\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"segment\", \"AVOID_CITY\", 30, true, false]\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 3,
+        "reason": "avoid dead_end_city for hotel/stay failures if feasible",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "segment",
+              "AVOID_CITY",
+              30,
+              true,
+              false
+            ]
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "segment",
+            "AVOID_CITY",
+            30,
+            true,
+            false
+          ]
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "a5dbe51f5f62",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-21|Santa Rosa->New York",
+      "bundle_fp": "58192842da4b"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "a5dbe51f5f62",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-21|Long Beach->New York",
+        "bundle_fp": "b982785bb151"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "AVOID_CITY",
+          "ttl": 2,
+          "city": "New York"
+        },
+        {
+          "phase": "hotel/stay",
+          "rule": "BLOCK_EDGE",
+          "ttl": 1,
+          "edge": "Redding->Santa Maria"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": -0.2
+        },
+        {
+          "phase": "hotel/stay",
+          "feature": "hotel_price",
+          "delta": -50.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Redding",
+        "Stockton",
+        "Santa Rosa"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "a5dbe51f5f62",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-21|Santa Rosa->New York",
+        "bundle_fp": "12580f20cd0c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "a5dbe51f5f62",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-21|Santa Rosa->New York",
+        "bundle_fp": "12580f20cd0c"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "NO_FLIGHT",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "hotel/stay",
+          "feature": "budget_risk",
+          "delta": 100.0
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Redding",
+        "Butte",
+        "Stockton"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "a5dbe51f5f62",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-21|Stockton->New York",
+        "bundle_fp": "07e4a7c500ba"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "a5dbe51f5f62",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-21|Stockton->New York",
+        "bundle_fp": "07e4a7c500ba"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Redding",
+        "Butte",
+        "Santa Rosa"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "a5dbe51f5f62",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:3|None|2022-03-21|Santa Rosa->New York",
+        "bundle_fp": "58192842da4b"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 7.8252049698494375
+}

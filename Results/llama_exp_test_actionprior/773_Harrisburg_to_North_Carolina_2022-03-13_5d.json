@@ -1,0 +1,853 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 2449.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you construct a 5-day travel plan for two people, beginning in Harrisburg and visiting 2 cities in North Carolina from March 13th to March 17th, 2022? We have a budget of $3,800. Our preferences for accommodations are private rooms where children under 10 are permitted. As for food, we enjoy Chinese, Mediterranean, Italian, and American cuisines.",
+  "parsed": {
+    "org": "Harrisburg",
+    "dest": "North Carolina",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15",
+      "2022-03-16",
+      "2022-03-17"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "children under 10",
+      "cuisine": [
+        "Chinese",
+        "Mediterranean",
+        "Italian",
+        "American"
+      ],
+      "room type": "private room",
+      "transportation": null
+    },
+    "budget": 3800,
+    "origin": "Harrisburg",
+    "destination": "North Carolina",
+    "duration_days": 5,
+    "start_date": "2022-03-13",
+    "preferences": [
+      "Chinese",
+      "Mediterranean",
+      "Italian",
+      "American",
+      "children under 10",
+      "private room"
+    ],
+    "candidate_cities": [
+      "Greensboro",
+      "Wilmington",
+      "New Bern",
+      "Charlotte",
+      "Raleigh",
+      "Asheville",
+      "Fayetteville"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Harrisburg->Asheville 846km cost 846",
+    "move:seg1:taxi:Asheville->Wilmington 539km cost 539",
+    "move:seg2:taxi:Wilmington->Harrisburg 764km cost 764",
+    "stay:Asheville:1015 Habitación comoda Private room $150"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Asheville",
+      "Wilmington"
+    ],
+    "transportation_dates": [
+      "2022-03-13",
+      "2022-03-15",
+      "2022-03-17"
+    ],
+    "transportation_methods": [
+      "taxi, from Harrisburg to Asheville, cost: 846.0",
+      "taxi, from Asheville to Wilmington, cost: 539.0",
+      "taxi, from Wilmington to Harrisburg, cost: 764.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Habitación comoda, Asheville",
+      "missing, Wilmington"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Harrisburg to Asheville",
+      "transportation": "Taxi, from Harrisburg to Asheville, Cost: 846",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Habitación comoda, Asheville"
+    },
+    {
+      "days": 2,
+      "current_city": "Asheville",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Habitación comoda, Asheville"
+    },
+    {
+      "days": 3,
+      "current_city": "from Asheville to Wilmington",
+      "transportation": "Taxi, from Asheville to Wilmington, Cost: 539",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Wilmington",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Wilmington to Harrisburg",
+      "transportation": "Taxi, from Wilmington to Harrisburg, Cost: 764",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Asheville|None|None->None",
+      "counts": {
+        "kb": 3,
+        "after_nonbudget": 2,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1651.0,
+        "slot_cap": 309.5625,
+        "reserve": 790.0
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Wilmington|None|None->None",
+      "counts": {
+        "kb": 5,
+        "after_nonbudget": 3,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 3,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1351.0,
+        "slot_cap": 989.501953125,
+        "reserve": 357.42074999999994
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 494.7,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 420.49499999999995,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 357.42074999999994,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Wilmington|None|None->None",
+        "city": "Wilmington",
+        "city_bundle": [
+          "Asheville",
+          "Wilmington"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 5,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1351.0,
+          "slot_cap": 989.501953125,
+          "reserve": 357.42074999999994,
+          "min_cost_nonbudget": 927.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "outbound"
+        ],
+        "city_bundle": [
+          "Fayetteville",
+          "Charlotte"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 164.0,
+          "bundle_lb_cost": 2283.0,
+          "stay_lb_cost": 1000.0,
+          "meal_lb_cost": 384.0,
+          "transport_lb_cost": 899.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "harrisburg",
+              "fayetteville"
+            ],
+            [
+              "fayetteville",
+              "charlotte"
+            ],
+            [
+              "charlotte",
+              "harrisburg"
+            ]
+          ],
+          "bundle_key": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "bundle_key_set": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "bundle_key_seq": [
+            "fayetteville",
+            "charlotte"
+          ],
+          "city_features": {
+            "Fayetteville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 214.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 20,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 14,
+              "hotel_slack": 0
+            },
+            "Charlotte": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 286.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 15,
+              "min_meal_cost": 14.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 6,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Harrisburg->Fayetteville": {
+              "min_cost": 689.0,
+              "blocked": false
+            },
+            "Fayetteville->Charlotte": {
+              "min_cost": 46.0,
+              "blocked": false
+            },
+            "Charlotte->Harrisburg": {
+              "min_cost": 164.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 6,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 286.0,
+            "bottleneck_city_meal": "Charlotte",
+            "bottleneck_city_hotel": "Charlotte",
+            "bottleneck_edge": "Harrisburg->Fayetteville"
+          },
+          "min_bundle_cost": 1899.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 6,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 286.0,
+          "bottleneck_city_meal": "Charlotte",
+          "bottleneck_city_hotel": "Charlotte",
+          "bottleneck_edge": "Harrisburg->Fayetteville"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 3800,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "children under 10",
+            "cuisine": [
+              "Chinese",
+              "Mediterranean",
+              "Italian",
+              "American"
+            ],
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Charlotte",
+        "Fayetteville"
+      ],
+      "reason": "{solution['reason']}\")",
+      "raw": "This is a JSON object representing the output of an optimization algorithm. It contains information about multiple candidate solutions, each represented as a dictionary with various attributes.\n\nHere's a breakdown of the structure:\n\n* The outermost element is an array called `output`, which contains 11 objects.\n* Each object represents a single candidate solution and has the following keys:\n\t+ `candidate_id`: a unique integer identifier for this solution.\n\t+ `reason`: a short string explaining why this solution was generated (e.g., \"using heuristic\").\n\t+ `confidence`: a float value between 0 and 1 indicating how confident the algorithm is in this solution's optimality.\n\t+ `gradient`: an object containing three lists:\n\t\t- `hard_exclusions`: a list of tuples describing hard exclusions from the solution (phase, rule, TTL, city?, edge?).\n\t\t- `soft_penalties`: a list of tuples describing soft penalties applied to the solution (phase, feature, delta).\n\t\t- `retrieval_patches`: a list of tuples describing retrieval patches applied to the solution (phase, patch, TTL).\n\nTo get more specific information about each candidate solution, you would need to inspect each individual object in the array. For example, you could print out the `candidate_id`, `reason`, and `confidence` values for each solution.\n\nHere's an example of how you might access these values using Python:\n```python\nimport json\n\n# Load the JSON data into a Python dictionary\ndata = json.loads(output)\n\n# Iterate over each candidate solution\nfor solution in data['output']:\n    print(f\"Solution {solution['candidate_id']}:\")\n    print(f\"  Reason: {solution['reason']}\")\n    print(f\"  Confidence: {solution['confidence']}\")\n    # ... inspect the gradient object as needed ...\n```",
+      "parsed": null,
+      "error": "invalid_candidate_id",
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "return"
+        ],
+        "city_bundle": [
+          "Charlotte",
+          "Fayetteville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 687.0,
+          "bundle_lb_cost": 2263.0,
+          "stay_lb_cost": 1000.0,
+          "meal_lb_cost": 366.0,
+          "transport_lb_cost": 897.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "harrisburg",
+              "charlotte"
+            ],
+            [
+              "charlotte",
+              "fayetteville"
+            ],
+            [
+              "fayetteville",
+              "harrisburg"
+            ]
+          ],
+          "bundle_key": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "bundle_key_set": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "bundle_key_seq": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "city_features": {
+            "Charlotte": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 286.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 15,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 9,
+              "hotel_slack": 1
+            },
+            "Fayetteville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 214.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 20,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 11,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Harrisburg->Charlotte": {
+              "min_cost": 164.0,
+              "blocked": false
+            },
+            "Charlotte->Fayetteville": {
+              "min_cost": 46.0,
+              "blocked": false
+            },
+            "Fayetteville->Harrisburg": {
+              "min_cost": 687.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 9,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 286.0,
+            "bottleneck_city_meal": "Charlotte",
+            "bottleneck_city_hotel": "Charlotte",
+            "bottleneck_edge": "Fayetteville->Harrisburg"
+          },
+          "min_bundle_cost": 1897.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 9,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 286.0,
+          "bottleneck_city_meal": "Charlotte",
+          "bottleneck_city_hotel": "Charlotte",
+          "bottleneck_edge": "Fayetteville->Harrisburg"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 3800,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "children under 10",
+            "cuisine": [
+              "Chinese",
+              "Mediterranean",
+              "Italian",
+              "American"
+            ],
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Charlotte",
+        "Asheville"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that represents a list of candidates for a travel recommendation system. Each candidate is an object with several properties:\n\n* `id`: a unique identifier for the candidate\n* `bundle`: a list of cities or locations that form the bundle\n* `lb_costs`: a dictionary of lower bound costs associated with each city in the bundle\n* `feasibility`: a boolean indicating whether the candidate is feasible (i.e., has a valid return leg)\n\nThe output schema provides information about the structure and interpretation of the JSON object. Here's a breakdown of the fields:\n\n* `candidate_id`: an integer identifier for the candidate\n* `reason`: a short string that describes why this candidate was generated (e.g., \"shortest path\")\n* `confidence`: a float value between 0 and 1 indicating how confident the system is in recommending this candidate\n* `gradient`: a dictionary with three keys:\n\t+ `hard_exclusions`: a list of tuples containing information about hard exclusions (e.g., phases, rules, TTLs)\n\t+ `soft_penalties`: a list of tuples containing information about soft penalties (e.g., phases, features, deltas)\n\t+ `retrieval_patches`: a list of tuples containing information about retrieval patches (e.g., phases, patches, TTLs)\n\nThe JSON object represents a list of 10 candidates, each with its own set of properties. The system generates these candidates based on various rules and constraints, which are encoded in the hard exclusions, soft penalties, and retrieval patches associated with each candidate.\n\nTo parse this data programmatically, you can use a JSON library for your preferred programming language (e.g., `json` module in Python). Here's an example code snippet in Python:\n```python\nimport json\n\n# Load the JSON object from a file or string\nwith open('candidates.json') as f:\n    candidates = json.load(f)\n\n# Iterate over each candidate and extract relevant information\nfor candidate in candidates['output_schema']['candidate']:\n    print(candidate['id'], candidate['bundle'])\n    for city, cost in candidate['lb_costs'].items():\n        print(f\"  {city}: {cost}\")\n    print()\n```\nThis code assumes that the JSON object is stored in a file named `candidates.json`. You can modify the file path and name to suit your needs.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "return"
+        ],
+        "city_bundle": [
+          "Charlotte",
+          "Asheville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 845.0,
+          "bundle_lb_cost": 2113.0,
+          "stay_lb_cost": 702.0,
+          "meal_lb_cost": 366.0,
+          "transport_lb_cost": 1045.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "harrisburg",
+              "charlotte"
+            ],
+            [
+              "charlotte",
+              "asheville"
+            ],
+            [
+              "asheville",
+              "harrisburg"
+            ]
+          ],
+          "bundle_key": [
+            "asheville",
+            "charlotte"
+          ],
+          "bundle_key_set": [
+            "asheville",
+            "charlotte"
+          ],
+          "bundle_key_seq": [
+            "charlotte",
+            "asheville"
+          ],
+          "city_features": {
+            "Charlotte": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 286.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 15,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 9,
+              "hotel_slack": 1
+            },
+            "Asheville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 65.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 9,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 0,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Harrisburg->Charlotte": {
+              "min_cost": 164.0,
+              "blocked": false
+            },
+            "Charlotte->Asheville": {
+              "min_cost": 36.0,
+              "blocked": false
+            },
+            "Asheville->Harrisburg": {
+              "min_cost": 845.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 0,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 286.0,
+            "bottleneck_city_meal": "Asheville",
+            "bottleneck_city_hotel": "Charlotte",
+            "bottleneck_edge": "Asheville->Harrisburg"
+          },
+          "min_bundle_cost": 1747.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 0,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 286.0,
+          "bottleneck_city_meal": "Asheville",
+          "bottleneck_city_hotel": "Charlotte",
+          "bottleneck_edge": "Asheville->Harrisburg"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 3800,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "children under 10",
+            "cuisine": [
+              "Chinese",
+              "Mediterranean",
+              "Italian",
+              "American"
+            ],
+            "room type": "private room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Asheville",
+        "Wilmington"
+      ],
+      "reason": null,
+      "raw": "This is a JSON data dump containing the output of an optimization algorithm. It appears to be a ranking system for candidate bundles, where each bundle consists of two cities and their corresponding edges (connections). The output includes various metrics such as confidence scores, gradient information, and exclusion penalties.\n\nHere's a brief summary of the key components:\n\n* `candidates`: A list of 10 candidate bundles, each with an ID from 0 to 9.\n\t+ Each bundle has attributes like `bundle_risk`, `city_summary`, `edge_summary`, and `lb_costs` (lower bound costs).\n\t+ The `bundle_risk` attribute is an object containing various metrics such as meal slack, attraction slack, hotel price, city, edge, etc.\n* `output_schema`: A dictionary defining the structure of the output data. It specifies the types and ranges for each attribute.\n\nTo provide a more meaningful analysis, I'd need to know what specific aspects of this data you're interested in exploring (e.g., understanding confidence scores, analyzing gradient information, identifying patterns in exclusion penalties). If you have any questions or requests related to this data, feel free to ask!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "85d9a4ce9682",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Wilmington|None|None->None",
+      "bundle_fp": "ec8521d27a01"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "85d9a4ce9682",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "6b7204ca99fd"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Charlotte",
+        "Fayetteville"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "85d9a4ce9682",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "704cc740fe97"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "85d9a4ce9682",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "704cc740fe97"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Charlotte",
+        "Asheville"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "85d9a4ce9682",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "fdccf73d23e1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "85d9a4ce9682",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "fdccf73d23e1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Asheville",
+        "Wilmington"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "85d9a4ce9682",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Wilmington|None|None->None",
+        "bundle_fp": "ec8521d27a01"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 68.3896040180698
+}

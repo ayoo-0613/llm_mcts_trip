@@ -1,0 +1,1057 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1160.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you create a 5-day travel plan for 2 individuals departing from Detroit and visiting 2 cities in Iowa from March 2nd to March 6th, 2022? The total budget allocated for the trip is now $1,700. We would like to bring pets with us, so kindly look for accommodations that allow them. Also, we prefer not to have shared accommodations. Flights are not our preferred method of transportation for this journey, please consider alternate options.",
+  "parsed": {
+    "org": "Detroit",
+    "dest": "Iowa",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-02",
+      "2022-03-03",
+      "2022-03-04",
+      "2022-03-05",
+      "2022-03-06"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "pets",
+      "cuisine": null,
+      "room type": "not shared room",
+      "transportation": "no flight"
+    },
+    "budget": 1700,
+    "origin": "Detroit",
+    "destination": "Iowa",
+    "duration_days": 5,
+    "start_date": "2022-03-02",
+    "preferences": [
+      "pets",
+      "not shared room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Cedar Rapids",
+      "Sioux City",
+      "Dubuque",
+      "Des Moines",
+      "Fort Dodge",
+      "Mason City"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Detroit->Des Moines 965km cost 965",
+    "move:seg1:taxi:Des Moines->Mason City 195km cost 195"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Des Moines",
+      "Mason City"
+    ],
+    "transportation_dates": [
+      "2022-03-02",
+      "2022-03-04",
+      "2022-03-06"
+    ],
+    "transportation_methods": [
+      "taxi, from Detroit to Des Moines, cost: 965.0",
+      "taxi, from Des Moines to Mason City, cost: 195.0",
+      "Mason City->Detroit missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Des Moines",
+      "missing, Mason City"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Detroit to Des Moines",
+      "transportation": "Taxi, from Detroit to Des Moines, Cost: 965",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Des Moines",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Des Moines to Mason City",
+      "transportation": "Taxi, from Des Moines to Mason City, Cost: 195",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Mason City",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Mason City",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:1|None|2022-03-02|Des Moines->Mason City",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 735.0,
+        "slot_cap": 84.62171052631577,
+        "reserve": 518.5
+      },
+      "segment_role": "intercity",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 518.5,
+          "kept": 1
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-02|Mason City->Detroit",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 540.0,
+        "slot_cap": 194.2845394736842,
+        "reserve": 374.61625
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 518.5,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 440.72499999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 374.61625,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-02|Mason City->Detroit",
+        "city": "Detroit",
+        "city_bundle": [
+          "Des Moines",
+          "Mason City"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 540.0,
+          "slot_cap": 194.2845394736842,
+          "reserve": 374.61625,
+          "min_cost_nonbudget": 522.5
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [],
+        "city_bundle": [
+          "Des Moines",
+          "Mason City"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1045.0,
+          "bundle_lb_cost": 2815.0,
+          "stay_lb_cost": 286.0,
+          "meal_lb_cost": 324.0,
+          "transport_lb_cost": 2205.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "detroit",
+              "des moines"
+            ],
+            [
+              "des moines",
+              "mason city"
+            ],
+            [
+              "mason city",
+              "detroit"
+            ]
+          ],
+          "bundle_key": [
+            "des moines",
+            "mason city"
+          ],
+          "bundle_key_set": [
+            "des moines",
+            "mason city"
+          ],
+          "bundle_key_seq": [
+            "des moines",
+            "mason city"
+          ],
+          "city_features": {
+            "Des Moines": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 61.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 32,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 26,
+              "hotel_slack": 1
+            },
+            "Mason City": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 82.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 16,
+              "meal_count": 34,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 13,
+              "meal_slack": 25,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Detroit->Des Moines": {
+              "min_cost": 965.0,
+              "blocked": false
+            },
+            "Des Moines->Mason City": {
+              "min_cost": 195.0,
+              "blocked": false
+            },
+            "Mason City->Detroit": {
+              "min_cost": 1045.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 25,
+            "bottleneck_attr_slack": 13,
+            "bottleneck_hotel_price": 82.0,
+            "bottleneck_city_meal": "Mason City",
+            "bottleneck_city_hotel": "Mason City",
+            "bottleneck_edge": "Mason City->Detroit"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 25,
+          "bottleneck_attr_slack": 13,
+          "bottleneck_hotel_price": 82.0,
+          "bottleneck_city_meal": "Mason City",
+          "bottleneck_city_hotel": "Mason City",
+          "bottleneck_edge": "Mason City->Detroit"
+        },
+        "budget_context": {
+          "remaining": 540.0,
+          "slot_cap": 194.2845394736842,
+          "reserve": 374.61625,
+          "min_cost_nonbudget": 522.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Detroit",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 540.0,
+          "slot_cap": 194.2845394736842,
+          "reserve": 374.61625,
+          "min_cost_nonbudget": 522.5
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1700,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": null,
+            "room type": "not shared room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Sioux City",
+        "Dubuque"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that represents a dataset or output from some kind of machine learning or optimization algorithm. It contains an array of 15 objects, each representing a candidate solution to some problem.\n\nHere's a high-level overview of the structure and contents:\n\n* The outermost object has several keys:\n\t+ `output_schema`: This is a dictionary that describes the schema of the output data.\n\t+ `candidates`: This is an array of 15 objects, each representing a candidate solution.\n* Each candidate object has several keys:\n\t+ `id`: A unique identifier for this candidate (e.g. `11`)\n\t+ `bundle`: The bundle or combination of cities that this candidate represents (e.g. `[Sioux City, Des Moines]`)\n\t+ `risk`: An object that describes the risk associated with this candidate (e.g. `{bottleneck_meal_slack: 23}`)\n\t+ `city_summary` and `edge_summary`: Objects that describe the summary statistics for the cities and edges in the bundle.\n\t+ `lb_costs`: An object that contains various cost metrics for this candidate (e.g. `transport_lb_cost`, `stay_lb_cost`)\n* The output_schema dictionary describes the structure of the data, including:\n\t+ `candidate_id`: The type of the `id` field (integer)\n\t+ `reason`: The type of the `reason` field (short string)\n\t+ `confidence`: The type of the `confidence` field (float between 0 and 1)\n\t+ `gradient`: An object that describes the gradient or optimization information associated with this candidate\n\nWithout more context, it's difficult to provide a specific interpretation or analysis of this data. However, I can try to help you extract specific values or fields from the dataset if that's what you're looking for!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Sioux City",
+          "Dubuque"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 746.0,
+          "bundle_lb_cost": 3629.0,
+          "stay_lb_cost": 828.0,
+          "meal_lb_cost": 324.0,
+          "transport_lb_cost": 2477.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "detroit",
+              "sioux city"
+            ],
+            [
+              "sioux city",
+              "dubuque"
+            ],
+            [
+              "dubuque",
+              "detroit"
+            ]
+          ],
+          "bundle_key": [
+            "dubuque",
+            "sioux city"
+          ],
+          "bundle_key_set": [
+            "dubuque",
+            "sioux city"
+          ],
+          "bundle_key_seq": [
+            "sioux city",
+            "dubuque"
+          ],
+          "city_features": {
+            "Sioux City": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 252.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 24,
+              "hotel_slack": 1
+            },
+            "Dubuque": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 162.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 21,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 12,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Detroit->Sioux City": {
+              "min_cost": 1248.0,
+              "blocked": false
+            },
+            "Sioux City->Dubuque": {
+              "min_cost": 483.0,
+              "blocked": false
+            },
+            "Dubuque->Detroit": {
+              "min_cost": 746.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 12,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 252.0,
+            "bottleneck_city_meal": "Dubuque",
+            "bottleneck_city_hotel": "Sioux City",
+            "bottleneck_edge": "Detroit->Sioux City"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 12,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 252.0,
+          "bottleneck_city_meal": "Dubuque",
+          "bottleneck_city_hotel": "Sioux City",
+          "bottleneck_edge": "Detroit->Sioux City"
+        },
+        "budget_context": {
+          "remaining": 1700.0,
+          "slot_cap": 203.8788377192982,
+          "reserve": 707.4719999999999,
+          "min_cost_nonbudget": 624.0
+        },
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Sioux City",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1700.0,
+          "slot_cap": 203.8788377192982,
+          "reserve": 707.4719999999999,
+          "min_cost_nonbudget": 624.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1700,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": null,
+            "room type": "not shared room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Dubuque",
+        "Des Moines"
+      ],
+      "reason": null,
+      "raw": "This appears to be a JSON output from a machine learning or optimization algorithm, specifically designed for candidate generation. Here's a breakdown of the structure and content:\n\n**Main Structure**\n\nThe main object is an array of objects, where each object represents a candidate solution.\n\n**Candidate Object**\n\nEach candidate object contains several key-value pairs:\n\n* `id`: a unique identifier for the candidate (e.g., 1, 2, 3)\n* `bundle`: an array of two strings representing the pair of cities or locations in the bundle\n* `lb_costs`: an object with four keys:\n\t+ `transport_lb_cost`\n\t+ `stay_lb_cost`\n\t+ `meal_lb_cost`\n\t+ `bundle_lb_cost`\nThese costs are likely part of a linear programming formulation used to optimize the candidate generation process.\n* `feasibility`: an object with two key-value pairs:\n\t+ `return_leg_exists`: a boolean indicating whether the return leg exists (true or false)\n\t+ `hotel_feasible_all`: a boolean indicating whether hotel feasibility is guaranteed for all locations (true or false)\n\n**Additional Information**\n\nThe `output_schema` section provides information about the expected structure and content of the output:\n\n* `candidate_id`: an integer representing the candidate's ID\n* `reason`: a short string describing the reason for selecting this candidate\n* `confidence`: a float between 0 and 1 representing the confidence in the candidate's optimality\n* `gradient`: an object containing three lists:\n\t+ `hard_exclusions`: a list of tuples (phase, rule, ttl, city?, edge?) representing hard exclusions or constraints\n\t+ `soft_penalties`: a list of tuples (phase, feature, delta) representing soft penalties or feature weights\n\t+ `retrieval_patches`: a list of tuples (phase, patch, ttl) representing retrieval patches or modifications to the optimization process\n\nThis schema suggests that the output is designed to provide insights into the candidate generation process, including the selection criteria, confidence in optimality, and potential biases or modifications applied during the optimization.\n\nTo extract meaningful information from this output, you may want to explore each candidate object and its associated costs, feasibility indicators, and gradient information. You can also use the `output_schema` as a guide to understand the structure and content of the output.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [],
+        "city_bundle": [
+          "Dubuque",
+          "Des Moines"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 964.0,
+          "bundle_lb_cost": 2812.0,
+          "stay_lb_cost": 446.0,
+          "meal_lb_cost": 336.0,
+          "transport_lb_cost": 2030.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "detroit",
+              "dubuque"
+            ],
+            [
+              "dubuque",
+              "des moines"
+            ],
+            [
+              "des moines",
+              "detroit"
+            ]
+          ],
+          "bundle_key": [
+            "des moines",
+            "dubuque"
+          ],
+          "bundle_key_set": [
+            "des moines",
+            "dubuque"
+          ],
+          "bundle_key_seq": [
+            "dubuque",
+            "des moines"
+          ],
+          "city_features": {
+            "Dubuque": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 162.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 21,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 15,
+              "hotel_slack": 1
+            },
+            "Des Moines": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 61.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 32,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 23,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Detroit->Dubuque": {
+              "min_cost": 749.0,
+              "blocked": false
+            },
+            "Dubuque->Des Moines": {
+              "min_cost": 317.0,
+              "blocked": false
+            },
+            "Des Moines->Detroit": {
+              "min_cost": 964.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 15,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 162.0,
+            "bottleneck_city_meal": "Dubuque",
+            "bottleneck_city_hotel": "Dubuque",
+            "bottleneck_edge": "Des Moines->Detroit"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 15,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 162.0,
+          "bottleneck_city_meal": "Dubuque",
+          "bottleneck_city_hotel": "Dubuque",
+          "bottleneck_edge": "Des Moines->Detroit"
+        },
+        "budget_context": {
+          "remaining": 634.0,
+          "slot_cap": 228.10444078947364,
+          "reserve": 480.24574999999993,
+          "min_cost_nonbudget": 482.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Detroit",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 634.0,
+          "slot_cap": 228.10444078947364,
+          "reserve": 480.24574999999993,
+          "min_cost_nonbudget": 482.0
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 1700,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": null,
+            "room type": "not shared room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Des Moines",
+        "Mason City"
+      ],
+      "reason": null,
+      "raw": "This is a JSON output from a machine learning model that appears to be generating candidate routes for a trip planning problem. The structure of the output suggests that it's an ensemble model that combines predictions from multiple models.\n\nHere are some key insights I was able to extract:\n\n1. **Number of candidates**: There are 15 different bundles (candidate routes) presented in the output.\n2. **Bundle characteristics**: Each bundle has a unique set of attributes, including:\n\t* `id`: A unique identifier for each bundle.\n\t* `bundle_risk`: An object containing various risk metrics, such as meal slack and hotel price.\n\t* `city_summary`: An object describing the city-related information for each location in the bundle (e.g., hotel prices, meal slacks).\n\t* `edge_summary`: An object summarizing the transportation costs between locations in the bundle.\n3. **Cost components**: The output includes four types of cost components:\n\t* `transport_lb_cost`\n\t* `stay_lb_cost`\n\t* `meal_lb_cost`\n\t* `bundle_lb_cost` (which seems to be a total cost metric)\n4. **Feasibility**: Each bundle has a feasibility indicator (`hotel_feasible_all`) that suggests whether the hotel options in each location are feasible for the trip.\n5. **Output schema**: The output schema provides information about the structure of the output, including data types and possible values.\n\nIf you have more context or questions about this output, feel free to ask!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "5b86d1a57bb0",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-02|Mason City->Detroit",
+      "bundle_fp": "94759682dda7"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "5b86d1a57bb0",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-02|Mason City->Detroit",
+        "bundle_fp": "94759682dda7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Sioux City",
+        "Dubuque"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "5b86d1a57bb0",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-02|Detroit->Sioux City",
+        "bundle_fp": "e9897e6c987d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "5b86d1a57bb0",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-02|Detroit->Sioux City",
+        "bundle_fp": "e9897e6c987d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Dubuque",
+        "Des Moines"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "5b86d1a57bb0",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-02|Des Moines->Detroit",
+        "bundle_fp": "fa714f3c47ab"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "5b86d1a57bb0",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-02|Des Moines->Detroit",
+        "bundle_fp": "fa714f3c47ab"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Des Moines",
+        "Mason City"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "5b86d1a57bb0",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-02|Mason City->Detroit",
+        "bundle_fp": "94759682dda7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 17.384914309717715
+}

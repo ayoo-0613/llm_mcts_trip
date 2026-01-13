@@ -1,0 +1,1050 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1969.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you help craft a 5-day travel plan for 2 persons? The trip should start in Rochester and should cover 2 cities in Minnesota from March 11th to March 15th, 2022. We have a budget of $3,900 for the trip. For the sake of transportation, we would prefer no flights during the entire journey. We require accommodations that allow parties and provide entire rooms for our stay.",
+  "parsed": {
+    "org": "Rochester",
+    "dest": "Minnesota",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-11",
+      "2022-03-12",
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "parties",
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": "no flight"
+    },
+    "budget": 3900,
+    "origin": "Rochester",
+    "destination": "Minnesota",
+    "duration_days": 5,
+    "start_date": "2022-03-11",
+    "preferences": [
+      "parties",
+      "entire room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Bemidji",
+      "Minneapolis",
+      "Duluth",
+      "Brainerd",
+      "Gustavus",
+      "St. Cloud",
+      "Hibbing",
+      "International Falls"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Rochester->Duluth 1720km cost 1720",
+    "move:seg1:taxi:Duluth->Minneapolis 249km cost 249"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Duluth",
+      "Minneapolis"
+    ],
+    "transportation_dates": [
+      "2022-03-11",
+      "2022-03-13",
+      "2022-03-15"
+    ],
+    "transportation_methods": [
+      "taxi, from Rochester to Duluth, cost: 1720.0",
+      "taxi, from Duluth to Minneapolis, cost: 249.0",
+      "Minneapolis->Rochester missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Duluth",
+      "missing, Minneapolis"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Rochester to Duluth",
+      "transportation": "Taxi, from Rochester to Duluth, Cost: 1720",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Duluth",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Duluth to Minneapolis",
+      "transportation": "Taxi, from Duluth to Minneapolis, Cost: 249",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Minneapolis",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Minneapolis",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:1|None|2022-03-11|Duluth->Minneapolis",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 2180.0,
+        "slot_cap": 200.7894736842105,
+        "reserve": 956.0
+      },
+      "segment_role": "intercity",
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-11|Minneapolis->Rochester",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1931.0,
+        "slot_cap": 694.7471217105262,
+        "reserve": 587.1034999999999
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 812.6,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 690.7099999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 587.1034999999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-11|Minneapolis->Rochester",
+        "city": "Rochester",
+        "city_bundle": [
+          "Duluth",
+          "Minneapolis"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1931.0,
+          "slot_cap": 694.7471217105262,
+          "reserve": 587.1034999999999,
+          "min_cost_nonbudget": 816.5
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Duluth",
+          "Minneapolis"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1633.0,
+          "bundle_lb_cost": 4558.0,
+          "stay_lb_cost": 572.0,
+          "meal_lb_cost": 384.0,
+          "transport_lb_cost": 3602.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "rochester",
+              "duluth"
+            ],
+            [
+              "duluth",
+              "minneapolis"
+            ],
+            [
+              "minneapolis",
+              "rochester"
+            ]
+          ],
+          "bundle_key": [
+            "duluth",
+            "minneapolis"
+          ],
+          "bundle_key_set": [
+            "duluth",
+            "minneapolis"
+          ],
+          "bundle_key_seq": [
+            "duluth",
+            "minneapolis"
+          ],
+          "city_features": {
+            "Duluth": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 179.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 35,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 29,
+              "hotel_slack": 0
+            },
+            "Minneapolis": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 107.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 37,
+              "min_meal_cost": 14.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Rochester->Duluth": {
+              "min_cost": 1720.0,
+              "blocked": false
+            },
+            "Duluth->Minneapolis": {
+              "min_cost": 249.0,
+              "blocked": false
+            },
+            "Minneapolis->Rochester": {
+              "min_cost": 1633.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 28,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 179.0,
+            "bottleneck_city_meal": "Minneapolis",
+            "bottleneck_city_hotel": "Duluth",
+            "bottleneck_edge": "Rochester->Duluth"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 28,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 179.0,
+          "bottleneck_city_meal": "Minneapolis",
+          "bottleneck_city_hotel": "Duluth",
+          "bottleneck_edge": "Rochester->Duluth"
+        },
+        "budget_context": {
+          "remaining": 1931.0,
+          "slot_cap": 694.7471217105262,
+          "reserve": 587.1034999999999,
+          "min_cost_nonbudget": 816.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Rochester",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1931.0,
+          "slot_cap": 694.7471217105262,
+          "reserve": 587.1034999999999,
+          "min_cost_nonbudget": 816.5
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3900,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Minneapolis",
+        "Brainerd"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that represents the output of an algorithm or system. It appears to be related to route planning or travel recommendation.\n\nHere's a breakdown of the structure:\n\n1. `result`: The top-level key, which contains a list of candidate bundles.\n2. `bundles`: A list of objects, each representing a bundle of cities and routes.\n3. Each bundle object has several keys:\n\t* `id`: A unique identifier for the bundle (e.g., `id 13`).\n\t* `bundle_risk`: An object containing information about potential risks or issues with this bundle (e.g., bottleneck meal slack, attr slack, etc.).\n\t* `city_summary`: An object summarizing the cities in this bundle, including their characteristics (e.g., hotel prices, meal slacks, etc.).\n\t* `edge_summary`: An object summarizing the routes between these cities.\n\t* `lb_costs`: A dictionary of costs associated with this bundle (e.g., transport, stay, meal costs).\n4. The output schema defines the structure and types of values in the result.\n\nSome possible applications or uses for this data could be:\n\n1. **Route planning**: This data could be used to generate itineraries for travelers, taking into account factors like transportation costs, accommodation prices, and activities.\n2. **Travel recommendation**: By analyzing the bundle risks and characteristics, users can receive recommendations on the best routes or combinations of cities to visit based on their preferences and constraints.\n3. **Cost optimization**: The data could be used to optimize travel plans by minimizing costs while meeting certain requirements (e.g., staying within a budget).\n\nPlease let me know if you'd like me to clarify anything or provide more specific information!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Minneapolis",
+          "Brainerd"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1836.0,
+          "bundle_lb_cost": 4664.0,
+          "stay_lb_cost": 652.0,
+          "meal_lb_cost": 348.0,
+          "transport_lb_cost": 3664.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "rochester",
+              "minneapolis"
+            ],
+            [
+              "minneapolis",
+              "brainerd"
+            ],
+            [
+              "brainerd",
+              "rochester"
+            ]
+          ],
+          "bundle_key": [
+            "brainerd",
+            "minneapolis"
+          ],
+          "bundle_key_set": [
+            "brainerd",
+            "minneapolis"
+          ],
+          "bundle_key_seq": [
+            "minneapolis",
+            "brainerd"
+          ],
+          "city_features": {
+            "Minneapolis": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 107.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 37,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 31,
+              "hotel_slack": 1
+            },
+            "Brainerd": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 219.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 19,
+              "meal_count": 38,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 16,
+              "meal_slack": 29,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Rochester->Minneapolis": {
+              "min_cost": 1625.0,
+              "blocked": false
+            },
+            "Minneapolis->Brainerd": {
+              "min_cost": 203.0,
+              "blocked": false
+            },
+            "Brainerd->Rochester": {
+              "min_cost": 1836.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 29,
+            "bottleneck_attr_slack": 16,
+            "bottleneck_hotel_price": 219.0,
+            "bottleneck_city_meal": "Brainerd",
+            "bottleneck_city_hotel": "Brainerd",
+            "bottleneck_edge": "Brainerd->Rochester"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 29,
+          "bottleneck_attr_slack": 16,
+          "bottleneck_hotel_price": 219.0,
+          "bottleneck_city_meal": "Brainerd",
+          "bottleneck_city_hotel": "Brainerd",
+          "bottleneck_edge": "Brainerd->Rochester"
+        },
+        "budget_context": {
+          "remaining": 2072.0,
+          "slot_cap": 745.4769736842104,
+          "reserve": 614.1249999999999,
+          "min_cost_nonbudget": 918.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Rochester",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 2072.0,
+          "slot_cap": 745.4769736842104,
+          "reserve": 614.1249999999999,
+          "min_cost_nonbudget": 918.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3900,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Minneapolis",
+        "Duluth"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that appears to represent the output of a machine learning or optimization algorithm. It contains a list of candidate IDs, each with associated metadata and a set of \"lb_costs\" (lower bound costs). Here's a breakdown of the structure:\n\n* `output_schema`: This section defines the schema for the output data.\n\t+ `candidate_id`: an integer ID for each candidate solution\n\t+ `reason`: a short string describing why this solution was selected (or not)\n\t+ `confidence`: a float value between 0 and 1 representing the confidence in the solution's optimality\n\t+ `gradient`: a JSON object containing three types of information:\n\t\t- `hard_exclusions`: a list of tuples with information about which phases, rules, TTLs, cities, and edges are excluded from consideration\n\t\t- `soft_penalties`: a list of tuples with information about feature penalties (phases, features, and deltas)\n\t\t- `retrieval_patches`: a list of tuples with information about patches to apply during retrieval (phases, patches, and TTLs)\n* The main data section: This is an array of candidate solutions, each represented as a JSON object with the following fields:\n\t+ `id` (or `candidate_id`): an integer ID for this solution\n\t+ `lb_costs`: a JSON object containing three types of costs:\n\t\t- `transport_lb_cost`: the lower bound cost for transportation\n\t\t- `stay_lb_cost`: the lower bound cost for stay/overnight accommodations\n\t\t- `meal_lb_cost`: the lower bound cost for meals\n\t+ `bundle_risk`: a JSON object containing information about the risks associated with this bundle:\n\t\t- `bottleneck_meal_slack`: the slack in meal planning (e.g., how much extra food to plan for)\n\t\t- `bottleneck_attr_slack`: the slack in attribute selection (e.g., how many attributes to select)\n\t\t- `bottleneck_hotel_price`: the bottleneck hotel price\n\t\t- `bottleneck_city_meal`, `bottleneck_city_hotel`: the city where the meal or hotel planning bottleneck occurs\n\t\t- `bottleneck_edge`: the edge in the graph where the optimization is stuck\n\t+ `city_summary` and `edge_summary`: JSON objects containing information about the cities and edges involved in this bundle solution.\n\nThis data structure appears to be the output of an algorithm that optimizes travel itineraries by minimizing costs while considering various constraints (e.g., transportation, accommodations, meals). The algorithm seems to have evaluated multiple candidate solutions and provided a detailed analysis for each one.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Minneapolis",
+          "Duluth"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1730.0,
+          "bundle_lb_cost": 4541.0,
+          "stay_lb_cost": 572.0,
+          "meal_lb_cost": 366.0,
+          "transport_lb_cost": 3603.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "rochester",
+              "minneapolis"
+            ],
+            [
+              "minneapolis",
+              "duluth"
+            ],
+            [
+              "duluth",
+              "rochester"
+            ]
+          ],
+          "bundle_key": [
+            "duluth",
+            "minneapolis"
+          ],
+          "bundle_key_set": [
+            "duluth",
+            "minneapolis"
+          ],
+          "bundle_key_seq": [
+            "minneapolis",
+            "duluth"
+          ],
+          "city_features": {
+            "Minneapolis": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 107.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 37,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 31,
+              "hotel_slack": 1
+            },
+            "Duluth": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 179.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 35,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 26,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Rochester->Minneapolis": {
+              "min_cost": 1625.0,
+              "blocked": false
+            },
+            "Minneapolis->Duluth": {
+              "min_cost": 248.0,
+              "blocked": false
+            },
+            "Duluth->Rochester": {
+              "min_cost": 1730.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 26,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 179.0,
+            "bottleneck_city_meal": "Duluth",
+            "bottleneck_city_hotel": "Duluth",
+            "bottleneck_edge": "Duluth->Rochester"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 26,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 179.0,
+          "bottleneck_city_meal": "Duluth",
+          "bottleneck_city_hotel": "Duluth",
+          "bottleneck_edge": "Duluth->Rochester"
+        },
+        "budget_context": {
+          "remaining": 2027.0,
+          "slot_cap": 729.2865953947368,
+          "reserve": 576.0492499999999,
+          "min_cost_nonbudget": 865.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Rochester",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 2027.0,
+          "slot_cap": 729.2865953947368,
+          "reserve": 576.0492499999999,
+          "min_cost_nonbudget": 865.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3900,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Duluth",
+        "Minneapolis"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object that represents the output of an optimization algorithm. It contains 16 candidate bundles, each with its own risk analysis and confidence score.\n\nHere's a breakdown of the structure:\n\n* `candidate_bundles`: An array of 16 objects, each representing a candidate bundle.\n* Each bundle object has the following properties:\n\t+ `id`: A unique identifier for the bundle (e.g. `1`, `2`, etc.)\n\t+ `bundle_risk`: An object that represents the risk analysis of the bundle.\n\t\t- `bottleneck_meal_slack`: The minimum slack value for meal planning in the bundle.\n\t\t- `bottleneck_attr_slack`: The minimum slack value for attraction planning in the bundle.\n\t\t- `bottleneck_hotel_price`: The maximum hotel price in the bundle.\n\t\t- `bottleneck_city_meal`: The city with the highest meal cost in the bundle.\n\t\t- `bottleneck_city_hotel`: The city with the highest hotel price in the bundle.\n\t\t- `bottleneck_edge`: The edge with the highest risk value in the bundle (i.e. the most critical leg of travel).\n\t+ `city_summary`: An object that summarizes the characteristics of each city in the bundle.\n\t+ `edge_summary`: An object that summarizes the characteristics of each leg of travel between cities in the bundle.\n\t+ `lb_costs`: An object that contains the lower bound costs for transportation, stay, meal, and bundle planning.\n\t+ `feasibility`: An object that indicates whether a return trip exists (true) or not (false), as well as whether hotel feasibility is possible (true) or not (false).\n\nThe output schema provides additional information about the format of the data. It describes the structure of each field in more detail, including:\n\n* `candidate_id`: A unique identifier for each candidate bundle.\n* `reason`: A short string that explains why a particular bundle was chosen or rejected.\n* `confidence`: A float value between 0 and 1 that represents the confidence level of the optimization algorithm's recommendation.\n\nOverall, this output provides valuable insights into the optimization process and can be used to inform decisions about which bundles to prioritize.",
+      "parsed": null,
+      "error": "invalid_candidate_id",
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "4e31e7d00d42",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-11|Minneapolis->Rochester",
+      "bundle_fp": "de4e066a391c"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "4e31e7d00d42",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-11|Minneapolis->Rochester",
+        "bundle_fp": "de4e066a391c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Minneapolis",
+        "Brainerd"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "4e31e7d00d42",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-11|Brainerd->Rochester",
+        "bundle_fp": "4cf3826b9177"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "4e31e7d00d42",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-11|Brainerd->Rochester",
+        "bundle_fp": "4cf3826b9177"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Minneapolis",
+        "Duluth"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "4e31e7d00d42",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-11|Duluth->Rochester",
+        "bundle_fp": "48d86db6d2d2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "4e31e7d00d42",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-11|Duluth->Rochester",
+        "bundle_fp": "48d86db6d2d2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Duluth",
+        "Minneapolis"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "4e31e7d00d42",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-11|Minneapolis->Rochester",
+        "bundle_fp": "de4e066a391c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 18.972086610738188
+}

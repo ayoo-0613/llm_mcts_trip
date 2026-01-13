@@ -1,0 +1,1025 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 3298.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you plan a 5-day trip, beginning in Montgomery and visiting 2 cities in Texas from March 24th to March 28th, 2022, for a group of 3? We require accommodations that allow smoking and should be entire rooms. Our transport preference is anything other than flight and our budget for this trip is $4,000.",
+  "parsed": {
+    "org": "Montgomery",
+    "dest": "Texas",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-24",
+      "2022-03-25",
+      "2022-03-26",
+      "2022-03-27",
+      "2022-03-28"
+    ],
+    "people_number": 3,
+    "local_constraint": {
+      "house rule": "smoking",
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": "no flight"
+    },
+    "budget": 4000,
+    "origin": "Montgomery",
+    "destination": "Texas",
+    "duration_days": 5,
+    "start_date": "2022-03-24",
+    "preferences": [
+      "smoking",
+      "entire room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas"
+    ]
+  },
+  "actions": [
+    "move:seg0:self-driving:Montgomery->Dallas 1045km cost 1045",
+    "move:seg1:self-driving:Dallas->Abilene 291km cost 291",
+    "move:seg2:self-driving:Abilene->Montgomery 1334km cost 1334",
+    "stay:Dallas:4411 Spacious cozy apartment Entire home/apt $314"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Dallas",
+      "Abilene"
+    ],
+    "transportation_dates": [
+      "2022-03-24",
+      "2022-03-26",
+      "2022-03-28"
+    ],
+    "transportation_methods": [
+      "self-driving, from Montgomery to Dallas, cost: 1045.0",
+      "self-driving, from Dallas to Abilene, cost: 291.0",
+      "self-driving, from Abilene to Montgomery, cost: 1334.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "Spacious cozy apartment, Dallas",
+      "missing, Abilene"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Montgomery to Dallas",
+      "transportation": "Self-driving, from Montgomery to Dallas, Cost: 1045",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Spacious cozy apartment, Dallas"
+    },
+    {
+      "days": 2,
+      "current_city": "Dallas",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Spacious cozy apartment, Dallas"
+    },
+    {
+      "days": 3,
+      "current_city": "from Dallas to Abilene",
+      "transportation": "Self-driving, from Dallas to Abilene, Cost: 291",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Abilene",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Abilene to Montgomery",
+      "transportation": "Self-driving, from Abilene to Montgomery, Cost: 1334",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Dallas|None|None->None",
+      "counts": {
+        "kb": 10,
+        "after_nonbudget": 6,
+        "after_budget": 2,
+        "returned": 2,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 4,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1330.0,
+        "slot_cap": 389.6484375,
+        "reserve": 633.6324999999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 745.4499999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 633.6324999999999,
+          "kept": 2
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+      "counts": {
+        "kb": 6,
+        "after_nonbudget": 3,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 3,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 634.0,
+        "slot_cap": 464.35546875,
+        "reserve": 303.99187499999994
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 420.75,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 357.6375,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 303.99187499999994,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "city": "Abilene",
+        "city_bundle": [
+          "Dallas",
+          "Abilene"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 6,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 634.0,
+          "slot_cap": 464.35546875,
+          "reserve": 303.99187499999994,
+          "min_cost_nonbudget": 404.0
+        }
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+      "counts": {
+        "kb": 6,
+        "after_nonbudget": 3,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 3,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 702.0,
+        "slot_cap": 514.16015625,
+        "reserve": 303.99187499999994
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 420.75,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 357.6375,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 303.99187499999994,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "city": "Abilene",
+        "city_bundle": [
+          "Dallas",
+          "Abilene"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 6,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 702.0,
+          "slot_cap": 514.16015625,
+          "reserve": 303.99187499999994,
+          "min_cost_nonbudget": 404.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Abilene",
+          "Dallas"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1043.0,
+          "bundle_lb_cost": 4032.0,
+          "stay_lb_cost": 864.0,
+          "meal_lb_cost": 495.0,
+          "transport_lb_cost": 2673.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "montgomery",
+              "abilene"
+            ],
+            [
+              "abilene",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "montgomery"
+            ]
+          ],
+          "bundle_key": [
+            "abilene",
+            "dallas"
+          ],
+          "bundle_key_set": [
+            "abilene",
+            "dallas"
+          ],
+          "bundle_key_seq": [
+            "abilene",
+            "dallas"
+          ],
+          "city_features": {
+            "Abilene": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 191.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 24,
+              "hotel_slack": 1
+            },
+            "Dallas": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 241.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 62,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 53,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Montgomery->Abilene": {
+              "min_cost": 1338.0,
+              "blocked": false
+            },
+            "Abilene->Dallas": {
+              "min_cost": 292.0,
+              "blocked": false
+            },
+            "Dallas->Montgomery": {
+              "min_cost": 1043.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 24,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 241.0,
+            "bottleneck_city_meal": "Abilene",
+            "bottleneck_city_hotel": "Dallas",
+            "bottleneck_edge": "Montgomery->Abilene"
+          },
+          "min_bundle_cost": 3537.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 24,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 241.0,
+          "bottleneck_city_meal": "Abilene",
+          "bottleneck_city_hotel": "Dallas",
+          "bottleneck_edge": "Montgomery->Abilene"
+        },
+        "budget_context": {
+          "remaining": 1327.0,
+          "slot_cap": 485.9619140625,
+          "reserve": 600.0001249999999,
+          "min_cost_nonbudget": 404.0
+        },
+        "counts": {
+          "kb": 6,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_city": "Abilene",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 6,
+          "after_nonbudget": 3,
+          "after_budget": 0,
+          "budget_removed": 3,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1327.0,
+          "slot_cap": 485.9619140625,
+          "reserve": 600.0001249999999,
+          "min_cost_nonbudget": 404.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 3,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Dallas",
+        "Longview"
+      ],
+      "reason": null,
+      "raw": "This is a JSON object representing the output of an optimization algorithm. It contains a list of candidate solutions (`output`) and a description of the schema used to represent these candidates (`output_schema`).\n\nHere's a breakdown of the main components:\n\n1. `output`: This is a list of candidate solutions, where each solution is represented as a dictionary with four keys:\n\t* `candidate_id`: An integer ID for the candidate.\n\t* `reason`: A short string explaining why this candidate was generated.\n\t* `confidence`: A floating-point value between 0 and 1 representing the confidence level in this candidate.\n\t* `gradient`: A nested object containing three types of information:\n\t\t+ `hard_exclusions`: A list of phase, rule, TTL (time to live), city, and edge tuples that are excluded from consideration.\n\t\t+ `soft_penalties`: A list of phase, feature, and delta tuples representing soft penalties applied during optimization.\n\t\t+ `retrieval_patches`: A list of phase, patch, and TTL tuples describing retrieval patches applied during optimization.\n2. `output_schema`: This is a dictionary describing the structure of the candidate solutions. It has three keys:\n\t* `candidate_id`: An integer field representing the candidate ID.\n\t* `reason`: A short string field for the reason why this candidate was generated.\n\t* `confidence`: A floating-point field between 0 and 1 representing confidence in the candidate.\n\t* `gradient`: A nested object containing three sub-objects:\n\t\t+ `hard_exclusions`: A list of tuples with phase, rule, TTL, city, and edge fields.\n\t\t+ `soft_penalties`: A list of tuples with phase, feature, and delta fields.\n\t\t+ `retrieval_patches`: A list of tuples with phase, patch, and TTL fields.\n\nTo extract specific information from this output, you can use standard JSON parsing techniques or libraries. For example, you could write a Python script to iterate over the candidate solutions and print their confidence levels, reasons, or gradients.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "stay",
+            "feature": "hotel_price",
+            "delta": 0.6
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "stay",
+            "patch": {
+              "topk": 50,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Dallas",
+          "Longview"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 844.0,
+          "bundle_lb_cost": 3911.0,
+          "stay_lb_cost": 1294.0,
+          "meal_lb_cost": 522.0,
+          "transport_lb_cost": 2095.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "montgomery",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "longview"
+            ],
+            [
+              "longview",
+              "montgomery"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_seq": [
+            "dallas",
+            "longview"
+          ],
+          "city_features": {
+            "Dallas": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 241.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 62,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 56,
+              "hotel_slack": 1
+            },
+            "Longview": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 406.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 13,
+              "meal_count": 26,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 10,
+              "meal_slack": 17,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Montgomery->Dallas": {
+              "min_cost": 1045.0,
+              "blocked": false
+            },
+            "Dallas->Longview": {
+              "min_cost": 206.0,
+              "blocked": false
+            },
+            "Longview->Montgomery": {
+              "min_cost": 844.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 17,
+            "bottleneck_attr_slack": 10,
+            "bottleneck_hotel_price": 406.0,
+            "bottleneck_city_meal": "Longview",
+            "bottleneck_city_hotel": "Longview",
+            "bottleneck_edge": "Montgomery->Dallas"
+          },
+          "min_bundle_cost": 3389.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 17,
+          "bottleneck_attr_slack": 10,
+          "bottleneck_hotel_price": 406.0,
+          "bottleneck_city_meal": "Longview",
+          "bottleneck_city_hotel": "Longview",
+          "bottleneck_edge": "Montgomery->Dallas"
+        },
+        "budget_context": {
+          "remaining": 432.0,
+          "slot_cap": 12.857142857142858,
+          "reserve": 387.59999999999997,
+          "min_cost_nonbudget": 11.0
+        },
+        "counts": {
+          "kb": 62,
+          "after_nonbudget": 62,
+          "after_budget": 1,
+          "budget_removed": 61,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Dallas",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 62,
+          "after_nonbudget": 62,
+          "after_budget": 1,
+          "budget_removed": 61,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 432.0,
+          "slot_cap": 12.857142857142858,
+          "reserve": 387.59999999999997,
+          "min_cost_nonbudget": 11.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 62,
+        "dead_end_after_budget": 1,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Longview",
+        "Dallas"
+      ],
+      "reason": null,
+      "raw": "This output is a JSON object that represents the result of some type of optimization or planning algorithm. Here's a breakdown of its components:\n\n**`output_schema`**: This section defines the structure of the output data. It specifies the fields that will be present in each element of the output list, along with their types and possible values.\n\n* `candidate_id`: an integer ID for each candidate solution\n* `reason`: a short string explaining why this candidate was generated (e.g., \"selected by algorithm\")\n* `confidence`: a float value between 0 and 1 representing how confident the algorithm is in this candidate's quality\n* `gradient`: an object containing various metrics that can be used to evaluate or refine the candidate\n\nWithin the `gradient` object, there are three sub-objects:\n\n* `hard_exclusions`: a list of exclusions that cannot be overcome by any patch (rule, phase, TTL, city, edge)\n\t+ Each element is an object with fields:\n\t\t- `phase`: the phase in which the exclusion occurred\n\t\t- `rule`: the rule that triggered the exclusion\n\t\t- `ttl`: the Time To Live (TTL) associated with this exclusion\n\t\t- `city?`: an optional field indicating whether a city was involved in this exclusion\n\t\t- `edge?`: an optional field indicating whether an edge was involved in this exclusion\n* `soft_penalties`: a list of penalties that can be overcome by a patch (feature, delta)\n\t+ Each element is an object with fields:\n\t\t- `phase`: the phase in which the penalty occurred\n\t\t- `feature`: the feature associated with this penalty\n\t\t- `delta`: the amount of the penalty (e.g., 0.5 for a 50% penalty)\n* `retrieval_patches`: a list of patches that can be applied to improve the candidate's quality (phase, patch, TTL)\n\t+ Each element is an object with fields:\n\t\t- `phase`: the phase in which the patch should be applied\n\t\t- `patch`: the type of patch (e.g., \" feature addition\" or \"rule modification\")\n\t\t- `ttl`: the Time To Live (TTL) associated with this patch\n\nThe rest of the JSON object contains a list of candidate solutions, each represented by an object with fields corresponding to those defined in the `output_schema` section.\n\nUnfortunately, without more context about what this output is supposed to represent or how it was generated, I can't provide more specific insights into its meaning. If you have any further questions or would like me to clarify any part of this explanation, feel free to ask!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "meal",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "Longview",
+          "Dallas"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1043.0,
+          "bundle_lb_cost": 3907.0,
+          "stay_lb_cost": 1294.0,
+          "meal_lb_cost": 513.0,
+          "transport_lb_cost": 2100.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "montgomery",
+              "longview"
+            ],
+            [
+              "longview",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "montgomery"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_seq": [
+            "longview",
+            "dallas"
+          ],
+          "city_features": {
+            "Longview": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 406.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 13,
+              "meal_count": 26,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 11,
+              "meal_slack": 20,
+              "hotel_slack": 1
+            },
+            "Dallas": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 241.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 62,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 53,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Montgomery->Longview": {
+              "min_cost": 849.0,
+              "blocked": false
+            },
+            "Longview->Dallas": {
+              "min_cost": 208.0,
+              "blocked": false
+            },
+            "Dallas->Montgomery": {
+              "min_cost": 1043.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 20,
+            "bottleneck_attr_slack": 11,
+            "bottleneck_hotel_price": 406.0,
+            "bottleneck_city_meal": "Longview",
+            "bottleneck_city_hotel": "Longview",
+            "bottleneck_edge": "Dallas->Montgomery"
+          },
+          "min_bundle_cost": 3394.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 20,
+          "bottleneck_attr_slack": 11,
+          "bottleneck_hotel_price": 406.0,
+          "bottleneck_city_meal": "Longview",
+          "bottleneck_city_hotel": "Longview",
+          "bottleneck_edge": "Dallas->Montgomery"
+        },
+        "budget_context": {
+          "remaining": 244.0,
+          "slot_cap": 14.44128787878788,
+          "reserve": 204.50362499999997,
+          "min_cost_nonbudget": 12.0
+        },
+        "counts": {
+          "kb": 26,
+          "after_nonbudget": 26,
+          "after_budget": 1,
+          "budget_removed": 25,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Longview",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 26,
+          "after_nonbudget": 26,
+          "after_budget": 1,
+          "budget_removed": 25,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 244.0,
+          "slot_cap": 14.44128787878788,
+          "reserve": 204.50362499999997,
+          "min_cost_nonbudget": 12.0
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 26,
+        "dead_end_after_budget": 1,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Dallas",
+        "Abilene"
+      ],
+      "reason": null,
+      "raw": "This output is a JSON object representing a machine learning model's output. It contains information about candidate travel plans, along with their confidence scores and reasons for selection.\n\nHere's a breakdown of the structure:\n\n1. **`output_schema`**: This section defines the schema of the output data. It includes metadata about the fields that make up each candidate travel plan.\n2. **`candidate_travel_plans`**: This is an array of objects, where each object represents a potential travel plan.\n\nEach `candidate_travel_plan` object has the following properties:\n\n* **`id`** (integer): A unique identifier for this travel plan.\n* **`reason`** (string): A brief description of why this travel plan was generated.\n* **`confidence`** (float in [0,1]): The model's confidence score for this travel plan.\n* **`gradient`**: An object containing three sub-objects:\n\t+ **`hard_exclusions`**: A list of rules that exclude this travel plan from consideration.\n\t+ **`soft_penalties`**: A list of penalties assigned to this travel plan based on its features.\n\t+ **`retrieval_patches`**: A list of patches applied to the data during retrieval.\n\nTo extract specific information from this output, you can query the `candidate_travel_plans` array and access the relevant properties for each candidate. For example:\n\n* Get all confidence scores: `output.candidate_travel_plans.map(plan => plan.confidence)`\n* Filter plans with a high confidence score (e.g., above 0.8): `output.candidate_travel_plans.filter(plan => plan.confidence > 0.8)`\n* Extract the reasons for each plan: `output.candidate_travel_plans.map(plan => plan.reason)`\n\nLet me know if you have any specific questions about working with this output!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "5a4c2fb37c33",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+      "bundle_fp": "ebf1544a7bc2"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "5a4c2fb37c33",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "bundle_fp": "9b60345db0fd"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Dallas",
+        "Longview"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "5a4c2fb37c33",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:lunch|seg:None|Dallas|None|None->None",
+        "bundle_fp": "25d991a8d318"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "5a4c2fb37c33",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:lunch|seg:None|Dallas|None|None->None",
+        "bundle_fp": "25d991a8d318"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Longview",
+        "Dallas"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "5a4c2fb37c33",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:lunch|seg:None|Longview|None|None->None",
+        "bundle_fp": "7ab573f6ac7e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "5a4c2fb37c33",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:lunch|seg:None|Longview|None|None->None",
+        "bundle_fp": "7ab573f6ac7e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Dallas",
+        "Abilene"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "5a4c2fb37c33",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Abilene|None|None->None",
+        "bundle_fp": "ebf1544a7bc2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 21.50094099296257
+}

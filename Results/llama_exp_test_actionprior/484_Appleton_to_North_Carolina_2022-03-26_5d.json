@@ -1,0 +1,957 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 3673.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you assist in crafting a 5-day travel plan for 2 individuals from Appleton to visit 2 cities in North Carolina, from March 26th to March 30th, 2022? Our budget for this trip is pegged at $4,200. We would prefer accommodations that offer entire rooms for privacy.",
+  "parsed": {
+    "org": "Appleton",
+    "dest": "North Carolina",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-26",
+      "2022-03-27",
+      "2022-03-28",
+      "2022-03-29",
+      "2022-03-30"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": null
+    },
+    "budget": 4200,
+    "origin": "Appleton",
+    "destination": "North Carolina",
+    "duration_days": 5,
+    "start_date": "2022-03-26",
+    "preferences": [
+      "entire room"
+    ],
+    "candidate_cities": [
+      "Greensboro",
+      "Wilmington",
+      "New Bern",
+      "Charlotte",
+      "Raleigh",
+      "Asheville",
+      "Fayetteville"
+    ]
+  },
+  "actions": [
+    "move:seg0:flight:F3796729 Appleton->Charlotte $148 07:00-10:22",
+    "move:seg1:flight:F2620505 Charlotte->Wilmington $37 14:26-15:14",
+    "move:seg2:taxi:Wilmington->Appleton 1825km cost 1825",
+    "stay:Charlotte:782 Luxury 2 bdr/2 bath prime Williamburg Entire home/apt $218",
+    "stay:Wilmington:4267 Luxury 3 bedroom apartment on the Upper East Side Entire home/apt $481",
+    "eat:d1:breakfast:3739 China Garden Tea, Mexican, BBQ, Mediterranean $14 rating 3.8",
+    "eat:d1:lunch:3298 Prince Snacks & Momo's Point Tea, Cafe, Desserts, Fast Food $11 rating 3.4",
+    "eat:d1:dinner:9088 Burger King Cafe, Pizza, Indian, Desserts $15 rating 3.5"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Charlotte",
+      "Wilmington"
+    ],
+    "transportation_dates": [
+      "2022-03-26",
+      "2022-03-28",
+      "2022-03-30"
+    ],
+    "transportation_methods": [
+      "Flight F3796729, from Appleton to Charlotte, Departure Time: 07:00, Arrival Time: 10:22, cost: 148.0",
+      "Flight F2620505, from Charlotte to Wilmington, Departure Time: 14:26, Arrival Time: 15:14, cost: 37.0",
+      "taxi, from Wilmington to Appleton, cost: 1825.0"
+    ],
+    "restaurants": [
+      "China Garden, Charlotte",
+      "Prince Snacks & Momo's Point, Charlotte",
+      "Burger King, Charlotte"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "Luxury 2 bdr/2 bath prime Williamburg, Charlotte",
+      "Luxury 3 bedroom apartment on the Upper East Side, Wilmington"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Appleton to Charlotte",
+      "transportation": "Flight Number: F3796729, from Appleton to Charlotte, Departure Time: 07:00, Arrival Time: 10:22",
+      "breakfast": "China Garden, Charlotte",
+      "attraction": "-",
+      "lunch": "Prince Snacks & Momo's Point, Charlotte",
+      "dinner": "Burger King, Charlotte",
+      "accommodation": "Luxury 2 bdr/2 bath prime Williamburg, Charlotte"
+    },
+    {
+      "days": 2,
+      "current_city": "Charlotte",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Luxury 2 bdr/2 bath prime Williamburg, Charlotte"
+    },
+    {
+      "days": 3,
+      "current_city": "from Charlotte to Wilmington",
+      "transportation": "Flight Number: F2620505, from Charlotte to Wilmington, Departure Time: 14:26, Arrival Time: 15:14",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Luxury 3 bedroom apartment on the Upper East Side, Wilmington"
+    },
+    {
+      "days": 4,
+      "current_city": "Wilmington",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Luxury 3 bedroom apartment on the Upper East Side, Wilmington"
+    },
+    {
+      "days": 5,
+      "current_city": "from Wilmington to Appleton",
+      "transportation": "Taxi, from Wilmington to Appleton, Cost: 1825",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:dinner|seg:None|Charlotte|None|None->None",
+      "counts": {
+        "kb": 30,
+        "after_nonbudget": 30,
+        "after_budget": 5,
+        "returned": 3,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 25,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 557.0,
+        "slot_cap": 21.423076923076923,
+        "reserve": 516.0
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "meal",
+      "slot_id": "meal|d2|slot:breakfast|seg:None|Charlotte|None|None->None",
+      "counts": {
+        "kb": 30,
+        "after_nonbudget": 30,
+        "after_budget": 1,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 29,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 521.0,
+        "slot_cap": 21.708333333333332,
+        "reserve": 494.0
+      },
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d2|slot:breakfast|seg:None|Charlotte|None|None->None",
+        "city": "Charlotte",
+        "city_bundle": [
+          "Charlotte",
+          "Wilmington"
+        ],
+        "reason": "duplication",
+        "counts": {
+          "kb": 30,
+          "after_nonbudget": 30,
+          "after_budget": 1,
+          "budget_removed": 29,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 521.0,
+          "slot_cap": 21.708333333333332,
+          "reserve": 494.0,
+          "min_cost_nonbudget": 11.0
+        }
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "meal",
+      "slot_id": "meal|d2|slot:breakfast|seg:None|Charlotte|None|None->None",
+      "counts": {
+        "kb": 30,
+        "after_nonbudget": 30,
+        "after_budget": 3,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 27,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 527.0,
+        "slot_cap": 21.958333333333332,
+        "reserve": 494.0
+      },
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d2|slot:breakfast|seg:None|Charlotte|None|None->None",
+        "city": "Charlotte",
+        "city_bundle": [
+          "Charlotte",
+          "Wilmington"
+        ],
+        "reason": "duplication",
+        "counts": {
+          "kb": 30,
+          "after_nonbudget": 30,
+          "after_budget": 3,
+          "budget_removed": 27,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 527.0,
+          "slot_cap": 21.958333333333332,
+          "reserve": 494.0,
+          "min_cost_nonbudget": 11.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "outbound"
+        ],
+        "city_bundle": [
+          "Asheville",
+          "Charlotte"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 300.0,
+          "bundle_lb_cost": 2601.0,
+          "stay_lb_cost": 562.0,
+          "meal_lb_cost": 330.0,
+          "transport_lb_cost": 1709.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "appleton",
+              "asheville"
+            ],
+            [
+              "asheville",
+              "charlotte"
+            ],
+            [
+              "charlotte",
+              "appleton"
+            ]
+          ],
+          "bundle_key": [
+            "asheville",
+            "charlotte"
+          ],
+          "bundle_key_set": [
+            "asheville",
+            "charlotte"
+          ],
+          "bundle_key_seq": [
+            "asheville",
+            "charlotte"
+          ],
+          "city_features": {
+            "Asheville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 63.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 20,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 14,
+              "hotel_slack": 1
+            },
+            "Charlotte": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 218.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Appleton->Asheville": {
+              "min_cost": 1373.0,
+              "blocked": false
+            },
+            "Asheville->Charlotte": {
+              "min_cost": 36.0,
+              "blocked": false
+            },
+            "Charlotte->Appleton": {
+              "min_cost": 300.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 14,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 218.0,
+            "bottleneck_city_meal": "Asheville",
+            "bottleneck_city_hotel": "Charlotte",
+            "bottleneck_edge": "Appleton->Asheville"
+          },
+          "min_bundle_cost": 2271.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 14,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 218.0,
+          "bottleneck_city_meal": "Asheville",
+          "bottleneck_city_hotel": "Charlotte",
+          "bottleneck_edge": "Appleton->Asheville"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 4200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Fayetteville",
+        "Charlotte"
+      ],
+      "reason": "bundle_risk + edge_summary",
+      "raw": "{\n  \"candidate_id\": 2,\n  \"reason\": \"bundle_risk + edge_summary\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel/stay\", \"rule\": \"AVOID_DEAD_END_CITY\", \"ttl\": 1, \"city\": \"Charlotte\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"segment/flight\", \"feature\": \"cost_ratio\", \"delta\": 0.2}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "bundle_risk + edge_summary",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel/stay",
+              "rule": "AVOID_DEAD_END_CITY",
+              "ttl": 1,
+              "city": "Charlotte"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment/flight",
+              "feature": "cost_ratio",
+              "delta": 0.2
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel/stay",
+            "rule": "AVOID_DEAD_END_CITY",
+            "ttl": 1,
+            "city": "Charlotte"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment/flight",
+            "feature": "cost_ratio",
+            "delta": 0.2
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "outbound"
+        ],
+        "city_bundle": [
+          "Fayetteville",
+          "Charlotte"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 300.0,
+          "bundle_lb_cost": 3025.0,
+          "stay_lb_cost": 706.0,
+          "meal_lb_cost": 330.0,
+          "transport_lb_cost": 1989.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "appleton",
+              "fayetteville"
+            ],
+            [
+              "fayetteville",
+              "charlotte"
+            ],
+            [
+              "charlotte",
+              "appleton"
+            ]
+          ],
+          "bundle_key": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "bundle_key_set": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "bundle_key_seq": [
+            "fayetteville",
+            "charlotte"
+          ],
+          "city_features": {
+            "Fayetteville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 135.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 0
+            },
+            "Charlotte": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 218.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 21,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Appleton->Fayetteville": {
+              "min_cost": 1643.0,
+              "blocked": false
+            },
+            "Fayetteville->Charlotte": {
+              "min_cost": 46.0,
+              "blocked": false
+            },
+            "Charlotte->Appleton": {
+              "min_cost": 300.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 21,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 218.0,
+            "bottleneck_city_meal": "Charlotte",
+            "bottleneck_city_hotel": "Charlotte",
+            "bottleneck_edge": "Appleton->Fayetteville"
+          },
+          "min_bundle_cost": 2695.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 21,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 218.0,
+          "bottleneck_city_meal": "Charlotte",
+          "bottleneck_city_hotel": "Charlotte",
+          "bottleneck_edge": "Appleton->Fayetteville"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 4200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Charlotte",
+        "Fayetteville"
+      ],
+      "reason": "bundle_risk + edge_summary",
+      "raw": "{\n  \"candidate_id\": 2,\n  \"reason\": \"bundle_risk + edge_summary\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\"NO_FLIGHT\"],\n    \"soft_penalties\": [\n      {\"phase\": \"segment\", \"feature\": \"cost_ratio\", \"delta\": 1.2},\n      {\"phase\": \"hotel/stay\", \"feature\": \"soft_penalty\", \"delta\": 0.5}\n    ],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "bundle_risk + edge_summary",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            "NO_FLIGHT"
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "cost_ratio",
+              "delta": 1.2
+            },
+            {
+              "phase": "hotel/stay",
+              "feature": "soft_penalty",
+              "delta": 0.5
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          "NO_FLIGHT"
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 1.2
+          },
+          {
+            "phase": "hotel/stay",
+            "feature": "soft_penalty",
+            "delta": 0.5
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "unknown",
+        "subtype": null,
+        "violations": [
+          "missing_flight",
+          "return"
+        ],
+        "city_bundle": [
+          "Charlotte",
+          "Fayetteville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1644.0,
+          "bundle_lb_cost": 3022.0,
+          "stay_lb_cost": 706.0,
+          "meal_lb_cost": 330.0,
+          "transport_lb_cost": 1986.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "appleton",
+              "charlotte"
+            ],
+            [
+              "charlotte",
+              "fayetteville"
+            ],
+            [
+              "fayetteville",
+              "appleton"
+            ]
+          ],
+          "bundle_key": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "bundle_key_set": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "bundle_key_seq": [
+            "charlotte",
+            "fayetteville"
+          ],
+          "city_features": {
+            "Charlotte": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 218.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 24,
+              "hotel_slack": 1
+            },
+            "Fayetteville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 135.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 25,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Appleton->Charlotte": {
+              "min_cost": 296.0,
+              "blocked": false
+            },
+            "Charlotte->Fayetteville": {
+              "min_cost": 46.0,
+              "blocked": false
+            },
+            "Fayetteville->Appleton": {
+              "min_cost": 1644.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 24,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 218.0,
+            "bottleneck_city_meal": "Charlotte",
+            "bottleneck_city_hotel": "Charlotte",
+            "bottleneck_edge": "Fayetteville->Appleton"
+          },
+          "min_bundle_cost": 2692.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 24,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 218.0,
+          "bottleneck_city_meal": "Charlotte",
+          "bottleneck_city_hotel": "Charlotte",
+          "bottleneck_edge": "Fayetteville->Appleton"
+        },
+        "budget_context": null,
+        "counts": {},
+        "dead_end_city": null,
+        "dead_end_reason": null,
+        "dead_end_counts": {},
+        "dead_end_budget_context": null,
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": null,
+        "dead_end_after_budget": null,
+        "dead_end_returned": null,
+        "constraints_snapshot": {
+          "budget": 4200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": null,
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Charlotte",
+        "Wilmington"
+      ],
+      "reason": "bundle_risk",
+      "raw": "{\n    \"candidate_id\": 4,\n    \"reason\": \"bundle_risk\",\n    \"confidence\": 0.7,\n    \"gradient\": {\n        \"hard_exclusions\": [\n            [\"segment\", \"NO_FLIGHT\", 300, null, null]\n        ],\n        \"soft_penalties\": [\n            [\"hotel_price\", -50.0],\n            [\"edge_cost\", 20.0]\n        ]\n    }\n}",
+      "parsed": {
+        "candidate_id": 4,
+        "reason": "bundle_risk",
+        "confidence": 0.7,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "segment",
+              "NO_FLIGHT",
+              300,
+              null,
+              null
+            ]
+          ],
+          "soft_penalties": [
+            [
+              "hotel_price",
+              -50.0
+            ],
+            [
+              "edge_cost",
+              20.0
+            ]
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "segment",
+            "NO_FLIGHT",
+            300,
+            null,
+            null
+          ]
+        ],
+        "soft_penalties": [
+          [
+            "hotel_price",
+            -50.0
+          ],
+          [
+            "edge_cost",
+            20.0
+          ]
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "853d6dae4850",
+      "phase": "daily",
+      "slot_fp": "meal|d2|slot:breakfast|seg:None|Charlotte|None|None->None",
+      "bundle_fp": "241db7658fb2"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "853d6dae4850",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "b89f75ab2dd7"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment/flight",
+          "feature": "cost_ratio",
+          "delta": 0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Fayetteville",
+        "Charlotte"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "853d6dae4850",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "6b7204ca99fd"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "853d6dae4850",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "6b7204ca99fd"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 1.2
+        },
+        {
+          "phase": "hotel/stay",
+          "feature": "soft_penalty",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Charlotte",
+        "Fayetteville"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "853d6dae4850",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "704cc740fe97"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "853d6dae4850",
+        "phase": "unknown",
+        "slot_fp": "finish|dNone|slot:None|seg:None|None|None|None->None",
+        "bundle_fp": "704cc740fe97"
+      },
+      "confidence": 0.7,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Charlotte",
+        "Wilmington"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "853d6dae4850",
+        "phase": "daily",
+        "slot_fp": "meal|d2|slot:breakfast|seg:None|Charlotte|None|None->None",
+        "bundle_fp": "241db7658fb2"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 57.59817347396165
+}

@@ -1,0 +1,1077 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 8616.0,
+  "violations": [
+    "commonsense:is_reasonable_visiting_city",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you please help create a 5-day travel program for a party of 6, departing from Tampa and traversing 2 cities in California, from March 10th to March 14th, 2022? Our budget for this trip is set at $15,800. We're big fans of American and French cuisines and would appreciate if these could be incorporated into our dining arrangements. We are open to different types of accommodations and transportation options.",
+  "parsed": {
+    "org": "Tampa",
+    "dest": "California",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-10",
+      "2022-03-11",
+      "2022-03-12",
+      "2022-03-13",
+      "2022-03-14"
+    ],
+    "people_number": 6,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": [
+        "American",
+        "French"
+      ],
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 15800,
+    "origin": "Tampa",
+    "destination": "California",
+    "duration_days": 5,
+    "start_date": "2022-03-10",
+    "preferences": [
+      "American",
+      "French"
+    ],
+    "candidate_cities": [
+      "San Diego",
+      "Redding",
+      "Sacramento",
+      "Fresno",
+      "San Luis Obispo",
+      "Oakland",
+      "Santa Barbara",
+      "Stockton",
+      "Santa Rosa",
+      "Bakersfield",
+      "Santa Ana",
+      "Santa Maria",
+      "San Jose",
+      "Burbank",
+      "Arcata",
+      "Butte",
+      "Palm Springs",
+      "Los Angeles",
+      "Long Beach",
+      "San Francisco"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Tampa->Bakersfield 4113km cost 4113",
+    "move:seg1:taxi:Bakersfield->Santa Maria 195km cost 195"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Bakersfield",
+      "Santa Maria"
+    ],
+    "transportation_dates": [
+      "2022-03-10",
+      "2022-03-12",
+      "2022-03-14"
+    ],
+    "transportation_methods": [
+      "taxi, from Tampa to Bakersfield, cost: 4113.0",
+      "taxi, from Bakersfield to Santa Maria, cost: 195.0",
+      "Santa Maria->Tampa missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Bakersfield",
+      "missing, Santa Maria"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Tampa to Bakersfield",
+      "transportation": "Taxi, from Tampa to Bakersfield, Cost: 4113",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Bakersfield",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Bakersfield to Santa Maria",
+      "transportation": "Taxi, from Bakersfield to Santa Maria, Cost: 195",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Santa Maria",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "Santa Maria",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:1|None|2022-03-10|Bakersfield->Santa Maria",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 7574.0,
+        "slot_cap": 232.5350877192982,
+        "reserve": 4544.0
+      },
+      "segment_role": "intercity",
+      "cache_hit": true
+    },
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-10|Santa Maria->Tampa",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 7184.0,
+        "slot_cap": 861.56798245614,
+        "reserve": 2790.584
+      },
+      "segment_role": "return",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 3862.4,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 3283.0399999999995,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 2790.584,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-10|Santa Maria->Tampa",
+        "city": "Tampa",
+        "city_bundle": [
+          "Bakersfield",
+          "Santa Maria"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 7184.0,
+          "slot_cap": 861.56798245614,
+          "reserve": 2790.584,
+          "min_cost_nonbudget": 1440.6666666666667
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Santa Barbara",
+          "Santa Maria"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 8644.0,
+          "bundle_lb_cost": 21918.0,
+          "stay_lb_cost": 3634.0,
+          "meal_lb_cost": 990.0,
+          "transport_lb_cost": 17294.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "tampa",
+              "santa barbara"
+            ],
+            [
+              "santa barbara",
+              "santa maria"
+            ],
+            [
+              "santa maria",
+              "tampa"
+            ]
+          ],
+          "bundle_key": [
+            "santa barbara",
+            "santa maria"
+          ],
+          "bundle_key_set": [
+            "santa barbara",
+            "santa maria"
+          ],
+          "bundle_key_seq": [
+            "santa barbara",
+            "santa maria"
+          ],
+          "city_features": {
+            "Santa Barbara": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1079.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 7,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 1,
+              "hotel_slack": 0
+            },
+            "Santa Maria": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 738.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 17,
+              "meal_count": 10,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 14,
+              "meal_slack": 1,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Tampa->Santa Barbara": {
+              "min_cost": 8442.0,
+              "blocked": false
+            },
+            "Santa Barbara->Santa Maria": {
+              "min_cost": 208.0,
+              "blocked": false
+            },
+            "Santa Maria->Tampa": {
+              "min_cost": 8644.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 1,
+            "bottleneck_attr_slack": 14,
+            "bottleneck_hotel_price": 1079.0,
+            "bottleneck_city_meal": "Santa Barbara",
+            "bottleneck_city_hotel": "Santa Barbara",
+            "bottleneck_edge": "Santa Maria->Tampa"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 1,
+          "bottleneck_attr_slack": 14,
+          "bottleneck_hotel_price": 1079.0,
+          "bottleneck_city_meal": "Santa Barbara",
+          "bottleneck_city_hotel": "Santa Barbara",
+          "bottleneck_edge": "Santa Maria->Tampa"
+        },
+        "budget_context": {
+          "remaining": 7150.0,
+          "slot_cap": 857.4904057017543,
+          "reserve": 2839.7139999999995,
+          "min_cost_nonbudget": 1440.6666666666667
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Tampa",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 7150.0,
+          "slot_cap": 857.4904057017543,
+          "reserve": 2839.7139999999995,
+          "min_cost_nonbudget": 1440.6666666666667
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 15800,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "American",
+              "French"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Bakersfield",
+        "Santa Maria"
+      ],
+      "reason": null,
+      "raw": "This appears to be a JSON output from a machine learning or data processing model. It represents the results of some kind of optimization or recommendation process.\n\nHere's a breakdown of the structure:\n\n* The top-level object has a key `output_schema` that describes the format and meaning of the output.\n* The main content is an array of objects, each representing a candidate solution to some problem. Each candidate is identified by an `id` (an integer) and contains additional information:\n\t+ `reason`: A short string explaining why this candidate was generated.\n\t+ `confidence`: A floating-point value between 0 and 1 indicating the confidence in the correctness of this candidate.\n\t+ `gradient`: An object containing three types of information about the candidate:\n\t\t- `hard_exclusions`: A list of objects, each describing a hard exclusion from the solution. Each object has keys for the phase, rule, TTL (time to live), city, and edge that were excluded.\n\t\t- `soft_penalties`: A list of objects, each describing a soft penalty applied to the solution. Each object has keys for the phase, feature, and delta (change) applied.\n\t\t- `retrieval_patches`: A list of objects, each describing a patch applied to improve the retrieval process. Each object has keys for the phase, patch, and TTL.\n\nThe specific values in this output are not immediately clear without more context about the problem being solved or the model used to generate the results.\n\nIf you have any questions about how to interpret this output or would like help with a specific aspect of it, feel free to ask!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Bakersfield",
+          "Santa Maria"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 8644.0,
+          "bundle_lb_cost": 21804.0,
+          "stay_lb_cost": 3590.0,
+          "meal_lb_cost": 954.0,
+          "transport_lb_cost": 17260.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "tampa",
+              "bakersfield"
+            ],
+            [
+              "bakersfield",
+              "santa maria"
+            ],
+            [
+              "santa maria",
+              "tampa"
+            ]
+          ],
+          "bundle_key": [
+            "bakersfield",
+            "santa maria"
+          ],
+          "bundle_key_set": [
+            "bakersfield",
+            "santa maria"
+          ],
+          "bundle_key_seq": [
+            "bakersfield",
+            "santa maria"
+          ],
+          "city_features": {
+            "Bakersfield": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1057.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 6,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 0,
+              "hotel_slack": 1
+            },
+            "Santa Maria": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 738.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 17,
+              "meal_count": 10,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 14,
+              "meal_slack": 1,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Tampa->Bakersfield": {
+              "min_cost": 8226.0,
+              "blocked": false
+            },
+            "Bakersfield->Santa Maria": {
+              "min_cost": 390.0,
+              "blocked": false
+            },
+            "Santa Maria->Tampa": {
+              "min_cost": 8644.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 0,
+            "bottleneck_attr_slack": 14,
+            "bottleneck_hotel_price": 1057.0,
+            "bottleneck_city_meal": "Bakersfield",
+            "bottleneck_city_hotel": "Bakersfield",
+            "bottleneck_edge": "Santa Maria->Tampa"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 0,
+          "bottleneck_attr_slack": 14,
+          "bottleneck_hotel_price": 1057.0,
+          "bottleneck_city_meal": "Bakersfield",
+          "bottleneck_city_hotel": "Bakersfield",
+          "bottleneck_edge": "Santa Maria->Tampa"
+        },
+        "budget_context": {
+          "remaining": 7184.0,
+          "slot_cap": 861.56798245614,
+          "reserve": 2790.584,
+          "min_cost_nonbudget": 1440.6666666666667
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Tampa",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 7184.0,
+          "slot_cap": 861.56798245614,
+          "reserve": 2790.584,
+          "min_cost_nonbudget": 1440.6666666666667
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 15800,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "American",
+              "French"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Stockton",
+        "Redding"
+      ],
+      "reason": null,
+      "raw": "This is a JSON response that appears to be the output of some kind of machine learning model or algorithm. Here's a breakdown of what I see:\n\n**Response Structure**\n\nThe response has two main parts: `output_schema` and `result`. The `output_schema` section defines the structure of the response, which includes several fields such as `candidate_id`, `reason`, `confidence`, and others.\n\n**Result Section**\n\nThe `result` section is an array of 16 objects, each representing a candidate solution. Each object has multiple fields:\n\n* `id`: A unique identifier for the candidate (e.g., `1`, `2`, etc.)\n* `bundle`: An array of two elements, which represents the bundle being considered (e.g., `[Butte, Santa Maria]`)\n* `lb_costs`: An object with four fields: `transport_lb_cost`, `stay_lb_cost`, `meal_lb_cost`, and `bundle_lb_cost`\n* `feasibility`: An object with two fields: `return_leg_exists` and `hotel_feasible_all`\n* `edge_summary`: An object with three fields: `Tampa->Butte`, `Butte->Santa Maria`, and `Santa Maria->Tampa`\n\n**Fields of Interest**\n\nSome fields that might be of interest:\n\n* `bundle_lb_cost`: The lower bound cost for the bundle being considered\n* `feasibility.return_leg_exists`: A boolean indicating whether a return leg exists in the candidate solution\n* `edge_summary`: An object containing edge costs and other information related to the edges in the candidate solution\n\n**Interpretation**\n\nBased on the structure of the response, it appears that this is some kind of optimization problem where the goal is to find the best bundle of cities (represented by their IDs) given certain constraints. The `output_schema` section defines the structure of the output, and the `result` section contains the actual candidate solutions.\n\nIf you provide more context about what this response represents or how it was generated, I may be able to help further!",
+      "parsed": null,
+      "error": "invalid_candidate_id",
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "over_budget",
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Stockton",
+          "Redding"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 9616.0,
+          "bundle_lb_cost": 23826.0,
+          "stay_lb_cost": 3280.0,
+          "meal_lb_cost": 1278.0,
+          "transport_lb_cost": 19268.0,
+          "hotel_min_nights_min": 2,
+          "edges": [
+            [
+              "tampa",
+              "stockton"
+            ],
+            [
+              "stockton",
+              "redding"
+            ],
+            [
+              "redding",
+              "tampa"
+            ]
+          ],
+          "bundle_key": [
+            "redding",
+            "stockton"
+          ],
+          "bundle_key_set": [
+            "redding",
+            "stockton"
+          ],
+          "bundle_key_seq": [
+            "stockton",
+            "redding"
+          ],
+          "city_features": {
+            "Stockton": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 607.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 9,
+              "min_meal_cost": 16.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 3,
+              "hotel_slack": 0
+            },
+            "Redding": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1033.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 15,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 6,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Tampa->Stockton": {
+              "min_cost": 8976.0,
+              "blocked": false
+            },
+            "Stockton->Redding": {
+              "min_cost": 676.0,
+              "blocked": false
+            },
+            "Redding->Tampa": {
+              "min_cost": 9616.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 3,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1033.0,
+            "bottleneck_city_meal": "Stockton",
+            "bottleneck_city_hotel": "Redding",
+            "bottleneck_edge": "Redding->Tampa"
+          }
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 3,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1033.0,
+          "bottleneck_city_meal": "Stockton",
+          "bottleneck_city_hotel": "Redding",
+          "bottleneck_edge": "Redding->Tampa"
+        },
+        "budget_context": {
+          "remaining": 6148.0,
+          "slot_cap": 737.3218201754385,
+          "reserve": 2699.6935,
+          "min_cost_nonbudget": 1602.6666666666667
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Tampa",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 6148.0,
+          "slot_cap": 737.3218201754385,
+          "reserve": 2699.6935,
+          "min_cost_nonbudget": 1602.6666666666667
+        },
+        "dead_end_subtype": "over_budget",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 15800,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": null,
+            "cuisine": [
+              "American",
+              "French"
+            ],
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Bakersfield",
+        "Santa Maria"
+      ],
+      "reason": null,
+      "raw": "This is a JSON output from an algorithmic system, likely a recommendation engine or a decision-making tool. It appears to be a candidate list with associated metadata and scores.\n\nHere's a breakdown of the structure:\n\n* `output_schema`: This section defines the schema for the output data.\n\t+ `candidate_id`: An integer identifier for each candidate (item).\n\t+ `reason`: A short string explaining why this item is included in the list.\n\t+ `confidence`: A float value between 0 and 1 representing the confidence level of this recommendation.\n\t+ `gradient`: This section contains additional metadata about the algorithm's decision-making process.\n\t\t- `hard_exclusions`: A list of tuples containing information on hard exclusions, such as:\n\t\t\t- `phase`: The phase of the algorithm where this exclusion occurred.\n\t\t\t- `rule`: The rule that triggered this exclusion.\n\t\t\t- `ttl`: Time to live (TTL) for this exclusion.\n\t\t\t- `city?`: Optional: City or location associated with this exclusion.\n\t\t\t- `edge?`: Optional: Edge or connection associated with this exclusion.\n\t\t- `soft_penalties`: A list of tuples containing information on soft penalties, such as:\n\t\t\t- `phase`: The phase of the algorithm where this penalty occurred.\n\t\t\t- `feature`: The feature that triggered this penalty.\n\t\t\t- `delta`: The magnitude of this penalty.\n\t\t- `retrieval_patches`: A list of tuples containing information on retrieval patches, such as:\n\t\t\t- `phase`: The phase of the algorithm where this patch was applied.\n\t\t\t- `patch`: The type of patch applied (e.g., \"add\", \"remove\").\n\t\t\t- `ttl`: Time to live (TTL) for this patch.\n* `[...]`: This is a list of candidate items, each represented by an object with the following structure:\n\t+ `id`: The integer identifier for this item (candidate).\n\t+ `bundle`: A list of two or more cities or locations that are bundled together in this recommendation.\n\t+ `bundle_risk`: An object containing risk information about this bundle, including:\n\t\t- `bottleneck_meal_slack`: Slack time for meal planning within the bundle.\n\t\t- `bottleneck_attr_slack`: Slack time for attractions within the bundle.\n\t\t- `bottleneck_hotel_price`: The minimum hotel price within the bundle.\n\t\t- `bottleneck_city_meal`: City or location associated with meal planning in this bundle.\n\t\t- `bottleneck_city_hotel`: City or location associated with hotels in this bundle.\n\t\t- `bottleneck_edge`: Edge or connection associated with this bundle.\n\t+ `[...]`: A list of objects containing additional metadata about this candidate, including:\n\t\t- `city_summary`: An object summarizing information about each city within the bundle, such as hotel prices and meal costs.\n\t\t- `edge_summary`: An object summarizing information about the edges or connections between cities in the bundle.\n\t\t- `lb_costs`: A list of cost estimates for this candidate, including:\n\t\t\t- `transport_lb_cost`: The lower bound on transportation costs within the bundle.\n\t\t\t- `stay_lb_cost`: The lower bound on stay costs (hotel prices) within the bundle.\n\t\t\t- `meal_lb_cost`: The lower bound on meal costs within the bundle.\n\t\t\t- `bundle_lb_cost`: The total estimated cost of this candidate.\n\nThis structure suggests that the algorithm is designed to recommend bundled travel plans, with each bundle consisting of two or more cities or locations. The output includes detailed metadata about each candidate, including risk information, cost estimates, and summaries of city and edge attributes.",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "96526423afcd",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-10|Santa Maria->Tampa",
+      "bundle_fp": "b2d02b35b2f7"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "96526423afcd",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-10|Santa Maria->Tampa",
+        "bundle_fp": "2a49607c900d"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Bakersfield",
+        "Santa Maria"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "96526423afcd",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-10|Santa Maria->Tampa",
+        "bundle_fp": "b2d02b35b2f7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "96526423afcd",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-10|Santa Maria->Tampa",
+        "bundle_fp": "b2d02b35b2f7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Stockton",
+        "Redding"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "96526423afcd",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-10|Redding->Tampa",
+        "bundle_fp": "1c7416f8b828"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "96526423afcd",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-10|Redding->Tampa",
+        "bundle_fp": "1c7416f8b828"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Bakersfield",
+        "Santa Maria"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "96526423afcd",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-10|Santa Maria->Tampa",
+        "bundle_fp": "b2d02b35b2f7"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 20.60615072119981
+}

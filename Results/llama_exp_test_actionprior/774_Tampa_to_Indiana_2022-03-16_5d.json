@@ -1,0 +1,1140 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1988.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you design a 5-day travel plan for 2 people, starting in Tampa and heading to Indiana from March 16th to March 20th, 2022, where we will visit 2 different cities? We have a budget of $3,100. For our stay, we want to ensure our accommodations are not shared and that they allow us to have visitors over. For meals, we would love the options of American, Chinese, Mexican, and Indian cuisines.",
+  "parsed": {
+    "org": "Tampa",
+    "dest": "Indiana",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-16",
+      "2022-03-17",
+      "2022-03-18",
+      "2022-03-19",
+      "2022-03-20"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "visitors",
+      "cuisine": [
+        "American",
+        "Chinese",
+        "Mexican",
+        "Indian"
+      ],
+      "room type": "not shared room",
+      "transportation": null
+    },
+    "budget": 3100,
+    "origin": "Tampa",
+    "destination": "Indiana",
+    "duration_days": 5,
+    "start_date": "2022-03-16",
+    "preferences": [
+      "American",
+      "Chinese",
+      "Mexican",
+      "Indian",
+      "visitors",
+      "not shared room"
+    ],
+    "candidate_cities": [
+      "Evansville",
+      "South Bend",
+      "Fort Wayne",
+      "Valparaiso",
+      "Indianapolis"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Tampa->Evansville 1375km cost 1375",
+    "move:seg1:taxi:Evansville->Indianapolis 277km cost 277",
+    "move:seg2:flight:F3107793 Indianapolis->Tampa $168 19:00-20:59"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Evansville",
+      "Indianapolis"
+    ],
+    "transportation_dates": [
+      "2022-03-16",
+      "2022-03-18",
+      "2022-03-20"
+    ],
+    "transportation_methods": [
+      "taxi, from Tampa to Evansville, cost: 1375.0",
+      "taxi, from Evansville to Indianapolis, cost: 277.0",
+      "Flight F3107793, from Indianapolis to Tampa, Departure Time: 19:00, Arrival Time: 20:59, cost: 168.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Evansville",
+      "missing, Indianapolis"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Tampa to Evansville",
+      "transportation": "Taxi, from Tampa to Evansville, Cost: 1375",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Evansville",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Evansville to Indianapolis",
+      "transportation": "Taxi, from Evansville to Indianapolis, Cost: 277",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Indianapolis",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Indianapolis to Tampa",
+      "transportation": "Flight Number: F3107793, from Indianapolis to Tampa, Departure Time: 19:00, Arrival Time: 20:59",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-16|Indianapolis->Tampa",
+      "counts": {
+        "kb": 632,
+        "after_nonbudget": 632,
+        "after_budget": 276,
+        "returned": 5,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 355,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1448.0,
+        "slot_cap": 266.7368421052631,
+        "reserve": 900.0
+      },
+      "segment_role": "return",
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Evansville|None|None->None",
+      "counts": {
+        "kb": 9,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1110.0,
+        "slot_cap": 406.494140625,
+        "reserve": 466.73499999999996
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 646.0,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 549.0999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 466.73499999999996,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Evansville|None|None->None",
+        "city": "Evansville",
+        "city_bundle": [
+          "Evansville",
+          "Indianapolis"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 9,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1110.0,
+          "slot_cap": 406.494140625,
+          "reserve": 466.73499999999996,
+          "min_cost_nonbudget": 514.0
+        }
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Evansville|None|None->None",
+      "counts": {
+        "kb": 9,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1112.0,
+        "slot_cap": 407.2265625,
+        "reserve": 466.73499999999996
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 646.0,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 549.0999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 466.73499999999996,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Evansville|None|None->None",
+        "city": "Evansville",
+        "city_bundle": [
+          "Evansville",
+          "Indianapolis"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 9,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1112.0,
+          "slot_cap": 407.2265625,
+          "reserve": 466.73499999999996,
+          "min_cost_nonbudget": 514.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Indianapolis",
+          "Evansville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1371.0,
+          "bundle_lb_cost": 3146.0,
+          "stay_lb_cost": 564.0,
+          "meal_lb_cost": 600.0,
+          "transport_lb_cost": 1982.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "tampa",
+              "indianapolis"
+            ],
+            [
+              "indianapolis",
+              "evansville"
+            ],
+            [
+              "evansville",
+              "tampa"
+            ]
+          ],
+          "bundle_key": [
+            "evansville",
+            "indianapolis"
+          ],
+          "bundle_key_set": [
+            "evansville",
+            "indianapolis"
+          ],
+          "bundle_key_seq": [
+            "indianapolis",
+            "evansville"
+          ],
+          "city_features": {
+            "Indianapolis": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 212.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 18,
+              "min_meal_cost": 29.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 12,
+              "hotel_slack": 0
+            },
+            "Evansville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 70.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 24,
+              "min_meal_cost": 14.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 15,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Tampa->Indianapolis": {
+              "min_cost": 334.0,
+              "blocked": false
+            },
+            "Indianapolis->Evansville": {
+              "min_cost": 277.0,
+              "blocked": false
+            },
+            "Evansville->Tampa": {
+              "min_cost": 1371.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 12,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 212.0,
+            "bottleneck_city_meal": "Indianapolis",
+            "bottleneck_city_hotel": "Indianapolis",
+            "bottleneck_edge": "Evansville->Tampa"
+          },
+          "min_bundle_cost": 2546.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 12,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 212.0,
+          "bottleneck_city_meal": "Indianapolis",
+          "bottleneck_city_hotel": "Indianapolis",
+          "bottleneck_edge": "Evansville->Tampa"
+        },
+        "budget_context": {
+          "remaining": 694.0,
+          "slot_cap": 508.30078125,
+          "reserve": 217.40024999999997,
+          "min_cost_nonbudget": 514.0
+        },
+        "counts": {
+          "kb": 9,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_city": "Evansville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 9,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 694.0,
+          "slot_cap": 508.30078125,
+          "reserve": 217.40024999999997,
+          "min_cost_nonbudget": 514.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "American",
+              "Chinese",
+              "Mexican",
+              "Indian"
+            ],
+            "room type": "not shared room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Evansville",
+        "Indianapolis"
+      ],
+      "reason": "Bundle with least lb_cost",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"Bundle with least lb_cost\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 0, \"city\": null, \"edge\": null}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "Bundle with least lb_cost",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 0,
+              "city": null,
+              "edge": null
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 0,
+            "city": null,
+            "edge": null
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Evansville",
+          "Indianapolis"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 336.0,
+          "bundle_lb_cost": 3242.0,
+          "stay_lb_cost": 564.0,
+          "meal_lb_cost": 690.0,
+          "transport_lb_cost": 1988.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "tampa",
+              "evansville"
+            ],
+            [
+              "evansville",
+              "indianapolis"
+            ],
+            [
+              "indianapolis",
+              "tampa"
+            ]
+          ],
+          "bundle_key": [
+            "evansville",
+            "indianapolis"
+          ],
+          "bundle_key_set": [
+            "evansville",
+            "indianapolis"
+          ],
+          "bundle_key_seq": [
+            "evansville",
+            "indianapolis"
+          ],
+          "city_features": {
+            "Evansville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 70.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 24,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 18,
+              "hotel_slack": 1
+            },
+            "Indianapolis": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 212.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 18,
+              "min_meal_cost": 29.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 9,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Tampa->Evansville": {
+              "min_cost": 1375.0,
+              "blocked": false
+            },
+            "Evansville->Indianapolis": {
+              "min_cost": 277.0,
+              "blocked": false
+            },
+            "Indianapolis->Tampa": {
+              "min_cost": 336.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 9,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 212.0,
+            "bottleneck_city_meal": "Indianapolis",
+            "bottleneck_city_hotel": "Indianapolis",
+            "bottleneck_edge": "Tampa->Evansville"
+          },
+          "min_bundle_cost": 2552.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 9,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 212.0,
+          "bottleneck_city_meal": "Indianapolis",
+          "bottleneck_city_hotel": "Indianapolis",
+          "bottleneck_edge": "Tampa->Evansville"
+        },
+        "budget_context": {
+          "remaining": 1112.0,
+          "slot_cap": 407.2265625,
+          "reserve": 466.73499999999996,
+          "min_cost_nonbudget": 514.0
+        },
+        "counts": {
+          "kb": 9,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_city": "Evansville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 9,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1112.0,
+          "slot_cap": 407.2265625,
+          "reserve": 466.73499999999996,
+          "min_cost_nonbudget": 514.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "American",
+              "Chinese",
+              "Mexican",
+              "Indian"
+            ],
+            "room type": "not shared room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Indianapolis",
+        "Evansville"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"hotel\", \"NO_FLIGHT\", 10, null]\n    ],\n    \"soft_penalties\": [\n      [\"transport\", \"budget_risk\", -100],\n      [\"meal\", \"cost_ratio\", -0.5]\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "hotel",
+              "NO_FLIGHT",
+              10,
+              null
+            ]
+          ],
+          "soft_penalties": [
+            [
+              "transport",
+              "budget_risk",
+              -100
+            ],
+            [
+              "meal",
+              "cost_ratio",
+              -0.5
+            ]
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "hotel",
+            "NO_FLIGHT",
+            10,
+            null
+          ]
+        ],
+        "soft_penalties": [
+          [
+            "transport",
+            "budget_risk",
+            -100
+          ],
+          [
+            "meal",
+            "cost_ratio",
+            -0.5
+          ]
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Indianapolis",
+          "Evansville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1371.0,
+          "bundle_lb_cost": 3146.0,
+          "stay_lb_cost": 564.0,
+          "meal_lb_cost": 600.0,
+          "transport_lb_cost": 1982.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "tampa",
+              "indianapolis"
+            ],
+            [
+              "indianapolis",
+              "evansville"
+            ],
+            [
+              "evansville",
+              "tampa"
+            ]
+          ],
+          "bundle_key": [
+            "evansville",
+            "indianapolis"
+          ],
+          "bundle_key_set": [
+            "evansville",
+            "indianapolis"
+          ],
+          "bundle_key_seq": [
+            "indianapolis",
+            "evansville"
+          ],
+          "city_features": {
+            "Indianapolis": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 212.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 18,
+              "min_meal_cost": 29.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 12,
+              "hotel_slack": 0
+            },
+            "Evansville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 70.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 24,
+              "min_meal_cost": 14.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 15,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Tampa->Indianapolis": {
+              "min_cost": 334.0,
+              "blocked": false
+            },
+            "Indianapolis->Evansville": {
+              "min_cost": 277.0,
+              "blocked": false
+            },
+            "Evansville->Tampa": {
+              "min_cost": 1371.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 12,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 212.0,
+            "bottleneck_city_meal": "Indianapolis",
+            "bottleneck_city_hotel": "Indianapolis",
+            "bottleneck_edge": "Evansville->Tampa"
+          },
+          "min_bundle_cost": 2546.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 12,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 212.0,
+          "bottleneck_city_meal": "Indianapolis",
+          "bottleneck_city_hotel": "Indianapolis",
+          "bottleneck_edge": "Evansville->Tampa"
+        },
+        "budget_context": {
+          "remaining": 694.0,
+          "slot_cap": 508.30078125,
+          "reserve": 217.40024999999997,
+          "min_cost_nonbudget": 514.0
+        },
+        "counts": {
+          "kb": 9,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_city": "Evansville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 9,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 694.0,
+          "slot_cap": 508.30078125,
+          "reserve": 217.40024999999997,
+          "min_cost_nonbudget": 514.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3100,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "American",
+              "Chinese",
+              "Mexican",
+              "Indian"
+            ],
+            "room type": "not shared room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Evansville",
+        "Indianapolis"
+      ],
+      "reason": "best candidate based on bundle_risk and lb_costs",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"best candidate based on bundle_risk and lb_costs\",\n  \"confidence\": 0.9,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      [\"hotel\", \"NO_FLIGHT\", 10, null]\n    ],\n    \"soft_penalties\": [\n      [\"flight\", \"cost_ratio\", -0.2],\n      [\"stay\", \"hotel_price\", -100]\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "best candidate based on bundle_risk and lb_costs",
+        "confidence": 0.9,
+        "gradient": {
+          "hard_exclusions": [
+            [
+              "hotel",
+              "NO_FLIGHT",
+              10,
+              null
+            ]
+          ],
+          "soft_penalties": [
+            [
+              "flight",
+              "cost_ratio",
+              -0.2
+            ],
+            [
+              "stay",
+              "hotel_price",
+              -100
+            ]
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          [
+            "hotel",
+            "NO_FLIGHT",
+            10,
+            null
+          ]
+        ],
+        "soft_penalties": [
+          [
+            "flight",
+            "cost_ratio",
+            -0.2
+          ],
+          [
+            "stay",
+            "hotel_price",
+            -100
+          ]
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "fadeb1cefe33",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Evansville|None|None->None",
+      "bundle_fp": "7a85db6a48ec"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "fadeb1cefe33",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Evansville|None|None->None",
+        "bundle_fp": "762131d4313e"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 1,
+          "city": null,
+          "edge": null
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Evansville",
+        "Indianapolis"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "fadeb1cefe33",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Evansville|None|None->None",
+        "bundle_fp": "7a85db6a48ec"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "fadeb1cefe33",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Evansville|None|None->None",
+        "bundle_fp": "7a85db6a48ec"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Indianapolis",
+        "Evansville"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "fadeb1cefe33",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Evansville|None|None->None",
+        "bundle_fp": "762131d4313e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "fadeb1cefe33",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Evansville|None|None->None",
+        "bundle_fp": "762131d4313e"
+      },
+      "confidence": 0.9,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Evansville",
+        "Indianapolis"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "fadeb1cefe33",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Evansville|None|None->None",
+        "bundle_fp": "7a85db6a48ec"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 4.99839325575158
+}

@@ -1,0 +1,1240 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1619.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you assist in developing a travel itinerary spanning 5 days for two people? We'd be departing from Cedar Rapids and would like to explore two distinct cities in Texas, starting from March 26th through March 30th, 2022. We've budgeted a total of $3,000 for this trip. We require accommodations that permit visitors and have entire rooms to ourselves. Also, we're culinary enthusiasts and would like to taste a variety of cuisines, including French, American, Italian, and Chinese.",
+  "parsed": {
+    "org": "Cedar Rapids",
+    "dest": "Texas",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-26",
+      "2022-03-27",
+      "2022-03-28",
+      "2022-03-29",
+      "2022-03-30"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "visitors",
+      "cuisine": [
+        "French",
+        "American",
+        "Italian",
+        "Chinese"
+      ],
+      "room type": "entire room",
+      "transportation": null
+    },
+    "budget": 3000,
+    "origin": "Cedar Rapids",
+    "destination": "Texas",
+    "duration_days": 5,
+    "start_date": "2022-03-26",
+    "preferences": [
+      "French",
+      "American",
+      "Italian",
+      "Chinese",
+      "visitors",
+      "entire room"
+    ],
+    "candidate_cities": [
+      "Abilene",
+      "Amarillo",
+      "Harlingen",
+      "Lubbock",
+      "College Station",
+      "Corpus Christi",
+      "Wichita Falls",
+      "Waco",
+      "San Angelo",
+      "Houston",
+      "San Antonio",
+      "Del Rio",
+      "Mission",
+      "Beaumont",
+      "Longview",
+      "Midland",
+      "El Paso",
+      "Brownsville",
+      "Austin",
+      "Dallas"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Cedar Rapids->Wichita Falls 1301km cost 1301",
+    "move:seg1:flight:F2135178 Wichita Falls->Dallas $22 18:34-19:18",
+    "move:seg2:flight:F2741312 Dallas->Cedar Rapids $137 16:37-18:26"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Wichita Falls",
+      "Dallas"
+    ],
+    "transportation_dates": [
+      "2022-03-26",
+      "2022-03-28",
+      "2022-03-30"
+    ],
+    "transportation_methods": [
+      "taxi, from Cedar Rapids to Wichita Falls, cost: 1301.0",
+      "Flight F2135178, from Wichita Falls to Dallas, Departure Time: 18:34, Arrival Time: 19:18, cost: 22.0",
+      "Flight F2741312, from Dallas to Cedar Rapids, Departure Time: 16:37, Arrival Time: 18:26, cost: 137.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Wichita Falls",
+      "missing, Dallas"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Cedar Rapids to Wichita Falls",
+      "transportation": "Taxi, from Cedar Rapids to Wichita Falls, Cost: 1301",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Wichita Falls",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Wichita Falls to Dallas",
+      "transportation": "Flight Number: F2135178, from Wichita Falls to Dallas, Departure Time: 18:34, Arrival Time: 19:18",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Dallas",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Dallas to Cedar Rapids",
+      "transportation": "Flight Number: F2741312, from Dallas to Cedar Rapids, Departure Time: 16:37, Arrival Time: 18:26",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-26|Dallas->Cedar Rapids",
+      "counts": {
+        "kb": 575,
+        "after_nonbudget": 575,
+        "after_budget": 96,
+        "returned": 5,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 479,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 1655.0,
+        "slot_cap": 304.8684210526315,
+        "reserve": 1314.0
+      },
+      "segment_role": "return",
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Wichita Falls|None|None->None",
+      "counts": {
+        "kb": 5,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1379.0,
+        "slot_cap": 505.0048828125,
+        "reserve": 588.3317499999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 814.3,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 692.155,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 588.3317499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Wichita Falls|None|None->None",
+        "city": "Wichita Falls",
+        "city_bundle": [
+          "Wichita Falls",
+          "Dallas"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 5,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1379.0,
+          "slot_cap": 505.0048828125,
+          "reserve": 588.3317499999999,
+          "min_cost_nonbudget": 823.0
+        }
+      },
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Wichita Falls|None|None->None",
+      "counts": {
+        "kb": 5,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 1,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1381.0,
+        "slot_cap": 505.7373046875,
+        "reserve": 588.3317499999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 814.3,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 692.155,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 588.3317499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Wichita Falls|None|None->None",
+        "city": "Wichita Falls",
+        "city_bundle": [
+          "Wichita Falls",
+          "Dallas"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 5,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1381.0,
+          "slot_cap": 505.7373046875,
+          "reserve": 588.3317499999999,
+          "min_cost_nonbudget": 823.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Longview",
+          "Dallas"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 274.0,
+          "bundle_lb_cost": 3169.0,
+          "stay_lb_cost": 1138.0,
+          "meal_lb_cost": 342.0,
+          "transport_lb_cost": 1689.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "cedar rapids",
+              "longview"
+            ],
+            [
+              "longview",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "cedar rapids"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_seq": [
+            "longview",
+            "dallas"
+          ],
+          "city_features": {
+            "Longview": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 255.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 13,
+              "meal_count": 15,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 11,
+              "meal_slack": 9,
+              "hotel_slack": 1
+            },
+            "Dallas": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 314.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 36,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 27,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Cedar Rapids->Longview": {
+              "min_cost": 1359.0,
+              "blocked": false
+            },
+            "Longview->Dallas": {
+              "min_cost": 56.0,
+              "blocked": false
+            },
+            "Dallas->Cedar Rapids": {
+              "min_cost": 274.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 9,
+            "bottleneck_attr_slack": 11,
+            "bottleneck_hotel_price": 314.0,
+            "bottleneck_city_meal": "Longview",
+            "bottleneck_city_hotel": "Dallas",
+            "bottleneck_edge": "Cedar Rapids->Longview"
+          },
+          "min_bundle_cost": 2827.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 9,
+          "bottleneck_attr_slack": 11,
+          "bottleneck_hotel_price": 314.0,
+          "bottleneck_city_meal": "Longview",
+          "bottleneck_city_hotel": "Dallas",
+          "bottleneck_edge": "Cedar Rapids->Longview"
+        },
+        "budget_context": {
+          "remaining": 1311.0,
+          "slot_cap": 480.1025390625,
+          "reserve": 595.70125,
+          "min_cost_nonbudget": 581.0
+        },
+        "counts": {
+          "kb": 6,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dead_end_city": "Longview",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 6,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1311.0,
+          "slot_cap": 480.1025390625,
+          "reserve": 595.70125,
+          "min_cost_nonbudget": 581.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "French",
+              "American",
+              "Italian",
+              "Chinese"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Dallas",
+        "Wichita Falls"
+      ],
+      "reason": "prefer candidates with no blocked edges for segment/flight failures",
+      "raw": "```json\n{\n  \"candidate_id\": 1,\n  \"reason\": \"prefer candidates with no blocked edges for segment/flight failures\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"segment\", \"rule\": \"NO_FLIGHT\", \"ttl\": 2, \"edge\": true}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"hotel\", \"feature\": \"cost_ratio\", \"delta\": -0.1},\n      {\"phase\": \"flight\", \"feature\": \"budget_risk\", \"delta\": -0.05}\n    ],\n    \"retrieval_patches\": []\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "prefer candidates with no blocked edges for segment/flight failures",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "NO_FLIGHT",
+              "ttl": 2,
+              "edge": true
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "hotel",
+              "feature": "cost_ratio",
+              "delta": -0.1
+            },
+            {
+              "phase": "flight",
+              "feature": "budget_risk",
+              "delta": -0.05
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "NO_FLIGHT",
+            "ttl": 2,
+            "edge": true
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "hotel",
+            "feature": "cost_ratio",
+            "delta": -0.1
+          },
+          {
+            "phase": "flight",
+            "feature": "budget_risk",
+            "delta": -0.05
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Dallas",
+          "Wichita Falls"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1298.0,
+          "bundle_lb_cost": 3092.0,
+          "stay_lb_cost": 984.0,
+          "meal_lb_cost": 492.0,
+          "transport_lb_cost": 1616.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "cedar rapids",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "wichita falls"
+            ],
+            [
+              "wichita falls",
+              "cedar rapids"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "wichita falls"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "wichita falls"
+          ],
+          "bundle_key_seq": [
+            "dallas",
+            "wichita falls"
+          ],
+          "city_features": {
+            "Dallas": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 314.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 36,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 30,
+              "hotel_slack": 1
+            },
+            "Wichita Falls": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 178.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 12,
+              "min_meal_cost": 20.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 3,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Cedar Rapids->Dallas": {
+              "min_cost": 274.0,
+              "blocked": false
+            },
+            "Dallas->Wichita Falls": {
+              "min_cost": 44.0,
+              "blocked": false
+            },
+            "Wichita Falls->Cedar Rapids": {
+              "min_cost": 1298.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 3,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 314.0,
+            "bottleneck_city_meal": "Wichita Falls",
+            "bottleneck_city_hotel": "Dallas",
+            "bottleneck_edge": "Wichita Falls->Cedar Rapids"
+          },
+          "min_bundle_cost": 2600.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 3,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 314.0,
+          "bottleneck_city_meal": "Wichita Falls",
+          "bottleneck_city_hotel": "Dallas",
+          "bottleneck_edge": "Wichita Falls->Cedar Rapids"
+        },
+        "budget_context": {
+          "remaining": 756.0,
+          "slot_cap": 553.7109375,
+          "reserve": 202.66124999999997,
+          "min_cost_nonbudget": 823.0
+        },
+        "counts": {
+          "kb": 5,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dead_end_city": "Wichita Falls",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 5,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 756.0,
+          "slot_cap": 553.7109375,
+          "reserve": 202.66124999999997,
+          "min_cost_nonbudget": 823.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "French",
+              "American",
+              "Italian",
+              "Chinese"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Longview",
+        "Dallas"
+      ],
+      "reason": "prefer bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n    \"candidate_id\": 0,\n    \"reason\": \"prefer bundle_risk + city_summary + edge_summary + lb_costs\",\n    \"confidence\": 1.0,\n    \"gradient\": {\n        \"hard_exclusions\": [{\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 1, \"city\": \"Wichita Falls\"}, {\"phase\": \"segment\", \"rule\": \"AVOID_CITY\", \"ttl\": 1, \"edge\": \"Wichita Falls->Cedar Rapids\"}],\n        \"soft_penalties\": [{\"phase\": \"hotel\", \"feature\": \"cost_ratio\", \"delta\": -0.5}, {\"phase\": \"stay\", \"feature\": \"budget_risk\", \"delta\": 0.2}],\n        \"retrieval_patches\": []\n    }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "prefer bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 1,
+              "city": "Wichita Falls"
+            },
+            {
+              "phase": "segment",
+              "rule": "AVOID_CITY",
+              "ttl": 1,
+              "edge": "Wichita Falls->Cedar Rapids"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "hotel",
+              "feature": "cost_ratio",
+              "delta": -0.5
+            },
+            {
+              "phase": "stay",
+              "feature": "budget_risk",
+              "delta": 0.2
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 1,
+            "city": "Wichita Falls"
+          },
+          {
+            "phase": "segment",
+            "rule": "AVOID_CITY",
+            "ttl": 1,
+            "edge": "Wichita Falls->Cedar Rapids"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "hotel",
+            "feature": "cost_ratio",
+            "delta": -0.5
+          },
+          {
+            "phase": "stay",
+            "feature": "budget_risk",
+            "delta": 0.2
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Longview",
+          "Dallas"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 274.0,
+          "bundle_lb_cost": 3169.0,
+          "stay_lb_cost": 1138.0,
+          "meal_lb_cost": 342.0,
+          "transport_lb_cost": 1689.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "cedar rapids",
+              "longview"
+            ],
+            [
+              "longview",
+              "dallas"
+            ],
+            [
+              "dallas",
+              "cedar rapids"
+            ]
+          ],
+          "bundle_key": [
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_set": [
+            "dallas",
+            "longview"
+          ],
+          "bundle_key_seq": [
+            "longview",
+            "dallas"
+          ],
+          "city_features": {
+            "Longview": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 255.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 13,
+              "meal_count": 15,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 11,
+              "meal_slack": 9,
+              "hotel_slack": 1
+            },
+            "Dallas": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 314.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 36,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 27,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Cedar Rapids->Longview": {
+              "min_cost": 1359.0,
+              "blocked": false
+            },
+            "Longview->Dallas": {
+              "min_cost": 56.0,
+              "blocked": false
+            },
+            "Dallas->Cedar Rapids": {
+              "min_cost": 274.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 9,
+            "bottleneck_attr_slack": 11,
+            "bottleneck_hotel_price": 314.0,
+            "bottleneck_city_meal": "Longview",
+            "bottleneck_city_hotel": "Dallas",
+            "bottleneck_edge": "Cedar Rapids->Longview"
+          },
+          "min_bundle_cost": 2827.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 9,
+          "bottleneck_attr_slack": 11,
+          "bottleneck_hotel_price": 314.0,
+          "bottleneck_city_meal": "Longview",
+          "bottleneck_city_hotel": "Dallas",
+          "bottleneck_edge": "Cedar Rapids->Longview"
+        },
+        "budget_context": {
+          "remaining": 1311.0,
+          "slot_cap": 480.1025390625,
+          "reserve": 595.70125,
+          "min_cost_nonbudget": 581.0
+        },
+        "counts": {
+          "kb": 6,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dead_end_city": "Longview",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 6,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1311.0,
+          "slot_cap": 480.1025390625,
+          "reserve": 595.70125,
+          "min_cost_nonbudget": 581.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "visitors",
+            "cuisine": [
+              "French",
+              "American",
+              "Italian",
+              "Chinese"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Wichita Falls",
+        "Dallas"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n    \"candidate_id\": 0,\n    \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n    \"confidence\": 0.8,\n    \"gradient\": {\n        \"hard_exclusions\": [{\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 10, \"city\": \"Longview\"}],\n        \"soft_penalties\": [{\"phase\": \"segment\", \"feature\": \"budget_risk\", \"delta\": -0.2}],\n        \"retrieval_patches\": [{\"phase\": \"flight\", \"patch\": \"new_flight\", \"ttl\": 5}]\n    }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 10,
+              "city": "Longview"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "budget_risk",
+              "delta": -0.2
+            }
+          ],
+          "retrieval_patches": [
+            {
+              "phase": "flight",
+              "patch": "new_flight",
+              "ttl": 5
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 10,
+            "city": "Longview"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "budget_risk",
+            "delta": -0.2
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "flight",
+            "patch": "new_flight",
+            "ttl": 5
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "4a916be760a1",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Wichita Falls|None|None->None",
+      "bundle_fp": "61f28d120137"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "4a916be760a1",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Longview|None|None->None",
+        "bundle_fp": "7ab573f6ac7e"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "NO_FLIGHT",
+          "ttl": 2,
+          "edge": true
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "cost_ratio",
+          "delta": -0.1
+        },
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": -0.05
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Dallas",
+        "Wichita Falls"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "4a916be760a1",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Wichita Falls|None|None->None",
+        "bundle_fp": "60f850c68bff"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "4a916be760a1",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Wichita Falls|None|None->None",
+        "bundle_fp": "60f850c68bff"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 1,
+          "city": "Wichita Falls"
+        },
+        {
+          "phase": "segment",
+          "rule": "AVOID_CITY",
+          "ttl": 1,
+          "edge": "Wichita Falls->Cedar Rapids"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "cost_ratio",
+          "delta": -0.5
+        },
+        {
+          "phase": "stay",
+          "feature": "budget_risk",
+          "delta": 0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Longview",
+        "Dallas"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "4a916be760a1",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Longview|None|None->None",
+        "bundle_fp": "7ab573f6ac7e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "4a916be760a1",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Longview|None|None->None",
+        "bundle_fp": "7ab573f6ac7e"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 10,
+          "city": "Longview"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": -0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Wichita Falls",
+        "Dallas"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "4a916be760a1",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Wichita Falls|None|None->None",
+        "bundle_fp": "61f28d120137"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 8.957716479897499
+}

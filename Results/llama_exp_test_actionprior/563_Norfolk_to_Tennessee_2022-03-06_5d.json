@@ -1,0 +1,1052 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 2952.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you construct a travel itinerary for a group of 3 departing from Norfolk to Tennessee? We plan to explore 2 cities in Tennessee within 5 days, from March 6th to March 10th, 2022. Our budget for this trip has been reset to $5,800. We are bringing our pets, so our accommodations must allow pets.",
+  "parsed": {
+    "org": "Norfolk",
+    "dest": "Tennessee",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-06",
+      "2022-03-07",
+      "2022-03-08",
+      "2022-03-09",
+      "2022-03-10"
+    ],
+    "people_number": 3,
+    "local_constraint": {
+      "house rule": "pets",
+      "cuisine": null,
+      "room type": null,
+      "transportation": null
+    },
+    "budget": 5800,
+    "origin": "Norfolk",
+    "destination": "Tennessee",
+    "duration_days": 5,
+    "start_date": "2022-03-06",
+    "preferences": [
+      "pets"
+    ],
+    "candidate_cities": [
+      "Nashville",
+      "Bristol",
+      "Knoxville",
+      "Chattanooga",
+      "Memphis"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Norfolk->Knoxville 850km cost 850",
+    "move:seg1:taxi:Knoxville->Memphis 629km cost 629",
+    "move:seg2:taxi:Memphis->Norfolk 1473km cost 1473"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Knoxville",
+      "Memphis"
+    ],
+    "transportation_dates": [
+      "2022-03-06",
+      "2022-03-08",
+      "2022-03-10"
+    ],
+    "transportation_methods": [
+      "taxi, from Norfolk to Knoxville, cost: 850.0",
+      "taxi, from Knoxville to Memphis, cost: 629.0",
+      "taxi, from Memphis to Norfolk, cost: 1473.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Knoxville",
+      "missing, Memphis"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Norfolk to Knoxville",
+      "transportation": "Taxi, from Norfolk to Knoxville, Cost: 850",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Knoxville",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Knoxville to Memphis",
+      "transportation": "Taxi, from Knoxville to Memphis, Cost: 629",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Memphis",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Memphis to Norfolk",
+      "transportation": "Taxi, from Memphis to Norfolk, Cost: 1473",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:2|None|2022-03-06|Memphis->Norfolk",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 4321.0,
+        "slot_cap": 530.6491228070174,
+        "reserve": 2696.0
+      },
+      "segment_role": "return",
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Knoxville|None|None->None",
+      "counts": {
+        "kb": 6,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 2,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 2848.0,
+        "slot_cap": 1042.96875,
+        "reserve": 1478.8129999999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 2046.8,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 1739.7799999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 1478.8129999999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Knoxville|None|None->None",
+        "city": "Knoxville",
+        "city_bundle": [
+          "Knoxville",
+          "Memphis"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 6,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 2848.0,
+          "slot_cap": 1042.96875,
+          "reserve": 1478.8129999999999,
+          "min_cost_nonbudget": 993.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Memphis",
+          "Knoxville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 847.0,
+          "bundle_lb_cost": 5657.0,
+          "stay_lb_cost": 2138.0,
+          "meal_lb_cost": 567.0,
+          "transport_lb_cost": 2952.0,
+          "hotel_min_nights_min": 2,
+          "edges": [
+            [
+              "norfolk",
+              "memphis"
+            ],
+            [
+              "memphis",
+              "knoxville"
+            ],
+            [
+              "knoxville",
+              "norfolk"
+            ]
+          ],
+          "bundle_key": [
+            "knoxville",
+            "memphis"
+          ],
+          "bundle_key_set": [
+            "knoxville",
+            "memphis"
+          ],
+          "bundle_key_seq": [
+            "memphis",
+            "knoxville"
+          ],
+          "city_features": {
+            "Memphis": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 925.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 25,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 19,
+              "hotel_slack": 0
+            },
+            "Knoxville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 144.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 14,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Norfolk->Memphis": {
+              "min_cost": 1476.0,
+              "blocked": false
+            },
+            "Memphis->Knoxville": {
+              "min_cost": 629.0,
+              "blocked": false
+            },
+            "Knoxville->Norfolk": {
+              "min_cost": 847.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 14,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 925.0,
+            "bottleneck_city_meal": "Knoxville",
+            "bottleneck_city_hotel": "Memphis",
+            "bottleneck_edge": "Norfolk->Memphis"
+          },
+          "min_bundle_cost": 5090.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 14,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 925.0,
+          "bottleneck_city_meal": "Knoxville",
+          "bottleneck_city_hotel": "Memphis",
+          "bottleneck_edge": "Norfolk->Memphis"
+        },
+        "budget_context": {
+          "remaining": 998.0,
+          "slot_cap": 730.95703125,
+          "reserve": 348.208875,
+          "min_cost_nonbudget": 993.0
+        },
+        "counts": {
+          "kb": 6,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dead_end_city": "Knoxville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 6,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 998.0,
+          "slot_cap": 730.95703125,
+          "reserve": 348.208875,
+          "min_cost_nonbudget": 993.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 5800,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Knoxville",
+        "Memphis"
+      ],
+      "reason": "default",
+      "raw": "```json\n{\n  \"candidate_id\": 0,\n  \"reason\": \"default\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 2, \"city\": null, \"edge\": null}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "default",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 2,
+              "city": null,
+              "edge": null
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 2,
+            "city": null,
+            "edge": null
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Knoxville",
+          "Memphis"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1473.0,
+          "bundle_lb_cost": 5648.0,
+          "stay_lb_cost": 2138.0,
+          "meal_lb_cost": 558.0,
+          "transport_lb_cost": 2952.0,
+          "hotel_min_nights_min": 2,
+          "edges": [
+            [
+              "norfolk",
+              "knoxville"
+            ],
+            [
+              "knoxville",
+              "memphis"
+            ],
+            [
+              "memphis",
+              "norfolk"
+            ]
+          ],
+          "bundle_key": [
+            "knoxville",
+            "memphis"
+          ],
+          "bundle_key_set": [
+            "knoxville",
+            "memphis"
+          ],
+          "bundle_key_seq": [
+            "knoxville",
+            "memphis"
+          ],
+          "city_features": {
+            "Knoxville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 144.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 17,
+              "hotel_slack": 0
+            },
+            "Memphis": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 925.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 25,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 16,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Norfolk->Knoxville": {
+              "min_cost": 850.0,
+              "blocked": false
+            },
+            "Knoxville->Memphis": {
+              "min_cost": 629.0,
+              "blocked": false
+            },
+            "Memphis->Norfolk": {
+              "min_cost": 1473.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 16,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 925.0,
+            "bottleneck_city_meal": "Memphis",
+            "bottleneck_city_hotel": "Memphis",
+            "bottleneck_edge": "Memphis->Norfolk"
+          },
+          "min_bundle_cost": 5090.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 16,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 925.0,
+          "bottleneck_city_meal": "Memphis",
+          "bottleneck_city_hotel": "Memphis",
+          "bottleneck_edge": "Memphis->Norfolk"
+        },
+        "budget_context": {
+          "remaining": 2848.0,
+          "slot_cap": 1042.96875,
+          "reserve": 1478.8129999999999,
+          "min_cost_nonbudget": 993.0
+        },
+        "counts": {
+          "kb": 6,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dead_end_city": "Knoxville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 6,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 2848.0,
+          "slot_cap": 1042.96875,
+          "reserve": 1478.8129999999999,
+          "min_cost_nonbudget": 993.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 5800,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Memphis",
+        "Knoxville"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "```\n{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 10, \"city\": \"Knoxville\"}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}\n```\n\nThis response selects the best candidate based on the provided rules and reports a FailureGradient. The reason for selecting this candidate is because it has the lowest bundle risk among all candidates, which is determined by the `bundle_risk` field in the candidate object.",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 10,
+              "city": "Knoxville"
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 10,
+            "city": "Knoxville"
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Memphis",
+          "Knoxville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 847.0,
+          "bundle_lb_cost": 5657.0,
+          "stay_lb_cost": 2138.0,
+          "meal_lb_cost": 567.0,
+          "transport_lb_cost": 2952.0,
+          "hotel_min_nights_min": 2,
+          "edges": [
+            [
+              "norfolk",
+              "memphis"
+            ],
+            [
+              "memphis",
+              "knoxville"
+            ],
+            [
+              "knoxville",
+              "norfolk"
+            ]
+          ],
+          "bundle_key": [
+            "knoxville",
+            "memphis"
+          ],
+          "bundle_key_set": [
+            "knoxville",
+            "memphis"
+          ],
+          "bundle_key_seq": [
+            "memphis",
+            "knoxville"
+          ],
+          "city_features": {
+            "Memphis": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 925.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 25,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 19,
+              "hotel_slack": 0
+            },
+            "Knoxville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 144.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 23,
+              "min_meal_cost": 13.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 14,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Norfolk->Memphis": {
+              "min_cost": 1476.0,
+              "blocked": false
+            },
+            "Memphis->Knoxville": {
+              "min_cost": 629.0,
+              "blocked": false
+            },
+            "Knoxville->Norfolk": {
+              "min_cost": 847.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 14,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 925.0,
+            "bottleneck_city_meal": "Knoxville",
+            "bottleneck_city_hotel": "Memphis",
+            "bottleneck_edge": "Norfolk->Memphis"
+          },
+          "min_bundle_cost": 5090.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 14,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 925.0,
+          "bottleneck_city_meal": "Knoxville",
+          "bottleneck_city_hotel": "Memphis",
+          "bottleneck_edge": "Norfolk->Memphis"
+        },
+        "budget_context": {
+          "remaining": 998.0,
+          "slot_cap": 730.95703125,
+          "reserve": 348.208875,
+          "min_cost_nonbudget": 993.0
+        },
+        "counts": {
+          "kb": 6,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dead_end_city": "Knoxville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 6,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 4,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 998.0,
+          "slot_cap": 730.95703125,
+          "reserve": 348.208875,
+          "min_cost_nonbudget": 993.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 2,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 5800,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "pets",
+            "cuisine": null,
+            "room type": null,
+            "transportation": null
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Knoxville",
+        "Memphis"
+      ],
+      "reason": "bundle_risk",
+      "raw": "```json\n{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\"},\n      {\"phase\": \"segment\", \"rule\": \"BLOCK_EDGE\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"bundle\", \"feature\": \"bundle_risk\", \"delta\": 0.5},\n      {\"phase\": \"city\", \"feature\": \"cost_ratio\", \"delta\": -0.3}\n    ]\n  }\n}\n```",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT"
+            },
+            {
+              "phase": "segment",
+              "rule": "BLOCK_EDGE"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "bundle",
+              "feature": "bundle_risk",
+              "delta": 0.5
+            },
+            {
+              "phase": "city",
+              "feature": "cost_ratio",
+              "delta": -0.3
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT"
+          },
+          {
+            "phase": "segment",
+            "rule": "BLOCK_EDGE"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "bundle",
+            "feature": "bundle_risk",
+            "delta": 0.5
+          },
+          {
+            "phase": "city",
+            "feature": "cost_ratio",
+            "delta": -0.3
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "52b88df568a6",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Knoxville|None|None->None",
+      "bundle_fp": "c7b2bba5b943"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "52b88df568a6",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Knoxville|None|None->None",
+        "bundle_fp": "881068ad624c"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 2,
+          "city": null,
+          "edge": null
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Knoxville",
+        "Memphis"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "52b88df568a6",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Knoxville|None|None->None",
+        "bundle_fp": "c7b2bba5b943"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "52b88df568a6",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Knoxville|None|None->None",
+        "bundle_fp": "c7b2bba5b943"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 10,
+          "city": "Knoxville"
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Memphis",
+        "Knoxville"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "52b88df568a6",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Knoxville|None|None->None",
+        "bundle_fp": "881068ad624c"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "52b88df568a6",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Knoxville|None|None->None",
+        "bundle_fp": "881068ad624c"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 1
+        },
+        {
+          "phase": "segment",
+          "rule": "BLOCK_EDGE",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "city",
+          "feature": "cost_ratio",
+          "delta": -0.3
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Knoxville",
+        "Memphis"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "52b88df568a6",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Knoxville|None|None->None",
+        "bundle_fp": "c7b2bba5b943"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 5.7116145100444555
+}

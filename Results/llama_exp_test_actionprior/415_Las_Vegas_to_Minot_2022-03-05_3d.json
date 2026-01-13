@@ -1,0 +1,285 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 3672.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "I need help planning a travel itinerary for a group of 8 people. The journey begins in Las Vegas and our destination is Minot, spanning from March 5th to March 7th, 2022. We have a budget of $13,500 for this trip. For our lodging, it's essential that we have entire rooms.",
+  "parsed": {
+    "org": "Las Vegas",
+    "dest": "Minot",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-05",
+      "2022-03-06",
+      "2022-03-07"
+    ],
+    "people_number": 8,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": "entire room",
+      "transportation": null
+    },
+    "budget": 13500,
+    "origin": "Las Vegas",
+    "destination": "Minot",
+    "duration_days": 3,
+    "start_date": "2022-03-05",
+    "preferences": [
+      "entire room"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Minot"
+    ],
+    "transportation_dates": [
+      "2022-03-05",
+      "2022-03-07"
+    ],
+    "transportation_methods": [
+      "Flight F0915673, from Las Vegas to Minot, Departure Time: 08:23, Arrival Time: 13:08, cost: 235.0",
+      "Flight F1345488, from Minot to Las Vegas, Departure Time: 21:48, Arrival Time: 23:03, cost: 224.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Minot"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Las Vegas to Minot",
+      "transportation": "Flight Number: F0915673, from Las Vegas to Minot, Departure Time: 08:23, Arrival Time: 13:08",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Minot",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Minot to Las Vegas",
+      "transportation": "Flight Number: F1345488, from Minot to Las Vegas, Departure Time: 21:48, Arrival Time: 23:03",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Minot|None|None->None",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 0,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 9828.0,
+        "slot_cap": 3685.5,
+        "reserve": 864.0
+      },
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Minot|None|None->None",
+        "city": "Minot",
+        "city_bundle": [
+          "Minot"
+        ],
+        "reason": "scarcity",
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 0,
+          "after_budget": 0,
+          "budget_removed": 0,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": "min_nights",
+        "budget_context": {
+          "remaining": 9828.0,
+          "slot_cap": 3685.5,
+          "reserve": 864.0,
+          "min_cost_nonbudget": null
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "b7cade455198",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Minot|None|None->None",
+      "bundle_fp": "ec5d42c16fc8"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [
+      {
+        "phase": "stay",
+        "rule": "AVOID_CITY",
+        "city": "Minot",
+        "ttl": 1
+      }
+    ],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "b7cade455198",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Minot|None|None->None",
+        "bundle_fp": "ec5d42c16fc8"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Minot",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "b7cade455198",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Minot|None|None->None",
+        "bundle_fp": "ec5d42c16fc8"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Minot",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "b7cade455198",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Minot|None|None->None",
+        "bundle_fp": "ec5d42c16fc8"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "city": "Minot",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.13629354536533356
+}

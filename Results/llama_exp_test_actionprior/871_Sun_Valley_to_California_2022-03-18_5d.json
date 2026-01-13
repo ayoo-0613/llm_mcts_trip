@@ -1,0 +1,1065 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 2809.9,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you create a 5-day itinerary for a duo, starting from Sun Valley and visiting 2 cities in California from March 18th to March 22nd, 2022? We've allocated a budget of $3,000. We wish to savor American, Chinese, Mediterranean, and Italian cuisines. Smoking is permissible in our accommodations, and we prefer a land-based journey, avoiding any flights.",
+  "parsed": {
+    "org": "Sun Valley",
+    "dest": "California",
+    "days": 5,
+    "visiting_city_number": 2,
+    "date": [
+      "2022-03-18",
+      "2022-03-19",
+      "2022-03-20",
+      "2022-03-21",
+      "2022-03-22"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": "smoking",
+      "cuisine": [
+        "American",
+        "Chinese",
+        "Mediterranean",
+        "Italian"
+      ],
+      "room type": null,
+      "transportation": "no flight"
+    },
+    "budget": 3000,
+    "origin": "Sun Valley",
+    "destination": "California",
+    "duration_days": 5,
+    "start_date": "2022-03-18",
+    "preferences": [
+      "American",
+      "Chinese",
+      "Mediterranean",
+      "Italian",
+      "smoking"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "San Diego",
+      "Redding",
+      "Sacramento",
+      "Fresno",
+      "San Luis Obispo",
+      "Oakland",
+      "Santa Barbara",
+      "Stockton",
+      "Santa Rosa",
+      "Bakersfield",
+      "Santa Ana",
+      "Santa Maria",
+      "San Jose",
+      "Burbank",
+      "Arcata",
+      "Butte",
+      "Palm Springs",
+      "Los Angeles",
+      "Long Beach",
+      "San Francisco"
+    ]
+  },
+  "actions": [
+    "move:seg0:self-driving:Sun Valley->Oakland 1204km cost 1204",
+    "move:seg1:self-driving:Oakland->San Francisco 20km cost 20",
+    "move:seg2:self-driving:San Francisco->Sun Valley 1214km cost 1214",
+    "stay:Oakland:1125 Modern luxury w/views of WTC Private room $55",
+    "stay:San Francisco:1660 Room in Down town Brooklyn Parkslop Private room $79",
+    "eat:d1:breakfast:3988 Maquina Pizza, Italian, Bakery, Fast Food, Seafood $24 rating 3.8",
+    "eat:d1:lunch:6079 Aggarwal Sweets Bakery, BBQ, Chinese, Indian, Seafood $28 rating 0.0"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Oakland",
+      "San Francisco"
+    ],
+    "transportation_dates": [
+      "2022-03-18",
+      "2022-03-20",
+      "2022-03-22"
+    ],
+    "transportation_methods": [
+      "self-driving, from Sun Valley to Oakland, cost: 1204.0",
+      "self-driving, from Oakland to San Francisco, cost: 19.9",
+      "self-driving, from San Francisco to Sun Valley, cost: 1214.0"
+    ],
+    "restaurants": [
+      "Maquina, Oakland",
+      "Aggarwal Sweets, Oakland"
+    ],
+    "attractions": [],
+    "accommodations": [
+      "Modern luxury w/views of WTC, Oakland",
+      "Room in Down town Brooklyn Parkslop, San Francisco"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Sun Valley to Oakland",
+      "transportation": "Self-driving, from Sun Valley to Oakland, Cost: 1204",
+      "breakfast": "Maquina, Oakland",
+      "attraction": "-",
+      "lunch": "Aggarwal Sweets, Oakland",
+      "dinner": "-",
+      "accommodation": "Modern luxury w/views of WTC, Oakland"
+    },
+    {
+      "days": 2,
+      "current_city": "Oakland",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Modern luxury w/views of WTC, Oakland"
+    },
+    {
+      "days": 3,
+      "current_city": "from Oakland to San Francisco",
+      "transportation": "Self-driving, from Oakland to San Francisco, Cost: 20",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Room in Down town Brooklyn Parkslop, San Francisco"
+    },
+    {
+      "days": 4,
+      "current_city": "San Francisco",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "Room in Down town Brooklyn Parkslop, San Francisco"
+    },
+    {
+      "days": 5,
+      "current_city": "from San Francisco to Sun Valley",
+      "transportation": "Self-driving, from San Francisco to Sun Valley, Cost: 1214",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:lunch|seg:None|Oakland|None|None->None",
+      "counts": {
+        "kb": 30,
+        "after_nonbudget": 30,
+        "after_budget": 4,
+        "returned": 3,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 26,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 246.0999999999999,
+        "slot_cap": 17.166573660714278,
+        "reserve": 189.15049999999997
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 261.8,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 222.52999999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 189.15049999999997,
+          "kept": 4
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "meal",
+      "slot_id": "meal|d1|slot:dinner|seg:None|Oakland|None|None->None",
+      "counts": {
+        "kb": 30,
+        "after_nonbudget": 30,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 2,
+        "violate_reserve": 28,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 190.0999999999999,
+        "slot_cap": 14.2803485576923,
+        "reserve": 169.49849999999998
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 234.6,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 199.40999999999997,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 169.49849999999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "meal",
+        "slot_id": "meal|d1|slot:dinner|seg:None|Oakland|None|None->None",
+        "city": "Oakland",
+        "city_bundle": [
+          "Oakland",
+          "San Francisco"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 30,
+          "after_nonbudget": 30,
+          "after_budget": 0,
+          "budget_removed": 30,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 190.0999999999999,
+          "slot_cap": 14.2803485576923,
+          "reserve": 169.49849999999998,
+          "min_cost_nonbudget": 16.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "San Francisco",
+          "Santa Rosa"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1229.0,
+          "bundle_lb_cost": 3260.3,
+          "stay_lb_cost": 358.0,
+          "meal_lb_cost": 372.0,
+          "transport_lb_cost": 2530.3,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "sun valley",
+              "san francisco"
+            ],
+            [
+              "san francisco",
+              "santa rosa"
+            ],
+            [
+              "santa rosa",
+              "sun valley"
+            ]
+          ],
+          "bundle_key": [
+            "san francisco",
+            "santa rosa"
+          ],
+          "bundle_key_set": [
+            "san francisco",
+            "santa rosa"
+          ],
+          "bundle_key_seq": [
+            "san francisco",
+            "santa rosa"
+          ],
+          "city_features": {
+            "San Francisco": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 79.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 17,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 11,
+              "hotel_slack": 1
+            },
+            "Santa Rosa": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 100.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 18,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 9,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Sun Valley->San Francisco": {
+              "min_cost": 1213.0,
+              "blocked": false
+            },
+            "San Francisco->Santa Rosa": {
+              "min_cost": 88.3,
+              "blocked": false
+            },
+            "Santa Rosa->Sun Valley": {
+              "min_cost": 1229.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 9,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 100.0,
+            "bottleneck_city_meal": "Santa Rosa",
+            "bottleneck_city_hotel": "Santa Rosa",
+            "bottleneck_edge": "Santa Rosa->Sun Valley"
+          },
+          "min_bundle_cost": 2888.3
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 9,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 100.0,
+          "bottleneck_city_meal": "Santa Rosa",
+          "bottleneck_city_hotel": "Santa Rosa",
+          "bottleneck_edge": "Santa Rosa->Sun Valley"
+        },
+        "budget_context": {
+          "remaining": 469.6999999999998,
+          "slot_cap": 172.00927734374994,
+          "reserve": 329.17099999999994,
+          "min_cost_nonbudget": 79.0
+        },
+        "counts": {
+          "kb": 8,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_city": "San Francisco",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 8,
+          "after_nonbudget": 5,
+          "after_budget": 0,
+          "budget_removed": 5,
+          "nonbudget_removed": 3,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 469.6999999999998,
+          "slot_cap": 172.00927734374994,
+          "reserve": 329.17099999999994,
+          "min_cost_nonbudget": 79.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 5,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": [
+              "American",
+              "Chinese",
+              "Mediterranean",
+              "Italian"
+            ],
+            "room type": null,
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Santa Rosa",
+        "Oakland"
+      ],
+      "reason": "Bundle risk is low and the candidate has no blocked edges for segment/flight failures.",
+      "raw": "{\n  \"candidate_id\": 1,\n  \"reason\": \"Bundle risk is low and the candidate has no blocked edges for segment/flight failures.\",\n  \"confidence\": 0.9,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"segment\", \"rule\": \"NO_FLIGHT\", \"ttl\": 60, \"city\": \"\", \"edge\": \"\"}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "Bundle risk is low and the candidate has no blocked edges for segment/flight failures.",
+        "confidence": 0.9,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "segment",
+              "rule": "NO_FLIGHT",
+              "ttl": 60,
+              "city": "",
+              "edge": ""
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "NO_FLIGHT",
+            "ttl": 60,
+            "city": "",
+            "edge": ""
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Santa Rosa",
+          "Oakland"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1204.0,
+          "bundle_lb_cost": 3413.2,
+          "stay_lb_cost": 310.0,
+          "meal_lb_cost": 576.0,
+          "transport_lb_cost": 2527.2,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "sun valley",
+              "santa rosa"
+            ],
+            [
+              "santa rosa",
+              "oakland"
+            ],
+            [
+              "oakland",
+              "sun valley"
+            ]
+          ],
+          "bundle_key": [
+            "oakland",
+            "santa rosa"
+          ],
+          "bundle_key_set": [
+            "oakland",
+            "santa rosa"
+          ],
+          "bundle_key_seq": [
+            "santa rosa",
+            "oakland"
+          ],
+          "city_features": {
+            "Santa Rosa": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 100.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 18,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 12,
+              "hotel_slack": 1
+            },
+            "Oakland": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 55.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 15,
+              "min_meal_cost": 24.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 6,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Sun Valley->Santa Rosa": {
+              "min_cost": 1229.0,
+              "blocked": false
+            },
+            "Santa Rosa->Oakland": {
+              "min_cost": 94.2,
+              "blocked": false
+            },
+            "Oakland->Sun Valley": {
+              "min_cost": 1204.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 6,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 100.0,
+            "bottleneck_city_meal": "Oakland",
+            "bottleneck_city_hotel": "Santa Rosa",
+            "bottleneck_edge": "Sun Valley->Santa Rosa"
+          },
+          "min_bundle_cost": 2837.2
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 6,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 100.0,
+          "bottleneck_city_meal": "Oakland",
+          "bottleneck_city_hotel": "Santa Rosa",
+          "bottleneck_edge": "Sun Valley->Santa Rosa"
+        },
+        "budget_context": {
+          "remaining": 472.8000000000002,
+          "slot_cap": 173.14453125000006,
+          "reserve": 332.85574999999994,
+          "min_cost_nonbudget": 240.0
+        },
+        "counts": {
+          "kb": 11,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_city": "Santa Rosa",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 11,
+          "after_nonbudget": 4,
+          "after_budget": 0,
+          "budget_removed": 4,
+          "nonbudget_removed": 7,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 472.8000000000002,
+          "slot_cap": 173.14453125000006,
+          "reserve": 332.85574999999994,
+          "min_cost_nonbudget": 240.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 4,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": [
+              "American",
+              "Chinese",
+              "Mediterranean",
+              "Italian"
+            ],
+            "room type": null,
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "San Francisco",
+        "Stockton"
+      ],
+      "reason": null,
+      "raw": "This output is a JSON object that represents the result of an optimization algorithm or a recommendation system. It contains various metadata and data about the candidates and their associated costs.\n\nHere's a breakdown of the main components:\n\n**candidates**: This is a list of 10 candidate bundles (i.e., combinations of cities). Each bundle has its own set of attributes, such as `id`, `bundle_risk` (which includes metrics like meal slack, attribute slack, and hotel price), `city_summary` (a summary of the cities in the bundle), `edge_summary` (a summary of the edges between cities in the bundle), and `lb_costs` (the lower bound costs for the bundle).\n\n**output_schema**: This is a dictionary that describes the schema of the output data. It defines the structure and format of each attribute, including its name, type, and possible values.\n\nSome specific attributes worth noting:\n\n* **bundle_risk**: This includes various metrics, such as meal slack, attribute slack, hotel price, and edge cost. These metrics likely relate to factors like transportation costs, accommodations, and activities.\n* **lb_costs**: This is the lower bound cost for each bundle, which might represent the estimated minimum cost of a trip given a particular set of constraints.\n\nTo extract meaningful insights from this data, you could analyze the following:\n\n1.  Compare the `bundle_risk` metrics across different candidates to identify patterns or correlations between city combinations and their associated costs.\n2.  Examine the distribution of `lb_costs` across the candidate bundles to understand how the cost varies depending on the cities chosen.\n3.  Investigate any relationships between specific attributes (e.g., meal slack, hotel price) and the overall cost.\n\nKeep in mind that this is just a starting point for analysis, and further exploration might be needed to derive actionable insights from these results.",
+      "parsed": null,
+      "error": "invalid_candidate_id",
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [],
+        "soft_penalties": [
+          {
+            "phase": "stay",
+            "feature": "hotel_price",
+            "delta": 0.6
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "stay",
+            "patch": {
+              "topk": 50,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "segment",
+        "subtype": "violate_reserve",
+        "violations": [],
+        "city_bundle": [
+          "San Francisco",
+          "Stockton"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 1151.0,
+          "bundle_lb_cost": 3440.0,
+          "stay_lb_cost": 498.0,
+          "meal_lb_cost": 444.0,
+          "transport_lb_cost": 2498.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "sun valley",
+              "san francisco"
+            ],
+            [
+              "san francisco",
+              "stockton"
+            ],
+            [
+              "stockton",
+              "sun valley"
+            ]
+          ],
+          "bundle_key": [
+            "san francisco",
+            "stockton"
+          ],
+          "bundle_key_set": [
+            "san francisco",
+            "stockton"
+          ],
+          "bundle_key_seq": [
+            "san francisco",
+            "stockton"
+          ],
+          "city_features": {
+            "San Francisco": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 79.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 17,
+              "min_meal_cost": 13.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 11,
+              "hotel_slack": 1
+            },
+            "Stockton": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 170.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 21,
+              "min_meal_cost": 16.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 12,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Sun Valley->San Francisco": {
+              "min_cost": 1213.0,
+              "blocked": false
+            },
+            "San Francisco->Stockton": {
+              "min_cost": 134.0,
+              "blocked": false
+            },
+            "Stockton->Sun Valley": {
+              "min_cost": 1151.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 11,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 170.0,
+            "bottleneck_city_meal": "San Francisco",
+            "bottleneck_city_hotel": "Stockton",
+            "bottleneck_edge": "Sun Valley->San Francisco"
+          },
+          "min_bundle_cost": 2996.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 11,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 170.0,
+          "bottleneck_city_meal": "San Francisco",
+          "bottleneck_city_hotel": "Stockton",
+          "bottleneck_edge": "Sun Valley->San Francisco"
+        },
+        "budget_context": {
+          "remaining": 1653.0,
+          "slot_cap": 594.7265624999999,
+          "reserve": 556.3972499999999,
+          "min_cost_nonbudget": 575.5
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Sun Valley",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1653.0,
+          "slot_cap": 594.7265624999999,
+          "reserve": 556.3972499999999,
+          "min_cost_nonbudget": 575.5
+        },
+        "dead_end_subtype": "violate_reserve",
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 3000,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "smoking",
+            "cuisine": [
+              "American",
+              "Chinese",
+              "Mediterranean",
+              "Italian"
+            ],
+            "room type": null,
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 2
+        }
+      },
+      "new_bundle": [
+        "Oakland",
+        "San Francisco"
+      ],
+      "reason": null,
+      "raw": "This is a large JSON object that appears to be the output of a machine learning model. It contains a list of candidate IDs with their corresponding reasons, confidences, and gradients.\n\nHere's a breakdown of the structure:\n\n* `output_schema`: This defines the schema for the output data.\n\t+ `candidate_id`: An integer ID for each candidate.\n\t+ `reason`: A short string explaining why this candidate was generated.\n\t+ `confidence`: A floating-point value between 0 and 1 indicating how confident the model is in its prediction.\n\t+ `gradient`: An object containing three lists:\n\t\t- `hard_exclusions`: A list of tuples containing information about hard exclusions (e.g., phase, rule, TTL, city, edge).\n\t\t- `soft_penalties`: A list of tuples containing information about soft penalties (e.g., phase, feature, delta).\n\t\t- `retrieval_patches`: A list of tuples containing information about retrieval patches (e.g., phase, patch, TTL).\n\nTo extract specific insights or patterns from this data, we would need to know more context about the problem being solved and the goals of the analysis. Some possible questions you could ask include:\n\n1. What is the purpose of each candidate ID? Are they representing different travel options or routes?\n2. How do the reasons and confidences relate to each other? Is there a correlation between high confidence and low reason values?\n3. Can we identify any patterns in the hard exclusions, soft penalties, or retrieval patches that might indicate areas for improvement in the model?\n\nIf you have specific questions about this data or want to explore further, I'd be happy to help!",
+      "parsed": null,
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "segment",
+            "rule": "EXCLUDE_BUNDLE_SEQ",
+            "ttl": 1
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.4
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "segment",
+            "patch": {
+              "topk": 30,
+              "prefer": "low_cost"
+            },
+            "ttl": 1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "84123b06f9a3",
+      "phase": "daily",
+      "slot_fp": "meal|d1|slot:dinner|seg:None|Oakland|None|None->None",
+      "bundle_fp": "131ad8fb15e1"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [],
+    "retrieval_patches": [],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "84123b06f9a3",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|San Francisco|None|None->None",
+        "bundle_fp": "606e4562a269"
+      },
+      "confidence": 0.9,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "NO_FLIGHT",
+          "ttl": 60,
+          "city": "",
+          "edge": ""
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Santa Rosa",
+        "Oakland"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "84123b06f9a3",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Santa Rosa|None|None->None",
+        "bundle_fp": "a95cd074c73e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "84123b06f9a3",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Santa Rosa|None|None->None",
+        "bundle_fp": "a95cd074c73e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "San Francisco",
+        "Stockton"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "84123b06f9a3",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-18|Stockton->Sun Valley",
+        "bundle_fp": "31285361ab7a"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "84123b06f9a3",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:2|None|2022-03-18|Stockton->Sun Valley",
+        "bundle_fp": "31285361ab7a"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [
+        {
+          "phase": "segment",
+          "rule": "EXCLUDE_BUNDLE_SEQ",
+          "ttl": 1
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.4
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": [
+        "Oakland",
+        "San Francisco"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "84123b06f9a3",
+        "phase": "daily",
+        "slot_fp": "meal|d1|slot:dinner|seg:None|Oakland|None|None->None",
+        "bundle_fp": "131ad8fb15e1"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 14.885441876016557
+}

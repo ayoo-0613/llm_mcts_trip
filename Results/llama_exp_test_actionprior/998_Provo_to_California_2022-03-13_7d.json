@@ -1,0 +1,1293 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 8790.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Can you create a travel itinerary for our group of 7, departing from Provo to California, where we'll be visiting 3 cities over the span of a week from March 13th to March 19th, 2022? We have a new budget of $13,200. We ideally require properties where parties are permitted, entire rooms for our accommodations, and we're interested in a variety of cuisines including Mediterranean, Indian, French, and Italian.",
+  "parsed": {
+    "org": "Provo",
+    "dest": "California",
+    "days": 7,
+    "visiting_city_number": 3,
+    "date": [
+      "2022-03-13",
+      "2022-03-14",
+      "2022-03-15",
+      "2022-03-16",
+      "2022-03-17",
+      "2022-03-18",
+      "2022-03-19"
+    ],
+    "people_number": 7,
+    "local_constraint": {
+      "house rule": "parties",
+      "cuisine": [
+        "Mediterranean",
+        "Indian",
+        "French",
+        "Italian"
+      ],
+      "room type": "entire room",
+      "transportation": null
+    },
+    "budget": 13200,
+    "origin": "Provo",
+    "destination": "California",
+    "duration_days": 7,
+    "start_date": "2022-03-13",
+    "preferences": [
+      "Mediterranean",
+      "Indian",
+      "French",
+      "Italian",
+      "parties",
+      "entire room"
+    ],
+    "candidate_cities": [
+      "San Diego",
+      "Redding",
+      "Sacramento",
+      "Fresno",
+      "San Luis Obispo",
+      "Oakland",
+      "Santa Barbara",
+      "Stockton",
+      "Santa Rosa",
+      "Bakersfield",
+      "Santa Ana",
+      "Santa Maria",
+      "San Jose",
+      "Burbank",
+      "Arcata",
+      "Butte",
+      "Palm Springs",
+      "Los Angeles",
+      "Long Beach",
+      "San Francisco",
+      "Monterey"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Provo->Santa Rosa 1262km cost 1262",
+    "move:seg1:taxi:Santa Rosa->Butte 285km cost 285",
+    "move:seg2:taxi:Butte->Santa Barbara 755km cost 755",
+    "move:seg3:taxi:Santa Barbara->Provo 1180km cost 1180",
+    "stay:Santa Rosa:1644 LIC 1 Bedroom 10 min to Times Sq -1 stop to NYC Entire home/apt $913"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Santa Rosa",
+      "Butte",
+      "Santa Barbara"
+    ],
+    "transportation_dates": [
+      "2022-03-13",
+      "2022-03-15",
+      "2022-03-17",
+      "2022-03-19"
+    ],
+    "transportation_methods": [
+      "taxi, from Provo to Santa Rosa, cost: 1262.0",
+      "taxi, from Santa Rosa to Butte, cost: 285.0",
+      "taxi, from Butte to Santa Barbara, cost: 755.0",
+      "taxi, from Santa Barbara to Provo, cost: 1180.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "LIC 1 Bedroom 10 min to Times Sq -1 stop to NYC, Santa Rosa",
+      "missing, Butte",
+      "missing, Santa Barbara"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Provo to Santa Rosa",
+      "transportation": "Taxi, from Provo to Santa Rosa, Cost: 1262",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "LIC 1 Bedroom 10 min to Times Sq -1 stop to NYC, Santa Rosa"
+    },
+    {
+      "days": 2,
+      "current_city": "Santa Rosa",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "LIC 1 Bedroom 10 min to Times Sq -1 stop to NYC, Santa Rosa"
+    },
+    {
+      "days": 3,
+      "current_city": "from Santa Rosa to Butte",
+      "transportation": "Taxi, from Santa Rosa to Butte, Cost: 285",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Butte",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Butte to Santa Barbara",
+      "transportation": "Taxi, from Butte to Santa Barbara, Cost: 755",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "Santa Barbara",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 7,
+      "current_city": "from Santa Barbara to Provo",
+      "transportation": "Taxi, from Santa Barbara to Provo, Cost: 1180",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Santa Rosa|None|None->None",
+      "counts": {
+        "kb": 2,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 6236.0,
+        "slot_cap": 1522.4609375,
+        "reserve": 3749.2331249999993
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 5189.25,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 4410.862499999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 3749.2331249999993,
+          "kept": 1
+        }
+      ],
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Butte|None|None->None",
+      "counts": {
+        "kb": 2,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 4410.0,
+        "slot_cap": 1614.990234375,
+        "reserve": 2447.2881249999996
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 3387.25,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 2879.1624999999995,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 2447.2881249999996,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Butte|None|None->None",
+        "city": "Butte",
+        "city_bundle": [
+          "Santa Rosa",
+          "Butte",
+          "Santa Barbara"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 4410.0,
+          "slot_cap": 1614.990234375,
+          "reserve": 2447.2881249999996,
+          "min_cost_nonbudget": 1115.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Santa Rosa",
+          "Santa Barbara",
+          "Long Beach"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 2130.0,
+          "bundle_lb_cost": 13655.0,
+          "stay_lb_cost": 5678.0,
+          "meal_lb_cost": 1743.0,
+          "transport_lb_cost": 6234.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "provo",
+              "santa rosa"
+            ],
+            [
+              "santa rosa",
+              "santa barbara"
+            ],
+            [
+              "santa barbara",
+              "long beach"
+            ],
+            [
+              "long beach",
+              "provo"
+            ]
+          ],
+          "bundle_key": [
+            "long beach",
+            "santa barbara",
+            "santa rosa"
+          ],
+          "bundle_key_set": [
+            "long beach",
+            "santa barbara",
+            "santa rosa"
+          ],
+          "bundle_key_seq": [
+            "santa rosa",
+            "santa barbara",
+            "long beach"
+          ],
+          "city_features": {
+            "Santa Rosa": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 913.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 20,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 14,
+              "hotel_slack": 0
+            },
+            "Santa Barbara": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1079.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 15,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 9,
+              "hotel_slack": 0
+            },
+            "Long Beach": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 847.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 19,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 10,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Provo->Santa Rosa": {
+              "min_cost": 2524.0,
+              "blocked": false
+            },
+            "Santa Rosa->Santa Barbara": {
+              "min_cost": 1210.0,
+              "blocked": false
+            },
+            "Santa Barbara->Long Beach": {
+              "min_cost": 370.0,
+              "blocked": false
+            },
+            "Long Beach->Provo": {
+              "min_cost": 2130.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 9,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1079.0,
+            "bottleneck_city_meal": "Santa Barbara",
+            "bottleneck_city_hotel": "Santa Barbara",
+            "bottleneck_edge": "Provo->Santa Rosa"
+          },
+          "min_bundle_cost": 11912.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 9,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1079.0,
+          "bottleneck_city_meal": "Santa Barbara",
+          "bottleneck_city_hotel": "Santa Barbara",
+          "bottleneck_edge": "Provo->Santa Rosa"
+        },
+        "budget_context": {
+          "remaining": 2982.0,
+          "slot_cap": 2184.08203125,
+          "reserve": 1018.8333749999998,
+          "min_cost_nonbudget": 1023.0
+        },
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_city": "Long Beach",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 2,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 2982.0,
+          "slot_cap": 2184.08203125,
+          "reserve": 1018.8333749999998,
+          "min_cost_nonbudget": 1023.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 13200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": [
+              "Mediterranean",
+              "Indian",
+              "French",
+              "Italian"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Butte",
+        "Santa Rosa",
+        "Santa Barbara"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 2, \"city\": \"Long Beach\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"flight\", \"feature\": \"budget_risk\", \"delta\": -0.1}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 2,
+              "city": "Long Beach"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "flight",
+              "feature": "budget_risk",
+              "delta": -0.1
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 2,
+            "city": "Long Beach"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "flight",
+            "feature": "budget_risk",
+            "delta": -0.1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Butte",
+          "Santa Rosa",
+          "Santa Barbara"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 2360.0,
+          "bundle_lb_cost": 14447.0,
+          "stay_lb_cost": 6104.0,
+          "meal_lb_cost": 1911.0,
+          "transport_lb_cost": 6432.0,
+          "hotel_min_nights_min": 2,
+          "edges": [
+            [
+              "provo",
+              "butte"
+            ],
+            [
+              "butte",
+              "santa rosa"
+            ],
+            [
+              "santa rosa",
+              "santa barbara"
+            ],
+            [
+              "santa barbara",
+              "provo"
+            ]
+          ],
+          "bundle_key": [
+            "butte",
+            "santa barbara",
+            "santa rosa"
+          ],
+          "bundle_key_set": [
+            "butte",
+            "santa barbara",
+            "santa rosa"
+          ],
+          "bundle_key_seq": [
+            "butte",
+            "santa rosa",
+            "santa barbara"
+          ],
+          "city_features": {
+            "Butte": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1060.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 10,
+              "min_meal_cost": 15.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 4,
+              "hotel_slack": 0
+            },
+            "Santa Rosa": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 913.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 20,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 14,
+              "hotel_slack": 0
+            },
+            "Santa Barbara": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1079.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 15,
+              "min_meal_cost": 11.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 6,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Provo->Butte": {
+              "min_cost": 2292.0,
+              "blocked": false
+            },
+            "Butte->Santa Rosa": {
+              "min_cost": 570.0,
+              "blocked": false
+            },
+            "Santa Rosa->Santa Barbara": {
+              "min_cost": 1210.0,
+              "blocked": false
+            },
+            "Santa Barbara->Provo": {
+              "min_cost": 2360.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 4,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1079.0,
+            "bottleneck_city_meal": "Butte",
+            "bottleneck_city_hotel": "Santa Barbara",
+            "bottleneck_edge": "Santa Barbara->Provo"
+          },
+          "min_bundle_cost": 12536.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 4,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1079.0,
+          "bottleneck_city_meal": "Butte",
+          "bottleneck_city_hotel": "Santa Barbara",
+          "bottleneck_edge": "Santa Barbara->Provo"
+        },
+        "budget_context": {
+          "remaining": 2712.0,
+          "slot_cap": 1986.328125,
+          "reserve": 1122.006375,
+          "min_cost_nonbudget": 1079.0
+        },
+        "counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_city": "Santa Barbara",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 1,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 2712.0,
+          "slot_cap": 1986.328125,
+          "reserve": 1122.006375,
+          "min_cost_nonbudget": 1079.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 13200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": [
+              "Mediterranean",
+              "Indian",
+              "French",
+              "Italian"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Long Beach",
+        "Santa Rosa",
+        "Butte"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 1,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_FLIGHT\", \"ttl\": 10, \"city\": true, \"edge\": false}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"segment\", \"feature\": \"budget_risk\", \"delta\": -0.5},\n      {\"phase\": \"flight\", \"feature\": \"cost_ratio\", \"delta\": 1.2}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 1,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_FLIGHT",
+              "ttl": 10,
+              "city": true,
+              "edge": false
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "segment",
+              "feature": "budget_risk",
+              "delta": -0.5
+            },
+            {
+              "phase": "flight",
+              "feature": "cost_ratio",
+              "delta": 1.2
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_FLIGHT",
+            "ttl": 10,
+            "city": true,
+            "edge": false
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "segment",
+            "feature": "budget_risk",
+            "delta": -0.5
+          },
+          {
+            "phase": "flight",
+            "feature": "cost_ratio",
+            "delta": 1.2
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [
+          "missing_flight"
+        ],
+        "city_bundle": [
+          "Long Beach",
+          "Santa Rosa",
+          "Butte"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 2304.0,
+          "bundle_lb_cost": 14083.0,
+          "stay_lb_cost": 5640.0,
+          "meal_lb_cost": 1995.0,
+          "transport_lb_cost": 6448.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "provo",
+              "long beach"
+            ],
+            [
+              "long beach",
+              "santa rosa"
+            ],
+            [
+              "santa rosa",
+              "butte"
+            ],
+            [
+              "butte",
+              "provo"
+            ]
+          ],
+          "bundle_key": [
+            "butte",
+            "long beach",
+            "santa rosa"
+          ],
+          "bundle_key_set": [
+            "butte",
+            "long beach",
+            "santa rosa"
+          ],
+          "bundle_key_seq": [
+            "long beach",
+            "santa rosa",
+            "butte"
+          ],
+          "city_features": {
+            "Long Beach": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 847.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 19,
+              "min_meal_cost": 11.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 13,
+              "hotel_slack": 1
+            },
+            "Santa Rosa": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 913.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 20,
+              "min_meal_cost": 14.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 14,
+              "hotel_slack": 0
+            },
+            "Butte": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 1060.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 10,
+              "min_meal_cost": 15.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 1,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Provo->Long Beach": {
+              "min_cost": 2122.0,
+              "blocked": false
+            },
+            "Long Beach->Santa Rosa": {
+              "min_cost": 1452.0,
+              "blocked": false
+            },
+            "Santa Rosa->Butte": {
+              "min_cost": 570.0,
+              "blocked": false
+            },
+            "Butte->Provo": {
+              "min_cost": 2304.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 1,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 1060.0,
+            "bottleneck_city_meal": "Butte",
+            "bottleneck_city_hotel": "Butte",
+            "bottleneck_edge": "Butte->Provo"
+          },
+          "min_bundle_cost": 12088.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 1,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 1060.0,
+          "bottleneck_city_meal": "Butte",
+          "bottleneck_city_hotel": "Butte",
+          "bottleneck_edge": "Butte->Provo"
+        },
+        "budget_context": {
+          "remaining": 6752.0,
+          "slot_cap": 1318.75,
+          "reserve": 4231.6825,
+          "min_cost_nonbudget": 1023.0
+        },
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 1,
+          "after_budget": 1,
+          "budget_removed": 0,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_city": "Long Beach",
+        "dead_end_reason": "duplication",
+        "dead_end_counts": {
+          "kb": 2,
+          "after_nonbudget": 1,
+          "after_budget": 1,
+          "budget_removed": 0,
+          "nonbudget_removed": 1,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 6752.0,
+          "slot_cap": 1318.75,
+          "reserve": 4231.6825,
+          "min_cost_nonbudget": 1023.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 1,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 13200,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": "parties",
+            "cuisine": [
+              "Mediterranean",
+              "Indian",
+              "French",
+              "Italian"
+            ],
+            "room type": "entire room",
+            "transportation": null
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Santa Rosa",
+        "Butte",
+        "Santa Barbara"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 2,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.8,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"NO_SELF_DRIVING\", \"ttl\": 10, \"city\": \"Butte\"},\n      {\"phase\": \"flight\", \"rule\": \"AVOID_CITY\", \"ttl\": 5, \"edge\": \"Provo->Santa Rosa\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"hotel\", \"feature\": \"hotel_price\", \"delta\": -100},\n      {\"phase\": \"segment\", \"feature\": \"cost_ratio\", \"delta\": 0.1}\n    ]\n  }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "NO_SELF_DRIVING",
+              "ttl": 10,
+              "city": "Butte"
+            },
+            {
+              "phase": "flight",
+              "rule": "AVOID_CITY",
+              "ttl": 5,
+              "edge": "Provo->Santa Rosa"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "hotel",
+              "feature": "hotel_price",
+              "delta": -100
+            },
+            {
+              "phase": "segment",
+              "feature": "cost_ratio",
+              "delta": 0.1
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "NO_SELF_DRIVING",
+            "ttl": 10,
+            "city": "Butte"
+          },
+          {
+            "phase": "flight",
+            "rule": "AVOID_CITY",
+            "ttl": 5,
+            "edge": "Provo->Santa Rosa"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "hotel",
+            "feature": "hotel_price",
+            "delta": -100
+          },
+          {
+            "phase": "segment",
+            "feature": "cost_ratio",
+            "delta": 0.1
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "68583b5f7b3a",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Butte|None|None->None",
+      "bundle_fp": "c534d1e54cca"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "68583b5f7b3a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Long Beach|None|None->None",
+        "bundle_fp": "df845d0166f0"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 2,
+          "city": "Long Beach"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": -0.1
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Butte",
+        "Santa Rosa",
+        "Santa Barbara"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "68583b5f7b3a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Santa Barbara|None|None->None",
+        "bundle_fp": "b9de7d511263"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "68583b5f7b3a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Santa Barbara|None|None->None",
+        "bundle_fp": "b9de7d511263"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_FLIGHT",
+          "ttl": 10,
+          "city": true,
+          "edge": false
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "budget_risk",
+          "delta": -0.5
+        },
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 1.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Long Beach",
+        "Santa Rosa",
+        "Butte"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "68583b5f7b3a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Long Beach|None|None->None",
+        "bundle_fp": "0b637701a13e"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "68583b5f7b3a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Long Beach|None|None->None",
+        "bundle_fp": "0b637701a13e"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "NO_SELF_DRIVING",
+          "ttl": 10,
+          "city": "Butte"
+        },
+        {
+          "phase": "segment",
+          "rule": "AVOID_CITY",
+          "ttl": 5,
+          "edge": "Provo->Santa Rosa"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": -100.0
+        },
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.1
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Santa Rosa",
+        "Butte",
+        "Santa Barbara"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "68583b5f7b3a",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Butte|None|None->None",
+        "bundle_fp": "c534d1e54cca"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 8.96097846608609
+}

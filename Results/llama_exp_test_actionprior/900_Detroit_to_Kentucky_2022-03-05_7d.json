@@ -1,0 +1,1183 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 1922.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Could you assist in creating a 7-day travel plan for 2 people departing from Detroit and visiting 3 cities in Kentucky, from March 5th to March 11th, 2022? We have allocated a budget of $4,900 for this trip. We require accommodations that accommodate smoking and should ideally be private rooms. Our travel arrangements should not involve any flights.",
+  "parsed": {
+    "org": "Detroit",
+    "dest": "Kentucky",
+    "days": 7,
+    "visiting_city_number": 3,
+    "date": [
+      "2022-03-05",
+      "2022-03-06",
+      "2022-03-07",
+      "2022-03-08",
+      "2022-03-09",
+      "2022-03-10",
+      "2022-03-11"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": [
+        "smoking"
+      ],
+      "cuisine": null,
+      "room type": "private room",
+      "transportation": "no flight"
+    },
+    "budget": 4900,
+    "origin": "Detroit",
+    "destination": "Kentucky",
+    "duration_days": 7,
+    "start_date": "2022-03-05",
+    "preferences": [
+      "smoking",
+      "private room"
+    ],
+    "transport_forbid": [
+      "flight"
+    ],
+    "candidate_cities": [
+      "Paducah",
+      "Owensboro",
+      "Lexington",
+      "Louisville"
+    ]
+  },
+  "actions": [
+    "move:seg0:taxi:Detroit->Owensboro 752km cost 752",
+    "move:seg1:taxi:Owensboro->Paducah 205km cost 205",
+    "move:seg2:taxi:Paducah->Lexington 411km cost 411",
+    "move:seg3:taxi:Lexington->Detroit 554km cost 554"
+  ],
+  "structured_plan": {
+    "destination_cities": [
+      "Owensboro",
+      "Paducah",
+      "Lexington"
+    ],
+    "transportation_dates": [
+      "2022-03-05",
+      "2022-03-07",
+      "2022-03-09",
+      "2022-03-11"
+    ],
+    "transportation_methods": [
+      "taxi, from Detroit to Owensboro, cost: 752.0",
+      "taxi, from Owensboro to Paducah, cost: 205.0",
+      "taxi, from Paducah to Lexington, cost: 411.0",
+      "taxi, from Lexington to Detroit, cost: 554.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Owensboro",
+      "missing, Paducah",
+      "missing, Lexington"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Detroit to Owensboro",
+      "transportation": "Taxi, from Detroit to Owensboro, Cost: 752",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Owensboro",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Owensboro to Paducah",
+      "transportation": "Taxi, from Owensboro to Paducah, Cost: 205",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 4,
+      "current_city": "Paducah",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 5,
+      "current_city": "from Paducah to Lexington",
+      "transportation": "Taxi, from Paducah to Lexington, Cost: 411",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 6,
+      "current_city": "Lexington",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 7,
+      "current_city": "from Lexington to Detroit",
+      "transportation": "Taxi, from Lexington to Detroit, Cost: 554",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:3|None|2022-03-05|Lexington->Detroit",
+      "counts": {
+        "kb": 1,
+        "after_nonbudget": 1,
+        "after_budget": 1,
+        "returned": 1,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 3532.0,
+        "slot_cap": 650.6315789473683,
+        "reserve": 2186.0
+      },
+      "segment_role": "return",
+      "cache_hit": true
+    },
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Owensboro|None|None->None",
+      "counts": {
+        "kb": 3,
+        "after_nonbudget": 1,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 1,
+        "missing_cost": 0
+      },
+      "budget_subtype": "violate_reserve",
+      "budget_context": {
+        "remaining": 2978.0,
+        "slot_cap": 727.05078125,
+        "reserve": 868.3727499999999
+      },
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 1201.8999999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 1021.6149999999999,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 868.3727499999999,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Owensboro|None|None->None",
+        "city": "Owensboro",
+        "city_bundle": [
+          "Owensboro",
+          "Paducah",
+          "Lexington"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 2978.0,
+          "slot_cap": 727.05078125,
+          "reserve": 868.3727499999999,
+          "min_cost_nonbudget": 1139.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [
+    {
+      "attempt": 1,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Lexington",
+          "Paducah",
+          "Louisville"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 581.0,
+          "bundle_lb_cost": 3423.0,
+          "stay_lb_cost": 1072.0,
+          "meal_lb_cost": 456.0,
+          "transport_lb_cost": 1895.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "detroit",
+              "lexington"
+            ],
+            [
+              "lexington",
+              "paducah"
+            ],
+            [
+              "paducah",
+              "louisville"
+            ],
+            [
+              "louisville",
+              "detroit"
+            ]
+          ],
+          "bundle_key": [
+            "lexington",
+            "louisville",
+            "paducah"
+          ],
+          "bundle_key_set": [
+            "lexington",
+            "louisville",
+            "paducah"
+          ],
+          "bundle_key_seq": [
+            "lexington",
+            "paducah",
+            "louisville"
+          ],
+          "city_features": {
+            "Lexington": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 259.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 25,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 19,
+              "hotel_slack": 0
+            },
+            "Paducah": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 208.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            },
+            "Louisville": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 69.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 28,
+              "min_meal_cost": 12.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 19,
+              "hotel_slack": 1
+            }
+          },
+          "edge_costs": {
+            "Detroit->Lexington": {
+              "min_cost": 555.0,
+              "blocked": false
+            },
+            "Lexington->Paducah": {
+              "min_cost": 410.0,
+              "blocked": false
+            },
+            "Paducah->Louisville": {
+              "min_cost": 349.0,
+              "blocked": false
+            },
+            "Louisville->Detroit": {
+              "min_cost": 581.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 19,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 259.0,
+            "bottleneck_city_meal": "Lexington",
+            "bottleneck_city_hotel": "Lexington",
+            "bottleneck_edge": "Louisville->Detroit"
+          },
+          "min_bundle_cost": 2967.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 19,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 259.0,
+          "bottleneck_city_meal": "Lexington",
+          "bottleneck_city_hotel": "Lexington",
+          "bottleneck_edge": "Louisville->Detroit"
+        },
+        "budget_context": {
+          "remaining": 1269.0,
+          "slot_cap": 929.443359375,
+          "reserve": 280.04099999999994,
+          "min_cost_nonbudget": 1123.0
+        },
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_city": "Louisville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 1269.0,
+          "slot_cap": 929.443359375,
+          "reserve": 280.04099999999994,
+          "min_cost_nonbudget": 1123.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4900,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": [
+              "smoking"
+            ],
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Owensboro",
+        "Paducah",
+        "Lexington"
+      ],
+      "reason": "no_dead_end",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"no_dead_end\",\n  \"confidence\": 1.0,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 10, \"city\": \"Louisville\"}\n    ],\n    \"soft_penalties\": [],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "no_dead_end",
+        "confidence": 1.0,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 10,
+              "city": "Louisville"
+            }
+          ],
+          "soft_penalties": [],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 10,
+            "city": "Louisville"
+          }
+        ],
+        "soft_penalties": [],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 2,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Owensboro",
+          "Paducah",
+          "Lexington"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 554.0,
+          "bundle_lb_cost": 4108.0,
+          "stay_lb_cost": 1706.0,
+          "meal_lb_cost": 480.0,
+          "transport_lb_cost": 1922.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "detroit",
+              "owensboro"
+            ],
+            [
+              "owensboro",
+              "paducah"
+            ],
+            [
+              "paducah",
+              "lexington"
+            ],
+            [
+              "lexington",
+              "detroit"
+            ]
+          ],
+          "bundle_key": [
+            "lexington",
+            "owensboro",
+            "paducah"
+          ],
+          "bundle_key_set": [
+            "lexington",
+            "owensboro",
+            "paducah"
+          ],
+          "bundle_key_seq": [
+            "owensboro",
+            "paducah",
+            "lexington"
+          ],
+          "city_features": {
+            "Owensboro": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 386.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 30,
+              "min_meal_cost": 15.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 24,
+              "hotel_slack": 0
+            },
+            "Paducah": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 208.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            },
+            "Lexington": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 259.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 25,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 16,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Detroit->Owensboro": {
+              "min_cost": 752.0,
+              "blocked": false
+            },
+            "Owensboro->Paducah": {
+              "min_cost": 205.0,
+              "blocked": false
+            },
+            "Paducah->Lexington": {
+              "min_cost": 411.0,
+              "blocked": false
+            },
+            "Lexington->Detroit": {
+              "min_cost": 554.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 16,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 386.0,
+            "bottleneck_city_meal": "Lexington",
+            "bottleneck_city_hotel": "Owensboro",
+            "bottleneck_edge": "Detroit->Owensboro"
+          },
+          "min_bundle_cost": 3628.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 16,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 386.0,
+          "bottleneck_city_meal": "Lexington",
+          "bottleneck_city_hotel": "Owensboro",
+          "bottleneck_edge": "Detroit->Owensboro"
+        },
+        "budget_context": {
+          "remaining": 2978.0,
+          "slot_cap": 727.05078125,
+          "reserve": 868.3727499999999,
+          "min_cost_nonbudget": 1139.0
+        },
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_city": "Owensboro",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 2978.0,
+          "slot_cap": 727.05078125,
+          "reserve": 868.3727499999999,
+          "min_cost_nonbudget": 1139.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4900,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": [
+              "smoking"
+            ],
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Paducah",
+        "Louisville",
+        "Lexington"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n    \"candidate_id\": 2,\n    \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n    \"confidence\": 0.8,\n    \"gradient\": {\n        \"hard_exclusions\": [{\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 10, \"city\": \"Owensboro\"}],\n        \"soft_penalties\": [{\"phase\": \"meal\", \"feature\": \"budget_risk\", \"delta\": -0.5}],\n        \"retrieval_patches\": [{\"phase\": \"edge\", \"patch\": \"blocked_edge\", \"ttl\": 5}]\n    }\n}",
+      "parsed": {
+        "candidate_id": 2,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.8,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 10,
+              "city": "Owensboro"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "meal",
+              "feature": "budget_risk",
+              "delta": -0.5
+            }
+          ],
+          "retrieval_patches": [
+            {
+              "phase": "edge",
+              "patch": "blocked_edge",
+              "ttl": 5
+            }
+          ]
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 10,
+            "city": "Owensboro"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "meal",
+            "feature": "budget_risk",
+            "delta": -0.5
+          }
+        ],
+        "retrieval_patches": [
+          {
+            "phase": "edge",
+            "patch": "blocked_edge",
+            "ttl": 5
+          }
+        ]
+      },
+      "applied": true,
+      "rerun": true
+    },
+    {
+      "attempt": 3,
+      "report": {
+        "failed_phase": "hotel",
+        "subtype": null,
+        "violations": [],
+        "city_bundle": [
+          "Paducah",
+          "Louisville",
+          "Lexington"
+        ],
+        "current_bundle_features": {
+          "hotel_feasible_all": true,
+          "return_leg_exists": true,
+          "min_return_cost": 554.0,
+          "bundle_lb_cost": 3471.0,
+          "stay_lb_cost": 1072.0,
+          "meal_lb_cost": 444.0,
+          "transport_lb_cost": 1955.0,
+          "hotel_min_nights_min": 1,
+          "edges": [
+            [
+              "detroit",
+              "paducah"
+            ],
+            [
+              "paducah",
+              "louisville"
+            ],
+            [
+              "louisville",
+              "lexington"
+            ],
+            [
+              "lexington",
+              "detroit"
+            ]
+          ],
+          "bundle_key": [
+            "lexington",
+            "louisville",
+            "paducah"
+          ],
+          "bundle_key_set": [
+            "lexington",
+            "louisville",
+            "paducah"
+          ],
+          "bundle_key_seq": [
+            "paducah",
+            "louisville",
+            "lexington"
+          ],
+          "city_features": {
+            "Paducah": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 208.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 34,
+              "min_meal_cost": 10.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 28,
+              "hotel_slack": 1
+            },
+            "Louisville": {
+              "days": 2,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 69.0,
+              "hotel_min_nights": 1,
+              "attraction_count": 20,
+              "meal_count": 28,
+              "min_meal_cost": 12.0,
+              "attr_required": 2,
+              "meal_required": 6,
+              "attr_slack": 18,
+              "meal_slack": 22,
+              "hotel_slack": 1
+            },
+            "Lexington": {
+              "days": 3,
+              "nights": 2,
+              "hotel_exists": true,
+              "hotel_min_price": 259.0,
+              "hotel_min_nights": 2,
+              "attraction_count": 20,
+              "meal_count": 25,
+              "min_meal_cost": 10.0,
+              "attr_required": 3,
+              "meal_required": 9,
+              "attr_slack": 17,
+              "meal_slack": 16,
+              "hotel_slack": 0
+            }
+          },
+          "edge_costs": {
+            "Detroit->Paducah": {
+              "min_cost": 927.0,
+              "blocked": false
+            },
+            "Paducah->Louisville": {
+              "min_cost": 349.0,
+              "blocked": false
+            },
+            "Louisville->Lexington": {
+              "min_cost": 125.0,
+              "blocked": false
+            },
+            "Lexington->Detroit": {
+              "min_cost": 554.0,
+              "blocked": false
+            }
+          },
+          "bundle_risk": {
+            "bottleneck_meal_slack": 16,
+            "bottleneck_attr_slack": 17,
+            "bottleneck_hotel_price": 259.0,
+            "bottleneck_city_meal": "Lexington",
+            "bottleneck_city_hotel": "Lexington",
+            "bottleneck_edge": "Detroit->Paducah"
+          },
+          "min_bundle_cost": 3027.0
+        },
+        "current_bottleneck": {
+          "bottleneck_meal_slack": 16,
+          "bottleneck_attr_slack": 17,
+          "bottleneck_hotel_price": 259.0,
+          "bottleneck_city_meal": "Lexington",
+          "bottleneck_city_hotel": "Lexington",
+          "bottleneck_edge": "Detroit->Paducah"
+        },
+        "budget_context": {
+          "remaining": 2149.0,
+          "slot_cap": 786.9873046875,
+          "reserve": 590.78825,
+          "min_cost_nonbudget": 1123.0
+        },
+        "counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_city": "Louisville",
+        "dead_end_reason": "budget",
+        "dead_end_counts": {
+          "kb": 3,
+          "after_nonbudget": 1,
+          "after_budget": 0,
+          "budget_removed": 1,
+          "nonbudget_removed": 2,
+          "topk": 0
+        },
+        "dead_end_budget_context": {
+          "remaining": 2149.0,
+          "slot_cap": 786.9873046875,
+          "reserve": 590.78825,
+          "min_cost_nonbudget": 1123.0
+        },
+        "dead_end_subtype": null,
+        "dead_end_after_nonbudget": 1,
+        "dead_end_after_budget": 0,
+        "dead_end_returned": 0,
+        "constraints_snapshot": {
+          "budget": 4900,
+          "return_required": null,
+          "require_accommodation": null,
+          "local_constraint": {
+            "house rule": [
+              "smoking"
+            ],
+            "cuisine": null,
+            "room type": "private room",
+            "transportation": "no flight"
+          },
+          "visiting_city_number": 3
+        }
+      },
+      "new_bundle": [
+        "Owensboro",
+        "Paducah",
+        "Lexington"
+      ],
+      "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+      "raw": "{\n  \"candidate_id\": 0,\n  \"reason\": \"bundle_risk + city_summary + edge_summary + lb_costs\",\n  \"confidence\": 0.85,\n  \"gradient\": {\n    \"hard_exclusions\": [\n      {\"phase\": \"hotel\", \"rule\": \"AVOID_CITY\", \"ttl\": 10, \"city\": \"Louisville\"}\n    ],\n    \"soft_penalties\": [\n      {\"phase\": \"transport\", \"feature\": \"cost_ratio\", \"delta\": -0.2}\n    ],\n    \"retrieval_patches\": []\n  }\n}",
+      "parsed": {
+        "candidate_id": 0,
+        "reason": "bundle_risk + city_summary + edge_summary + lb_costs",
+        "confidence": 0.85,
+        "gradient": {
+          "hard_exclusions": [
+            {
+              "phase": "hotel",
+              "rule": "AVOID_CITY",
+              "ttl": 10,
+              "city": "Louisville"
+            }
+          ],
+          "soft_penalties": [
+            {
+              "phase": "transport",
+              "feature": "cost_ratio",
+              "delta": -0.2
+            }
+          ],
+          "retrieval_patches": []
+        }
+      },
+      "error": null,
+      "error_detail": null,
+      "status_code": null,
+      "endpoint": "http://localhost:11434/api/generate",
+      "gradient": {
+        "hard_exclusions": [
+          {
+            "phase": "hotel",
+            "rule": "AVOID_CITY",
+            "ttl": 10,
+            "city": "Louisville"
+          }
+        ],
+        "soft_penalties": [
+          {
+            "phase": "transport",
+            "feature": "cost_ratio",
+            "delta": -0.2
+          }
+        ],
+        "retrieval_patches": []
+      },
+      "applied": true,
+      "rerun": true
+    }
+  ],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "04560161aefd",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Owensboro|None|None->None",
+      "bundle_fp": "ac553c07da89"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "04560161aefd",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Louisville|None|None->None",
+        "bundle_fp": "95747090003e"
+      },
+      "confidence": 1.0,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 10,
+          "city": "Louisville"
+        }
+      ],
+      "soft_penalties": [],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Owensboro",
+        "Paducah",
+        "Lexington"
+      ]
+    },
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "04560161aefd",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Owensboro|None|None->None",
+        "bundle_fp": "ac553c07da89"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "04560161aefd",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Owensboro|None|None->None",
+        "bundle_fp": "ac553c07da89"
+      },
+      "confidence": 0.8,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 10,
+          "city": "Owensboro"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "daily",
+          "feature": "budget_risk",
+          "delta": -0.5
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Paducah",
+        "Louisville",
+        "Lexington"
+      ]
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "04560161aefd",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Louisville|None|None->None",
+        "bundle_fp": "8ec5fb2ceadc"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "04560161aefd",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Louisville|None|None->None",
+        "bundle_fp": "8ec5fb2ceadc"
+      },
+      "confidence": 0.85,
+      "hard_exclusions": [
+        {
+          "phase": "stay",
+          "rule": "AVOID_CITY",
+          "ttl": 10,
+          "city": "Louisville"
+        }
+      ],
+      "soft_penalties": [
+        {
+          "phase": "transport",
+          "feature": "cost_ratio",
+          "delta": -0.2
+        }
+      ],
+      "retrieval_patches": [],
+      "bundle_override": [
+        "Owensboro",
+        "Paducah",
+        "Lexington"
+      ]
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "04560161aefd",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Owensboro|None|None->None",
+        "bundle_fp": "ac553c07da89"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 8.654292359016836
+}

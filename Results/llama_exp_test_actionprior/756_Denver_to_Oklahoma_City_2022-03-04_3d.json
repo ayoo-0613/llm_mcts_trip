@@ -1,0 +1,269 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 396.0,
+  "violations": [
+    "commonsense:is_not_absent"
+  ],
+  "query": "Please create a 3-day travel plan for 2 individuals departing from Denver and heading to Oklahoma City from March 4th to March 6th, 2022. Our budget is set at $1,500 for the trip. We require accommodations that offer private (not shared) rooms and do not intend to self-drive. On our culinary adventure, we're excited to savor Mexican, American, Italian, and French dishes.",
+  "parsed": {
+    "org": "Denver",
+    "dest": "Oklahoma City",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-04",
+      "2022-03-05",
+      "2022-03-06"
+    ],
+    "people_number": 2,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": [
+        "Mexican",
+        "American",
+        "Italian",
+        "French"
+      ],
+      "room type": "private (not shared) room",
+      "transportation": "no self-driving"
+    },
+    "budget": 1500,
+    "origin": "Denver",
+    "destination": "Oklahoma City",
+    "duration_days": 3,
+    "start_date": "2022-03-04",
+    "preferences": [
+      "Mexican",
+      "American",
+      "Italian",
+      "French",
+      "private (not shared) room"
+    ],
+    "transport_forbid": [
+      "self-driving"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Oklahoma City"
+    ],
+    "transportation_dates": [
+      "2022-03-04",
+      "2022-03-06"
+    ],
+    "transportation_methods": [
+      "Flight F2688605, from Denver to Oklahoma City, Departure Time: 05:26, Arrival Time: 07:40, cost: 99.0",
+      "Flight F2693470, from Oklahoma City to Denver, Departure Time: 20:18, Arrival Time: 20:40, cost: 99.0"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Oklahoma City"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "from Denver to Oklahoma City",
+      "transportation": "Flight Number: F2688605, from Denver to Oklahoma City, Departure Time: 05:26, Arrival Time: 07:40",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Oklahoma City",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "from Oklahoma City to Denver",
+      "transportation": "Flight Number: F2693470, from Oklahoma City to Denver, Departure Time: 20:18, Arrival Time: 20:40",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "hotel",
+      "slot_id": "hotel|dNone|slot:None|seg:None|Oklahoma City|None|None->None",
+      "counts": {
+        "kb": 0,
+        "after_nonbudget": 0,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 0,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": null,
+      "budget_context": {
+        "remaining": 1104.0,
+        "slot_cap": 414.0,
+        "reserve": 1105.0
+      },
+      "dead_end_meta": {
+        "phase": "hotel",
+        "slot_id": "hotel|dNone|slot:None|seg:None|Oklahoma City|None|None->None",
+        "city": "Oklahoma City",
+        "city_bundle": [
+          "Oklahoma City"
+        ],
+        "reason": "constraint_mismatch",
+        "counts": {
+          "kb": 0,
+          "after_nonbudget": 0,
+          "after_budget": 0,
+          "budget_removed": 0,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": "bundle_infeasible",
+        "budget_context": {
+          "remaining": 1104.0,
+          "slot_cap": 414.0,
+          "reserve": 1105.0,
+          "min_cost_nonbudget": null
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "17d9916d73d0",
+      "phase": "stay",
+      "slot_fp": "hotel|dNone|slot:None|seg:None|Oklahoma City|None|None->None",
+      "bundle_fp": "1cd73424fa50"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "stay",
+        "feature": "hotel_price",
+        "delta": 0.6
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "stay",
+        "patch": {
+          "topk": 50,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "17d9916d73d0",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Oklahoma City|None|None->None",
+        "bundle_fp": "1cd73424fa50"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "17d9916d73d0",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Oklahoma City|None|None->None",
+        "bundle_fp": "1cd73424fa50"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "17d9916d73d0",
+        "phase": "stay",
+        "slot_fp": "hotel|dNone|slot:None|seg:None|Oklahoma City|None|None->None",
+        "bundle_fp": "1cd73424fa50"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "stay",
+          "feature": "hotel_price",
+          "delta": 0.6
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "stay",
+          "patch": {
+            "topk": 50,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.1847579050809145
+}

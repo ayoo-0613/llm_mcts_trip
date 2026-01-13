@@ -1,0 +1,283 @@
+{
+  "parser_mode": "legacy",
+  "success": false,
+  "cost": 0.0,
+  "violations": [
+    "commonsense:is_valid_transportation",
+    "commonsense:is_not_absent"
+  ],
+  "query": "Please create a travel plan for a 3-day trip from Houston to Boise for one person from March 26th to March 28th, 2022. The budget for this journey is set at $1,700.",
+  "parsed": {
+    "org": "Houston",
+    "dest": "Boise",
+    "days": 3,
+    "visiting_city_number": 1,
+    "date": [
+      "2022-03-26",
+      "2022-03-27",
+      "2022-03-28"
+    ],
+    "people_number": 1,
+    "local_constraint": {
+      "house rule": null,
+      "cuisine": null,
+      "room type": null,
+      "transportation": "no flight"
+    },
+    "budget": 1700,
+    "origin": "Houston",
+    "destination": "Boise",
+    "duration_days": 3,
+    "start_date": "2022-03-26",
+    "preferences": [],
+    "transport_forbid": [
+      "flight"
+    ]
+  },
+  "actions": [],
+  "structured_plan": {
+    "destination_cities": [
+      "Boise"
+    ],
+    "transportation_dates": [
+      "2022-03-26",
+      "2022-03-28"
+    ],
+    "transportation_methods": [
+      "Houston->Boise missing mode",
+      "Boise->Houston missing mode"
+    ],
+    "restaurants": [],
+    "attractions": [],
+    "accommodations": [
+      "missing, Boise"
+    ]
+  },
+  "submission_plan": [
+    {
+      "days": 1,
+      "current_city": "Boise",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 2,
+      "current_city": "Boise",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    },
+    {
+      "days": 3,
+      "current_city": "Boise",
+      "transportation": "-",
+      "breakfast": "-",
+      "attraction": "-",
+      "lunch": "-",
+      "dinner": "-",
+      "accommodation": "-"
+    }
+  ],
+  "filter_usage": [
+    {
+      "phase": "segment",
+      "slot_id": "segment|dNone|slot:None|seg:0|None|2022-03-26|Houston->Boise",
+      "counts": {
+        "kb": 2,
+        "after_nonbudget": 2,
+        "after_budget": 0,
+        "returned": 0,
+        "topk": 5
+      },
+      "hard_reject": {
+        "over_budget": 2,
+        "violate_reserve": 0,
+        "missing_cost": 0
+      },
+      "budget_subtype": "over_budget",
+      "budget_context": {
+        "remaining": 1700.0,
+        "slot_cap": 611.6365131578946,
+        "reserve": 157.21599999999998
+      },
+      "segment_role": "outbound",
+      "relax_steps": [
+        {
+          "attempt": 1,
+          "reserve_scale": 0.85,
+          "cap_multiplier": 1.25,
+          "reserve": 217.6,
+          "kept": 0
+        },
+        {
+          "attempt": 2,
+          "reserve_scale": 0.7224999999999999,
+          "cap_multiplier": 1.5625,
+          "reserve": 184.95999999999998,
+          "kept": 0
+        },
+        {
+          "attempt": 3,
+          "reserve_scale": 0.6141249999999999,
+          "cap_multiplier": 1.953125,
+          "reserve": 157.21599999999998,
+          "kept": 0
+        }
+      ],
+      "dead_end_meta": {
+        "phase": "segment",
+        "slot_id": "segment|dNone|slot:None|seg:0|None|2022-03-26|Houston->Boise",
+        "city": "Boise",
+        "city_bundle": [
+          "Boise"
+        ],
+        "reason": "budget",
+        "counts": {
+          "kb": 2,
+          "after_nonbudget": 2,
+          "after_budget": 0,
+          "budget_removed": 2,
+          "nonbudget_removed": 0,
+          "topk": 0
+        },
+        "dominant_nonbudget_filter": null,
+        "budget_context": {
+          "remaining": 1700.0,
+          "slot_cap": 611.6365131578946,
+          "reserve": 157.21599999999998,
+          "min_cost_nonbudget": 2969.0
+        }
+      },
+      "cache_hit": true
+    }
+  ],
+  "prior_usage": [],
+  "llm_refinement": null,
+  "llm_refinements": [],
+  "failure_gradient": {
+    "attempt": 3,
+    "scope": {
+      "goal_fp": "6e9dca2d7b50",
+      "phase": "segment",
+      "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-26|Houston->Boise",
+      "bundle_fp": "d09d40da9043"
+    },
+    "confidence": 0.0,
+    "hard_exclusions": [],
+    "soft_penalties": [
+      {
+        "phase": "segment",
+        "feature": "cost_ratio",
+        "delta": 0.5
+      }
+    ],
+    "retrieval_patches": [
+      {
+        "phase": "segment",
+        "patch": {
+          "topk": 30,
+          "prefer": "low_cost"
+        },
+        "ttl": 1
+      }
+    ],
+    "bundle_override": null
+  },
+  "failure_gradients": [
+    {
+      "attempt": 1,
+      "scope": {
+        "goal_fp": "6e9dca2d7b50",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-26|Houston->Boise",
+        "bundle_fp": "d09d40da9043"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 2,
+      "scope": {
+        "goal_fp": "6e9dca2d7b50",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-26|Houston->Boise",
+        "bundle_fp": "d09d40da9043"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    },
+    {
+      "attempt": 3,
+      "scope": {
+        "goal_fp": "6e9dca2d7b50",
+        "phase": "segment",
+        "slot_fp": "segment|dNone|slot:None|seg:0|None|2022-03-26|Houston->Boise",
+        "bundle_fp": "d09d40da9043"
+      },
+      "confidence": 0.0,
+      "hard_exclusions": [],
+      "soft_penalties": [
+        {
+          "phase": "segment",
+          "feature": "cost_ratio",
+          "delta": 0.5
+        }
+      ],
+      "retrieval_patches": [
+        {
+          "phase": "segment",
+          "patch": {
+            "topk": 30,
+            "prefer": "low_cost"
+          },
+          "ttl": 1
+        }
+      ],
+      "bundle_override": null
+    }
+  ],
+  "elapsed_seconds": 0.011702480260282755
+}
